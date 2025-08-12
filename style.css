@@ -1,0 +1,32 @@
+body {
+    background-color: #333;
+    color: #fff;
+    font-family: 'Courier New', Courier, monospace;
+    text-align: center;
+}
+
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 20px; /* space between canvas and video */
+    margin: 20px auto;
+    max-width: 850px;
+}
+
+/* Snake Canvas */
+canvas {
+    background-color: #000;
+    border: 2px solid #fff;
+    display: block;
+}
+
+/* Webcam feed shown on the right */
+#input_video {
+    display: block;
+    width: 400px;
+    height: 400px;
+    border: 2px solid #fff;
+    border-radius: 8px;
+    object-fit: cover;
+}
