@@ -1,0 +1,2316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task Wall</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --ink: #1b1630;
+            --violet: #6d5efc;
+            --violet-deep: #4a3fd6;
+            --amber: #f5a524;
+            --green: #17b978;
+            --red: #e5484d;
+            --paper: #ffffff;
+            --rail: rgba(20, 16, 40, 0.55);
+            --font: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Ubuntu, sans-serif;
+        }
+
+        html, body { height: 100%; }
+        html, body { scrollbar-width: none; -ms-overflow-style: none; }
+        html::-webkit-scrollbar, body::-webkit-scrollbar { width: 0; height: 0; display: none; }
+        @media (min-width: 641px) { html, body { overflow: hidden; } }
+
+        body {
+            font-family: var(--font);
+            color: var(--ink);
+            display: flex;
+            min-height: 100vh;
+            background:
+                radial-gradient(1100px 620px at 12% -5%, rgba(255,255,255,0.18), transparent 60%),
+                radial-gradient(900px 540px at 105% 108%, rgba(255,255,255,0.12), transparent 55%),
+                linear-gradient(135deg, #6d5efc 0%, #8b5cf6 45%, #7c3aed 100%);
+            background-attachment: fixed;
+        }
+
+        /* ---------- Icon rail ---------- */
+        .rail {
+            width: 88px;
+            flex-shrink: 0;
+            background: var(--rail);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border-right: 1px solid rgba(255,255,255,0.12);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+            padding: 18px 0;
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            z-index: 40;
+            overflow: hidden;
+            scrollbar-width: none;      /* Firefox */
+            -ms-overflow-style: none;   /* old Edge/IE */
+        }
+        .rail::-webkit-scrollbar { width: 0; height: 0; display: none; } /* Chrome/Edge/Safari */
+
+        .brand {
+            width: 46px; height: 46px;
+            border-radius: 14px;
+            background: white;
+            color: var(--violet-deep);
+            display: grid; place-items: center;
+            font-size: 24px; font-weight: 800;
+            margin-bottom: 14px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.18);
+        }
+
+        .nav-btn {
+            width: 60px;
+            border: none;
+            background: transparent;
+            color: rgba(255,255,255,0.82);
+            cursor: pointer;
+            border-radius: 14px;
+            padding: 10px 0 8px;
+            display: flex; flex-direction: column; align-items: center; gap: 4px;
+            font-size: 11px; font-weight: 600; letter-spacing: 0.2px;
+            transition: background 0.18s, color 0.18s, transform 0.18s;
+        }
+        .nav-btn .ico { font-size: 22px; line-height: 1; }
+        .nav-btn:hover { background: rgba(255,255,255,0.14); transform: translateY(-1px); }
+        .nav-btn.active { background: #fff; color: var(--violet-deep); }
+        .nav-spacer { flex: 1; }
+
+        /* ---------- Stage ---------- */
+        .stage {
+            flex: 1;
+            min-width: 0;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            overflow-y: auto;
+            scrollbar-width: none;      /* Firefox */
+            -ms-overflow-style: none;   /* old Edge/IE */
+        }
+        .stage::-webkit-scrollbar { width: 0; height: 0; display: none; } /* Chrome/Edge/Safari */
+
+        .stage-head {
+            position: sticky; top: 0; z-index: 20;
+            padding: 22px 30px 18px;
+            display: flex;
+            align-items: baseline;
+            justify-content: space-between;
+            gap: 16px;
+            flex-wrap: wrap;
+            background: linear-gradient(to bottom, rgba(109,94,252,0.35), rgba(109,94,252,0));
+            backdrop-filter: blur(2px);
+        }
+        .stage-head h1 {
+            color: #fff;
+            font-size: clamp(1.6rem, 2.4vw, 2.2rem);
+            font-weight: 800;
+            letter-spacing: -0.5px;
+        }
+        .stage-head p { color: rgba(255,255,255,0.82); font-size: 0.95rem; margin-top: 2px; }
+        .chips { display: flex; gap: 8px; flex-wrap: wrap; }
+        .chip {
+            background: rgba(255,255,255,0.16);
+            border: 1px solid rgba(255,255,255,0.25);
+            color: #fff;
+            padding: 6px 12px;
+            border-radius: 999px;
+            font-size: 13px; font-weight: 600;
+        }
+
+        .filter-bar { padding: 0 30px 14px; display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+        .filt {
+            border: 1px solid rgba(255,255,255,0.35);
+            background: rgba(255,255,255,0.14);
+            color: #fff; padding: 8px 18px; border-radius: 999px;
+            font-weight: 700; font-size: 13px; cursor: pointer;
+            transition: background 0.15s;
+        }
+        .filt:hover { background: rgba(255,255,255,0.24); }
+        .filt.active { background: #fff; color: var(--violet-deep); border-color: #fff; }
+        .fb-spacer { flex: 1 1 auto; }
+        .dl-btn {
+            border: 1px solid rgba(255,255,255,0.4);
+            background: rgba(255,255,255,0.16);
+            color: #fff; padding: 8px 14px; border-radius: 999px;
+            font-weight: 700; font-size: 13px; cursor: pointer;
+            display: inline-flex; align-items: center; gap: 6px;
+            transition: background 0.15s, transform 0.15s;
+        }
+        .dl-btn:hover { background: rgba(255,255,255,0.28); transform: translateY(-1px); }
+
+        /* ---------- The wall ---------- */
+        .wall { padding: 6px 30px 60px; }
+
+        .date-group { margin-bottom: 30px; }
+
+        .date-ribbon {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            padding: 9px 18px;
+            margin-bottom: 16px;
+            background: rgba(255,255,255,0.92);
+            border-radius: 12px;
+            box-shadow: 0 6px 16px rgba(30,20,70,0.18);
+        }
+        .date-ribbon .d-day { font-weight: 800; font-size: 1.05rem; color: var(--ink); }
+        .date-ribbon .d-count {
+            font-size: 12px; font-weight: 700;
+            color: var(--violet-deep);
+            background: rgba(109,94,252,0.14);
+            padding: 3px 10px; border-radius: 999px;
+        }
+
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 16px;
+        }
+
+        .note-card {
+            position: relative;
+            background: var(--paper);
+            border-radius: 14px;
+            padding: 16px 16px 16px 20px;
+            box-shadow: 0 10px 26px rgba(26,18,60,0.20);
+            display: flex; flex-direction: column; gap: 10px;
+            min-width: 0;
+        }
+        /* status stripe */
+        .note-card::before {
+            content: "";
+            position: absolute; left: 0; top: 0; bottom: 0;
+            width: 6px; border-radius: 14px 0 0 14px;
+            background: var(--amber);
+        }
+        .note-card.done::before { background: var(--green); }
+        .note-card.done { opacity: 0.72; }
+
+        .note-top { display: flex; align-items: center; justify-content: space-between; }
+
+        .check { display: inline-flex; align-items: center; gap: 8px; cursor: pointer; font-size: 12px; font-weight: 700; color: #8a86a0; }
+        .check input { width: 18px; height: 18px; cursor: pointer; accent-color: var(--green); }
+
+        .card-actions { display: flex; gap: 6px; }
+        .icon-btn {
+            border: none; background: #f1f0fa; cursor: pointer;
+            width: 30px; height: 30px; border-radius: 8px;
+            font-size: 14px; display: grid; place-items: center;
+            transition: background 0.15s, transform 0.15s;
+        }
+        .icon-btn:hover { transform: translateY(-1px); }
+        .icon-btn.edit:hover { background: #fdeecf; }
+        .icon-btn.del:hover { background: #fbdcdd; }
+
+        .note-text {
+            font-size: 1rem; line-height: 1.45; color: var(--ink);
+            white-space: normal; word-break: break-word; font-weight: 500;
+        }
+        .note-text a { color: var(--violet-deep); }
+        /* Keep pasted images / tables / wide content inside the box */
+        .note-text, .rich-input, .edit-fields .edit-rich { overflow-wrap: anywhere; }
+        .note-text *, .rich-input *, .edit-fields .edit-rich * { max-width: 100%; box-sizing: border-box; }
+        .note-text img, .rich-input img, .edit-fields .edit-rich img { max-width: 100% !important; height: auto !important; }
+        .note-text table, .rich-input table, .edit-fields .edit-rich table { display: block; max-width: 100%; overflow-x: auto; border-collapse: collapse; }
+        .note-text p, .note-text div, .rich-input p, .rich-input div,
+        .edit-fields .edit-rich p, .edit-fields .edit-rich div { margin: 0; }
+        .note-card.done .note-text { text-decoration: line-through; color: #8a86a0; }
+
+        .todo-meta { display: flex; flex-direction: column; gap: 5px; font-size: 12.5px; color: #55506b; }
+        .todo-meta.top-meta { border-bottom: 1px dashed #ececf5; padding-bottom: 8px; }
+        .todo-meta .m-row { display: flex; gap: 6px; min-width: 0; align-items: flex-start; }
+        .todo-meta .m-key {
+            flex-shrink: 0; font-weight: 700; color: var(--violet-deep);
+            text-transform: none;
+        }
+        .todo-meta .m-row > span:last-child,
+        .todo-meta .m-row > a { min-width: 0; overflow-wrap: anywhere; word-break: break-word; }
+        .todo-meta a { color: var(--violet-deep); text-decoration: none; word-break: break-all; }
+        .todo-meta a:hover { text-decoration: underline; }
+
+        /* ---------- Steps (sub-checklist) ---------- */
+        .steps { display: flex; flex-direction: column; gap: 6px; margin-top: 2px; }
+        .steps-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+        .steps-progress { font-size: 12px; font-weight: 700; color: var(--violet-deep); }
+        .steps-all { border: none; background: #eceafd; color: var(--violet-deep); font-weight: 700; font-size: 12px; padding: 4px 10px; border-radius: 8px; cursor: pointer; }
+        .steps-all:hover { background: #ded9fb; }
+        .step { display: grid; grid-template-columns: 16px minmax(0, 1fr) auto; align-items: start; gap: 8px; width: 100%; min-width: 0; font-size: 13.5px; color: var(--ink); cursor: pointer; }
+        .step input { width: 16px; height: 16px; accent-color: var(--green); cursor: pointer; flex-shrink: 0; }
+        .step span { display: block; min-width: 0; max-width: 100%; white-space: normal; overflow-wrap: anywhere; word-break: break-word; }
+        .step.done span { text-decoration: line-through; color: #9a96ad; }
+        .step-del { border: none; background: transparent; color: #c7c3d8; cursor: pointer; font-size: 12px; }
+        .step-del:hover { color: var(--red); }
+        .step-add { display: flex; gap: 6px; margin-top: 2px; }
+        .step-add input { flex: 1; min-width: 0; padding: 7px 9px; border: 1px solid #e6e4f2; border-radius: 8px; font-size: 13px; font-family: var(--font); }
+        .step-add input:focus { outline: none; border-color: var(--violet); }
+        .step-add button { border: none; background: var(--violet); color: #fff; font-weight: 700; font-size: 13px; padding: 0 12px; border-radius: 8px; cursor: pointer; }
+        .step-add-row { display: flex; gap: 6px; }
+        .step-add-row input { flex: 1; }
+        .draft-steps { list-style: none; margin: 8px 0 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
+        .draft-steps li { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; min-width: 0; background: #fff; border: 1px solid #e6e4f2; border-radius: 8px; padding: 7px 10px; font-size: 13.5px; }
+        .draft-steps li > span { min-width: 0; overflow-wrap: anywhere; word-break: break-word; }
+        .draft-steps li button { border: none; background: transparent; color: #c7c3d8; cursor: pointer; font-size: 13px; }
+        .draft-steps li button:hover { color: var(--red); }
+
+        /* ---------- Sub-POCs (who did what) ---------- */
+        .pocs { display: flex; flex-direction: column; gap: 6px; min-width: 0; margin-top: 2px; }
+        .pocs-head { font-size: 12px; font-weight: 700; color: var(--violet-deep); }
+        .poc-item { display: grid; grid-template-columns: minmax(0, 35%) minmax(0, 1fr) auto; gap: 8px; align-items: start; width: 100%; min-width: 0; font-size: 13px; }
+        .poc-item .who { min-width: 0; max-width: 100%; font-weight: 700; color: var(--ink); white-space: normal; overflow-wrap: anywhere; word-break: break-word; }
+        .poc-item .did { min-width: 0; max-width: 100%; color: #55506b; white-space: normal; overflow-wrap: anywhere; word-break: break-word; }
+        .poc-item .poc-del { flex-shrink: 0; border: none; background: transparent; color: #c7c3d8; cursor: pointer; font-size: 12px; }
+        .poc-item .poc-del:hover { color: var(--red); }
+        .poc-add { display: flex; gap: 6px; margin-top: 2px; flex-wrap: wrap; }
+        .poc-add input, .poc-add textarea { flex: 1 1 40%; min-width: 110px; padding: 7px 9px; border: 1px solid #e6e4f2; border-radius: 8px; font-size: 13px; font-family: var(--font); line-height: 1.4; box-sizing: border-box; overflow-wrap: anywhere; word-break: break-word; }
+        .poc-add textarea { resize: none; min-height: 38px; max-height: 120px; overflow-y: auto; }
+        .poc-add input:focus, .poc-add textarea:focus { outline: none; border-color: var(--violet); }
+        .poc-add button { border: none; background: var(--violet); color: #fff; font-weight: 700; font-size: 13px; padding: 0 12px; border-radius: 8px; cursor: pointer; }
+        .poc-add-row { display: flex; gap: 6px; }
+        .poc-add-row input { flex: 1; }
+        .draft-pocs { list-style: none; margin: 8px 0 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
+        .draft-pocs li { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; min-width: 0; background: #fff; border: 1px solid #e6e4f2; border-radius: 8px; padding: 7px 10px; font-size: 13px; }
+        .draft-pocs li .who { font-weight: 700; }
+        .draft-pocs li > span { min-width: 0; overflow-wrap: anywhere; word-break: break-word; }
+        .draft-pocs li button { border: none; background: transparent; color: #c7c3d8; cursor: pointer; font-size: 13px; }
+        .draft-pocs li button:hover { color: var(--red); }
+        .edit-lbl { font-size: 12px; font-weight: 700; color: var(--violet-deep); margin: 8px 0 -2px; display: block; }
+        .edit-fields select { width: 100%; padding: 9px 10px; border: 1px solid #d8d5ea; border-radius: 8px; font-size: 14px; font-family: var(--font); background: #fff; color: var(--ink); }
+        .edit-fields select:focus { outline: none; border-color: var(--violet); }
+        /* ---------- Priority badge ---------- */
+        .prio { display: inline-block; align-self: flex-start; font-size: 11px; font-weight: 800; letter-spacing: .3px; padding: 3px 10px; border-radius: 999px; text-transform: uppercase; }
+        .prio-high { background: #fdecec; color: #c0362c; border: 1px solid #f3b7b2; }
+        .prio-medium { background: #fef3e0; color: #a5670a; border: 1px solid #f6d59a; }
+        .prio-low { background: #e8f7ef; color: #0f7a4e; border: 1px solid #b6e5cd; }
+
+        .note-time {
+            display: flex; flex-direction: column; gap: 2px;
+            margin-top: 2px; padding-top: 8px;
+            border-top: 1px dashed #ececf5;
+            font-size: 11.5px; color: #9a96ad;
+        }
+
+        /* editing inside a card */
+        .edit-fields { display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+        .edit-fields textarea, .edit-fields input, .edit-fields .edit-rich {
+            width: 100%; padding: 9px 11px;
+            border: 2px solid #e6e4f2; border-radius: 9px;
+            font-size: 14px; font-family: var(--font); color: var(--ink); background: #fff;
+        }
+        .edit-fields textarea { resize: vertical; min-height: 54px; line-height: 1.4; }
+        .edit-fields .edit-rich { min-width: 0; width: 100%; min-height: 54px; max-height: 260px; overflow: auto; line-height: 1.4; }
+        .edit-fields .edit-rich:empty:before { content: attr(data-placeholder); color: #9a96ad; }
+        .edit-fields .edit-rich img { display: block; width: auto !important; max-width: none !important; height: auto !important; }
+        .edit-fields textarea:focus, .edit-fields input:focus, .edit-fields .edit-rich:focus { outline: none; border-color: var(--violet); }
+        .edit-actions-row { display: flex; gap: 8px; }
+        .btn-save, .btn-cancel {
+            flex: 1; padding: 9px; border: none; border-radius: 9px;
+            font-weight: 700; font-size: 14px; cursor: pointer; color: #fff;
+        }
+        .btn-save { background: var(--green); }
+        .btn-cancel { background: #8a86a0; }
+
+        /* ---------- Empty state ---------- */
+        .empty {
+            text-align: center; color: #fff; padding: 60px 20px;
+        }
+        .empty .big { font-size: 3.4rem; margin-bottom: 10px; }
+        .empty h3 { font-size: 1.4rem; margin-bottom: 6px; }
+        .empty p { color: rgba(255,255,255,0.82); }
+
+        /* ---------- Drawer ---------- */
+        .backdrop {
+            position: fixed; inset: 0; z-index: 50;
+            background: rgba(15,10,35,0.45);
+            opacity: 0; pointer-events: none; transition: opacity 0.25s;
+        }
+        .backdrop.show { opacity: 1; pointer-events: auto; }
+
+        .drawer {
+            position: fixed; top: 0; left: 88px; z-index: 60;
+            width: min(430px, calc(100vw - 88px));
+            height: 100vh;
+            background: #faf9ff;
+            box-shadow: 18px 0 50px rgba(15,10,35,0.30);
+            transform: translateX(-115%);
+            transition: transform 0.28s cubic-bezier(.4,.9,.3,1);
+            display: flex; flex-direction: column;
+        }
+        .drawer.open { transform: translateX(0); }
+
+        .drawer-head {
+            padding: 22px 24px 16px;
+            display: flex; align-items: center; justify-content: space-between;
+            border-bottom: 1px solid #ece9f7;
+        }
+        .drawer-head h2 { font-size: 1.25rem; font-weight: 800; color: var(--ink); }
+        .close-btn {
+            width: 36px; height: 36px; border-radius: 10px; border: none;
+            background: #efedf9; cursor: pointer; font-size: 18px; color: #55506b;
+        }
+        .close-btn:hover { background: #e4e0f4; }
+
+        .drawer-body { padding: 22px 24px 30px; overflow-y: auto; }
+        .drawer input, .drawer textarea, .drawer select, .drawer .rich-input, .drawer .edit-rich { scroll-margin-bottom: 220px; }
+        .panel { display: none; }
+
+        .field { margin-bottom: 15px; }
+        .field label { display: block; font-size: 13px; font-weight: 700; color: #55506b; margin-bottom: 6px; }
+        .field .fld, .field textarea {
+            width: 100%; padding: 12px 14px;
+            border: 2px solid #e6e4f2; border-radius: 11px;
+            font-size: 15px; font-family: var(--font); color: var(--ink); background: #fff;
+        }
+        .field textarea {
+            display: block; resize: none; overflow-y: auto; min-height: 54px; max-height: 260px; line-height: 1.4;
+            overflow-wrap: anywhere; word-break: break-word; box-sizing: border-box;
+        }
+        .field .fld:focus, .field textarea:focus { outline: none; border-color: var(--violet); }
+
+        .rich-input {
+            width: 100%; padding: 12px 14px;
+            border: 2px solid #e6e4f2; border-radius: 11px;
+            font-size: 15px; font-family: var(--font); color: var(--ink); background: #fff;
+            min-height: 54px; max-height: 320px; overflow-y: auto; line-height: 1.45;
+        }
+        .rich-input:focus { outline: none; border-color: var(--violet); }
+        .rich-input:empty:before { content: attr(data-placeholder); color: #9a96ad; }
+        .rich-input img { max-width: 100%; height: auto; }
+        .task-row .rich-input { flex: 1; }
+
+        .task-row { display: flex; gap: 8px; align-items: flex-start; min-width: 0; }
+        .task-row textarea { flex: 1; }
+        .voice-btn {
+            flex-shrink: 0;
+            padding: 12px 14px; border: none; border-radius: 11px; cursor: pointer;
+            background: var(--green); color: #fff; font-weight: 700; font-size: 14px;
+            display: flex; align-items: center; gap: 6px;
+        }
+        .step-add-row, .poc-add { min-width: 0; }
+        .step-add-row input, .poc-add input { min-width: 0; box-sizing: border-box; }
+        .poc-add input { overflow-wrap: anywhere; }
+        .voice-btn.recording { background: var(--red); animation: pulse 1.4s infinite; }
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(229,72,77,0.65); }
+            70% { box-shadow: 0 0 0 12px rgba(229,72,77,0); }
+            100% { box-shadow: 0 0 0 0 rgba(229,72,77,0); }
+        }
+        .voice-indicator {
+            display: none; align-items: center; gap: 10px;
+            padding: 10px 12px; margin: -4px 0 14px;
+            background: #fff4d6; border: 1px solid #f5c96b; border-radius: 10px;
+            font-size: 13px; color: #8a6212;
+        }
+        .voice-indicator.active { display: flex; }
+        .voice-dot { width: 9px; height: 9px; background: var(--red); border-radius: 50%; animation: blink 1s infinite; }
+        @keyframes blink { 0%,50% { opacity: 1; } 51%,100% { opacity: 0; } }
+
+        .primary-btn {
+            width: 100%; padding: 14px; border: none; border-radius: 12px;
+            background: var(--violet); color: #fff; font-size: 16px; font-weight: 800; cursor: pointer;
+            transition: background 0.15s, transform 0.15s;
+        }
+        .primary-btn:hover { background: var(--violet-deep); transform: translateY(-1px); }
+
+        .row-2 { display: flex; gap: 8px; align-items: flex-end; }
+        .row-2 .field { flex: 1; margin-bottom: 12px; }
+        .mini-btn {
+            padding: 12px 16px; border: none; border-radius: 11px; cursor: pointer;
+            font-weight: 700; font-size: 14px; color: #fff; white-space: nowrap; margin-bottom: 12px;
+            background: var(--violet);
+        }
+        .mini-btn.ghost { background: #8a86a0; }
+        .mini-btn.export { background: var(--violet-deep); }
+        .hint { font-size: 12.5px; color: #8a86a0; margin-bottom: 18px; line-height: 1.5; }
+        .divider { height: 1px; background: #ece9f7; margin: 6px 0 18px; }
+
+        /* ---------- Notification ---------- */
+        .notification {
+            position: fixed; top: 20px; right: 20px; z-index: 80;
+            padding: 14px 18px; border-radius: 12px;
+            background: var(--green); color: #fff; font-weight: 600;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+            transform: translateX(460px); transition: transform 0.3s; max-width: 340px;
+        }
+        .notification.show { transform: translateX(0); }
+
+        /* ---------- Date Picker Dialog ---------- */
+        .custom-dialog {
+            border: none;
+            border-radius: 14px;
+            padding: 24px;
+            max-width: 380px;
+            width: calc(100% - 32px);
+            background: #faf9ff;
+            box-shadow: 0 10px 40px rgba(15,10,35,0.35);
+            margin: auto;
+        }
+        .custom-dialog::backdrop {
+            background: rgba(15,10,35,0.45);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+        }
+        .custom-dialog h3 {
+            font-size: 1.15rem;
+            font-weight: 800;
+            color: var(--ink);
+            margin-bottom: 8px;
+        }
+        .custom-dialog p {
+            font-size: 13.5px;
+            color: #8a86a0;
+            margin-bottom: 18px;
+            line-height: 1.4;
+        }
+        .dialog-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        .dialog-actions button {
+            margin-bottom: 0;
+        }
+
+        /* ---------- Responsive ---------- */
+        @media (max-width: 640px) {
+            body { flex-direction: column; }
+            .rail {
+                width: 100%; height: auto; flex-direction: row;
+                justify-content: space-around; padding: 8px 6px;
+                position: fixed; bottom: 0; top: auto;
+                border-right: none; border-top: 1px solid rgba(255,255,255,0.14);
+            }
+            .brand { display: none; }
+            .nav-spacer { display: none; }
+            .nav-btn { width: auto; padding: 6px 10px; }
+            .stage { height: auto; min-height: 100vh; padding-bottom: 80px; }
+            .drawer { left: 0; top: 0; width: 100vw; height: calc(100vh - 66px); }
+            .wall, .stage-head, .filter-bar { padding-left: 18px; padding-right: 18px; }
+        }
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+</head>
+<body>
+    <!-- Icon rail -->
+    <aside class="rail">
+        <div class="brand">✓</div>
+        <button class="nav-btn" id="nav-all" onclick="goHome()"><span class="ico">🗂️</span>Wall</button>
+        <button class="nav-btn" id="nav-add" onclick="openPanel('add')"><span class="ico">➕</span>Add</button>
+        <button class="nav-btn" id="nav-search" onclick="openPanel('search')"><span class="ico">🔍</span>Find</button>
+        <button class="nav-btn" id="nav-export" onclick="openPanel('export')"><span class="ico">⬇️</span>PDF</button>
+        <button class="nav-btn" id="nav-excel" onclick="openPanel('excel')"><span class="ico">📊</span>Excel</button>
+        <button class="nav-btn" id="nav-data" onclick="openPanel('data')"><span class="ico">💾</span>Data</button>
+        <div class="nav-spacer"></div>
+        <button class="nav-btn" id="nav-full" onclick="toggleFullscreen()"><span class="ico">⛶</span>Full</button>
+    </aside>
+
+    <!-- Stage / wall -->
+    <main class="stage">
+        <header class="stage-head">
+            <div>
+                <h1>Task Wall</h1>
+                <p>Speak a task, pin it to a date, track your follow-ups.</p>
+            </div>
+            <div class="chips">
+                <span class="chip" id="totalTodos">0 total</span>
+                <span class="chip" id="pendingTodos">0 open</span>
+                <span class="chip" id="completedTodos">0 closed</span>
+            </div>
+        </header>
+
+        <div class="filter-bar">
+            <button class="filt active" id="filt-all" onclick="setStatus('all')">All</button>
+            <button class="filt" id="filt-open" onclick="setStatus('open')">Open</button>
+            <button class="filt" id="filt-closed" onclick="setStatus('closed')">Closed</button>
+            <div class="fb-spacer"></div>
+            <button class="dl-btn" onclick="exportPDF('current')" title="Download what's shown as PDF">⬇️ PDF</button>
+            <button class="dl-btn" onclick="exportExcel('current')" title="Download what's shown as Excel">📊 Excel</button>
+            <button class="dl-btn" onclick="exportHTML('current')" title="Download what's shown as an HTML file you can print / save as PDF at any size">🖨️ HTML</button>
+        </div>
+
+        <div class="wall" id="todoList"></div>
+    </main>
+
+    <!-- Date Range Search Dialog -->
+    <dialog id="dateSearchDialog" class="custom-dialog">
+        <form id="dateSearchForm" method="dialog" style="margin:0; padding:0;" onsubmit="event.preventDefault(); closeDateSearchDialog(true);">
+            <h3>Select Date Range</h3>
+            <p>Please choose a start and end date to filter your keyword search.</p>
+            <div class="field">
+                <label for="dialogStartDate">Start date</label>
+                <input type="date" class="fld" id="dialogStartDate" required>
+            </div>
+            <div class="field">
+                <label for="dialogEndDate">End date</label>
+                <input type="date" class="fld" id="dialogEndDate" required>
+            </div>
+            <div class="dialog-actions">
+                <button type="button" class="mini-btn ghost" id="dialogCancelBtn" onclick="closeDateSearchDialog(false)">Cancel</button>
+                <button type="submit" class="mini-btn" id="dialogSubmitBtn">Apply Search</button>
+            </div>
+        </form>
+    </dialog>
+
+    <!-- Drawer + backdrop -->
+    <div class="backdrop" id="backdrop" onclick="closeDrawer()"></div>
+    <aside class="drawer" id="drawer">
+        <div class="drawer-head">
+            <h2 id="drawerTitle">Add a task</h2>
+            <button class="close-btn" onclick="closeDrawer()">✕</button>
+        </div>
+        <div class="drawer-body">
+
+            <!-- ADD -->
+            <div class="panel" id="panel-add">
+                <div class="field">
+                    <label for="entryDate">📅 Which date is this task for?</label>
+                    <input type="date" class="fld" id="entryDate">
+                </div>
+                <div class="field">
+                    <label for="priorityInput">🚩 Priority</label>
+                    <select class="fld" id="priorityInput">
+                        <option value="high">High</option>
+                        <option value="medium" selected>Medium</option>
+                        <option value="low">Low</option>
+                    </select>
+                </div>
+                <div class="field">
+                    <label for="emailFromInput">📤 From</label>
+                    <textarea class="fld" id="emailFromInput" rows="2" placeholder="Sender (from)"></textarea>
+                </div>
+                <div class="field">
+                    <label for="emailToInput">📨 To</label>
+                    <textarea class="fld" id="emailToInput" rows="2" placeholder="To recipients"></textarea>
+                </div>
+                <div class="field">
+                    <label for="emailCcInput">📋 CC</label>
+                    <textarea class="fld" id="emailCcInput" rows="2" placeholder="CC recipients"></textarea>
+                </div>
+                <div class="field">
+                    <label for="emailWhenInput">🕘 Email date &amp; time</label>
+                    <textarea class="fld" id="emailWhenInput" rows="2" placeholder="e.g. Fri 04-09-2026 11:52"></textarea>
+                </div>
+                <div class="field">
+                    <label for="todoInput">📝 Task — type, speak, or paste an email (keeps its formatting)</label>
+                    <div class="task-row">
+                        <div id="todoInput" class="rich-input" contenteditable="true" data-placeholder="Type, speak, or paste an email here…"></div>
+                        <button class="voice-btn" id="voiceBtn" onclick="toggleVoiceRecording()">
+                            <span id="voiceIcon">🎤</span><span id="voiceText">Speak</span>
+                        </button>
+                    </div>
+                </div>
+                <div class="voice-indicator" id="voiceIndicator">
+                    <div class="voice-dot"></div><span>Listening… speak now. Press Stop when done.</span> <span id="voiceInterim" style="opacity:.75;"></span>
+                </div>
+                <div class="field">
+                    <label for="actionInput">✅ Action item</label>
+                    <textarea class="fld" id="actionInput" rows="2" placeholder="What action to take (e.g. Send report)"></textarea>
+                </div>
+                <div class="field">
+                    <label for="stepInput">🧩 Steps / sub-tasks (optional)</label>
+                    <div class="step-add-row">
+                        <textarea class="fld" id="stepInput" rows="2" placeholder="e.g. Wash vegetables" onkeydown="if(event.key==='Enter' && !event.shiftKey){event.preventDefault();addStepToDraft();}"></textarea>
+                        <button type="button" class="mini-btn" onclick="addStepToDraft()">Add</button>
+                    </div>
+                    <ul id="draftSteps" class="draft-steps"></ul>
+                </div>
+                <div class="field">
+                    <label for="pocInput">👤 POC (person)</label>
+                    <textarea class="fld" id="pocInput" rows="2" placeholder="Person responsible / contact"></textarea>
+                </div>
+                <div class="field">
+                    <label for="pocNameInput">🧑‍🤝‍🧑 More POCs (who did what)</label>
+                    <div class="poc-add">
+                        <textarea id="pocNameInput" rows="2" placeholder="POC name"></textarea>
+                        <textarea id="pocWorkInput" rows="2" placeholder="What this POC did" onkeydown="if(event.key==='Enter' && !event.shiftKey){event.preventDefault();addPocToDraft();}"></textarea>
+                        <button type="button" class="mini-btn" onclick="addPocToDraft()">Add</button>
+                    </div>
+                    <ul id="draftPocs" class="draft-pocs"></ul>
+                </div>
+                <div class="field">
+                    <label for="emailInput">📧 Email ID</label>
+                    <textarea class="fld" id="emailInput" rows="2" placeholder="name@example.com"></textarea>
+                </div>
+                <div class="field">
+                    <label for="emailTitleInput">✉️ Email title (for follow-up)</label>
+                    <textarea class="fld" id="emailTitleInput" rows="2" placeholder="Subject line to follow up"></textarea>
+                </div>
+                <div class="field">
+                    <label for="emailCodeInput">🔢 Email code</label>
+                    <textarea class="fld" id="emailCodeInput" rows="2" placeholder="Reference / code for the email"></textarea>
+                </div>
+                <button class="primary-btn" onclick="addTodo()">Add to wall</button>
+            </div>
+
+            <!-- SEARCH -->
+            <div class="panel" id="panel-search">
+                <div class="field">
+                    <label for="searchField">🔎 Search in</label>
+                    <select class="fld" id="searchField">
+                        <option value="all">All fields</option>
+                        <option value="text">Task text</option>
+                        <option value="action">Action item</option>
+                        <option value="priority">Priority</option>
+                        <option value="poc">POC</option>
+                        <option value="emailFrom">From</option>
+                        <option value="emailTo">To</option>
+                        <option value="emailCc">CC</option>
+                        <option value="email">Email ID</option>
+                        <option value="emailTitle">Email title</option>
+                        <option value="emailCode">Email code</option>
+                        <option value="emailWhen">Email date &amp; time</option>
+                    </select>
+                </div>
+                <div class="row-2">
+                    <div class="field">
+                        <label for="searchText">Keyword</label>
+                        <input type="text" class="fld" id="searchText" placeholder="Type a word to find…">
+                    </div>
+                    <button class="mini-btn" onclick="runSearch()">Search</button>
+                </div>
+                <p class="hint">Finds tickets containing the keyword. Combine it with the Open / Closed filter on the wall.</p>
+                <div class="divider"></div>
+                <div class="row-2">
+                    <div class="field">
+                        <label for="searchDate">Show a specific date</label>
+                        <input type="date" class="fld" id="searchDate">
+                    </div>
+                    <button class="mini-btn" onclick="searchByDate()">Show</button>
+                </div>
+                <div class="row-2">
+                    <div class="field">
+                        <label for="searchStartDate">Start date</label>
+                        <input type="date" class="fld" id="searchStartDate">
+                    </div>
+                    <div class="field">
+                        <label for="searchEndDate">End date</label>
+                        <input type="date" class="fld" id="searchEndDate">
+                    </div>
+                    <button class="mini-btn" onclick="searchByDateRange()">Show</button>
+                </div>
+                <div class="row-2">
+                    <div class="field">
+                        <label for="searchMonth">Show a whole month</label>
+                        <input type="month" class="fld" id="searchMonth">
+                    </div>
+                    <button class="mini-btn" onclick="searchByMonth()">Show</button>
+                </div>
+                <div class="row-2">
+                    <div class="field">
+                        <label for="searchYear">Show a whole year</label>
+                        <input type="number" class="fld" id="searchYear" min="2000" max="2100" placeholder="Year">
+                    </div>
+                    <button class="mini-btn" onclick="searchByYear()">Show</button>
+                </div>
+                <div class="row-2">
+                    <div class="field">
+                        <label for="searchMonthAny">Show a month across all years</label>
+                        <select class="fld" id="searchMonthAny">
+                            <option value="">Select a month</option>
+                            <option value="1">January</option>
+                            <option value="2">February</option>
+                            <option value="3">March</option>
+                            <option value="4">April</option>
+                            <option value="5">May</option>
+                            <option value="6">June</option>
+                            <option value="7">July</option>
+                            <option value="8">August</option>
+                            <option value="9">September</option>
+                            <option value="10">October</option>
+                            <option value="11">November</option>
+                            <option value="12">December</option>
+                        </select>
+                    </div>
+                    <button class="mini-btn" onclick="searchByMonthAny()">Show</button>
+                </div>
+                <div class="divider"></div>
+                <button class="mini-btn ghost" style="width:100%;" onclick="showAll()">Show everything (all dates)</button>
+            </div>
+
+            <!-- EXPORT -->
+            <div class="panel" id="panel-export">
+                <p class="hint">Download your tasks as a PDF — one day, a whole month, a full year, or everything.</p>
+                <div class="row-2">
+                    <div class="field">
+                        <label for="exportDate">A single date</label>
+                        <input type="date" class="fld" id="exportDate">
+                    </div>
+                    <button class="mini-btn export" onclick="exportPDF('date')">PDF</button>
+                </div>
+                <div class="row-2">
+                    <div class="field">
+                        <label for="exportMonth">A whole month</label>
+                        <input type="month" class="fld" id="exportMonth">
+                    </div>
+                    <button class="mini-btn export" onclick="exportPDF('month')">PDF</button>
+                </div>
+                <div class="row-2">
+                    <div class="field">
+                        <label for="exportYear">A whole year</label>
+                        <input type="number" class="fld" id="exportYear" min="2000" max="2100" placeholder="Year">
+                    </div>
+                    <button class="mini-btn export" onclick="exportPDF('year')">PDF</button>
+                </div>
+                <div class="divider"></div>
+                <button class="primary-btn" onclick="exportPDF('all')">Download everything</button>
+                <div class="divider"></div>
+                <button class="mini-btn ghost" style="width:100%;" onclick="exportHTML('all')">🖨️ Download all as HTML (choose size when printing)</button>
+                <p class="hint" style="margin-top:10px;">The HTML file opens in your browser — press Ctrl+P to print or save as PDF at any paper size (A4, A3, A2…).</p>
+            </div>
+
+            <!-- EXCEL -->
+            <div class="panel" id="panel-excel">
+                <p class="hint">Download tickets as an Excel sheet. Exports follow your current <b>Open / Closed</b> filter — set it to <b>All</b> to get both together.</p>
+                <div class="row-2">
+                    <div class="field"><label for="xlDate">A single date</label><input type="date" class="fld" id="xlDate"></div>
+                    <button class="mini-btn export" onclick="exportExcel('date')">Excel</button>
+                </div>
+                <div class="row-2">
+                    <div class="field"><label for="xlMonth">A whole month</label><input type="month" class="fld" id="xlMonth"></div>
+                    <button class="mini-btn export" onclick="exportExcel('month')">Excel</button>
+                </div>
+                <div class="row-2">
+                    <div class="field"><label for="xlYear">A whole year</label><input type="number" class="fld" id="xlYear" min="2000" max="2100" placeholder="Year"></div>
+                    <button class="mini-btn export" onclick="exportExcel('year')">Excel</button>
+                </div>
+                <div class="divider"></div>
+                <button class="primary-btn" onclick="exportExcel('all')">Download everything</button>
+            </div>
+
+            <!-- DATA (backup / restore) -->
+            <div class="panel" id="panel-data">
+                <p class="hint">Your tickets are saved in this browser automatically. Use these to back up to a JSON file or restore from one. Tip: press <b>Ctrl+S</b> anytime to download a backup.</p>
+                <button class="primary-btn" onclick="exportJSON()">⬇️ Export all as JSON</button>
+                <div class="divider"></div>
+                <label for="importFile" class="mini-btn" style="display:block;width:100%;text-align:center;box-sizing:border-box;cursor:pointer;">⬆️ Import from JSON</label>
+                <input type="file" id="importFile" accept="application/json,.json" style="display:none;" onchange="importJSON(event)">
+                <p class="hint" style="margin-top:12px;">Importing adds tickets from the file that aren't already here (matched by ID), so re-importing the same file won't create duplicates.</p>
+            </div>
+
+        </div>
+    </aside>
+
+    <div class="notification" id="notification"></div>
+
+    <script>
+        let todos = JSON.parse(localStorage.getItem('todos')) || [];
+        let todoIdCounter = todos.length > 0 ? Math.max(...todos.map(t => t.id)) + 1 : 1;
+        let recognition = null;
+        let isRecording = false;
+        let finalTranscript = '';
+        let voiceBaseHtml = '';
+        let voiceFinalSegments = [];
+        let currentFilterDate = null;
+        let currentFilterStartDate = null;
+        let currentFilterEndDate = null;
+        let currentFilterMonth = null;
+        let currentFilterYear = null;
+        let currentFilterMonthAny = null;
+        let editingId = null;
+        let currentStatus = 'all';
+        let currentSearchText = '';
+        let currentSearchField = 'all';
+
+        const PANEL_TITLES = { add: 'Add a task', search: 'Find tasks', export: 'Download PDF', excel: 'Download Excel', data: 'Save & restore' };
+
+        // ---------- Date helpers ----------
+        function getTodayStr() {
+            const d = new Date();
+            const mm = String(d.getMonth() + 1).padStart(2, '0');
+            const dd = String(d.getDate()).padStart(2, '0');
+            return `${d.getFullYear()}-${mm}-${dd}`;
+        }
+        function formatDate(dateStr) {
+            const p = dateStr.split('-').map(Number);
+            return new Date(p[0], p[1] - 1, p[2]).toLocaleDateString(undefined, {
+                weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
+            });
+        }
+        function formatDateTime(iso) {
+            if (!iso) return '';
+            const d = new Date(iso);
+            if (isNaN(d.getTime())) return '';
+            return d.toLocaleString(undefined, {
+                year: 'numeric', month: 'short', day: 'numeric',
+                hour: 'numeric', minute: '2-digit'
+            });
+        }
+
+        // ---------- Drawer / navigation ----------
+        function openPanel(name) {
+            document.querySelectorAll('.panel').forEach(p => p.style.display = 'none');
+            const panel = document.getElementById('panel-' + name);
+            if (panel) panel.style.display = 'block';
+            document.getElementById('drawerTitle').textContent = PANEL_TITLES[name] || '';
+            document.getElementById('drawer').classList.add('open');
+            document.getElementById('backdrop').classList.add('show');
+            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+            const btn = document.getElementById('nav-' + name);
+            if (btn) btn.classList.add('active');
+            if (name === 'add') {
+                setTimeout(() => document.getElementById('todoInput').focus(), 300);
+            }
+        }
+        function closeDrawer() {
+            document.getElementById('drawer').classList.remove('open');
+            document.getElementById('backdrop').classList.remove('show');
+            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+            if (isRecording) stopRecording();
+        }
+        function goHome() {
+            currentFilterDate = getTodayStr();
+            currentFilterStartDate = null;
+            currentFilterEndDate = null;
+            currentFilterMonth = null;
+            currentFilterYear = null;
+            currentFilterMonthAny = null;
+            currentSearchText = '';
+            const sd = document.getElementById('searchDate'); if (sd) sd.value = currentFilterDate;
+            const st = document.getElementById('searchText'); if (st) st.value = '';
+            renderTodos();
+            closeDrawer();
+        }
+        function showAll() {
+            currentFilterDate = null;
+            currentFilterStartDate = null;
+            currentFilterEndDate = null;
+            currentFilterMonth = null;
+            currentFilterYear = null;
+            currentFilterMonthAny = null;
+            currentSearchText = '';
+            const sd = document.getElementById('searchDate'); if (sd) sd.value = '';
+            const st = document.getElementById('searchText'); if (st) st.value = '';
+            renderTodos();
+            closeDrawer();
+        }
+        function setStatus(s) {
+            currentStatus = s;
+            document.querySelectorAll('.filt').forEach(b => b.classList.remove('active'));
+            const btn = document.getElementById('filt-' + s);
+            if (btn) btn.classList.add('active');
+            renderTodos();
+        }
+        function toggleFullscreen() {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen().catch(() => {});
+            } else {
+                document.exitFullscreen();
+            }
+        }
+
+        // ---------- Speech recognition ----------
+        if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+            const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+            recognition = new SR();
+            recognition.continuous = true;
+            recognition.interimResults = true;
+            recognition.lang = 'en-US';
+
+            recognition.onstart = function() {
+                isRecording = true;
+                document.getElementById('voiceBtn').classList.add('recording');
+                document.getElementById('voiceIcon').textContent = '⏹️';
+                document.getElementById('voiceText').textContent = 'Stop';
+                document.getElementById('voiceIndicator').classList.add('active');
+            };
+            recognition.onresult = function(event) {
+                let interim = '';
+                for (let i = event.resultIndex; i < event.results.length; i++) {
+                    const tr = event.results[i][0].transcript;
+                    if (event.results[i].isFinal) {
+                        // Mobile Chrome can send earlier final results again. Store each
+                        // result by index and render the complete transcript once.
+                        voiceFinalSegments[i] = tr;
+                    }
+                    else interim += tr;
+                }
+                const finalParts = voiceFinalSegments.filter(Boolean);
+                const uniqueParts = finalParts.filter(function (part, index) {
+                    return index === 0 || part.trim().toLowerCase() !== finalParts[index - 1].trim().toLowerCase();
+                });
+                const transcript = uniqueParts.join(' ').replace(/\s+/g, ' ').trim();
+                if (transcript !== finalTranscript) {
+                    finalTranscript = transcript;
+                    todoInputEl.innerHTML = voiceBaseHtml;
+                    if (transcript) todoInputEl.appendChild(document.createTextNode(transcript + ' '));
+                }
+                const live = document.getElementById('voiceInterim');
+                if (live) live.textContent = interim;
+            };
+            recognition.onerror = function(event) {
+                if (event.error === 'no-speech' || event.error === 'aborted') return;
+                if (event.error === 'not-allowed' || event.error === 'service-not-allowed') {
+                    showNotification('Microphone access was blocked.', 'error');
+                    stopRecording();
+                } else {
+                    showNotification('Voice error: ' + event.error, 'error');
+                }
+            };
+            recognition.onend = function() {
+                if (isRecording) {
+                    // The next mobile recognition session starts with a fresh result
+                    // list, so commit this session before restarting it.
+                    voiceBaseHtml = todoInputEl.innerHTML;
+                    voiceFinalSegments = [];
+                    finalTranscript = '';
+                    try { recognition.start(); }
+                    catch (e) {
+                        setTimeout(() => { if (isRecording) { try { recognition.start(); } catch (e2) {} } }, 250);
+                    }
+                }
+            };
+        } else {
+            document.getElementById('voiceBtn').style.display = 'none';
+        }
+
+        function toggleVoiceRecording() { isRecording ? stopRecording() : startRecording(); }
+        function startRecording() {
+            if (recognition && !isRecording) {
+                finalTranscript = '';
+                voiceFinalSegments = [];
+                voiceBaseHtml = todoInputEl.innerHTML;
+                isRecording = true;
+                try { recognition.start(); } catch (e) {}
+            }
+        }
+        function stopRecording() {
+            isRecording = false;
+            if (recognition) { try { recognition.stop(); } catch (e) {} }
+            document.getElementById('voiceBtn').classList.remove('recording');
+            document.getElementById('voiceIcon').textContent = '🎤';
+            document.getElementById('voiceText').textContent = 'Speak';
+            document.getElementById('voiceIndicator').classList.remove('active');
+            const live = document.getElementById('voiceInterim');
+            if (live) live.textContent = '';
+        }
+
+        // ---------- Storage & notifications ----------
+        function saveTodos() {
+            localStorage.setItem('todos', JSON.stringify(todos));
+            updateStats();
+        }
+        function showNotification(message, type = 'success') {
+            const n = document.getElementById('notification');
+            n.textContent = message;
+            n.style.background = type === 'success' ? 'var(--green)' : 'var(--red)';
+            n.classList.add('show');
+            setTimeout(() => n.classList.remove('show'), 3000);
+        }
+
+        // ---------- Core actions ----------
+        function addTodo() {
+            const input = document.getElementById('todoInput');
+            const text = sanitizeHtml(input.innerHTML);
+            const plain = (input.innerText || '').trim();
+            if (plain === '') { showNotification('Type, speak, or paste a task first.', 'error'); return; }
+
+            let date = document.getElementById('entryDate').value;
+            if (!date) { date = getTodayStr(); document.getElementById('entryDate').value = date; }
+
+            const actionEl = document.getElementById('actionInput');
+            const prioEl = document.getElementById('priorityInput');
+            const pocEl = document.getElementById('pocInput');
+            const emailEl = document.getElementById('emailInput');
+            const fromEl = document.getElementById('emailFromInput');
+            const toEl = document.getElementById('emailToInput');
+            const ccEl = document.getElementById('emailCcInput');
+            const whenEl = document.getElementById('emailWhenInput');
+            const titleEl = document.getElementById('emailTitleInput');
+            const codeEl = document.getElementById('emailCodeInput');
+
+            todos.unshift({
+                id: todoIdCounter++,
+                text: text,
+                rich: true,
+                priority: prioEl ? prioEl.value : 'medium',
+                action: actionEl.value.trim(),
+                poc: pocEl.value.trim(),
+                emailFrom: fromEl.value.trim(),
+                emailTo: toEl.value.trim(),
+                emailCc: ccEl.value.trim(),
+                emailWhen: whenEl.value.trim(),
+                email: emailEl.value.trim(),
+                emailTitle: titleEl.value.trim(),
+                emailCode: codeEl.value.trim(),
+                steps: draftSteps.slice(),
+                pocs: draftPocs.slice(),
+                date: date,
+                completed: false,
+                createdAt: new Date().toISOString()
+            });
+            saveTodos();
+
+            currentFilterDate = date;
+            currentFilterStartDate = null;
+            currentFilterEndDate = null;
+            currentFilterMonth = null;
+            currentFilterYear = null;
+            currentFilterMonthAny = null;
+            currentSearchText = '';
+            const sd0 = document.getElementById('searchDate'); if (sd0) sd0.value = date;
+            const st0 = document.getElementById('searchText'); if (st0) st0.value = '';
+            renderTodos();
+
+            input.innerHTML = '';
+            if (prioEl) prioEl.value = 'medium';
+            actionEl.value = ''; pocEl.value = ''; emailEl.value = ''; titleEl.value = '';
+            codeEl.value = ''; fromEl.value = ''; toEl.value = ''; ccEl.value = ''; whenEl.value = '';
+            draftSteps = []; renderDraftSteps();
+            draftPocs = []; renderDraftPocs();
+            finalTranscript = '';
+            showNotification('Pinned to ' + formatDate(date));
+            closeDrawer();
+        }
+
+        function toggleTodo(id) {
+            const t = todos.find(t => t.id === id);
+            if (!t) return;
+            if (t.steps && t.steps.length) {
+                const target = !t.completed;
+                t.steps.forEach(s => s.done = target);
+                t.completed = target;
+            } else {
+                t.completed = !t.completed;
+            }
+            saveTodos(); renderTodos();
+        }
+        function deleteTodo(id) {
+            todos = todos.filter(t => t.id !== id);
+            saveTodos(); renderTodos();
+            showNotification('Task removed.');
+        }
+
+        // ---------- Editing ----------
+        function editTodo(id) {
+            editingId = id;
+            renderTodos();
+            const el = document.getElementById('editText-' + id);
+            if (el) placeCaretEnd(el);
+        }
+        // Read the current edit-form values back into the ticket, so mutating steps/POCs
+        // mid-edit (which re-renders) does not discard unsaved text or field edits.
+        function captureEdit(id) {
+            const t = todos.find(x => x.id === id);
+            if (!t) return;
+            const txt = document.getElementById('editText-' + id);
+            if (txt) t.text = sanitizeHtml(txt.innerHTML);
+            const gv = (pfx, key) => { const el = document.getElementById(pfx + '-' + id); if (el) t[key] = el.value.trim(); };
+            gv('editAction', 'action');
+            gv('editPoc', 'poc');
+            gv('editFrom', 'emailFrom');
+            gv('editTo', 'emailTo');
+            gv('editCc', 'emailCc');
+            gv('editWhen', 'emailWhen');
+            gv('editEmail', 'email');
+            gv('editTitle', 'emailTitle');
+            gv('editCode', 'emailCode');
+            if (editingId === id) {
+                const pocs = t.pocs || [];
+                pocs.forEach(function (p, i) {
+                    const name = document.getElementById('editPocName-' + id + '-' + i);
+                    const work = document.getElementById('editPocWork-' + id + '-' + i);
+                    if (name) p.name = name.value.trim();
+                    if (work) p.work = work.value.trim();
+                });
+                const steps = t.steps || [];
+                steps.forEach(function (s, i) {
+                    const step = document.getElementById('editStep-' + id + '-' + i);
+                    if (step) s.text = step.value.trim();
+                });
+            }
+            const pe = document.getElementById('editPriority-' + id); if (pe) t.priority = pe.value;
+        }
+        function saveEdit(id) {
+            const textEl = document.getElementById('editText-' + id);
+            if (!textEl) return;
+            const newHtml = sanitizeHtml(textEl.innerHTML);
+            const plain = (textEl.innerText || '').trim();
+            if (plain === '') { showNotification('A task needs some text.', 'error'); return; }
+            const t = todos.find(t => t.id === id);
+            if (t) {
+                captureEdit(id);
+                t.text = newHtml;
+                t.action = document.getElementById('editAction-' + id).value.trim();
+                t.poc = document.getElementById('editPoc-' + id).value.trim();
+                t.emailFrom = document.getElementById('editFrom-' + id).value.trim();
+                t.emailTo = document.getElementById('editTo-' + id).value.trim();
+                t.emailCc = document.getElementById('editCc-' + id).value.trim();
+                t.emailWhen = document.getElementById('editWhen-' + id).value.trim();
+                t.email = document.getElementById('editEmail-' + id).value.trim();
+                t.emailTitle = document.getElementById('editTitle-' + id).value.trim();
+                t.emailCode = document.getElementById('editCode-' + id).value.trim();
+                t.priority = document.getElementById('editPriority-' + id).value;
+                t.updatedAt = new Date().toISOString();
+                saveTodos();
+            }
+            editingId = null;
+            renderTodos();
+            showNotification('Task updated.');
+        }
+        function cancelEdit() { editingId = null; renderTodos(); }
+
+        // ---------- Steps (sub-checklist) ----------
+        let draftSteps = [];
+        function renderDraftSteps() {
+            const ul = document.getElementById('draftSteps');
+            if (!ul) return;
+            ul.innerHTML = draftSteps.map((s, i) => '<li><span>' + escapeHtml(s.text) + '</span><button type="button" onclick="removeDraftStep(' + i + ')">\u2715</button></li>').join('');
+        }
+        function addStepToDraft() {
+            const el = document.getElementById('stepInput');
+            const v = (el ? el.value : '').trim();
+            if (!v) return;
+            draftSteps.push({ text: v, done: false });
+            el.value = ''; el.focus();
+            renderDraftSteps();
+        }
+        function removeDraftStep(i) { draftSteps.splice(i, 1); renderDraftSteps(); }
+        function recomputeCompleted(t) { if (t.steps && t.steps.length) t.completed = t.steps.every(s => s.done); }
+        function toggleStep(id, i) {
+            const t = todos.find(t => t.id === id);
+            if (!t || !t.steps || !t.steps[i]) return;
+            if (editingId === id) captureEdit(id);
+            t.steps[i].done = !t.steps[i].done;
+            recomputeCompleted(t);
+            saveTodos(); renderTodos();
+        }
+        function tickAllSteps(id) {
+            const t = todos.find(t => t.id === id);
+            if (!t || !t.steps || !t.steps.length) return;
+            if (editingId === id) captureEdit(id);
+            const allDone = t.steps.every(s => s.done);
+            t.steps.forEach(s => s.done = !allDone);
+            recomputeCompleted(t);
+            saveTodos(); renderTodos();
+        }
+        function addStep(id) {
+            const t = todos.find(t => t.id === id);
+            if (!t) return;
+            const el = document.getElementById('cardStep-' + id);
+            const v = (el ? el.value : '').trim();
+            if (!v) return;
+            if (editingId === id) captureEdit(id);
+            if (!t.steps) t.steps = [];
+            t.steps.push({ text: v, done: false });
+            recomputeCompleted(t);
+            saveTodos(); renderTodos();
+            const ne = document.getElementById('cardStep-' + id);
+            if (ne) ne.focus();
+        }
+        function removeStep(id, i) {
+            const t = todos.find(t => t.id === id);
+            if (!t || !t.steps) return;
+            if (editingId === id) captureEdit(id);
+            t.steps.splice(i, 1);
+            recomputeCompleted(t);
+            saveTodos(); renderTodos();
+        }
+        function buildStepsHtml(t) {
+            const steps = t.steps || [];
+            const done = steps.filter(s => s.done).length;
+            const head = steps.length ? '<div class="steps-head"><span class="steps-progress">Steps ' + done + '/' + steps.length + '</span><button class="steps-all" onclick="tickAllSteps(' + t.id + ')">' + (done === steps.length ? 'Untick all' : '\u2713 Tick all') + '</button></div>' : '';
+            const items = steps.map((s, i) => editingId === t.id
+                ? '<div class="step ' + (s.done ? 'done' : '') + '"><input type="checkbox" ' + (s.done ? 'checked' : '') + ' onchange="toggleStep(' + t.id + ',' + i + ')"><input type="text" id="editStep-' + t.id + '-' + i + '" value="' + escapeAttr(s.text) + '" placeholder="Step"><button class="step-del" title="Remove step" onclick="removeStep(' + t.id + ',' + i + ')">\u2715</button></div>'
+                : '<label class="step ' + (s.done ? 'done' : '') + '"><input type="checkbox" ' + (s.done ? 'checked' : '') + ' onchange="toggleStep(' + t.id + ',' + i + ')"><span>' + escapeHtml(s.text) + '</span><button class="step-del" title="Remove step" onclick="removeStep(' + t.id + ',' + i + ')">\u2715</button></label>').join('');
+            const addRow = '<div class="step-add"><input type="text" id="cardStep-' + t.id + '" placeholder="Add a step\u2026" onkeydown="if(event.key===&#39;Enter&#39;){event.preventDefault();addStep(' + t.id + ');}"><button onclick="addStep(' + t.id + ')">Add</button></div>';
+            return '<div class="steps">' + head + items + addRow + '</div>';
+        }
+
+        // ---------- Sub-POCs (multiple people + what each did) ----------
+        let draftPocs = [];
+        function renderDraftPocs() {
+            const ul = document.getElementById('draftPocs');
+            if (!ul) return;
+            ul.innerHTML = draftPocs.map((p, i) => '<li><span><span class="who">' + escapeHtml(p.name) + '</span>' + (p.work ? ' \u2014 ' + escapeHtml(p.work) : '') + '</span><button type="button" onclick="removeDraftPoc(' + i + ')">\u2715</button></li>').join('');
+        }
+        function addPocToDraft() {
+            const n = document.getElementById('pocNameInput');
+            const w = document.getElementById('pocWorkInput');
+            const name = (n ? n.value : '').trim();
+            const work = (w ? w.value : '').trim();
+            if (!name) { showNotification('Enter a POC name.', 'error'); return; }
+            draftPocs.push({ name: name, work: work });
+            n.value = ''; w.value = ''; n.focus();
+            renderDraftPocs();
+        }
+        function removeDraftPoc(i) { draftPocs.splice(i, 1); renderDraftPocs(); }
+        function addPoc(id) {
+            const t = todos.find(t => t.id === id);
+            if (!t) return;
+            const n = document.getElementById('cardPocName-' + id);
+            const w = document.getElementById('cardPocWork-' + id);
+            const name = (n ? n.value : '').trim();
+            const work = (w ? w.value : '').trim();
+            if (!name) return;
+            if (editingId === id) captureEdit(id);
+            if (!t.pocs) t.pocs = [];
+            t.pocs.push({ name: name, work: work });
+            saveTodos(); renderTodos();
+            const nn = document.getElementById('cardPocName-' + id);
+            if (nn) nn.focus();
+        }
+        function removePoc(id, i) {
+            const t = todos.find(t => t.id === id);
+            if (!t || !t.pocs) return;
+            if (editingId === id) captureEdit(id);
+            t.pocs.splice(i, 1);
+            saveTodos(); renderTodos();
+        }
+        function buildPocsHtml(t) {
+            const pocs = t.pocs || [];
+            const head = pocs.length ? '<div class="pocs-head">People &amp; what they did</div>' : '';
+            const items = pocs.map((p, i) => editingId === t.id
+                ? '<div class="poc-item"><textarea id="editPocName-' + t.id + '-' + i + '" rows="2" placeholder="POC name">' + escapeHtml(p.name) + '</textarea><textarea id="editPocWork-' + t.id + '-' + i + '" rows="2" placeholder="What this POC did">' + escapeHtml(p.work) + '</textarea><button class="poc-del" title="Remove" onclick="removePoc(' + t.id + ',' + i + ')">\u2715</button></div>'
+                : '<div class="poc-item"><span class="who">' + escapeHtml(p.name) + '</span><span class="did">' + (p.work ? escapeHtml(p.work) : '') + '</span><button class="poc-del" title="Remove" onclick="removePoc(' + t.id + ',' + i + ')">\u2715</button></div>').join('');
+            const addRow = '<div class="poc-add"><textarea rows="2" id="cardPocName-' + t.id + '" placeholder="POC name"></textarea><textarea rows="2" id="cardPocWork-' + t.id + '" placeholder="What this POC did" onkeydown="if(event.key===&#39;Enter&#39; && !event.shiftKey){event.preventDefault();addPoc(' + t.id + ');}"></textarea><button onclick="addPoc(' + t.id + ')">Add</button></div>';
+            return '<div class="pocs">' + head + items + addRow + '</div>';
+        }
+
+        // ---------- Search ----------
+        function searchByDate() {
+            const v = document.getElementById('searchDate').value;
+            if (!v) { showNotification('Pick a date to search.', 'error'); return; }
+            currentFilterDate = v;
+            currentFilterStartDate = null;
+            currentFilterEndDate = null;
+            currentFilterMonth = null;
+            currentFilterYear = null;
+            currentFilterMonthAny = null;
+            currentSearchText = '';
+            const st = document.getElementById('searchText'); if (st) st.value = '';
+            renderTodos();
+            showNotification('Showing ' + formatDate(v));
+            closeDrawer();
+        }
+        function searchByDateRange() {
+            const start = document.getElementById('searchStartDate').value;
+            const end = document.getElementById('searchEndDate').value;
+            if (!start || !end) { showNotification('Pick both a start date and an end date.', 'error'); return; }
+            if (start > end) { showNotification('Start date must be on or before the end date.', 'error'); return; }
+            currentFilterStartDate = start;
+            currentFilterEndDate = end;
+            currentFilterDate = null;
+            currentFilterMonth = null;
+            currentFilterYear = null;
+            currentFilterMonthAny = null;
+            currentSearchText = '';
+            const st = document.getElementById('searchText'); if (st) st.value = '';
+            renderTodos();
+            showNotification('Showing ' + formatDate(start) + ' to ' + formatDate(end));
+            closeDrawer();
+        }
+        function searchByMonth() {
+            const v = document.getElementById('searchMonth').value;
+            if (!v) { showNotification('Pick a month to show.', 'error'); return; }
+            currentFilterMonth = v;
+            currentFilterDate = null;
+            currentFilterStartDate = null;
+            currentFilterEndDate = null;
+            currentFilterYear = null;
+            currentFilterMonthAny = null;
+            currentSearchText = '';
+            const st = document.getElementById('searchText'); if (st) st.value = '';
+            renderTodos();
+            const p = v.split('-').map(Number);
+            showNotification('Showing ' + new Date(p[0], p[1] - 1, 1).toLocaleDateString(undefined, { month: 'long', year: 'numeric' }));
+            closeDrawer();
+        }
+        function searchByYear() {
+            const el = document.getElementById('searchYear');
+            const v = el ? String(el.value).trim() : '';
+            const year = Number(v);
+            if (!/^\d{4}$/.test(v) || !Number.isInteger(year) || year < 2000 || year > 2100) {
+                showNotification('Enter a valid year between 2000 and 2100.', 'error'); return;
+            }
+            currentFilterYear = String(year);
+            currentFilterDate = null;
+            currentFilterStartDate = null;
+            currentFilterEndDate = null;
+            currentFilterMonth = null;
+            currentFilterMonthAny = null;
+            currentSearchText = '';
+            const st = document.getElementById('searchText'); if (st) st.value = '';
+            renderTodos();
+            showNotification('Showing ' + year);
+            closeDrawer();
+        }
+        function searchByMonthAny() {
+            const el = document.getElementById('searchMonthAny');
+            const v = el ? String(el.value) : '';
+            if (!v) { showNotification('Pick a month to show.', 'error'); return; }
+            currentFilterMonthAny = Number(v);
+            currentFilterDate = null;
+            currentFilterStartDate = null;
+            currentFilterEndDate = null;
+            currentFilterMonth = null;
+            currentFilterYear = null;
+            currentSearchText = '';
+            const st = document.getElementById('searchText'); if (st) st.value = '';
+            renderTodos();
+            showNotification('Showing every ' + new Date(2000, Number(v) - 1, 1).toLocaleDateString(undefined, { month: 'long' }));
+            closeDrawer();
+        }
+        function runSearch() {
+            const st = document.getElementById('searchText');
+            const searchText = (st ? st.value : '').trim();
+            const searchField = document.getElementById('searchField').value;
+            
+            if (searchText !== '') {
+                const dlgStart = document.getElementById('dialogStartDate');
+                const dlgEnd = document.getElementById('dialogEndDate');
+                dlgStart.value = document.getElementById('searchStartDate').value || getTodayStr();
+                dlgEnd.value = document.getElementById('searchEndDate').value || getTodayStr();
+                document.getElementById('dateSearchDialog').showModal();
+                return;
+            }
+
+            currentSearchText = '';
+            currentSearchField = searchField;
+            currentFilterDate = null;
+            currentFilterStartDate = null;
+            currentFilterEndDate = null;
+            currentFilterMonth = null;
+            currentFilterYear = null;
+            currentFilterMonthAny = null;
+            document.getElementById('searchDate').value = '';
+            renderTodos();
+            showNotification('Showing all tickets.');
+            closeDrawer();
+        }
+        function closeDateSearchDialog(apply) {
+            const dialog = document.getElementById('dateSearchDialog');
+            if (!apply) {
+                dialog.close();
+                return;
+            }
+            
+            const start = document.getElementById('dialogStartDate').value;
+            const end = document.getElementById('dialogEndDate').value;
+            
+            if (!start || !end) {
+                showNotification('Pick both a start date and an end date.', 'error');
+                return;
+            }
+            if (start > end) {
+                showNotification('Start date must be on or before the end date.', 'error');
+                return;
+            }
+            
+            const st = document.getElementById('searchText');
+            currentSearchText = (st ? st.value : '').trim();
+            currentSearchField = document.getElementById('searchField').value;
+            
+            currentFilterStartDate = start;
+            currentFilterEndDate = end;
+            currentFilterDate = null;
+            currentFilterMonth = null;
+            currentFilterYear = null;
+            currentFilterMonthAny = null;
+            
+            document.getElementById('searchStartDate').value = start;
+            document.getElementById('searchEndDate').value = end;
+            document.getElementById('searchDate').value = '';
+            
+            dialog.close();
+            renderTodos();
+            
+            if (currentSearchText) {
+                showNotification('Searching for "' + currentSearchText + '" from ' + formatDate(start) + ' to ' + formatDate(end));
+            } else {
+                showNotification('Showing tickets from ' + formatDate(start) + ' to ' + formatDate(end));
+            }
+            closeDrawer();
+        }
+        function matchesSearch(t) {
+            if (!currentSearchText) return true;
+            const q = currentSearchText.toLowerCase();
+            const f = currentSearchField;
+            const val = (key) => (key === 'text' ? htmlToText(t.text || '') : (t[key] || '')).toString().toLowerCase();
+            if (f === 'all') {
+                const hay = ['text', 'action', 'poc', 'emailFrom', 'emailTo', 'emailCc', 'email', 'emailTitle', 'emailCode', 'emailWhen', 'priority']
+                    .map(val).join('\n');
+                return hay.indexOf(q) !== -1;
+            }
+            return val(f).indexOf(q) !== -1;
+        }
+        // The exact set of tickets currently shown on the wall (date + status + search).
+        function getFilteredList() {
+            let list = todos.slice();
+            if (currentFilterDate) list = list.filter(t => t.date === currentFilterDate);
+            else if (currentFilterStartDate && currentFilterEndDate) list = list.filter(t => t.date >= currentFilterStartDate && t.date <= currentFilterEndDate);
+            else if (currentFilterMonth) list = list.filter(t => t.date.slice(0, 7) === currentFilterMonth);
+            else if (currentFilterYear) list = list.filter(t => t.date.slice(0, 4) === currentFilterYear);
+            else if (currentFilterMonthAny) list = list.filter(t => Number(t.date.slice(5, 7)) === currentFilterMonthAny);
+            if (currentStatus === 'open') list = list.filter(t => !t.completed);
+            else if (currentStatus === 'closed') list = list.filter(t => t.completed);
+            if (currentSearchText) list = list.filter(matchesSearch);
+            return list;
+        }
+        function currentViewLabel() {
+            const parts = [];
+            if (currentSearchText) parts.push('\u201c' + currentSearchText + '\u201d');
+            if (currentStatus !== 'all') parts.push(currentStatus);
+            if (currentFilterDate) parts.push(formatDate(currentFilterDate));
+            else if (currentFilterStartDate && currentFilterEndDate) parts.push(formatDate(currentFilterStartDate) + ' to ' + formatDate(currentFilterEndDate));
+            else if (currentFilterMonth) { const p = currentFilterMonth.split('-').map(Number); parts.push(new Date(p[0], p[1] - 1, 1).toLocaleDateString(undefined, { month: 'long', year: 'numeric' })); }
+            else if (currentFilterYear) parts.push('Year ' + currentFilterYear);
+            else if (currentFilterMonthAny) parts.push('Every ' + new Date(2000, currentFilterMonthAny - 1, 1).toLocaleDateString(undefined, { month: 'long' }));
+            return parts.length ? ('Filtered \u2014 ' + parts.join('  \u00b7  ')) : 'All tasks';
+        }
+        function slugify(s) {
+            return (s || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 30);
+        }
+        function currentViewSuffix() {
+            return (currentFilterDate ? '-' + currentFilterDate : (currentFilterStartDate && currentFilterEndDate ? '-' + currentFilterStartDate + '-to-' + currentFilterEndDate : (currentFilterMonth ? '-' + currentFilterMonth : (currentFilterYear ? '-year-' + currentFilterYear : (currentFilterMonthAny ? '-month-' + currentFilterMonthAny : '')))))
+                + (currentSearchText ? '-' + slugify(currentSearchText) : '')
+                + (currentStatus !== 'all' ? '-' + currentStatus : '');
+        }
+
+        // ---------- Rendering ----------
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text == null ? '' : text;
+            return div.innerHTML;
+        }
+        function sanitizeHtml(html) {
+            const box = document.createElement('div');
+            box.innerHTML = html || '';
+            box.querySelectorAll('script,style,meta,link,title,iframe,object,embed,form,input,button').forEach(el => el.remove());
+            box.querySelectorAll('*').forEach(el => {
+                [...el.attributes].forEach(attr => {
+                    const name = attr.name.toLowerCase();
+                    if (name.startsWith('on')) el.removeAttribute(attr.name);
+                    else if ((name === 'href' || name === 'src') && /^\s*javascript:/i.test(attr.value)) el.removeAttribute(attr.name);
+                    else if (name === 'class' || name === 'id') el.removeAttribute(attr.name);
+                });
+            });
+            collapseSpacing(box);
+            return box.innerHTML.trim();
+        }
+        // Strip the blank lines and gaps that email clients paste in.
+        function collapseSpacing(box) {
+            // Collapse runs of spaces / non-breaking spaces inside text.
+            const walker = document.createTreeWalker(box, NodeFilter.SHOW_TEXT, null);
+            const textNodes = [];
+            while (walker.nextNode()) textNodes.push(walker.currentNode);
+            textNodes.forEach(n => { n.nodeValue = n.nodeValue.replace(/[\u00a0\s]{2,}/g, ' '); });
+
+            // Remove empty wrapper elements (including ones holding only <br>), repeatedly.
+            let changed = true;
+            while (changed) {
+                changed = false;
+                box.querySelectorAll('p, div, span, li, ul, ol, h1, h2, h3, h4, h5, h6, section, article').forEach(el => {
+                    const hasMedia = el.querySelector('img, table');
+                    const txt = (el.textContent || '').replace(/\u00a0/g, ' ').trim();
+                    if (!hasMedia && txt === '') { el.remove(); changed = true; }
+                });
+            }
+
+            // Collapse consecutive <br> and trim leading/trailing ones.
+            box.querySelectorAll('br + br').forEach(br => br.remove());
+            while (box.firstChild && box.firstChild.nodeName === 'BR') box.removeChild(box.firstChild);
+            while (box.lastChild && box.lastChild.nodeName === 'BR') box.removeChild(box.lastChild);
+        }
+        function htmlToText(html) {
+            const box = document.createElement('div');
+            box.innerHTML = html || '';
+            return (box.innerText || box.textContent || '').replace(/\u00a0/g, ' ');
+        }
+        function escapeAttr(text) {
+            return (text || '').replace(/&/g, '&amp;').replace(/"/g, '&quot;')
+                .replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+        function buildPriorityHtml(t) {
+            const lvl = t.priority || 'medium';
+            const label = lvl.charAt(0).toUpperCase() + lvl.slice(1);
+            return '<div class="prio prio-' + lvl + '">' + label + ' priority</div>';
+        }
+        function buildTopMetaHtml(t) {
+            const rows = [];
+            if (t.emailFrom) rows.push('<div class="m-row"><span class="m-key">From:</span><span>' + escapeHtml(t.emailFrom) + '</span></div>');
+            if (t.emailTo) rows.push('<div class="m-row"><span class="m-key">To:</span><span>' + escapeHtml(t.emailTo) + '</span></div>');
+            if (t.emailCc) rows.push('<div class="m-row"><span class="m-key">CC:</span><span>' + escapeHtml(t.emailCc) + '</span></div>');
+            if (t.emailTitle) rows.push('<div class="m-row"><span class="m-key">Email title:</span><span>' + escapeHtml(t.emailTitle) + '</span></div>');
+            if (t.emailWhen) rows.push('<div class="m-row"><span class="m-key">When:</span><span>' + escapeHtml(t.emailWhen) + '</span></div>');
+            return rows.length ? '<div class="todo-meta top-meta">' + rows.join('') + '</div>' : '';
+        }
+        function buildMetaHtml(t) {
+            const rows = [];
+            if (t.action) rows.push('<div class="m-row"><span class="m-key">Action:</span><span>' + escapeHtml(t.action) + '</span></div>');
+            if (t.poc) rows.push('<div class="m-row"><span class="m-key">POC:</span><span>' + escapeHtml(t.poc) + '</span></div>');
+            if (t.email) {
+                let href = 'mailto:' + t.email;
+                if (t.emailTitle) href += '?subject=' + encodeURIComponent(t.emailTitle);
+                rows.push('<div class="m-row"><span class="m-key">Email:</span><a href="' + escapeAttr(href) + '">' + escapeHtml(t.email) + '</a></div>');
+            }
+            if (t.emailCode) rows.push('<div class="m-row"><span class="m-key">Code:</span><span>' + escapeHtml(t.emailCode) + '</span></div>');
+            return rows.length ? '<div class="todo-meta">' + rows.join('') + '</div>' : '';
+        }
+
+        function renderTodos() {
+            const wall = document.getElementById('todoList');
+            let list = getFilteredList();
+
+            if (list.length === 0) {
+                const sw = currentStatus === 'open' ? 'open ' : currentStatus === 'closed' ? 'closed ' : '';
+                if (currentSearchText) {
+                    wall.innerHTML = `<div class="empty"><div class="big">🔍</div><h3>No matches</h3><p>Nothing ${sw}matched “${escapeHtml(currentSearchText)}”. Try another word, or use 🔍 Find to change the view.</p></div>`;
+                } else if (currentFilterDate) {
+                    wall.innerHTML = `<div class="empty"><div class="big">📭</div><h3>No ${sw}tickets for this date</h3><p>Nothing on ${formatDate(currentFilterDate)}. Tap ➕ Add to create one.</p></div>`;
+                } else if (currentFilterStartDate && currentFilterEndDate) {
+                    wall.innerHTML = `<div class="empty"><div class="big">📭</div><h3>No ${sw}tickets in this date range</h3><p>Nothing from ${formatDate(currentFilterStartDate)} to ${formatDate(currentFilterEndDate)}. Use 🔍 Find to pick another range.</p></div>`;
+                } else if (currentFilterMonth) {
+                    const p = currentFilterMonth.split('-').map(Number);
+                    const ml = new Date(p[0], p[1] - 1, 1).toLocaleDateString(undefined, { month: 'long', year: 'numeric' });
+                    wall.innerHTML = `<div class="empty"><div class="big">📭</div><h3>No ${sw}tickets in ${ml}</h3><p>Nothing this month. Use 🔍 Find to pick another range.</p></div>`;
+                } else if (currentFilterYear) {
+                    wall.innerHTML = `<div class="empty"><div class="big">📭</div><h3>No ${sw}tickets in ${currentFilterYear}</h3><p>Nothing this year. Use 🔍 Find to pick another range.</p></div>`;
+                } else if (currentFilterMonthAny) {
+                    const ml = new Date(2000, currentFilterMonthAny - 1, 1).toLocaleDateString(undefined, { month: 'long' });
+                    wall.innerHTML = `<div class="empty"><div class="big">📭</div><h3>No ${sw}tickets in ${ml}</h3><p>Nothing in this month across the available years. Use 🔍 Find to pick another range.</p></div>`;
+                } else {
+                    wall.innerHTML = `<div class="empty"><div class="big">🧱</div><h3>No ${sw}tickets yet</h3><p>Tap ➕ Add to create one${sw ? ', or switch the filter to All' : ''}.</p></div>`;
+                }
+                return;
+            }
+
+            const dates = [...new Set(list.map(t => t.date))].sort().reverse();
+            wall.innerHTML = dates.map(date => {
+                const items = list.filter(t => t.date === date);
+                const cards = items.map(t => {
+                    if (t.id === editingId) {
+                        return `
+                            <div class="note-card">
+                                <div class="edit-fields">
+                                    <label class="edit-lbl">📝 Task</label>
+                                    <div id="editText-${t.id}" class="edit-rich" contenteditable="true" data-placeholder="Task">${t.text}</div>
+                                    <label class="edit-lbl">🚩 Priority</label>
+                                    <select id="editPriority-${t.id}">
+                                        <option value="high" ${t.priority === 'high' ? 'selected' : ''}>High</option>
+                                        <option value="medium" ${(!t.priority || t.priority === 'medium') ? 'selected' : ''}>Medium</option>
+                                        <option value="low" ${t.priority === 'low' ? 'selected' : ''}>Low</option>
+                                    </select>
+                                    <label class="edit-lbl">📤 From</label>
+                                    <textarea id="editFrom-${t.id}" rows="2" placeholder="From">${escapeHtml(t.emailFrom)}</textarea>
+                                    <label class="edit-lbl">📨 To</label>
+                                    <textarea id="editTo-${t.id}" rows="2" placeholder="To">${escapeHtml(t.emailTo)}</textarea>
+                                    <label class="edit-lbl">📋 CC</label>
+                                    <textarea id="editCc-${t.id}" rows="2" placeholder="CC">${escapeHtml(t.emailCc)}</textarea>
+                                    <label class="edit-lbl">🕘 Email date & time</label>
+                                    <textarea id="editWhen-${t.id}" rows="2" placeholder="e.g. Fri 04-09-2026 11:52">${escapeHtml(t.emailWhen)}</textarea>
+                                    <label class="edit-lbl">✅ Action item</label>
+                                    <textarea id="editAction-${t.id}" rows="2" placeholder="Action item">${escapeHtml(t.action)}</textarea>
+                                    <label class="edit-lbl">👤 POC (person)</label>
+                                    <textarea id="editPoc-${t.id}" rows="2" placeholder="POC (person)">${escapeHtml(t.poc)}</textarea>
+                                    <label class="edit-lbl">📧 Email ID</label>
+                                    <textarea id="editEmail-${t.id}" rows="2" placeholder="Email ID">${escapeHtml(t.email)}</textarea>
+                                    <label class="edit-lbl">✉️ Email title</label>
+                                    <textarea id="editTitle-${t.id}" rows="2" placeholder="Email title">${escapeHtml(t.emailTitle)}</textarea>
+                                    <label class="edit-lbl">🔢 Email code</label>
+                                    <textarea id="editCode-${t.id}" rows="2" placeholder="Email code">${escapeHtml(t.emailCode)}</textarea>
+                                    <label class="edit-lbl">🧑‍🤝‍🧑 More POCs (who did what)</label>
+                                    ${buildPocsHtml(t)}
+                                    <label class="edit-lbl">🧩 Steps / sub-tasks</label>
+                                    ${buildStepsHtml(t)}
+                                </div>
+                                <div class="edit-actions-row">
+                                    <button class="btn-save" onclick="saveEdit(${t.id})">Save</button>
+                                    <button class="btn-cancel" onclick="cancelEdit()">Cancel</button>
+                                </div>
+                            </div>`;
+                    }
+                    return `
+                        <div class="note-card ${t.completed ? 'done' : ''}">
+                            <div class="note-top">
+                                <label class="check">
+                                    <input type="checkbox" ${t.completed ? 'checked' : ''} onchange="toggleTodo(${t.id})">
+                                    ${t.completed ? 'Closed' : 'Open'}
+                                </label>
+                                <div class="card-actions">
+                                    <button class="icon-btn edit" title="Edit" onclick="editTodo(${t.id})">✏️</button>
+                                    <button class="icon-btn del" title="Delete" onclick="deleteTodo(${t.id})">🗑️</button>
+                                </div>
+                            </div>
+                            ${buildPriorityHtml(t)}
+                            ${buildTopMetaHtml(t)}
+                            <div class="note-text">${t.text}</div>
+                            ${buildMetaHtml(t)}
+                            ${buildPocsHtml(t)}
+                            ${buildStepsHtml(t)}
+                            <div class="note-time">
+                                <span>🕒 Created ${formatDateTime(t.createdAt)}</span>
+                                ${t.updatedAt ? `<span>✏️ Edited ${formatDateTime(t.updatedAt)}</span>` : ''}
+                            </div>
+                        </div>`;
+                }).join('');
+
+                return `
+                    <section class="date-group">
+                        <div class="date-ribbon">
+                            <span class="d-day">${formatDate(date)}</span>
+                            <span class="d-count">${items.length} ${items.length === 1 ? 'task' : 'tasks'}</span>
+                        </div>
+                        <div class="cards">${cards}</div>
+                    </section>`;
+            }).join('');
+            reorderEmailFields();
+        }
+
+        function reorderEmailFields() {
+            const addTitle = document.getElementById('emailTitleInput');
+            const addWhen = document.getElementById('emailWhenInput');
+            if (addTitle && addWhen) {
+                addWhen.closest('.field').parentNode.insertBefore(addTitle.closest('.field'), addWhen.closest('.field'));
+            }
+            document.querySelectorAll('.edit-fields').forEach(function (fields) {
+                const titleLabel = Array.from(fields.querySelectorAll('.edit-lbl')).find(function (label) {
+                    return label.nextElementSibling && label.nextElementSibling.id.indexOf('editTitle-') === 0;
+                });
+                const whenLabel = Array.from(fields.querySelectorAll('.edit-lbl')).find(function (label) {
+                    return label.nextElementSibling && label.nextElementSibling.id.indexOf('editWhen-') === 0;
+                });
+                if (titleLabel && whenLabel) {
+                    const titleInput = titleLabel.nextElementSibling;
+                    fields.insertBefore(titleLabel, whenLabel);
+                    fields.insertBefore(titleInput, whenLabel);
+                }
+            });
+        }
+
+        function updateStats() {
+            const total = todos.length;
+            const done = todos.filter(t => t.completed).length;
+            document.getElementById('totalTodos').textContent = total + ' total';
+            document.getElementById('pendingTodos').textContent = (total - done) + ' open';
+            document.getElementById('completedTodos').textContent = done + ' closed';
+        }
+
+        // ---------- Input wiring ----------
+        const todoInputEl = document.getElementById('todoInput');
+
+        // Keep formatting when pasting (e.g. an email) into the task or edit fields.
+        function handleRichPaste(e) {
+            e.preventDefault();
+            const cb = e.clipboardData || window.clipboardData;
+            const html = cb ? cb.getData('text/html') : '';
+            if (html) {
+                insertHtmlAtCaret(sanitizeHtml(html));
+            } else {
+                const text = cb ? cb.getData('text/plain') : '';
+                document.execCommand('insertText', false, text);
+            }
+        }
+        function insertHtmlAtCaret(html) {
+            const sel = window.getSelection();
+            if (!sel || !sel.rangeCount) {
+                const el = document.querySelector('.rich-input:focus, .edit-rich:focus') || todoInputEl;
+                const tmp = document.createElement('div'); tmp.innerHTML = html;
+                while (tmp.firstChild) el.appendChild(tmp.firstChild);
+                return;
+            }
+            const range = sel.getRangeAt(0);
+            range.deleteContents();
+            const frag = range.createContextualFragment(html);
+            range.insertNode(frag);
+            range.collapse(false);
+            sel.removeAllRanges(); sel.addRange(range);
+        }
+        function placeCaretEnd(el) {
+            el.focus();
+            const range = document.createRange();
+            range.selectNodeContents(el);
+            range.collapse(false);
+            const sel = window.getSelection();
+            sel.removeAllRanges(); sel.addRange(range);
+        }
+        function appendTextToEditor(text) {
+            if (!todoInputEl) return;
+            todoInputEl.appendChild(document.createTextNode(text));
+        }
+
+        // Sanitized paste on any of our rich editors (add box + inline edit boxes).
+        document.addEventListener('paste', function(e) {
+            const el = e.target && e.target.closest ? e.target.closest('.rich-input, .edit-rich') : null;
+            if (el) handleRichPaste(e);
+        });
+
+        document.getElementById('searchDate').addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') { e.preventDefault(); searchByDate(); }
+        });
+        document.getElementById('searchText').addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') { e.preventDefault(); runSearch(); }
+        });
+        // Keep the active field above the mobile on-screen keyboard.
+        let mobileFocusedField = null;
+        function keepMobileFieldVisible() {
+            if (!mobileFocusedField || window.innerWidth > 700) return;
+            setTimeout(function () {
+                if (mobileFocusedField && document.activeElement === mobileFocusedField) {
+                    mobileFocusedField.scrollIntoView({ block: 'center', inline: 'nearest', behavior: 'smooth' });
+                }
+            }, 120);
+        }
+        document.addEventListener('focusin', function (e) {
+            const field = e.target && e.target.closest ? e.target.closest('input, textarea, select, .rich-input, .edit-rich') : null;
+            if (field) { mobileFocusedField = field; keepMobileFieldVisible(); }
+        });
+        document.addEventListener('focusout', function (e) {
+            if (e.target === mobileFocusedField) mobileFocusedField = null;
+        });
+        if (window.visualViewport) window.visualViewport.addEventListener('resize', keepMobileFieldVisible);
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') closeDrawer();
+        });
+        // Ctrl+S / Cmd+S -> download a JSON backup (browser copy is already auto-saved).
+        document.addEventListener('keydown', function(e) {
+            if ((e.ctrlKey || e.metaKey) && (e.key === 's' || e.key === 'S')) {
+                e.preventDefault();
+                exportJSON();
+            }
+        });
+
+        // ---------- PDF export (render rich content via SVG, then into PDF) ----------
+        // Build the small key/value detail lines for a ticket.
+        function pdfMetaHtml(t) {
+            var line = function (k, v) { return '<div style="font-size:12px;color:#55506b;margin-top:3px;"><b style="color:#4a3fd6;">' + k + ':</b> ' + escapeHtml(v) + '</div>'; };
+            var h = '';
+            h += line('Priority', (t.priority || 'medium'));
+            if (t.emailFrom) h += line('From', t.emailFrom);
+            if (t.emailTo) h += line('To', t.emailTo);
+            if (t.emailCc) h += line('CC', t.emailCc);
+            if (t.emailTitle) h += line('Email title', t.emailTitle);
+            if (t.emailWhen) h += line('When', t.emailWhen);
+            if (t.action) h += line('Action', t.action);
+            if (t.poc) h += line('POC', t.poc);
+            if (t.email) h += line('Email', t.email);
+            if (t.emailCode) h += line('Code', t.emailCode);
+            if (t.pocs && t.pocs.length) {
+                h += '<div style="font-size:12px;font-weight:700;color:#4a3fd6;margin-top:7px;margin-bottom:3px;">People &amp; what they did</div>';
+                h += '<table style="width:100%;table-layout:fixed;border-collapse:collapse;font-size:12px;color:#55506b;">'
+                    + '<thead><tr>'
+                    + '<th style="width:32%;text-align:left;padding:5px 6px;background:#f1f0fa;border:1px solid #dcd9ee;color:#4a3fd6;">POC name</th>'
+                    + '<th style="width:68%;text-align:left;padding:5px 6px;background:#f1f0fa;border:1px solid #dcd9ee;color:#4a3fd6;">What this POC did</th>'
+                    + '</tr></thead><tbody>';
+                t.pocs.forEach(function (p) {
+                    h += '<tr><td style="vertical-align:top;padding:5px 6px;border:1px solid #dcd9ee;overflow-wrap:anywhere;word-break:break-word;">' + escapeHtml(p.name || '') + '</td>'
+                        + '<td style="vertical-align:top;padding:5px 6px;border:1px solid #dcd9ee;overflow-wrap:anywhere;word-break:break-word;">' + escapeHtml(p.work || '') + '</td></tr>';
+                });
+                h += '</tbody></table>';
+            }
+            if (t.steps && t.steps.length) {
+                var sdone = t.steps.filter(function (s) { return s.done; }).length;
+                h += line('Steps', sdone + '/' + t.steps.length);
+                t.steps.forEach(function (s) { h += '<div style="font-size:12px;color:#55506b;margin-top:2px;padding-left:14px;">' + (s.done ? '\u2611' : '\u2610') + ' ' + escapeHtml(s.text) + '</div>'; });
+            }
+            return h;
+        }
+        // Keep only inline data: images so the SVG->canvas step can't taint or fail.
+        function sanitizeForRender(html) {
+            var box = document.createElement('div');
+            box.innerHTML = html || '';
+            box.querySelectorAll('img').forEach(function (im) {
+                var src = im.getAttribute('src') || '';
+                if (!/^data:/i.test(src)) {
+                    var note = document.createElement('span');
+                    note.textContent = '[image]';
+                    note.style.color = '#9a96ad';
+                    im.replaceWith(note);
+                } else {
+                    im.style.maxWidth = '100%'; im.style.height = 'auto';
+                }
+            });
+            return box.innerHTML;
+        }
+        // One date group -> one HTML block (rendered as one SVG).
+        function buildGroupHtml(date, items, widthPx, keepImages) {
+            var cards = '';
+            items.forEach(function (t) {
+                var stripe = t.completed ? '#17b978' : '#f5a524';
+                var status = t.completed ? 'CLOSED' : 'OPEN';
+                var created = t.createdAt ? 'Created ' + formatDateTime(t.createdAt) : '';
+                var edited = t.updatedAt ? '    Edited ' + formatDateTime(t.updatedAt) : '';
+                var body = keepImages ? (t.text || '') : sanitizeForRender(t.text);
+                cards += '<div style="border:1px solid #e6e4f2;border-left:6px solid ' + stripe + ';border-radius:10px;padding:12px 14px;margin-bottom:12px;background:#ffffff;">'
+                    + '<div style="font-size:11px;font-weight:700;letter-spacing:.5px;color:#8a86a0;margin-bottom:6px;">' + status + '</div>'
+                    + '<div style="font-size:14px;color:#1b1630;line-height:1.45;word-break:break-word;overflow-wrap:anywhere;">' + body + '</div>'
+                    + pdfMetaHtml(t)
+                    + (created ? '<div style="border-top:1px dashed #ececf5;margin-top:8px;padding-top:6px;font-size:11px;color:#9a96ad;">' + escapeHtml(created + edited) + '</div>' : '')
+                    + '</div>';
+            });
+            return '<div style="width:' + widthPx + 'px;font-family:sans-serif;box-sizing:border-box;color:#1b1630;">'
+                + '<div style="background:#6d5efc;color:#ffffff;font-weight:700;font-size:14px;padding:8px 12px;border-radius:6px;margin:0 0 10px;">' + escapeHtml(formatDate(date)) + '  \u2014  ' + items.length + (items.length === 1 ? ' task' : ' tasks') + '</div>'
+                + cards + '</div>';
+        }
+        // Render an HTML string to a canvas. Prefers html2canvas (reliable across browsers);
+        // falls back to an SVG <foreignObject> if the library isn't available.
+        async function htmlToCanvas(html, widthPx) {
+            var host = document.createElement('div');
+            host.style.cssText = 'position:fixed;left:0;top:0;z-index:-1;opacity:0;pointer-events:none;background:#ffffff;width:' + widthPx + 'px;';
+            host.innerHTML = html;
+            document.body.appendChild(host);
+            try {
+                var inner = host.firstElementChild || host;
+                // Let any inline (data:) images decode before capture.
+                var imgs = Array.prototype.slice.call(host.querySelectorAll('img'));
+                await Promise.all(imgs.map(function (im) {
+                    if (im.complete) return Promise.resolve();
+                    return (im.decode ? im.decode().catch(function () {}) : Promise.resolve());
+                }));
+
+                var canvas;
+                if (window.html2canvas) {
+                    canvas = await window.html2canvas(inner, {
+                        scale: 2,
+                        backgroundColor: '#ffffff',
+                        logging: false,
+                        useCORS: true,
+                        width: widthPx,
+                        windowWidth: widthPx
+                    });
+                    canvas._scale = 2;
+                } else {
+                    var h = Math.max(1, Math.ceil(inner.getBoundingClientRect().height));
+                    var xhtml = new XMLSerializer().serializeToString(inner);
+                    var svg = '<svg xmlns="http://www.w3.org/2000/svg" width="' + widthPx + '" height="' + h + '">'
+                        + '<foreignObject x="0" y="0" width="' + widthPx + '" height="' + h + '">'
+                        + xhtml.replace('<div ', '<div xmlns="http://www.w3.org/1999/xhtml" ')
+                        + '</foreignObject></svg>';
+                    var url = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg);
+                    var img = new Image();
+                    await new Promise(function (res, rej) { img.onload = res; img.onerror = rej; img.src = url; });
+                    canvas = document.createElement('canvas');
+                    canvas.width = widthPx * 2; canvas.height = h * 2;
+                    var ctx = canvas.getContext('2d');
+                    ctx.scale(2, 2);
+                    ctx.fillStyle = '#ffffff'; ctx.fillRect(0, 0, widthPx, h);
+                    ctx.drawImage(img, 0, 0);
+                    canvas._scale = 2;
+                }
+                return canvas;
+            } finally {
+                document.body.removeChild(host);
+            }
+        }
+        // Place a (possibly tall) canvas into the PDF, slicing across pages of the SAME size if needed.
+        function placeCanvas(doc, canvas, margin, contentW, pageW, pageH, startY) {
+            var scale = canvas._scale || 1;
+            var wPx = canvas.width / scale, hPx = canvas.height / scale;
+            var ratio = contentW / wPx;            // pt per css px
+            var y = startY, srcY = 0, remain = hPx;
+            function moveToSafeBreak(targetCss, fromCss) {
+                if (targetCss >= hPx - 0.5) return targetCss;
+                var targetDev = Math.min(canvas.height - 1, Math.round(targetCss * scale));
+                var fromDev = Math.max(Math.round(fromCss * scale), targetDev - Math.round(90 * scale));
+                var ctx = canvas.getContext('2d');
+                var maxInk = Math.max(12, Math.round(canvas.width * 0.015));
+                try {
+                    for (var row = targetDev; row >= fromDev; row--) {
+                        var pixels = ctx.getImageData(0, row, canvas.width, 1).data;
+                        var ink = 0;
+                        for (var px = 0; px < pixels.length; px += 4) {
+                            if (pixels[px] < 238 || pixels[px + 1] < 238 || pixels[px + 2] < 238) ink++;
+                            if (ink > maxInk) break;
+                        }
+                        if (ink <= maxInk) return row / scale;
+                    }
+                } catch (e) {}
+                return targetCss;
+            }
+            while (remain > 0.5) {
+                var availPt = pageH - margin - y;
+                if (availPt < 60) { doc.addPage([pageW, pageH], 'portrait'); y = margin; availPt = pageH - 2 * margin; }
+                var availCss = availPt / ratio;
+                var sliceCss = Math.min(availCss, remain);
+                if (sliceCss < remain) {
+                    var safeCss = moveToSafeBreak(srcY + sliceCss, srcY + 60);
+                    if (safeCss - srcY >= 60) sliceCss = safeCss - srcY;
+                }
+                var sHdev = Math.round(sliceCss * scale);
+                var tmp = document.createElement('canvas');
+                tmp.width = canvas.width; tmp.height = sHdev;
+                var tctx = tmp.getContext('2d');
+                tctx.fillStyle = '#ffffff'; tctx.fillRect(0, 0, tmp.width, tmp.height);
+                tctx.drawImage(canvas, 0, Math.round(srcY * scale), canvas.width, sHdev, 0, 0, tmp.width, sHdev);
+                doc.addImage(tmp.toDataURL('image/png'), 'PNG', margin, y, contentW, sliceCss * ratio);
+                y += sliceCss * ratio + 8;
+                srcY += sliceCss; remain -= sliceCss;
+            }
+            return y;
+        }
+        // Plain-text fallback for one group (used only if rasterizing fails).
+        function renderGroupText(doc, date, items, margin, contentW, pageW, pageH, y) {
+            if (y + 30 > pageH - margin) { doc.addPage([pageW, pageH], 'portrait'); y = margin; }
+            y += 12;
+            doc.setFillColor(109, 94, 252);
+            doc.rect(margin, y - 13, contentW, 20, 'F');
+            doc.setTextColor(255); doc.setFont('helvetica', 'bold'); doc.setFontSize(12);
+            doc.text(formatDate(date), margin + 8, y + 1);
+            doc.setTextColor(0); y += 18;
+            items.forEach(function (t) {
+                var prefix = t.completed ? '[x] ' : '[ ] ';
+                var lines = doc.splitTextToSize(prefix + htmlToText(t.text), contentW - 10);
+                var details = [];
+                details.push('Priority: ' + (t.priority || 'medium'));
+                if (t.action) details.push('Action: ' + t.action);
+                if (t.poc) details.push('POC: ' + t.poc);
+                if (t.pocs && t.pocs.length) {
+                    t.pocs.forEach(function (p) { details.push('   POC ' + p.name + (p.work ? ': ' + p.work : '')); });
+                }
+                if (t.emailFrom) details.push('From: ' + t.emailFrom);
+                if (t.emailTo) details.push('To: ' + t.emailTo);
+                if (t.emailCc) details.push('CC: ' + t.emailCc);
+                if (t.emailTitle) details.push('Email title: ' + t.emailTitle);
+                if (t.emailWhen) details.push('Email date & time: ' + t.emailWhen);
+                if (t.email) details.push('Email: ' + t.email);
+                if (t.emailCode) details.push('Email code: ' + t.emailCode);
+                if (t.steps && t.steps.length) {
+                    details.push('Steps: ' + t.steps.filter(function (s) { return s.done; }).length + '/' + t.steps.length);
+                    t.steps.forEach(function (s) { details.push('   ' + (s.done ? '[x]' : '[ ]') + ' ' + s.text); });
+                }
+                if (t.createdAt) details.push('Created: ' + formatDateTime(t.createdAt));
+                if (t.updatedAt) details.push('Edited: ' + formatDateTime(t.updatedAt));
+                var detailLines = [];
+                details.forEach(function (d) { detailLines = detailLines.concat(doc.splitTextToSize(d, contentW - 25)); });
+                var blockH = lines.length * 14 + detailLines.length * 13 + 8;
+                if (y + blockH > pageH - margin) { doc.addPage([pageW, pageH], 'portrait'); y = margin; }
+                doc.setFont('helvetica', 'normal'); doc.setFontSize(11); doc.setTextColor(0);
+                doc.text(lines, margin + 5, y + 8); y += lines.length * 14;
+                if (detailLines.length) {
+                    doc.setFontSize(10); doc.setTextColor(90);
+                    doc.text(detailLines, margin + 18, y + 6);
+                    doc.setTextColor(0); doc.setFontSize(11);
+                    y += detailLines.length * 13;
+                }
+                y += 8;
+            });
+            return y + 6;
+        }
+        async function exportPDF(scope) {
+            if (!window.jspdf || !window.jspdf.jsPDF) {
+                showNotification('PDF tool needs an internet connection to load.', 'error');
+                return;
+            }
+            let list = [], label = '', filename = 'tasks';
+            if (scope === 'date') {
+                const v = document.getElementById('exportDate').value;
+                if (!v) { showNotification('Pick a date to export.', 'error'); return; }
+                list = todos.filter(t => t.date === v); label = formatDate(v); filename = 'tasks-' + v;
+            } else if (scope === 'month') {
+                const v = document.getElementById('exportMonth').value;
+                if (!v) { showNotification('Pick a month to export.', 'error'); return; }
+                list = todos.filter(t => t.date.slice(0, 7) === v);
+                const p = v.split('-').map(Number);
+                label = new Date(p[0], p[1] - 1, 1).toLocaleDateString(undefined, { month: 'long', year: 'numeric' });
+                filename = 'tasks-' + v;
+            } else if (scope === 'year') {
+                const v = document.getElementById('exportYear').value;
+                if (!v) { showNotification('Enter a year to export.', 'error'); return; }
+                list = todos.filter(t => t.date.slice(0, 4) === String(v));
+                label = 'Year ' + v; filename = 'tasks-' + v;
+            } else if (scope === 'current') {
+                list = getFilteredList();
+                label = currentViewLabel();
+                filename = 'tasks-view' + currentViewSuffix();
+            } else {
+                list = todos.slice(); label = 'All tasks'; filename = 'tasks-all';
+            }
+            if (list.length === 0) { showNotification('Nothing to export for that selection.', 'error'); return; }
+
+            list.sort((a, b) => a.date.localeCompare(b.date));
+            showNotification('Building PDF\u2026');
+
+            const { jsPDF } = window.jspdf;
+            const margin = 40;
+            const renderW = 760; // css px width used to lay out each group
+            const PAGE = { w: 1190.55, h: 1683.78 }; // A2 portrait, always
+            const contentW = PAGE.w - 2 * margin;
+            const doc = new jsPDF({ unit: 'pt', format: [PAGE.w, PAGE.h] });
+            let y = margin + 4;
+
+            doc.setFont('helvetica', 'bold'); doc.setFontSize(18); doc.setTextColor(0);
+            doc.text('Task Wall', margin, y); y += 20;
+            doc.setFont('helvetica', 'normal'); doc.setFontSize(11); doc.setTextColor(120);
+            doc.text(label + '  -  ' + list.length + (list.length === 1 ? ' task' : ' tasks'), margin, y);
+            doc.setTextColor(0); y += 14;
+
+            const dates = [...new Set(list.map(t => t.date))].sort();
+            for (const date of dates) {
+                const items = list.filter(t => t.date === date);
+                try {
+                    const canvas = await htmlToCanvas(buildGroupHtml(date, items, renderW, true), renderW);
+                    y = placeCanvas(doc, canvas, margin, contentW, PAGE.w, PAGE.h, y);
+                } catch (e) {
+                    y = renderGroupText(doc, date, items, margin, contentW, PAGE.w, PAGE.h, y);
+                }
+            }
+
+            doc.save(filename + '.pdf');
+            showNotification('PDF downloaded.');
+        }
+
+        // ---------- Excel export ----------
+        function exportExcel(scope) {
+            if (!window.XLSX) {
+                showNotification('Excel tool needs an internet connection to load.', 'error');
+                return;
+            }
+            let list = [], filename = 'tickets';
+            const isCurrent = (scope === 'current');
+            if (scope === 'current') {
+                list = getFilteredList();
+                filename = 'tickets-view' + currentViewSuffix();
+            } else if (scope === 'date') {
+                const v = document.getElementById('xlDate').value;
+                if (!v) { showNotification('Pick a date to export.', 'error'); return; }
+                list = todos.filter(t => t.date === v); filename = 'tickets-' + v;
+            } else if (scope === 'month') {
+                const v = document.getElementById('xlMonth').value;
+                if (!v) { showNotification('Pick a month to export.', 'error'); return; }
+                list = todos.filter(t => t.date.slice(0, 7) === v); filename = 'tickets-' + v;
+            } else if (scope === 'year') {
+                const v = document.getElementById('xlYear').value;
+                if (!v) { showNotification('Enter a year to export.', 'error'); return; }
+                list = todos.filter(t => t.date.slice(0, 4) === String(v)); filename = 'tickets-' + v;
+            } else {
+                list = todos.slice(); filename = 'tickets-all';
+            }
+
+            // Follow the current Open / Closed filter (the 'current' view already applied it).
+            if (!isCurrent) {
+                if (currentStatus === 'open') { list = list.filter(t => !t.completed); filename += '-open'; }
+                else if (currentStatus === 'closed') { list = list.filter(t => t.completed); filename += '-closed'; }
+            }
+
+            if (list.length === 0) { showNotification('Nothing to export for that selection.', 'error'); return; }
+
+            list.sort((a, b) => a.date.localeCompare(b.date));
+            const rows = list.map(t => ({
+                Date: t.date,
+                Status: t.completed ? 'Closed' : 'Open',
+                Priority: (t.priority || 'medium'),
+                Ticket: htmlToText(t.text),
+                'Action item': t.action || '',
+                POC: t.poc || '',
+                'Sub-POCs': (t.pocs && t.pocs.length) ? t.pocs.map(function (p) { return p.name + (p.work ? ' (' + p.work + ')' : ''); }).join(' | ') : '',
+                From: t.emailFrom || '',
+                To: t.emailTo || '',
+                CC: t.emailCc || '',
+                'Email title': t.emailTitle || '',
+                'Email date & time': t.emailWhen || '',
+                Email: t.email || '',
+                'Email code': t.emailCode || '',
+                Steps: (t.steps && t.steps.length) ? (t.steps.filter(function (s) { return s.done; }).length + '/' + t.steps.length + ': ' + t.steps.map(function (s) { return (s.done ? '[x] ' : '[ ] ') + s.text; }).join(' | ')) : '',
+                Created: formatDateTime(t.createdAt),
+                Edited: t.updatedAt ? formatDateTime(t.updatedAt) : ''
+            }));
+            const header = ['Date', 'Status', 'Priority', 'Ticket', 'Action item', 'POC', 'Sub-POCs', 'From', 'To', 'CC', 'Email title', 'Email date & time', 'Email', 'Email code', 'Steps', 'Created', 'Edited'];
+            const ws = XLSX.utils.json_to_sheet(rows, { header: header });
+            ws['!cols'] = [{ wch: 12 }, { wch: 9 }, { wch: 10 }, { wch: 50 }, { wch: 26 }, { wch: 18 }, { wch: 40 }, { wch: 26 }, { wch: 26 }, { wch: 26 }, { wch: 20 }, { wch: 26 }, { wch: 26 }, { wch: 16 }, { wch: 44 }, { wch: 20 }, { wch: 20 }];
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, 'Tickets');
+            XLSX.writeFile(wb, filename + '.xlsx');
+            showNotification('Excel downloaded.');
+        }
+
+        // ---------- HTML export (all groups embedded as inline SVG in one file) ----------
+        // Render one date group as a self-contained inline <svg><foreignObject> block.
+        async function groupToSvg(date, items, widthPx) {
+            var html = buildGroupHtml(date, items, widthPx, true); // keep real images
+            var host = document.createElement('div');
+            host.style.cssText = 'position:fixed;left:-99999px;top:0;width:' + widthPx + 'px;';
+            host.innerHTML = html;
+            document.body.appendChild(host);
+            try {
+                var inner = host.firstElementChild || host;
+                var imgs = Array.prototype.slice.call(host.querySelectorAll('img'));
+                await Promise.all(imgs.map(function (im) {
+                    if (im.complete) return Promise.resolve();
+                    return (im.decode ? im.decode().catch(function () {}) : Promise.resolve());
+                }));
+                var h = Math.max(1, Math.ceil(inner.getBoundingClientRect().height));
+                var xhtml = new XMLSerializer().serializeToString(inner)
+                    .replace('<div ', '<div xmlns="http://www.w3.org/1999/xhtml" ');
+                return '<svg xmlns="http://www.w3.org/2000/svg" width="100%" viewBox="0 0 ' + widthPx + ' ' + h + '" '
+                    + 'preserveAspectRatio="xMidYMin meet" style="max-width:' + widthPx + 'px;height:auto;display:block;margin:0 auto 18px;">'
+                    + '<foreignObject x="0" y="0" width="' + widthPx + '" height="' + h + '">' + xhtml + '</foreignObject></svg>';
+            } finally {
+                document.body.removeChild(host);
+            }
+        }
+        async function buildPrintDoc(list, label) {
+            const renderW = 760;
+            const dates = [...new Set(list.map(t => t.date))].sort();
+            let body = '';
+            for (const date of dates) {
+                const items = list.filter(t => t.date === date);
+                try {
+                    body += await groupToSvg(date, items, renderW);
+                } catch (e) {
+                    // Fallback: embed the group as plain HTML if the SVG step fails.
+                    body += '<div style="max-width:' + renderW + 'px;margin:0 auto 18px;">' + buildGroupHtml(date, items, renderW, true) + '</div>';
+                }
+            }
+            return '<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><title>Task Wall \u2014 ' + escapeHtml(label) + '</title><style>'
+                + '@page{margin:12mm;}'
+                + '*{box-sizing:border-box;}'
+                + 'body{font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Ubuntu,sans-serif;color:#1b1630;margin:0;padding:20px;background:#fff;}'
+                + 'h1{font-size:22px;margin:0 0 2px;} .sub{color:#777;font-size:13px;margin:0 0 16px;}'
+                + 'svg{page-break-inside:avoid;-webkit-print-color-adjust:exact;print-color-adjust:exact;}'
+                + '.noprint{background:#eef1ff;border:1px solid #c7cdf0;padding:10px 14px;border-radius:8px;margin-bottom:16px;font-size:13px;color:#334;}'
+                + '@media print{.noprint{display:none;}}'
+                + '</style></head><body>'
+                + '<div class="noprint">Press <b>Ctrl+P</b> (\u2318P on Mac) to print or save as PDF. In the dialog pick any paper size (A4, A3, A2\u2026) and turn on <b>Background graphics</b> so the colours show. Chrome or Edge recommended.</div>'
+                + '<h1>Task Wall</h1><div class="sub">' + escapeHtml(label) + '  \u2014  ' + list.length + (list.length === 1 ? ' task' : ' tasks') + '</div>'
+                + body
+                + '</body></html>';
+        }
+        async function exportHTML(scope) {
+            let list = [], label = '', filename = 'task-wall';
+            if (scope === 'current') {
+                list = getFilteredList(); label = currentViewLabel(); filename = 'task-wall-view' + currentViewSuffix();
+            } else if (scope === 'date') {
+                const v = document.getElementById('exportDate').value;
+                if (!v) { showNotification('Pick a date to export.', 'error'); return; }
+                list = todos.filter(t => t.date === v); label = formatDate(v); filename = 'task-wall-' + v;
+            } else if (scope === 'month') {
+                const v = document.getElementById('exportMonth').value;
+                if (!v) { showNotification('Pick a month to export.', 'error'); return; }
+                list = todos.filter(t => t.date.slice(0, 7) === v);
+                const p = v.split('-').map(Number);
+                label = new Date(p[0], p[1] - 1, 1).toLocaleDateString(undefined, { month: 'long', year: 'numeric' });
+                filename = 'task-wall-' + v;
+            } else if (scope === 'year') {
+                const v = document.getElementById('exportYear').value;
+                if (!v) { showNotification('Enter a year to export.', 'error'); return; }
+                list = todos.filter(t => t.date.slice(0, 4) === String(v)); label = 'Year ' + v; filename = 'task-wall-' + v;
+            } else {
+                list = todos.slice(); label = 'All tasks'; filename = 'task-wall-all';
+            }
+            if (list.length === 0) { showNotification('Nothing to export for that selection.', 'error'); return; }
+            list.sort((a, b) => a.date.localeCompare(b.date));
+            showNotification('Building HTML\u2026');
+            try {
+                const html = await buildPrintDoc(list, label);
+                const blob = new Blob([html], { type: 'text/html' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url; a.download = filename + '.html';
+                document.body.appendChild(a); a.click(); a.remove();
+                URL.revokeObjectURL(url);
+                showNotification('HTML downloaded \u2014 open it and press Ctrl+P to print or save as PDF.');
+            } catch (e) {
+                showNotification('Could not create the HTML file.', 'error');
+            }
+            closeDrawer();
+        }
+
+        // ---------- JSON backup / restore ----------
+        function exportJSON() {
+            try {
+                saveTodos();
+                const data = JSON.stringify(todos, null, 2);
+                const blob = new Blob([data], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'task-wall-backup-' + getTodayStr() + '.json';
+                document.body.appendChild(a); a.click(); a.remove();
+                URL.revokeObjectURL(url);
+                showNotification('Backup saved (' + todos.length + ' ticket' + (todos.length === 1 ? '' : 's') + ').');
+            } catch (e) {
+                showNotification('Could not create the backup file.', 'error');
+            }
+        }
+        function importJSON(evt) {
+            const file = evt.target.files && evt.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function () {
+                try {
+                    const parsed = JSON.parse(reader.result);
+                    if (!Array.isArray(parsed)) throw new Error('not an array');
+                    const existingIds = new Set(todos.map(t => t.id));
+                    let added = 0;
+                    parsed.forEach(item => {
+                        if (!item || typeof item !== 'object' || item.text == null) return;
+                        let id = item.id;
+                        if (id != null && existingIds.has(id)) return; // skip true duplicate
+                        if (id == null) id = todoIdCounter++;
+                        const t = {
+                            id: id,
+                            text: item.text,
+                            rich: item.rich !== false,
+                            action: item.action || '',
+                            poc: item.poc || '',
+                            emailFrom: item.emailFrom || '',
+                            emailTo: item.emailTo || '',
+                            emailCc: item.emailCc || '',
+                            emailWhen: item.emailWhen || '',
+                            email: item.email || '',
+                            emailTitle: item.emailTitle || '',
+                            emailCode: item.emailCode || '',
+                            priority: (item.priority === 'high' || item.priority === 'low') ? item.priority : 'medium',
+                            steps: Array.isArray(item.steps) ? item.steps.map(function (s) { return { text: String((s && s.text) || ''), done: !!(s && s.done) }; }) : [],
+                            pocs: Array.isArray(item.pocs) ? item.pocs.map(function (p) { return { name: String((p && p.name) || ''), work: String((p && p.work) || '') }; }) : [],
+                            date: item.date || (item.createdAt ? String(item.createdAt).slice(0, 10) : getTodayStr()),
+                            completed: !!item.completed,
+                            createdAt: item.createdAt || new Date().toISOString()
+                        };
+                        if (item.updatedAt) t.updatedAt = item.updatedAt;
+                        if (!t.rich) { t.text = escapeHtml(t.text).replace(/\n/g, '<br>'); t.rich = true; }
+                        todos.push(t);
+                        existingIds.add(id);
+                        added++;
+                    });
+                    if (todos.length) todoIdCounter = Math.max(todoIdCounter, Math.max.apply(null, todos.map(t => t.id + 1)));
+                    saveTodos();
+                    renderTodos();
+                    showNotification(added ? ('Imported ' + added + ' ticket' + (added === 1 ? '' : 's') + '.') : 'Nothing new to import.');
+                } catch (e) {
+                    showNotification('That file is not a valid Task Wall JSON backup.', 'error');
+                }
+                evt.target.value = '';
+            };
+            reader.onerror = function () { showNotification('Could not read that file.', 'error'); };
+            reader.readAsText(file);
+        }
+
+        // ---------- Initialize ----------
+        todos.forEach(t => {
+            if (!t.date) t.date = (t.createdAt ? t.createdAt.slice(0, 10) : getTodayStr());
+            if (!t.createdAt) t.createdAt = new Date(t.date + 'T00:00:00').toISOString();
+            if (!t.rich) { t.text = escapeHtml(t.text || '').replace(/\n/g, '<br>'); t.rich = true; }
+            if (!Array.isArray(t.steps)) t.steps = [];
+            if (!Array.isArray(t.pocs)) t.pocs = [];
+            if (!t.priority) t.priority = 'medium';
+        });
+        saveTodos();
+        currentFilterDate = getTodayStr();
+        document.getElementById('entryDate').value = getTodayStr();
+        document.getElementById('searchDate').value = getTodayStr();
+        document.getElementById('searchMonth').value = getTodayStr().slice(0, 7);
+        document.getElementById('searchYear').value = getTodayStr().slice(0, 4);
+        document.getElementById('exportDate').value = getTodayStr();
+        document.getElementById('exportMonth').value = getTodayStr().slice(0, 7);
+        document.getElementById('exportYear').value = getTodayStr().slice(0, 4);
+        document.getElementById('xlDate').value = getTodayStr();
+        document.getElementById('xlMonth').value = getTodayStr().slice(0, 7);
+        document.getElementById('xlYear').value = getTodayStr().slice(0, 4);
+        renderTodos();
+        updateStats();
+    </script>
+</body>
+</html>
