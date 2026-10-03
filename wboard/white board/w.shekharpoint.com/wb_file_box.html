@@ -1,0 +1,66 @@
+<style scoped>
+.f1{
+width:400px;
+}
+</style>
+
+<!-- Mirrored from w.shekharpoint.com/wb_file_box.htm by HTTrack Website Copier/3.x [XR&CO'2014], Wed, 07 Oct 2020 04:47:38 GMT -->
+<!-- Added by HTTrack --><meta http-equiv="content-type" content="text/html;charset=UTF-8" /><!-- /Added by HTTrack -->
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<div class="easyui-panel" style="width:100%">
+<div style="padding:10px 60px 20px 60px">
+<div style="text-align:center;padding:5px">
+<p><img src="images/file-upload.png"  style="width:60px; height:60px"/></p>
+<p>Select your presentation file from any local drive to be uploaded to whiteboard</p>
+</div>
+<form action="https://w.send18.com/wb_presentation.php"  accept="text/plain" method="post" enctype="multipart/form-data" id="fileuploadform">
+<input type="hidden" name="sessionid" value="" id="sessionid"/>
+<table style="width:100%; text-align: center">
+   <tr style="text-align:center;height:100px;">
+   <td>File:</td>
+   <td><input name="file" id="file" class="f1 easyui-filebox"></input></td>
+   </tr>
+</table>
+</form>
+<div style="text-align:center;padding:5px">
+<a href="javascript:void(0)" class="easyui-linkbutton" onclick="uploadFile()" style="width:60px"> Upload </a>
+<a href="javascript:void(0)" class="easyui-linkbutton" onclick="closeSign()" style="width:60px"> Cancel </a>
+</div>
+<br>
+</div>
+<script src="theme/js/jquery.form.html"></script> 
+<script>
+function uploadFile(){
+  $("#sessionid").val( sessionid );
+    var filename = null;
+    $('#fileuploadform').ajaxForm({
+          beforeSend: function() {
+               var $file = $('#fileuploadform').find("input[type=file]");
+               filename = $('input[type=file]').val().replace(/C:\\fakepath\\/i, '');
+               if (!$file.val() || $file.val() == "") {
+                  $.messager.alert('Alert Message','No file selected to be uploaded!', 'info');
+                  return false;
+               }
+               $('#sign').window('close');
+               $("#wait").html("Processing presentation, it may take some time...");
+               $('.wrapLoader').show();
+         },
+         success:function(data) {
+              $("#south").html(data);
+              $('.wrapLoader').hide();
+              $("#cc").layout('panel','south').panel({
+                 title:'Slides',
+                 iconCls:'icon-image-editor',
+              });
+              $("#south").attr('height','115px');
+              $("#cc").layout('expand','south');
+              $("#south #content-slider").lightSlider({
+                loop:false,
+                keyPress:false,
+                pager:false
+              });
+         }
+    });
+    $('#fileuploadform').submit();
+}
+</script>

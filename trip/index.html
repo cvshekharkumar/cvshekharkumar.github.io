@@ -1,0 +1,2144 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, interactive-widget=resizes-content">
+    <title>Trip AI ✈️ Next-Gen Travel Intelligence & Google Maps Experience</title>
+    <meta name="description" content="AI-powered travel planner with Google Maps integration, real-time budget calculator, milestone path navigator, public/private bus finder, and Gemini Live context Q&A.">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Outfit:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                        heading: ['"Outfit"', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#eff6ff',
+                            100: '#dbeafe',
+                            200: '#bfdbfe',
+                            300: '#93c5fd',
+                            400: '#60a5fa',
+                            500: '#3b82f6',
+                            600: '#2563eb',
+                            700: '#1d4ed8',
+                            800: '#1e40af',
+                            900: '#1e3a8a',
+                        },
+                        gemini: {
+                            purple: '#8b5cf6',
+                            blue: '#3b82f6',
+                            cyan: '#06b6d4',
+                            glow: '#a855f7'
+                        }
+                    },
+                    boxShadow: {
+                        'glow': '0 0 35px -5px rgba(59, 130, 246, 0.4)',
+                        'glow-purple': '0 0 35px -5px rgba(168, 85, 247, 0.4)',
+                        'card-hover': '0 20px 40px -15px rgba(0, 0, 0, 0.15)',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <!-- Leaflet Map CSS & JS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+    <!-- Chart.js for Budget Breakdown Visuals -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- Canvas Confetti for Celebration on Trip Booking/Export -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+    <!-- html2pdf.js for multi-page PDF generation -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+    <style>
+        /* Custom Glassmorphism and Animations */
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+        }
+        .dark .glass-panel {
+            background: rgba(17, 24, 39, 0.85);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .dark .glass-card {
+            background: rgba(31, 41, 55, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .glass-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 15px 30px -10px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Gradient Text */
+        .gradient-text {
+            background: linear-gradient(135deg, #2563eb 0%, #7c3aed 50%, #db2777 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .gemini-gradient {
+            background: linear-gradient(135deg, #4285F4 0%, #9B72CB 50%, #D96570 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .gemini-bg {
+            background: linear-gradient(135deg, #1e3a8a 0%, #581c87 50%, #831843 100%);
+        }
+
+        /* Pulse Badge */
+        @keyframes subtle-pulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.05); opacity: 0.85; }
+        }
+        .pulse-badge {
+            animation: subtle-pulse 2.5s infinite ease-in-out;
+        }
+
+        /* Google Lens Scanning Animations */
+        @keyframes lens-laser-scan {
+            0% { top: 0%; opacity: 0.8; }
+            50% { top: 96%; opacity: 1; }
+            100% { top: 0%; opacity: 0.8; }
+        }
+        .lens-laser-line {
+            position: absolute;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #38bdf8, #818cf8, #f43f5e, transparent);
+            box-shadow: 0 0 12px #38bdf8, 0 0 20px #818cf8;
+            animation: lens-laser-scan 2.5s infinite ease-in-out;
+            pointer-events: none;
+            z-index: 10;
+        }
+        .lens-resize-handle {
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            background: #3b82f6;
+            border: 2px solid white;
+            border-radius: 50%;
+            box-shadow: 0 0 8px rgba(0,0,0,0.4);
+            z-index: 25;
+        }
+        .lens-resize-nw { top: -6px; left: -6px; cursor: nwse-resize; }
+        .lens-resize-ne { top: -6px; right: -6px; cursor: nesw-resize; }
+        .lens-resize-se { bottom: -6px; right: -6px; cursor: nwse-resize; }
+        .lens-resize-sw { bottom: -6px; left: -6px; cursor: nesw-resize; }
+        .lens-resize-n { top: -6px; left: calc(50% - 6px); cursor: ns-resize; }
+        .lens-resize-s { bottom: -6px; left: calc(50% - 6px); cursor: ns-resize; }
+        .lens-resize-w { top: calc(50% - 6px); left: -6px; cursor: ew-resize; }
+        .lens-resize-e { top: calc(50% - 6px); right: -6px; cursor: ew-resize; }
+
+        /* Milestone Connector Line */
+        .milestone-timeline {
+            position: relative;
+        }
+        .milestone-timeline::before {
+            content: '';
+            position: absolute;
+            top: 2rem;
+            bottom: 2rem;
+            left: 1.75rem;
+            width: 3px;
+            background: linear-gradient(to bottom, #3b82f6, #8b5cf6, #ec4899);
+            z-index: 0;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.05);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #93c5fd;
+            border-radius: 9999px;
+        }
+        .dark ::-webkit-scrollbar-thumb {
+            background: #374151;
+        }
+
+        #travelMap {
+            min-height: 480px;
+            border-radius: 1.25rem;
+            z-index: 10;
+        }
+
+        /* Loading Skeleton Animation */
+        @keyframes shimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+        .shimmer-loading {
+            background: linear-gradient(90deg, rgba(255,255,255,0.05) 25%, rgba(255,255,255,0.2) 50%, rgba(255,255,255,0.05) 75%);
+            background-size: 200% 100%;
+            animation: shimmer 1.5s infinite;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 font-sans transition-colors duration-300 min-h-screen flex flex-col antialiased">
+
+    <!-- Top Announcement Bar (2 Rows on Mobile for Zero Out-of-Bounds Overflow) -->
+    <div class="bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 text-white text-[11px] sm:text-xs py-1.5 px-2 sm:px-4 text-center font-medium flex flex-col gap-1 sm:gap-1.5 shadow-md w-full overflow-hidden">
+        <!-- Row 1: Title / Info Banner -->
+        <div class="flex items-center justify-center gap-1.5 sm:gap-2 flex-wrap text-center">
+            <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] sm:text-xs font-bold bg-white/20 text-white backdrop-blur-sm shadow-sm">
+                ✨ Google Maps & Gemini AI
+            </span>
+            <span class="text-[10px] sm:text-xs text-white/90 font-medium">Milestone routes, live transit & budget forecasts!</span>
+        </div>
+
+        <!-- Row 2: Action Buttons & Quick Tools -->
+        <div class="flex flex-wrap items-center justify-center gap-1 sm:gap-1.5 max-w-full">
+            <a href="https://supportsourcecode.lovable.app/home" target="_blank" rel="noopener noreferrer"
+               class="px-2 py-0.5 rounded-lg bg-white/20 hover:bg-white/30 text-white font-bold text-[10px] sm:text-xs flex items-center gap-1 border border-white/30 transition-all shrink-0">
+                <i class="fa-solid fa-house text-amber-300"></i>
+                <span>Main Page</span>
+            </a>
+            <a href="https://interactive-media-display.lovable.app/" target="_blank" rel="noopener noreferrer"
+               class="px-2 py-0.5 rounded-lg bg-amber-400 hover:bg-amber-300 text-slate-900 font-extrabold text-[10px] sm:text-xs flex items-center gap-1 shadow-sm transition-all shrink-0">
+                <i class="fa-solid fa-bag-shopping"></i>
+                <span>App Store</span>
+            </a>
+            <a href="help.html"
+               class="px-2 py-0.5 rounded-lg bg-emerald-500 hover:bg-emerald-400 text-white font-extrabold text-[10px] sm:text-xs flex items-center gap-1 shadow-sm transition-all shrink-0" title="End-to-End User Guide & Documentation">
+                <i class="fa-solid fa-book-open text-amber-200"></i>
+                <span>Help Guide</span>
+            </a>
+            <!-- Top Announcement Direct Google Maps Key Setup Button -->
+            <button onclick="window.openGoogleMapsKeyModal('manage')" title="Set up or manage Google Maps API Key for Live Directions"
+                    class="px-2 py-0.5 rounded-lg bg-amber-500 hover:bg-amber-400 text-slate-950 font-extrabold text-[10px] sm:text-xs flex items-center gap-1 shadow-sm transition-all cursor-pointer shrink-0">
+                <i class="fa-solid fa-key text-slate-900"></i>
+                <span id="topGmapsKeyStatusText">Maps Key</span>
+            </button>
+            <!-- Top Announcement Direct HTML Download Button -->
+            <button onclick="window.downloadLensNotesHTML()" title="Download Saved Cookies & Inspection Notes as HTML"
+                    class="px-2 py-0.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-bold text-[10px] sm:text-xs flex items-center gap-1 shadow-sm transition-all cursor-pointer shrink-0">
+                <i class="fa-solid fa-code text-blue-200"></i>
+                <span>HTML</span>
+            </button>
+            <!-- Top Announcement Delete Cookies Button -->
+            <button onclick="window.clearLensCookiesAndNotes()" title="Clear all browser cookies and saved notes"
+                    class="px-2 py-0.5 rounded-lg bg-rose-500/90 hover:bg-rose-600 text-white font-bold text-[10px] sm:text-xs flex items-center gap-1 shadow-sm transition-all cursor-pointer shrink-0">
+                <i class="fa-solid fa-trash-can text-rose-200"></i>
+                <span>Delete Cookies</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Navigation Bar -->
+    <header class="sticky top-0 z-50 glass-panel border-b shadow-sm transition-all duration-300">
+        <!-- Row 1: Brand Logo & Functional Controls -->
+        <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 h-14 sm:h-16 flex items-center justify-between gap-2">
+            <!-- Brand Logo -->
+            <a href="#hero" class="flex items-center gap-2 sm:gap-3 group shrink-0">
+                <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-xl sm:rounded-2xl bg-gradient-to-tr from-blue-600 to-indigo-600 flex items-center justify-center text-white shadow-glow group-hover:scale-105 transition-transform">
+                    <i class="fa-solid fa-compass fa-spin-pulse text-xs sm:text-base text-amber-300" style="--fa-animation-duration: 6s;"></i>
+                </div>
+                <div>
+                    <div class="flex items-center gap-1">
+                        <span class="font-heading font-extrabold text-lg sm:text-2xl tracking-tight bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 bg-clip-text text-transparent">Trip</span>
+                        <span class="px-1 py-0.2 rounded-md text-[9px] sm:text-[10px] font-black uppercase tracking-wider bg-purple-100 dark:bg-purple-900/50 text-purple-600 dark:text-purple-300 border border-purple-200 dark:border-purple-700">AI</span>
+                    </div>
+                    <p class="text-[10px] text-slate-500 dark:text-slate-400 font-medium hidden sm:block">Google Maps & Gemini Travel Engine</p>
+                </div>
+            </a>
+
+            <!-- Action Controls (Responsive & Non-overlapping) -->
+            <div class="flex items-center gap-1 sm:gap-2">
+                <!-- Google Maps API Key Button -->
+                <button onclick="window.openGoogleMapsKeyModal('manage')" id="navGmapsKeyBtn" title="Setup & Encrypt Google Maps API Key in Cookies"
+                        class="px-2 py-1 sm:px-2.5 sm:py-1.5 rounded-lg sm:rounded-xl bg-amber-50 hover:bg-amber-100 dark:bg-amber-950/40 dark:hover:bg-amber-900/60 border border-amber-300 dark:border-amber-700 text-amber-700 dark:text-amber-300 font-extrabold text-[10px] sm:text-xs flex items-center gap-1.5 shadow-sm hover:scale-105 active:scale-95 transition-all cursor-pointer shrink-0">
+                    <i class="fa-solid fa-key text-amber-500 text-[10px] sm:text-xs"></i>
+                    <span class="hidden sm:inline" id="navGmapsKeyLabel">Maps Key</span>
+                    <span id="navGmapsKeyDot" class="w-2 h-2 rounded-full bg-amber-500"></span>
+                </button>
+
+                <!-- Delete Cookies Button (Hidden on Mobile view, visible on tablet/desktop) -->
+                <button onclick="window.clearLensCookiesAndNotes()" title="Delete all browser cookies and saved notes"
+                        class="hidden sm:flex px-2 py-1 sm:px-2.5 sm:py-1.5 rounded-lg sm:rounded-xl bg-rose-50 hover:bg-rose-100 dark:bg-rose-950/40 dark:hover:bg-rose-900/60 border border-rose-200 dark:border-rose-800 text-rose-600 dark:text-rose-300 font-bold text-[10px] sm:text-xs items-center gap-1 shadow-sm hover:scale-105 active:scale-95 transition-all cursor-pointer shrink-0">
+                    <i class="fa-solid fa-trash-can text-rose-500 text-[10px] sm:text-xs"></i>
+                    <span>Delete Cookies</span>
+                </button>
+
+                <!-- Help Guide Link for Desktop/Tablet -->
+                <a href="help.html"
+                   title="Open End-to-End User Guide"
+                   class="hidden md:flex px-2.5 py-1.5 rounded-xl bg-emerald-50 hover:bg-emerald-100 dark:bg-emerald-950/50 dark:hover:bg-emerald-900/60 text-emerald-700 dark:text-emerald-300 font-bold text-xs items-center gap-1 border border-emerald-200 dark:border-emerald-800 shadow-sm transition-all shrink-0">
+                    <i class="fa-solid fa-book-open text-emerald-600 dark:text-emerald-400"></i>
+                    <span>Guide</span>
+                </a>
+
+                <!-- External Main Page & App Store Links (Visible on Tablets & Desktops) -->
+                <a href="https://supportsourcecode.lovable.app/home" target="_blank" rel="noopener noreferrer"
+                   title="Visit Main Page"
+                   class="hidden md:flex px-2.5 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 font-bold text-xs items-center gap-1 border border-slate-200 dark:border-slate-700 shadow-sm transition-all shrink-0">
+                    <i class="fa-solid fa-house text-blue-600 dark:text-blue-400"></i>
+                    <span>Main Page</span>
+                </a>
+
+                <a href="https://interactive-media-display.lovable.app/" target="_blank" rel="noopener noreferrer"
+                   title="Browse App Store"
+                   class="hidden md:flex px-3 py-1.5 rounded-xl bg-gradient-to-r from-purple-600 via-indigo-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white font-extrabold text-xs items-center gap-1 shadow-md hover:scale-105 active:scale-95 transition-all shrink-0">
+                    <i class="fa-solid fa-bag-shopping text-amber-300"></i>
+                    <span>App Store</span>
+                </a>
+
+                <!-- Currency Selector -->
+                <div class="relative shrink-0">
+                    <select id="currencySelector" onchange="window.updateCurrency(this.value)" class="text-[10px] sm:text-xs font-bold bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-1.5 sm:px-2.5 py-1 sm:py-1.5 text-slate-700 dark:text-slate-200 cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <option value="INR" selected>₹ INR</option>
+                        <option value="USD">$ USD</option>
+                        <option value="EUR">€ EUR</option>
+                        <option value="GBP">£ GBP</option>
+                        <option value="AED">د.إ AED</option>
+                        <option value="JPY">¥ JPY</option>
+                    </select>
+                </div>
+
+                <!-- Dark/Light Theme Toggle -->
+                <button onclick="window.toggleDarkMode()" title="Toggle Theme" class="w-8 h-8 sm:w-9 sm:h-9 rounded-lg sm:rounded-xl bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 flex items-center justify-center text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition-all shrink-0 text-xs sm:text-sm">
+                    <i id="themeIcon" class="fa-solid fa-moon"></i>
+                </button>
+
+                <!-- Saved Trips Button -->
+                <button onclick="window.openSavedTripsModal()" class="relative px-2 py-1 sm:px-2.5 sm:py-1.5 rounded-lg sm:rounded-xl bg-blue-50 dark:bg-blue-950/60 border border-blue-200 dark:border-blue-800 text-blue-600 dark:text-blue-400 font-semibold text-[10px] sm:text-xs flex items-center gap-1 hover:bg-blue-100 dark:hover:bg-blue-900/80 transition-all shrink-0">
+                    <i class="fa-solid fa-bookmark text-[10px] sm:text-xs"></i>
+                    <span class="hidden md:inline">Saved</span>
+                    <span id="savedCountBadge" class="w-4 h-4 sm:w-5 sm:h-5 rounded-full bg-blue-600 text-white text-[9px] sm:text-[10px] flex items-center justify-center font-bold">0</span>
+                </button>
+
+                <!-- Mobile Menu Button -->
+                <button onclick="window.toggleMobileMenu()" class="lg:hidden w-8 h-8 sm:w-9 sm:h-9 rounded-lg sm:rounded-xl bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-600 dark:text-slate-300 shrink-0 text-xs sm:text-sm">
+                    <i class="fa-solid fa-bars"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Row 2: Desktop Navigation Bar Menu -->
+        <div class="hidden lg:block border-t border-slate-200/80 dark:border-slate-800/80 bg-slate-50/80 dark:bg-slate-900/80 backdrop-blur-md">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2">
+                <nav class="flex items-center justify-center gap-4 xl:gap-7 text-xs xl:text-sm font-bold text-slate-600 dark:text-slate-300">
+                    <a href="#planner" class="hover:text-blue-600 dark:hover:text-blue-400 transition-colors flex items-center gap-1.5 px-3 py-1 rounded-lg hover:bg-blue-50 dark:hover:bg-slate-800">
+                        <i class="fa-solid fa-wand-magic-sparkles text-purple-500"></i>
+                        <span>AI Planner</span>
+                    </a>
+                    <a href="#map-section" class="hover:text-blue-600 dark:hover:text-blue-400 transition-colors flex items-center gap-1.5 px-3 py-1 rounded-lg hover:bg-blue-50 dark:hover:bg-slate-800">
+                        <i class="fa-solid fa-map-location-dot text-blue-500"></i>
+                        <span>Map & Milestones</span>
+                    </a>
+                    <a href="#budget-section" class="hover:text-blue-600 dark:hover:text-blue-400 transition-colors flex items-center gap-1.5 px-3 py-1 rounded-lg hover:bg-blue-50 dark:hover:bg-slate-800">
+                        <i class="fa-solid fa-calculator text-emerald-500"></i>
+                        <span>Budget Calculator</span>
+                    </a>
+                    <a href="#bus-section" class="hover:text-blue-600 dark:hover:text-blue-400 transition-colors flex items-center gap-1.5 px-3 py-1 rounded-lg hover:bg-blue-50 dark:hover:bg-slate-800">
+                        <i class="fa-solid fa-bus text-amber-500"></i>
+                        <span>Bus Routes</span>
+                    </a>
+                    <a href="#reviews-section" class="hover:text-blue-600 dark:hover:text-blue-400 transition-colors flex items-center gap-1.5 px-3 py-1 rounded-lg hover:bg-blue-50 dark:hover:bg-slate-800">
+                        <i class="fa-solid fa-star text-amber-400"></i>
+                        <span>Google Reviews</span>
+                    </a>
+                    <a href="#gemini-chat" class="hover:text-blue-600 dark:hover:text-blue-400 transition-colors flex items-center gap-1.5 px-3 py-1 rounded-lg hover:bg-blue-50 dark:hover:bg-slate-800">
+                        <i class="fa-solid fa-brain text-purple-500"></i>
+                        <span>Ask Gemini Live</span>
+                    </a>
+                    <a href="help.html" class="hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors flex items-center gap-1.5 text-emerald-600 dark:text-emerald-400 font-bold px-3 py-1 rounded-lg hover:bg-emerald-50 dark:hover:bg-slate-800">
+                        <i class="fa-solid fa-book-open"></i>
+                        <span>User Guide</span>
+                    </a>
+                </nav>
+            </div>
+        </div>
+
+        <!-- Mobile Menu Dropdown -->
+        <div id="mobileMenu" class="hidden lg:hidden px-3 pt-2 pb-4 space-y-2 border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900">
+            <!-- Mobile Action Row: Maps Key + Delete Cookies + PDF/HTML Download + Links -->
+            <div class="space-y-2 pb-2 border-b border-slate-200 dark:border-slate-800">
+                <button onclick="window.openGoogleMapsKeyModal('manage'); window.toggleMobileMenu();"
+                        class="w-full px-3 py-2 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 text-slate-950 font-extrabold text-xs flex items-center justify-center gap-2 shadow-md">
+                    <i class="fa-solid fa-key"></i>
+                    <span id="mobileGmapsKeyLabel">🔑 Google Maps API Key Setup</span>
+                </button>
+                <a href="help.html"
+                   class="w-full px-3 py-2 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 text-white font-extrabold text-xs flex items-center justify-center gap-2 shadow-md">
+                    <i class="fa-solid fa-book-open text-amber-200"></i>
+                    <span>📖 Wow User Guide & Help Docs</span>
+                </a>
+                <button onclick="window.clearLensCookiesAndNotes(); window.toggleMobileMenu();"
+                        class="w-full px-3 py-2 rounded-xl bg-rose-50 dark:bg-rose-950/50 text-rose-600 dark:text-rose-300 font-bold text-xs flex items-center justify-center gap-1.5 border border-rose-200 dark:border-rose-800 cursor-pointer">
+                    <i class="fa-solid fa-trash-can text-rose-500"></i>
+                    <span>Delete All Cookies</span>
+                </button>
+                <button onclick="window.downloadLensNotesHTML(); window.toggleMobileMenu();"
+                        class="w-full px-3 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs flex items-center justify-center gap-1.5 shadow-sm cursor-pointer">
+                    <i class="fa-solid fa-code"></i>
+                    <span>Download HTML</span>
+                </button>
+                <div class="grid grid-cols-2 gap-2">
+                    <a href="https://supportsourcecode.lovable.app/home" target="_blank" rel="noopener noreferrer"
+                       class="px-3 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-200 font-bold text-xs flex items-center justify-center gap-1.5">
+                        <i class="fa-solid fa-house text-blue-600"></i>
+                        <span>Main Page</span>
+                    </a>
+                    <a href="https://interactive-media-display.lovable.app/" target="_blank" rel="noopener noreferrer"
+                       class="px-3 py-2 rounded-xl bg-gradient-to-r from-purple-600 to-blue-600 text-white font-bold text-xs flex items-center justify-center gap-1.5">
+                        <i class="fa-solid fa-bag-shopping text-amber-300"></i>
+                        <span>App Store</span>
+                    </a>
+                </div>
+            </div>
+            <a href="#planner" onclick="window.toggleMobileMenu()" class="block px-3 py-2 rounded-lg text-sm font-medium text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800">✨ AI Trip Planner</a>
+            <a href="#map-section" onclick="window.toggleMobileMenu()" class="block px-3 py-2 rounded-lg text-sm font-medium text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800">📍 Google Map & Milestones</a>
+            <a href="#budget-section" onclick="window.toggleMobileMenu()" class="block px-3 py-2 rounded-lg text-sm font-medium text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800">💰 Expense & Budget</a>
+            <a href="#bus-section" onclick="window.toggleMobileMenu()" class="block px-3 py-2 rounded-lg text-sm font-medium text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800">🚌 Public & Private Buses</a>
+            <a href="#reviews-section" onclick="window.toggleMobileMenu()" class="block px-3 py-2 rounded-lg text-sm font-medium text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800">⭐ Google Reviews</a>
+            <a href="#gemini-chat" onclick="window.toggleMobileMenu()" class="block px-3 py-2 rounded-lg text-sm font-medium text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800">🤖 Ask Gemini Live Guide</a>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section id="hero" class="relative overflow-hidden py-16 lg:py-24 bg-gradient-to-b from-blue-50/70 via-indigo-50/30 to-slate-50 dark:from-slate-900 dark:via-slate-950 dark:to-slate-950">
+        <!-- Ambient decorative blobs -->
+        <div class="absolute -top-40 -left-40 w-96 h-96 bg-blue-400/20 dark:bg-blue-600/10 rounded-full blur-3xl pointer-events-none"></div>
+        <div class="absolute top-1/2 -right-40 w-96 h-96 bg-purple-400/20 dark:bg-purple-600/10 rounded-full blur-3xl pointer-events-none"></div>
+        <div class="absolute -bottom-20 left-1/3 w-80 h-80 bg-pink-400/15 dark:bg-pink-600/10 rounded-full blur-3xl pointer-events-none"></div>
+
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <!-- Headline & Value Prop -->
+            <div class="text-center max-w-3xl mx-auto mb-10">
+                <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 font-semibold text-xs sm:text-sm mb-6 border border-blue-200 dark:border-blue-700/50 shadow-sm">
+                    <span class="w-2 h-2 rounded-full bg-blue-500 animate-ping"></span>
+                    <i class="fa-solid fa-sparkles text-amber-500"></i> Gemini AI × Google Maps Engine
+                </div>
+                <h1 class="font-heading font-black text-4xl sm:text-5xl lg:text-6xl tracking-tight text-slate-900 dark:text-white leading-[1.15]">
+                    Plan Any Trip With <br class="hidden sm:inline"/>
+                    <span class="gradient-text">Google Maps & Gemini AI</span>
+                </h1>
+                <p class="mt-4 text-base sm:text-lg text-slate-600 dark:text-slate-300 font-normal leading-relaxed">
+                    Discover step-by-step milestone routes, estimated budgets, opening/closing hours, public & private buses, authentic Google reviews sentiment, and live AI assistant for <span class="font-semibold text-blue-600 dark:text-blue-400">ANY location on Earth</span>.
+                </p>
+
+                <!-- Quick Ecosystem Links: Main Page & App Store -->
+                <div class="mt-6 flex flex-wrap items-center justify-center gap-3">
+                    <a href="https://supportsourcecode.lovable.app/home" target="_blank" rel="noopener noreferrer"
+                       class="px-5 py-2.5 rounded-2xl bg-white/90 dark:bg-slate-900/90 hover:bg-white dark:hover:bg-slate-900 text-slate-800 dark:text-slate-100 font-bold text-xs shadow-md border border-slate-200 dark:border-slate-800 flex items-center gap-2 hover:scale-105 active:scale-95 transition-all">
+                        <i class="fa-solid fa-house text-blue-600 dark:text-blue-400"></i>
+                        <span>Visit Main Page</span>
+                        <i class="fa-solid fa-arrow-up-right-from-square text-[10px] text-slate-400"></i>
+                    </a>
+                    <a href="https://interactive-media-display.lovable.app/" target="_blank" rel="noopener noreferrer"
+                       class="px-5 py-2.5 rounded-2xl bg-gradient-to-r from-purple-600 via-indigo-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white font-extrabold text-xs shadow-glow flex items-center gap-2 hover:scale-105 active:scale-95 transition-all">
+                        <i class="fa-solid fa-bag-shopping text-amber-300"></i>
+                        <span>Explore App Store</span>
+                        <i class="fa-solid fa-arrow-up-right-from-square text-[10px] text-white/70"></i>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Intelligent Search Box -->
+            <div id="planner" class="max-w-5xl mx-auto">
+                <div class="glass-panel p-6 sm:p-8 rounded-3xl shadow-2xl border border-white/60 dark:border-slate-800/80">
+                    <form id="searchTripForm" onsubmit="window.handleSearchSubmit(event)" class="space-y-4">
+                        <div class="grid grid-cols-1 md:grid-cols-12 gap-4">
+                            <!-- Destination Input -->
+                            <div class="md:col-span-4 relative">
+                                <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1.5">
+                                    <i class="fa-solid fa-location-dot text-rose-500 mr-1"></i> Destination City or Country
+                                </label>
+                                <div class="relative">
+                                    <input type="text" id="destinationInput" list="popularDestinationsList" placeholder="e.g. Paris, Tokyo, Jaipur, Dubai, Bali..." required
+                                           class="w-full pl-10 pr-4 py-3.5 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-100 font-semibold focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm shadow-inner transition-all">
+                                    <i class="fa-solid fa-earth-americas absolute left-3.5 top-4 text-slate-400"></i>
+                                </div>
+                                <datalist id="popularDestinationsList">
+                                    <option value="Paris, France">
+                                    <option value="Tokyo, Japan">
+                                    <option value="Jaipur, Rajasthan, India">
+                                    <option value="Dubai, United Arab Emirates">
+                                    <option value="Bali, Indonesia">
+                                    <option value="Rome, Italy">
+                                    <option value="New York City, USA">
+                                    <option value="Goa, India">
+                                    <option value="Manali, Himachal Pradesh, India">
+                                    <option value="Ladakh, India">
+                                    <option value="London, United Kingdom">
+                                    <option value="Bangkok, Thailand">
+                                    <option value="Santorini, Greece">
+                                    <option value="Kyoto, Japan">
+                                    <option value="Cairo, Egypt">
+                                    <option value="Singapore">
+                                    <option value="Zurich, Switzerland">
+                                    <option value="Barcelona, Spain">
+                                    <option value="Sydney, Australia">
+                                    <option value="Varanasi, India">
+                                </datalist>
+                            </div>
+
+                            <!-- Starting Point / From -->
+                            <div class="md:col-span-3 relative">
+                                <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1.5">
+                                    <i class="fa-solid fa-plane-departure text-blue-500 mr-1"></i> Starting From
+                                </label>
+                                <div class="relative">
+                                    <input type="text" id="originInput" placeholder="e.g. Current Location / Delhi / NYC"
+                                           class="w-full pl-10 pr-4 py-3.5 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-100 font-semibold focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm shadow-inner transition-all">
+                                    <i class="fa-solid fa-location-crosshairs absolute left-3.5 top-4 text-slate-400 cursor-pointer hover:text-blue-500" onclick="window.useCurrentLocation()" title="Use Current GPS"></i>
+                                </div>
+                            </div>
+
+                            <!-- Trip Duration & Travelers -->
+                            <div class="md:col-span-3 grid grid-cols-2 gap-2">
+                                <div>
+                                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1.5">
+                                        <i class="fa-solid fa-calendar-day text-emerald-500 mr-1"></i> Days
+                                    </label>
+                                    <select id="tripDaysInput" class="w-full px-3 py-3.5 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-100 font-semibold text-sm focus:ring-2 focus:ring-blue-500">
+                                        <option value="1">1 Day (Quick Tour)</option>
+                                        <option value="2">2 Days (Weekend)</option>
+                                        <option value="3" selected>3 Days (Popular)</option>
+                                        <option value="5">5 Days (Complete)</option>
+                                        <option value="7">7 Days (Full Explorer)</option>
+                                        <option value="10">10 Days (Grand)</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1.5">
+                                        <i class="fa-solid fa-users text-purple-500 mr-1"></i> Travelers
+                                    </label>
+                                    <select id="travelersCountInput" class="w-full px-3 py-3.5 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-100 font-semibold text-sm focus:ring-2 focus:ring-blue-500">
+                                        <option value="1">1 Person (Solo)</option>
+                                        <option value="2" selected>2 Persons (Couple/Duo)</option>
+                                        <option value="4">4 Persons (Family/Group)</option>
+                                        <option value="6">6+ Persons (Big Group)</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <!-- Travel Style / Budget Tier -->
+                            <div class="md:col-span-2">
+                                <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1.5">
+                                    <i class="fa-solid fa-suitcase-rolling text-indigo-500 mr-1"></i> Style
+                                </label>
+                                <select id="travelStyleInput" class="w-full px-3 py-3.5 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-100 font-semibold text-sm focus:ring-2 focus:ring-blue-500">
+                                    <option value="budget">🎒 Backpacker (Budget)</option>
+                                    <option value="moderate" selected>⭐ Moderate (Comfort)</option>
+                                    <option value="luxury">👑 Luxury (VIP)</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Action Bar Inside Search Form -->
+                        <div class="flex flex-col sm:flex-row items-center justify-between pt-4 border-t border-slate-200/80 dark:border-slate-800 gap-3">
+                            <!-- Quick Suggestion Pills -->
+                            <div class="flex flex-wrap items-center gap-1.5 text-xs text-slate-600 dark:text-slate-400">
+                                <span class="font-bold flex items-center gap-1"><i class="fa-solid fa-fire text-amber-500"></i> Trending:</span>
+                                <button type="button" onclick="window.quickSearch('Paris, France')" class="px-2.5 py-1 rounded-full bg-slate-100 dark:bg-slate-800 hover:bg-blue-100 dark:hover:bg-blue-900/60 hover:text-blue-600 transition-colors">Paris</button>
+                                <button type="button" onclick="window.quickSearch('Tokyo, Japan')" class="px-2.5 py-1 rounded-full bg-slate-100 dark:bg-slate-800 hover:bg-blue-100 dark:hover:bg-blue-900/60 hover:text-blue-600 transition-colors">Tokyo</button>
+                                <button type="button" onclick="window.quickSearch('Jaipur, Rajasthan, India')" class="px-2.5 py-1 rounded-full bg-slate-100 dark:bg-slate-800 hover:bg-blue-100 dark:hover:bg-blue-900/60 hover:text-blue-600 transition-colors">Jaipur</button>
+                                <button type="button" onclick="window.quickSearch('Dubai, UAE')" class="px-2.5 py-1 rounded-full bg-slate-100 dark:bg-slate-800 hover:bg-blue-100 dark:hover:bg-blue-900/60 hover:text-blue-600 transition-colors">Dubai</button>
+                                <button type="button" onclick="window.quickSearch('Bali, Indonesia')" class="px-2.5 py-1 rounded-full bg-slate-100 dark:bg-slate-800 hover:bg-blue-100 dark:hover:bg-blue-900/60 hover:text-blue-600 transition-colors">Bali</button>
+                                <button type="button" onclick="window.quickSearch('Goa, India')" class="px-2.5 py-1 rounded-full bg-slate-100 dark:bg-slate-800 hover:bg-blue-100 dark:hover:bg-blue-900/60 hover:text-blue-600 transition-colors">Goa</button>
+                            </div>
+
+                            <!-- Generate Button -->
+                            <button type="submit" id="generateTripBtn" class="w-full sm:w-auto px-8 py-3.5 rounded-xl bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-heading font-bold text-sm tracking-wide shadow-glow flex items-center justify-center gap-2 hover:scale-[1.02] active:scale-[0.98] transition-all">
+                                <i class="fa-solid fa-wand-magic-sparkles"></i>
+                                <span>Generate AI Journey & Budget</span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Highlights Grid (Why Trip AI is Superior) -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-12 max-w-5xl mx-auto">
+                <div class="glass-card p-4 rounded-2xl flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-blue-100 dark:bg-blue-900/50 text-blue-600 flex items-center justify-center text-lg shrink-0">
+                        <i class="fa-solid fa-route"></i>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-xs sm:text-sm">Milestone Paths</h4>
+                        <p class="text-[11px] text-slate-500 dark:text-slate-400">Step-by-step route milestones</p>
+                    </div>
+                </div>
+                <div class="glass-card p-4 rounded-2xl flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-emerald-100 dark:bg-emerald-900/50 text-emerald-600 flex items-center justify-center text-lg shrink-0">
+                        <i class="fa-solid fa-coins"></i>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-xs sm:text-sm">Exact Expenses</h4>
+                        <p class="text-[11px] text-slate-500 dark:text-slate-400">Budget for any location</p>
+                    </div>
+                </div>
+                <div class="glass-card p-4 rounded-2xl flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-amber-100 dark:bg-amber-900/50 text-amber-600 flex items-center justify-center text-lg shrink-0">
+                        <i class="fa-solid fa-bus-simple"></i>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-xs sm:text-sm">Bus & Transit Finder</h4>
+                        <p class="text-[11px] text-slate-500 dark:text-slate-400">Public & private bus routes</p>
+                    </div>
+                </div>
+                <div class="glass-card p-4 rounded-2xl flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-purple-100 dark:bg-purple-900/50 text-purple-600 flex items-center justify-center text-lg shrink-0">
+                        <i class="fa-solid fa-brain"></i>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-xs sm:text-sm">Gemini Live Chat</h4>
+                        <p class="text-[11px] text-slate-500 dark:text-slate-400">Contextual Q&A on demand</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Dynamic Experience Dashboard -->
+    <main id="tripDashboard" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-12 flex-1 w-full">
+        
+        <!-- Active Destination Header Banner -->
+        <section class="glass-panel p-6 sm:p-8 rounded-3xl shadow-xl relative overflow-hidden">
+            <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-6 relative z-10">
+                <div>
+                    <div class="flex flex-wrap items-center gap-2 mb-2">
+                        <span id="destCountryBadge" class="px-3 py-1 rounded-full text-xs font-extrabold uppercase bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300">
+                            Global Destination
+                        </span>
+                        <span id="bestSeasonBadge" class="px-3 py-1 rounded-full text-xs font-semibold bg-emerald-100 dark:bg-emerald-900/60 text-emerald-700 dark:text-emerald-300 flex items-center gap-1">
+                            <i class="fa-solid fa-sun text-amber-500"></i> Best Season: Oct - Mar
+                        </span>
+                        <span id="safetyScoreBadge" class="px-3 py-1 rounded-full text-xs font-semibold bg-indigo-100 dark:bg-indigo-900/60 text-indigo-700 dark:text-indigo-300 flex items-center gap-1">
+                            <i class="fa-solid fa-shield-halved text-indigo-500"></i> Safety Index: 9.4/10
+                        </span>
+                    </div>
+                    <h2 id="activeDestTitle" class="font-heading font-black text-3xl sm:text-4xl text-slate-900 dark:text-white">
+                        Jaipur, Rajasthan, India
+                    </h2>
+                    <p id="activeDestSubtitle" class="mt-2 text-slate-600 dark:text-slate-300 text-sm sm:text-base max-w-3xl">
+                        The famed Pink City of royal palaces, majestic forts, bustling bazaars, and legendary Rajasthani hospitality.
+                    </p>
+                </div>
+
+                <!-- Quick Action Bar -->
+                <div class="flex flex-wrap items-center gap-3">
+                    <button onclick="window.saveCurrentTrip()" id="saveTripBtn" class="px-4 py-2.5 rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:border-blue-500 text-slate-700 dark:text-slate-200 font-bold text-xs flex items-center gap-2 shadow-sm transition-all">
+                        <i class="fa-regular fa-bookmark text-blue-600"></i>
+                        <span>Bookmark Trip</span>
+                    </button>
+                    <button onclick="window.shareTrip()" class="px-4 py-2.5 rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:border-blue-500 text-slate-700 dark:text-slate-200 font-bold text-xs flex items-center gap-2 shadow-sm transition-all">
+                        <i class="fa-solid fa-share-nodes text-indigo-600"></i>
+                        <span>Share</span>
+                    </button>
+                    <button onclick="window.exportItineraryPDF()" class="px-4 py-2.5 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-bold text-xs flex items-center gap-2 shadow-md hover:scale-105 transition-all">
+                        <i class="fa-solid fa-file-pdf"></i>
+                        <span>Export Plan</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Live GPS Location Optimizer & Food Companion Action Hub -->
+            <div class="mt-6 pt-6 border-t border-slate-200/80 dark:border-slate-800 grid grid-cols-1 md:grid-cols-2 gap-4">
+                <!-- Share Location & Build Custom Plan Card -->
+                <div class="p-4 rounded-2xl bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-950/40 dark:to-indigo-950/40 border border-blue-200/80 dark:border-blue-800 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-xl bg-blue-600 text-white flex items-center justify-center text-lg font-bold shadow-md shrink-0">
+                            <i class="fa-solid fa-location-crosshairs"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-heading font-extrabold text-sm text-slate-900 dark:text-white">Start From Your Current Location</h4>
+                            <p class="text-xs text-slate-500 dark:text-slate-400">Pick places you want to visit & generate Shortest / Cheapest plans.</p>
+                        </div>
+                    </div>
+                    <button onclick="window.requestUserLocationAndOpenPlanner()"
+                            class="px-4 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs shadow-md flex items-center justify-center gap-1.5 hover:scale-105 transition-all shrink-0">
+                        <i class="fa-solid fa-wand-magic-sparkles"></i>
+                        <span>Create Day Plan</span>
+                    </button>
+                </div>
+
+                <!-- Food & Restaurant Finder Card (Veg / Non-Veg) -->
+                <div class="p-4 rounded-2xl bg-gradient-to-r from-amber-50 to-orange-50 dark:from-amber-950/40 dark:to-orange-950/40 border border-amber-200/80 dark:border-amber-800 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-amber-500 to-orange-500 text-white flex items-center justify-center text-lg font-bold shadow-md shrink-0">
+                            🍽️
+                        </div>
+                        <div>
+                            <h4 class="font-heading font-extrabold text-sm text-slate-900 dark:text-white">Local Food & Restaurant Guide</h4>
+                            <p class="text-xs text-slate-500 dark:text-slate-400">Select Veg / Non-Veg for top dishes & 1-click Google Maps travel.</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-1.5 shrink-0">
+                        <button onclick="window.openFoodFinderModal('veg')"
+                                class="px-3 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs shadow-sm transition-all flex items-center gap-1">
+                            <span>🥗 Veg</span>
+                        </button>
+                        <button onclick="window.openFoodFinderModal('nonveg')"
+                                class="px-3 py-2.5 rounded-xl bg-rose-600 hover:bg-rose-700 text-white font-bold text-xs shadow-sm transition-all flex items-center gap-1">
+                            <span>🍗 Non-Veg</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Google Map & Interactive Route Section -->
+        <section id="map-section" class="scroll-mt-24 space-y-4">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                <div>
+                    <h3 class="font-heading font-extrabold text-2xl text-slate-900 dark:text-white flex items-center gap-2">
+                        <i class="fa-solid fa-map-location-dot text-blue-600"></i> Interactive Google Map & Milestone Routing
+                    </h3>
+                    <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400">
+                        Visual path with waypoint markers, distance measurements, transit tracks, and direct Google Maps deep integration.
+                    </p>
+                </div>
+
+                <!-- Map View Switcher & Actions -->
+                <div class="flex flex-wrap items-center gap-1.5 sm:gap-2">
+                    <!-- Google Lens Saved Notes Button -->
+                    <button onclick="window.openLensNotesModal()" title="View Google Lens Saved Area Notes"
+                            class="px-2.5 py-1.5 sm:px-3 sm:py-2 rounded-lg sm:rounded-xl bg-gradient-to-r from-amber-500 via-orange-500 to-rose-500 hover:from-amber-600 hover:to-rose-600 text-white font-extrabold text-[10px] sm:text-xs shadow-md flex items-center gap-1 sm:gap-1.5 hover:scale-105 active:scale-95 transition-all cursor-pointer">
+                        <i class="fa-solid fa-camera text-amber-200 text-[10px] sm:text-xs"></i>
+                        <span>Google Lens (<span id="lensNotesCountBadge">0</span>)</span>
+                    </button>
+
+                    <!-- Direct HTML Download Button -->
+                    <button onclick="window.downloadLensNotesHTML()" title="Download Saved Cookies & Notes in HTML format with full detail"
+                            class="px-2.5 py-1.5 sm:px-3 sm:py-2 rounded-lg sm:rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-extrabold text-[10px] sm:text-xs shadow-md flex items-center gap-1 sm:gap-1.5 hover:scale-105 active:scale-95 transition-all cursor-pointer">
+                        <i class="fa-solid fa-code text-blue-200 text-[10px] sm:text-xs"></i>
+                        <span>HTML</span>
+                    </button>
+
+                    <!-- Delete / Clear Cookies Button -->
+                    <button onclick="window.clearLensCookiesAndNotes()" title="Clear all browser cookies and saved notes"
+                            class="px-2.5 py-1.5 sm:px-3 sm:py-2 rounded-lg sm:rounded-xl bg-rose-100 hover:bg-rose-200 dark:bg-rose-950/60 dark:hover:bg-rose-900/80 border border-rose-300 dark:border-rose-800 text-rose-700 dark:text-rose-300 font-extrabold text-[10px] sm:text-xs shadow-sm flex items-center gap-1 sm:gap-1.5 hover:scale-105 active:scale-95 transition-all cursor-pointer">
+                        <i class="fa-solid fa-trash-can text-rose-500 text-[10px] sm:text-xs"></i>
+                        <span>Delete Cookies</span>
+                    </button>
+
+                    <!-- Double Click Hint -->
+                    <span class="hidden md:flex items-center gap-1.5 px-3 py-2 rounded-xl bg-white/80 dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 text-xs font-bold shadow-sm">
+                        <i class="fa-solid fa-arrow-pointer text-blue-500 animate-bounce"></i>
+                        <span>Double-Click Map for Google Lens</span>
+                    </span>
+
+                    <!-- Active Map Style (Satellite 4K Only) -->
+                    <div class="px-2.5 py-1.5 sm:px-3.5 sm:py-2 rounded-lg sm:rounded-xl bg-slate-900 text-white font-bold text-[10px] sm:text-xs shadow-md flex items-center gap-1.5 border border-slate-700">
+                        <span class="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                        <i class="fa-solid fa-satellite text-blue-400 text-[10px] sm:text-xs"></i>
+                        <span>Satellite 4K</span>
+                    </div>
+
+                    <!-- Direct Google Navigation Deep Links with Key Integration -->
+                    <button id="openInGoogleMapsLinkBtn" onclick="window.openGoogleDirections()" title="Open Live Turn-by-Turn Google Directions"
+                       class="px-2.5 py-1.5 sm:px-3.5 sm:py-2 rounded-lg sm:rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-bold text-[10px] sm:text-xs flex items-center gap-1 sm:gap-1.5 shadow-md hover:scale-105 active:scale-95 transition-all cursor-pointer">
+                        <i class="fa-brands fa-google text-[10px] sm:text-xs text-amber-300"></i>
+                        <span class="hidden sm:inline">Start Google Navigation</span>
+                        <span class="sm:hidden">Navigate</span>
+                    </button>
+                    <!-- Hidden legacy anchor for direct fallback -->
+                    <a id="openInGoogleMapsLink" href="https://www.google.com/maps/dir/?api=1&destination=Jaipur" target="_blank" rel="noopener noreferrer" class="hidden"></a>
+                </div>
+            </div>
+
+            <!-- Map View Container -->
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                <!-- Map Area -->
+                <div class="lg:col-span-8 glass-panel p-3 rounded-3xl shadow-xl border border-slate-200 dark:border-slate-800 relative">
+                    <!-- Leaflet Interactive Canvas (Zero Blocking / No API Key Required / High Performance) -->
+                    <div id="travelMap" class="w-full rounded-2xl overflow-hidden shadow-inner relative" style="height: 500px; z-index: 1;"></div>
+
+                    <!-- Google Lens Interactive Inspector Overlay (Draggable / Resizable Box Spawns Here) -->
+                    <div id="lensInspectorOverlay" class="absolute inset-0 pointer-events-none z-30 overflow-hidden"></div>
+
+                    <!-- Map Legend & Control Overlay -->
+                    <div class="absolute bottom-6 left-6 right-6 z-20 flex flex-wrap items-center justify-between gap-2 pointer-events-none">
+                        <div class="glass-panel px-3 py-2 rounded-xl shadow-lg text-[11px] font-semibold text-slate-700 dark:text-slate-200 flex items-center gap-3 pointer-events-auto">
+                            <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full bg-blue-600 shadow-sm"></span> Milestone Checkpoint</span>
+                            <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full bg-emerald-500 shadow-sm"></span> Start Hub</span>
+                            <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full bg-purple-600 shadow-sm"></span> Transit Hub</span>
+                        </div>
+                        <div class="flex items-center gap-2 pointer-events-auto">
+                            <button onclick="window.fitMapToBounds()" class="glass-panel px-3 py-2 rounded-xl shadow-lg text-xs font-bold text-blue-600 dark:text-blue-400 hover:scale-105 transition-all flex items-center gap-1">
+                                <i class="fa-solid fa-expand"></i> Reset View
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Live Route Quick Summary Card -->
+                <div class="lg:col-span-4 space-y-4">
+                    <div class="glass-panel p-5 rounded-3xl shadow-xl space-y-4">
+                        <div class="flex items-center justify-between border-b border-slate-200/80 dark:border-slate-800 pb-3">
+                            <h4 class="font-heading font-extrabold text-base text-slate-900 dark:text-white flex items-center gap-2">
+                                <i class="fa-solid fa-route text-indigo-500"></i> Route Insights
+                            </h4>
+                            <span class="px-2.5 py-0.5 rounded-full bg-emerald-100 dark:bg-emerald-900/50 text-emerald-600 dark:text-emerald-300 text-xs font-bold">
+                                Optimized Path
+                            </span>
+                        </div>
+
+                        <div class="space-y-3 text-xs">
+                            <div class="flex items-center justify-between p-3 rounded-xl bg-slate-50 dark:bg-slate-900/60 border border-slate-200/60 dark:border-slate-800">
+                                <span class="text-slate-500 dark:text-slate-400 font-medium">Total Milestones:</span>
+                                <span id="totalMilestonesCount" class="font-extrabold text-slate-800 dark:text-slate-100">15 Major Checkpoints</span>
+                            </div>
+                            <div class="flex items-center justify-between p-3 rounded-xl bg-slate-50 dark:bg-slate-900/60 border border-slate-200/60 dark:border-slate-800">
+                                <span class="text-slate-500 dark:text-slate-400 font-medium">Est. Milestone Travel Time:</span>
+                                <span id="totalTravelTime" class="font-extrabold text-slate-800 dark:text-slate-100">~ 2h 45m total transit</span>
+                            </div>
+                            <div class="flex items-center justify-between p-3 rounded-xl bg-slate-50 dark:bg-slate-900/60 border border-slate-200/60 dark:border-slate-800">
+                                <span class="text-slate-500 dark:text-slate-400 font-medium">Best Starting Time:</span>
+                                <span class="font-extrabold text-blue-600 dark:text-blue-400">08:30 AM (To avoid rush)</span>
+                            </div>
+                            <div class="flex items-center justify-between p-3 rounded-xl bg-slate-50 dark:bg-slate-900/60 border border-slate-200/60 dark:border-slate-800">
+                                <span class="text-slate-500 dark:text-slate-400 font-medium">Public Transit Coverage:</span>
+                                <span class="font-extrabold text-emerald-600">92% High Accessibility</span>
+                            </div>
+                        </div>
+
+                        <!-- Street View & Directions Button -->
+                        <div class="pt-2">
+                            <a id="streetViewDeepLink" href="https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=26.9124,75.7873" target="_blank" rel="noopener noreferrer"
+                               class="w-full py-2.5 px-4 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 font-bold text-xs flex items-center justify-center gap-2 transition-all">
+                                <i class="fa-solid fa-street-view text-amber-500"></i>
+                                <span>Explore 360° Google Street View</span>
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Weather Card Widget -->
+                    <div class="glass-panel p-5 rounded-3xl shadow-xl flex items-center justify-between">
+                        <div class="flex items-center gap-3">
+                            <div id="weatherIconContainer" class="w-12 h-12 rounded-2xl bg-amber-100 dark:bg-amber-900/50 text-amber-500 flex items-center justify-center text-2xl">
+                                <i class="fa-solid fa-cloud-sun"></i>
+                            </div>
+                            <div>
+                                <span id="weatherTemp" class="font-heading font-black text-2xl text-slate-900 dark:text-white">28°C</span>
+                                <p id="weatherCondition" class="text-xs font-semibold text-slate-500 dark:text-slate-400">Pleasant & Sunny</p>
+                            </div>
+                        </div>
+                        <div class="text-right text-xs">
+                            <span class="text-slate-400 block">Humidity: 42%</span>
+                            <span class="text-emerald-500 font-bold">Great for sightseeing</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Milestones Journey Path with Operating Hours, Timings & Entry Details -->
+        <section id="milestones-section" class="scroll-mt-24 space-y-6">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                <div>
+                    <h3 class="font-heading font-extrabold text-2xl text-slate-900 dark:text-white flex items-center gap-2">
+                        <i class="fa-solid fa-signs-post text-purple-600"></i> Milestone Journey Path & Operating Schedules
+                    </h3>
+                    <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400">
+                        Chronological sequence of attractions, travel time between stops, opening & closing hours, and public transit links.
+                    </p>
+                </div>
+                <div class="flex items-center gap-2">
+                    <button onclick="window.expandAllMilestones(true)" class="text-xs font-bold text-blue-600 dark:text-blue-400 hover:underline">Expand All</button>
+                    <span class="text-slate-300 dark:text-slate-700">|</span>
+                    <button onclick="window.expandAllMilestones(false)" class="text-xs font-bold text-slate-500 hover:underline">Collapse</button>
+                </div>
+            </div>
+
+            <!-- Milestone Timeline Container -->
+            <div id="milestoneTimelineContainer" class="milestone-timeline space-y-6 pl-4 sm:pl-8">
+                <!-- Milestones will be rendered dynamically by JavaScript -->
+            </div>
+        </section>
+
+        <!-- Expenses & Budget Matrix (Dynamic Calculator for ANY Location) -->
+        <section id="budget-section" class="scroll-mt-24 space-y-6">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                <div>
+                    <h3 class="font-heading font-extrabold text-2xl text-slate-900 dark:text-white flex items-center gap-2">
+                        <i class="fa-solid fa-sack-dollar text-emerald-500"></i> Trip Expenses & Real-Time Budget Estimator
+                    </h3>
+                    <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400">
+                        Granular cost breakdown based on historical Google data, live currency conversions, and traveler preferences.
+                    </p>
+                </div>
+                
+                <!-- Live Budget Adjuster Sliders -->
+                <div class="flex items-center gap-2">
+                    <span class="text-xs font-bold text-slate-500 dark:text-slate-400">Live Simulator:</span>
+                    <button onclick="window.recalculateBudget('budget')" id="tierBudgetBtn" class="px-3 py-1.5 rounded-lg text-xs font-bold bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300">🎒 Backpacker</button>
+                    <button onclick="window.recalculateBudget('moderate')" id="tierModerateBtn" class="px-3 py-1.5 rounded-lg text-xs font-bold bg-blue-600 text-white shadow-sm">⭐ Standard</button>
+                    <button onclick="window.recalculateBudget('luxury')" id="tierLuxuryBtn" class="px-3 py-1.5 rounded-lg text-xs font-bold bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300">👑 Luxury</button>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                <!-- 3-Tier Comparison Cards -->
+                <div class="lg:col-span-7 space-y-4">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <!-- Backpacker Card -->
+                        <div class="glass-card p-5 rounded-2xl border-2 border-transparent hover:border-slate-400 transition-all">
+                            <div class="flex items-center justify-between mb-3">
+                                <span class="text-xl">🎒</span>
+                                <span class="text-[10px] uppercase font-extrabold tracking-wider px-2 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">Budget</span>
+                            </div>
+                            <h4 class="font-bold text-base text-slate-900 dark:text-white">Backpacker</h4>
+                            <p class="text-xs text-slate-500 dark:text-slate-400 mb-4">Hostels, local street food & buses</p>
+                            <div class="pt-2 border-t border-slate-200/80 dark:border-slate-800">
+                                <span class="text-[11px] text-slate-400 block">Est. Per Person</span>
+                                <span id="budgetCardBackpackerPrice" class="font-heading font-black text-2xl text-slate-800 dark:text-slate-100">₹4,500</span>
+                                <span class="text-[10px] text-slate-400 block">For 3 Days</span>
+                            </div>
+                        </div>
+
+                        <!-- Standard / Moderate Card (Active Default) -->
+                        <div class="glass-card p-5 rounded-2xl border-2 border-blue-500 shadow-glow relative bg-blue-50/40 dark:bg-blue-950/30">
+                            <div class="absolute -top-3 right-4 px-2.5 py-0.5 rounded-full bg-blue-600 text-white text-[10px] font-extrabold uppercase tracking-wide">
+                                Most Popular
+                            </div>
+                            <div class="flex items-center justify-between mb-3">
+                                <span class="text-xl">⭐</span>
+                                <span class="text-[10px] uppercase font-extrabold tracking-wider px-2 py-0.5 rounded-full bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-300">Comfort</span>
+                            </div>
+                            <h4 class="font-bold text-base text-blue-600 dark:text-blue-400">Standard / Duo</h4>
+                            <p class="text-xs text-slate-500 dark:text-slate-400 mb-4">3-Star hotels, cabs & top cafes</p>
+                            <div class="pt-2 border-t border-blue-200/80 dark:border-blue-800">
+                                <span class="text-[11px] text-slate-400 block">Est. Per Person</span>
+                                <span id="budgetCardModeratePrice" class="font-heading font-black text-2xl text-blue-600 dark:text-blue-400">₹11,800</span>
+                                <span class="text-[10px] text-slate-400 block">For 3 Days</span>
+                            </div>
+                        </div>
+
+                        <!-- Luxury VIP Card -->
+                        <div class="glass-card p-5 rounded-2xl border-2 border-transparent hover:border-amber-400 transition-all">
+                            <div class="flex items-center justify-between mb-3">
+                                <span class="text-xl">👑</span>
+                                <span class="text-[10px] uppercase font-extrabold tracking-wider px-2 py-0.5 rounded-full bg-amber-100 dark:bg-amber-900/60 text-amber-700 dark:text-amber-300">VIP</span>
+                            </div>
+                            <h4 class="font-bold text-base text-slate-900 dark:text-white">Luxury Heritage</h4>
+                            <p class="text-xs text-slate-500 dark:text-slate-400 mb-4">5-Star Palaces & private chauffeur</p>
+                            <div class="pt-2 border-t border-slate-200/80 dark:border-slate-800">
+                                <span class="text-[11px] text-slate-400 block">Est. Per Person</span>
+                                <span id="budgetCardLuxuryPrice" class="font-heading font-black text-2xl text-amber-600 dark:text-amber-400">₹32,500</span>
+                                <span class="text-[10px] text-slate-400 block">For 3 Days</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Detailed Line-by-Line Expense Breakdown Table -->
+                    <div class="glass-panel p-5 rounded-3xl shadow-xl overflow-x-auto">
+                        <h4 class="font-heading font-extrabold text-base text-slate-900 dark:text-white mb-3 flex items-center justify-between">
+                            <span>Itemized Expense Matrix</span>
+                            <span id="activeStyleTag" class="text-xs font-bold text-blue-600 uppercase bg-blue-100 dark:bg-blue-900/50 px-2.5 py-0.5 rounded-full">Standard Tier</span>
+                        </h4>
+                        <table class="w-full text-left text-xs sm:text-sm">
+                            <thead>
+                                <tr class="border-b border-slate-200 dark:border-slate-800 text-slate-400 uppercase text-[10px] font-bold">
+                                    <th class="py-2.5">Category</th>
+                                    <th class="py-2.5">What's Included</th>
+                                    <th class="py-2.5 text-right">Daily Cost</th>
+                                    <th class="py-2.5 text-right">Total Trip Cost</th>
+                                </tr>
+                            </thead>
+                            <tbody id="expenseTableBody" class="divide-y divide-slate-100 dark:divide-slate-800/60 font-medium">
+                                <!-- Populated dynamically -->
+                            </tbody>
+                            <tfoot>
+                                <tr class="font-extrabold text-slate-900 dark:text-white border-t-2 border-slate-300 dark:border-slate-700">
+                                    <td colspan="3" class="py-3 text-right">Grand Total (<span id="totalTravelersLabel">2 Travelers</span>, <span id="totalDaysLabel">3 Days</span>):</td>
+                                    <td id="grandTotalBudgetDisplay" class="py-3 text-right text-base text-blue-600 dark:text-blue-400 font-black">₹23,600</td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Budget Chart & Savings Tips -->
+                <div class="lg:col-span-5 space-y-4">
+                    <div class="glass-panel p-5 rounded-3xl shadow-xl space-y-4">
+                        <h4 class="font-heading font-extrabold text-base text-slate-900 dark:text-white flex items-center gap-2">
+                            <i class="fa-solid fa-chart-pie text-blue-500"></i> Cost Distribution Ratio
+                        </h4>
+                        <div class="h-56 relative flex items-center justify-center">
+                            <canvas id="budgetDoughnutChart"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Gemini AI Budget Saving Tips -->
+                    <div class="glass-panel p-5 rounded-3xl shadow-xl space-y-3 bg-gradient-to-br from-indigo-50/50 via-white to-purple-50/50 dark:from-slate-900 dark:via-slate-900 dark:to-indigo-950/40">
+                        <div class="flex items-center gap-2 text-indigo-600 dark:text-indigo-400 font-bold text-xs">
+                            <i class="fa-solid fa-lightbulb text-amber-500"></i>
+                            <span>Gemini Budget Optimization Tips:</span>
+                        </div>
+                        <ul id="budgetTipsList" class="space-y-2 text-xs text-slate-600 dark:text-slate-300">
+                            <li class="flex items-start gap-2">
+                                <i class="fa-solid fa-check text-emerald-500 mt-0.5"></i>
+                                <span>Get the Composite Heritage Entry Pass to save 45% on entrance tickets.</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <i class="fa-solid fa-check text-emerald-500 mt-0.5"></i>
+                                <span>Use City AC Bus Route 9A or Metro instead of prime auto-rickshaws for inter-city travel.</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <i class="fa-solid fa-check text-emerald-500 mt-0.5"></i>
+                                <span>Visit early mornings (08:30 AM) to skip queue booking surcharges and surge taxi rates.</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Public & Private Bus Availability & Route Finder -->
+        <section id="bus-section" class="scroll-mt-24 space-y-6">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                <div>
+                    <h3 class="font-heading font-extrabold text-2xl text-slate-900 dark:text-white flex items-center gap-2">
+                        <i class="fa-solid fa-route text-amber-500"></i> Public & Private Bus Availability & Route Finder
+                    </h3>
+                    <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400">
+                        Search any bus number (e.g., <strong>KIA-8</strong>, <strong>AC-5</strong>, <strong>500-D</strong>, <strong>Bus 72</strong>) to display its complete route itinerary, stop-by-stop sequence, operating hours, and fare.
+                    </p>
+                </div>
+                <div class="flex items-center gap-2 text-xs font-semibold">
+                    <span class="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-blue-100 dark:bg-blue-900/60 text-blue-700 dark:text-blue-300">
+                        <i class="fa-solid fa-map-pin text-blue-500"></i> Verified Route Directory
+                    </span>
+                </div>
+            </div>
+
+            <!-- Bus Number Route Explorer Form -->
+            <div class="glass-panel p-5 sm:p-7 rounded-3xl shadow-xl border-2 border-amber-500/30 dark:border-amber-500/20 bg-gradient-to-r from-amber-500/5 via-blue-500/5 to-indigo-500/5 space-y-4">
+                <div class="flex items-center gap-2 text-xs font-bold text-amber-700 dark:text-amber-300">
+                    <span class="px-2 py-0.5 rounded-md bg-amber-100 dark:bg-amber-900/60 font-black">STEP-BY-STEP TRANSIT FINDER</span>
+                    <span class="text-slate-500 dark:text-slate-400">1. Select Country ➔ 2. Select State / Region ➔ 3. Enter Bus Number</span>
+                </div>
+
+                <form id="busTrackerForm" onsubmit="window.handleBusSearch(event)" class="space-y-3">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-3">
+                        <!-- 1. Country Selector -->
+                        <div class="sm:col-span-1 lg:col-span-4">
+                            <label for="busCountrySelect" class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1 flex items-center gap-1.5">
+                                <span class="w-5 h-5 rounded-full bg-amber-500 text-white flex items-center justify-center text-[10px] font-black shrink-0">1</span>
+                                <span>Country <span class="text-rose-500">*</span></span>
+                            </label>
+                            <div class="relative">
+                                <i class="fa-solid fa-earth-americas absolute left-3.5 top-3.5 text-amber-500 text-sm pointer-events-none"></i>
+                                <select id="busCountrySelect" onchange="window.handleBusCountryChange(this.value)" required
+                                        class="w-full pl-9 pr-7 py-3 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 font-bold text-slate-800 dark:text-slate-100 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-amber-500 cursor-pointer shadow-inner">
+                                    <option value="">-- Select Country --</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- 2. State Selector -->
+                        <div class="sm:col-span-1 lg:col-span-4">
+                            <label for="busStateSelect" class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1 flex items-center gap-1.5">
+                                <span class="w-5 h-5 rounded-full bg-amber-500 text-white flex items-center justify-center text-[10px] font-black shrink-0">2</span>
+                                <span>State / Region <span class="text-rose-500">*</span></span>
+                            </label>
+                            <div class="relative">
+                                <i class="fa-solid fa-map-location-dot absolute left-3.5 top-3.5 text-amber-500 text-sm pointer-events-none"></i>
+                                <select id="busStateSelect" onchange="window.handleBusStateChange(this.value)" required
+                                        class="w-full pl-9 pr-7 py-3 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 font-bold text-slate-800 dark:text-slate-100 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-amber-500 cursor-pointer shadow-inner">
+                                    <option value="">-- First Select Country --</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- 3. Bus Number Input & Submit -->
+                        <div class="sm:col-span-2 lg:col-span-4">
+                            <label for="busNumberInput" class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1 flex items-center gap-1.5">
+                                <span class="w-5 h-5 rounded-full bg-amber-500 text-white flex items-center justify-center text-[10px] font-black shrink-0">3</span>
+                                <span>Bus Number <span class="text-rose-500">*</span></span>
+                            </label>
+                            <div class="relative flex items-center">
+                                <i class="fa-solid fa-magnifying-glass-location absolute left-3.5 top-3.5 text-amber-500 text-sm pointer-events-none"></i>
+                                <input type="text" id="busNumberInput" placeholder="e.g. KIA-8, AC-5, 500-D, 72..." required
+                                       class="w-full pl-9 pr-24 py-3 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 font-bold text-slate-800 dark:text-slate-100 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-amber-500 shadow-inner">
+                                <button type="submit" id="busSearchSubmitBtn"
+                                        class="absolute right-1 px-3.5 py-2 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-extrabold text-xs shadow-md flex items-center gap-1.5 hover:scale-105 active:scale-95 transition-all cursor-pointer">
+                                    <i class="fa-solid fa-route text-xs"></i>
+                                    <span>Search</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+
+                <!-- Dynamic Quick Bus Route Suggestions for Selected Country/State -->
+                <div class="space-y-1.5">
+                    <div class="flex flex-wrap items-center gap-2 text-xs">
+                        <span class="font-bold text-slate-500 dark:text-slate-400 flex items-center gap-1">
+                            <i class="fa-solid fa-bolt text-amber-500"></i> Popular Bus Routes:
+                        </span>
+                        <div id="popularBusesContainer" class="flex flex-wrap items-center gap-1.5">
+                            <!-- Populated dynamically based on selected Country/State or defaults -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Bus Route Itinerary Result Box -->
+                <div id="liveBusResultCard" class="hidden p-5 sm:p-6 rounded-3xl bg-white dark:bg-slate-900 border-2 border-amber-400 dark:border-amber-700/80 shadow-2xl space-y-5">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-200/80 dark:border-slate-800 pb-3">
+                        <div>
+                            <div class="flex flex-wrap items-center gap-2 mb-1">
+                                <span class="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold uppercase bg-amber-100 dark:bg-amber-900/60 text-amber-700 dark:text-amber-300">
+                                    Official Bus Route
+                                </span>
+                                <span id="busCountryBadge" class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-purple-100 dark:bg-purple-900/50 text-purple-700 dark:text-purple-300">
+                                    🇮🇳 India
+                                </span>
+                                <span id="busStateBadge" class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 dark:bg-emerald-900/50 text-emerald-700 dark:text-emerald-300">
+                                    Rajasthan
+                                </span>
+                                <span id="busCityBadge" class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-blue-100 dark:bg-blue-900/50 text-blue-700 dark:text-blue-300">
+                                    Jaipur
+                                </span>
+                            </div>
+                            <h4 id="liveBusCardTitle" class="font-heading font-black text-xl text-slate-900 dark:text-white">
+                                BMTC Bus Route KIA-8
+                            </h4>
+                        </div>
+                        <button type="button" onclick="document.getElementById('liveBusResultCard').classList.add('hidden')" class="self-end sm:self-center px-2.5 py-1 rounded-lg text-xs font-bold bg-slate-100 dark:bg-slate-800 text-slate-500 hover:text-slate-800 dark:hover:text-slate-200">
+                            ✕ Close Route
+                        </button>
+                    </div>
+
+                    <!-- Route Metadata Grid -->
+                    <div id="busRouteMetaGrid" class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
+                        <!-- Filled dynamically -->
+                    </div>
+
+                    <!-- Route Overview -->
+                    <p id="liveBusCardRoute" class="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed"></p>
+
+                    <!-- Stop-by-Stop Visual Route Timeline -->
+                    <div class="space-y-2">
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs font-extrabold uppercase tracking-wider text-slate-700 dark:text-slate-300 flex items-center gap-1.5">
+                                <i class="fa-solid fa-list-ol text-blue-500"></i> Stop-by-Stop Route Sequence:
+                            </span>
+                            <span id="totalStopsBadge" class="text-[11px] font-bold text-slate-500">18 Key Stops</span>
+                        </div>
+                        <div id="busStopsTimelineList" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5 max-h-80 overflow-y-auto pr-1">
+                            <!-- Populated dynamically -->
+                        </div>
+                    </div>
+
+                    <!-- Bottom Action Bar -->
+                    <div class="flex flex-wrap items-center justify-between gap-3 pt-3 border-t border-slate-200/80 dark:border-slate-800">
+                        <div id="liveBusCardFare" class="text-xs text-slate-700 dark:text-slate-300">
+                            <!-- Fare info -->
+                        </div>
+                        <a id="liveBusGoogleAppLink" href="#" target="_blank" rel="noopener noreferrer"
+                           class="px-4 py-2.5 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-bold text-xs flex items-center gap-2 shadow-md hover:scale-105 transition-all">
+                            <i class="fa-brands fa-google text-sm"></i>
+                            <span>View Bus Route on Google Maps ➔</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Public Bus Section -->
+                <div class="glass-panel p-6 rounded-3xl shadow-xl space-y-4">
+                    <div class="flex items-center justify-between border-b border-slate-200/80 dark:border-slate-800 pb-3">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-xl bg-blue-100 dark:bg-blue-900/50 text-blue-600 flex items-center justify-center text-lg font-bold">
+                                🚎
+                            </div>
+                            <div>
+                                <h4 class="font-heading font-bold text-base text-slate-900 dark:text-white">Public City Bus Network</h4>
+                                <span id="publicBusOperatorName" class="text-xs text-slate-500 dark:text-slate-400">JCTSL City Service</span>
+                            </div>
+                        </div>
+                        <span class="px-2.5 py-1 rounded-lg text-xs font-extrabold bg-blue-50 dark:bg-blue-950 text-blue-600 border border-blue-200 dark:border-blue-800">
+                            Fares: ₹10 - ₹40
+                        </span>
+                    </div>
+
+                    <div id="publicBusRoutesList" class="space-y-3">
+                        <!-- Populated dynamically -->
+                    </div>
+
+                    <div class="p-3 rounded-xl bg-slate-50 dark:bg-slate-900/60 border border-slate-200/80 dark:border-slate-800 text-xs text-slate-600 dark:text-slate-300 flex items-center gap-2">
+                        <i class="fa-solid fa-circle-info text-blue-500"></i>
+                        <span>Frequency: Every 8 - 15 minutes. Daily tourist day pass available for ₹100.</span>
+                    </div>
+                </div>
+
+                <!-- Private Bus & Long Distance Coaches -->
+                <div class="glass-panel p-6 rounded-3xl shadow-xl space-y-4">
+                    <div class="flex items-center justify-between border-b border-slate-200/80 dark:border-slate-800 pb-3">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-xl bg-amber-100 dark:bg-amber-900/50 text-amber-600 flex items-center justify-center text-lg font-bold">
+                                🚍
+                            </div>
+                            <div>
+                                <h4 class="font-heading font-bold text-base text-slate-900 dark:text-white">Private & Intercity Luxury Buses</h4>
+                                <span class="text-xs text-slate-500 dark:text-slate-400">Volvo Multi-Axle, AC Sleepers</span>
+                            </div>
+                        </div>
+                        <span class="px-2.5 py-1 rounded-lg text-xs font-extrabold bg-amber-50 dark:bg-amber-950 text-amber-600 border border-amber-200 dark:border-amber-800">
+                            Available: High
+                        </span>
+                    </div>
+
+                    <div id="privateBusOperatorsList" class="space-y-3">
+                        <!-- Populated dynamically -->
+                    </div>
+
+                    <div class="flex items-center justify-between pt-2 text-xs">
+                        <span class="text-slate-500 dark:text-slate-400 font-medium">Nearest Private Hub:</span>
+                        <span id="privateBusHubName" class="font-bold text-slate-800 dark:text-slate-200">Sindhi Camp / Main Express Stand</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Google Reviews Sentiment & Authentic Traveler Feedback -->
+        <section id="reviews-section" class="scroll-mt-24 space-y-6">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                <div>
+                    <h3 class="font-heading font-extrabold text-2xl text-slate-900 dark:text-white flex items-center gap-2">
+                        <i class="fa-solid fa-star text-yellow-400"></i> Google Reviews & Sentiment Analysis
+                    </h3>
+                    <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400">
+                        Aggregated ratings, real feedback summaries, and traveler satisfaction metrics fetched from Google data.
+                    </p>
+                </div>
+                <div class="flex items-center gap-2">
+                    <div class="flex items-center text-yellow-400 text-sm">
+                        <i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star-half-stroke"></i>
+                    </div>
+                    <span id="aggregateRatingText" class="font-black text-sm text-slate-800 dark:text-slate-100">4.8 / 5.0 (28,400+ Reviews)</span>
+                </div>
+            </div>
+
+            <!-- Sentiment Overview Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- What Travelers Love -->
+                <div class="glass-panel p-5 rounded-3xl shadow-xl space-y-3 border-l-4 border-emerald-500">
+                    <h4 class="font-bold text-sm text-emerald-600 dark:text-emerald-400 flex items-center gap-2">
+                        <i class="fa-solid fa-thumbs-up"></i> What Travelers Love
+                    </h4>
+                    <ul id="positiveSentimentList" class="space-y-2 text-xs text-slate-600 dark:text-slate-300">
+                        <!-- Populated -->
+                    </ul>
+                </div>
+
+                <!-- Things to Keep in Mind -->
+                <div class="glass-panel p-5 rounded-3xl shadow-xl space-y-3 border-l-4 border-amber-500">
+                    <h4 class="font-bold text-sm text-amber-600 dark:text-amber-400 flex items-center gap-2">
+                        <i class="fa-solid fa-triangle-exclamation"></i> Helpful Warnings & Tips
+                    </h4>
+                    <ul id="warningSentimentList" class="space-y-2 text-xs text-slate-600 dark:text-slate-300">
+                        <!-- Populated -->
+                    </ul>
+                </div>
+
+                <!-- Rating Distribution Bars -->
+                <div class="glass-panel p-5 rounded-3xl shadow-xl space-y-2">
+                    <h4 class="font-bold text-sm text-slate-800 dark:text-slate-200 mb-3">Google Star Breakdown</h4>
+                    <div class="space-y-1.5 text-xs">
+                        <div class="flex items-center gap-2">
+                            <span class="w-6 text-slate-400 font-bold">5★</span>
+                            <div class="flex-1 h-2 rounded-full bg-slate-200 dark:bg-slate-800 overflow-hidden">
+                                <div class="h-full bg-yellow-400 rounded-full" style="width: 82%;"></div>
+                            </div>
+                            <span class="w-8 text-right font-semibold text-slate-500">82%</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <span class="w-6 text-slate-400 font-bold">4★</span>
+                            <div class="flex-1 h-2 rounded-full bg-slate-200 dark:bg-slate-800 overflow-hidden">
+                                <div class="h-full bg-yellow-400 rounded-full" style="width: 14%;"></div>
+                            </div>
+                            <span class="w-8 text-right font-semibold text-slate-500">14%</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <span class="w-6 text-slate-400 font-bold">3★</span>
+                            <div class="flex-1 h-2 rounded-full bg-slate-200 dark:bg-slate-800 overflow-hidden">
+                                <div class="h-full bg-yellow-400 rounded-full" style="width: 3%;"></div>
+                            </div>
+                            <span class="w-8 text-right font-semibold text-slate-500">3%</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <span class="w-6 text-slate-400 font-bold">2★</span>
+                            <div class="flex-1 h-2 rounded-full bg-slate-200 dark:bg-slate-800 overflow-hidden">
+                                <div class="h-full bg-yellow-400 rounded-full" style="width: 1%;"></div>
+                            </div>
+                            <span class="w-8 text-right font-semibold text-slate-500">1%</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Authentic Verified Review Cards -->
+            <div id="verifiedReviewsGrid" class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <!-- Rendered dynamically -->
+            </div>
+        </section>
+
+        <!-- Next Travel Destinations & Recommended Nearby Trips -->
+        <section id="next-travel-section" class="scroll-mt-24 space-y-6">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                <div>
+                    <h3 class="font-heading font-extrabold text-2xl text-slate-900 dark:text-white flex items-center gap-2">
+                        <i class="fa-solid fa-compass-drafting text-indigo-500"></i> Recommended Next Travel Hops & Budgets
+                    </h3>
+                    <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400">
+                        Continue your journey seamlessly. Nearby destinations, estimated transit time, and trip extension budgets.
+                    </p>
+                </div>
+            </div>
+
+            <div id="nextTravelHopsGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Rendered dynamically -->
+            </div>
+        </section>
+
+        <!-- Gemini Live AI Travel Guide (Contextual Q&A on Current Location & Google Data) -->
+        <section id="gemini-chat" class="scroll-mt-24">
+            <div class="glass-panel p-6 sm:p-8 rounded-3xl shadow-2xl border-2 border-purple-500/30 dark:border-purple-500/20 relative overflow-hidden">
+                <!-- Background Glow -->
+                <div class="absolute -right-20 -bottom-20 w-80 h-80 bg-purple-500/10 rounded-full blur-3xl pointer-events-none"></div>
+
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 border-b border-slate-200/80 dark:border-slate-800 pb-4">
+                    <div class="flex items-center gap-3">
+                        <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-purple-600 via-indigo-600 to-blue-600 flex items-center justify-center text-white text-xl shadow-glow-purple">
+                            <i class="fa-solid fa-brain"></i>
+                        </div>
+                        <div>
+                            <div class="flex items-center gap-2">
+                                <h3 class="font-heading font-extrabold text-xl text-slate-900 dark:text-white">Gemini Live Travel Assistant</h3>
+                                <span class="px-2 py-0.5 rounded-full text-[10px] font-black uppercase bg-purple-100 dark:bg-purple-900/60 text-purple-700 dark:text-purple-300">
+                                    Context Active
+                                </span>
+                            </div>
+                            <p class="text-xs text-slate-500 dark:text-slate-400">
+                                Ask any question about <span id="chatContextLocationName" class="font-bold text-purple-600 dark:text-purple-400">Jaipur</span>, timings, safe areas, street foods, or hidden gems.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Quick Prompt Suggestions -->
+                    <div class="flex flex-wrap items-center gap-1.5">
+                        <button onclick="window.sendPredefinedQuery('Is it safe to travel at night here with family?')" class="px-3 py-1 rounded-full text-xs font-semibold bg-slate-100 dark:bg-slate-800 hover:bg-purple-100 dark:hover:bg-purple-900/40 hover:text-purple-600 transition-colors">
+                            🛡️ Night Safety?
+                        </button>
+                        <button onclick="window.sendPredefinedQuery('What are the best vegetarian street food spots nearby?')" class="px-3 py-1 rounded-full text-xs font-semibold bg-slate-100 dark:bg-slate-800 hover:bg-purple-100 dark:hover:bg-purple-900/40 hover:text-purple-600 transition-colors">
+                            🍲 Best Local Food?
+                        </button>
+                        <button onclick="window.sendPredefinedQuery('How do I catch the cheapest bus from airport to city center?')" class="px-3 py-1 rounded-full text-xs font-semibold bg-slate-100 dark:bg-slate-800 hover:bg-purple-100 dark:hover:bg-purple-900/40 hover:text-purple-600 transition-colors">
+                            🚌 Airport Bus Link?
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Chat Messages Scrollable Box -->
+                <div id="chatMessagesBox" class="h-80 overflow-y-auto space-y-4 p-4 rounded-2xl bg-white/70 dark:bg-slate-900/70 border border-slate-200/80 dark:border-slate-800/80 mb-4 text-xs sm:text-sm">
+                    <!-- Default welcome from Gemini -->
+                    <div class="flex items-start gap-3">
+                        <div class="w-8 h-8 rounded-xl bg-purple-600 text-white flex items-center justify-center shrink-0 text-xs font-bold">
+                            ✨
+                        </div>
+                        <div class="glass-card p-3.5 rounded-2xl rounded-tl-none max-w-2xl text-slate-800 dark:text-slate-200 space-y-1.5 leading-relaxed">
+                            <p class="font-bold text-xs text-purple-600 dark:text-purple-400">Gemini AI Travel Guide</p>
+                            <p>Namaste & Welcome! I have loaded all live Google Maps coordinates, milestone travel times, public/private bus timetables, and authentic Google review sentiments for <strong id="chatWelcomeDest">Jaipur</strong>. How can I assist your journey today?</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Chat Input Form -->
+                <form id="geminiChatForm" onsubmit="window.handleChatSubmit(event)" class="relative flex items-center gap-2">
+                    <input type="text" id="chatInputMessage" placeholder="Ask Gemini any question about this destination or route..." required
+                           class="flex-1 pl-4 pr-12 py-3.5 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-100 font-medium focus:outline-none focus:ring-2 focus:ring-purple-500 text-sm shadow-inner transition-all">
+                    <button type="submit" id="chatSendBtn" class="px-5 py-3.5 rounded-xl bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white font-bold text-sm shadow-md flex items-center justify-center gap-2 hover:scale-105 active:scale-95 transition-all">
+                        <i class="fa-solid fa-paper-plane"></i>
+                        <span class="hidden sm:inline">Ask AI</span>
+                    </button>
+                </form>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="mt-20 border-t border-slate-200/80 dark:border-slate-800/80 bg-white/70 dark:bg-slate-950/70 backdrop-blur-xl transition-colors">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 mb-10">
+                <!-- Brand Info -->
+                <div class="lg:col-span-2 space-y-4">
+                    <div class="flex items-center gap-2">
+                        <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-blue-600 to-indigo-600 flex items-center justify-center text-white shadow-glow">
+                            <i class="fa-solid fa-compass text-lg text-amber-300"></i>
+                        </div>
+                        <span class="font-heading font-extrabold text-2xl tracking-tight bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 bg-clip-text text-transparent">Trip AI</span>
+                    </div>
+                    <p class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed max-w-sm">
+                        World-class Travel Intelligence platform combining Google Maps 4K satellite views, Gemini AI itinerary synthesis, Google Lens double-click area scanner, and live GPS day route optimizer.
+                    </p>
+                    <div class="flex items-center gap-3 pt-2">
+                        <a href="https://wa.me/917903933705?text=Hello!%20I%20want%20to%20purchase%20this%20Trip%20Travel%20AI%20app%20for%20personal%20use%20without%20lagging.%20Please%20share%20the%20details%20and%20pricing."
+                           target="_blank" rel="noopener noreferrer"
+                           class="px-3.5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs flex items-center gap-2 shadow-md transition-all">
+                            <i class="fa-brands fa-whatsapp text-sm"></i>
+                            <span>WhatsApp: +91 7903933705</span>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Navigation Links -->
+                <div class="space-y-3">
+                    <h4 class="font-heading font-bold text-sm text-slate-900 dark:text-white uppercase tracking-wider">Features</h4>
+                    <ul class="space-y-2 text-xs font-medium text-slate-600 dark:text-slate-400">
+                        <li><a href="#planner" class="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">✨ AI Trip Planner</a></li>
+                        <li><a href="#map-section" class="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">📍 Interactive Google Map</a></li>
+                        <li><a href="#budget-section" class="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">💰 Budget & Cost Calculator</a></li>
+                        <li><a href="#bus-section" class="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">🚌 Public & Private Buses</a></li>
+                        <li><a href="#reviews-section" class="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">⭐ Real Google Reviews</a></li>
+                        <li><a href="#gemini-chat" class="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">🤖 Ask Gemini Live Guide</a></li>
+                    </ul>
+                </div>
+
+                <!-- User Guide & Resources -->
+                <div class="space-y-3">
+                    <h4 class="font-heading font-bold text-sm text-slate-900 dark:text-white uppercase tracking-wider">User Guide</h4>
+                    <ul class="space-y-2 text-xs font-medium text-slate-600 dark:text-slate-400">
+                        <li>
+                            <a href="help.html" class="font-bold text-emerald-600 dark:text-emerald-400 hover:underline flex items-center gap-1.5">
+                                <i class="fa-solid fa-book-open text-xs"></i>
+                                <span>End-to-End User Guide</span>
+                            </a>
+                        </li>
+                        <li><a href="help.html#step-lens" class="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">🔍 Google Lens Scanner Guide</a></li>
+                        <li><a href="help.html#step-gps" class="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">🧭 GPS Day Tour Routing</a></li>
+                        <li><a href="help.html#step-food" class="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">🍽️ Dietary Food Finder</a></li>
+                        <li><a href="help.html#step-export" class="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">📄 PDF & HTML Export Guide</a></li>
+                        <li><a href="help.html#faq" class="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">❓ Help & FAQs</a></li>
+                    </ul>
+                </div>
+
+                <!-- Ecosystem Apps -->
+                <div class="space-y-3">
+                    <h4 class="font-heading font-bold text-sm text-slate-900 dark:text-white uppercase tracking-wider">Ecosystem</h4>
+                    <ul class="space-y-2 text-xs font-medium text-slate-600 dark:text-slate-400">
+                        <li>
+                            <a href="https://supportsourcecode.lovable.app/home" target="_blank" rel="noopener noreferrer"
+                               class="hover:text-blue-600 dark:hover:text-blue-400 transition-colors flex items-center gap-1.5 font-semibold">
+                                <i class="fa-solid fa-house text-blue-500"></i> Main Portal & Home
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://interactive-media-display.lovable.app/" target="_blank" rel="noopener noreferrer"
+                               class="hover:text-purple-600 dark:hover:text-purple-400 transition-colors flex items-center gap-1.5 font-semibold">
+                                <i class="fa-solid fa-bag-shopping text-purple-500"></i> Interactive App Store
+                            </a>
+                        </li>
+                        <li>
+                            <button onclick="window.downloadLensNotesHTML()" class="hover:text-blue-600 dark:hover:text-blue-400 transition-colors flex items-center gap-1.5 text-left cursor-pointer">
+                                <i class="fa-solid fa-code text-blue-500"></i> Download Notes (HTML)
+                            </button>
+                        </li>
+                        <li>
+                            <button onclick="window.clearLensCookiesAndNotes()" class="hover:text-rose-600 dark:hover:text-rose-400 transition-colors flex items-center gap-1.5 text-left cursor-pointer text-rose-500 font-bold">
+                                <i class="fa-solid fa-trash-can"></i> Delete Browser Cookies
+                            </button>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Bottom Sub-Footer Bar -->
+            <div class="pt-8 border-t border-slate-200 dark:border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500 dark:text-slate-400">
+                <p>© 2026 Trip AI Travel Technologies. Built with Google Maps Platform & Gemini AI.</p>
+                <div class="flex items-center gap-4">
+                    <a href="help.html" class="hover:text-slate-800 dark:hover:text-slate-200 underline">User Manual</a>
+                    <a href="https://supportsourcecode.lovable.app/home" target="_blank" class="hover:text-slate-800 dark:hover:text-slate-200">Main Page</a>
+                    <a href="https://interactive-media-display.lovable.app/" target="_blank" class="hover:text-slate-800 dark:hover:text-slate-200">App Store</a>
+                    <button onclick="window.clearLensCookiesAndNotes()" class="text-rose-500 hover:underline">Clear Cookies</button>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <div id="savedTripsModal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm hidden flex items-center justify-center p-4">
+        <div class="glass-panel w-full max-w-2xl rounded-3xl shadow-2xl p-6 space-y-4 max-h-[85vh] flex flex-col">
+            <div class="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-3">
+                <h3 class="font-heading font-extrabold text-xl text-slate-900 dark:text-white flex items-center gap-2">
+                    <i class="fa-solid fa-bookmark text-blue-600"></i> Saved Travel Itineraries
+                </h3>
+                <button onclick="window.closeSavedTripsModal()" class="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-500 hover:text-slate-900 flex items-center justify-center">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <div id="savedTripsList" class="flex-1 overflow-y-auto space-y-3">
+                <!-- Dynamically populated from localStorage -->
+            </div>
+
+            <div class="pt-3 border-t border-slate-200 dark:border-slate-800 flex justify-between items-center text-xs">
+                <span class="text-slate-400">Stored safely in your browser session</span>
+                <button onclick="window.clearAllSavedTrips()" class="text-rose-500 hover:underline font-bold">Clear All</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Share Trip Modal Dialog -->
+    <div id="shareTripModal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm hidden flex items-center justify-center p-4">
+        <div class="glass-panel w-full max-w-md rounded-3xl shadow-2xl p-6 space-y-5 flex flex-col border border-slate-200 dark:border-slate-800">
+            <div class="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-3">
+                <div class="flex items-center gap-2.5">
+                    <div class="w-9 h-9 rounded-xl bg-indigo-100 dark:bg-indigo-900/50 text-indigo-600 dark:text-indigo-400 flex items-center justify-center text-sm">
+                        <i class="fa-solid fa-share-nodes"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-heading font-extrabold text-base text-slate-900 dark:text-white">Share Travel Itinerary</h3>
+                        <p id="shareModalDestName" class="text-[11px] text-slate-500 dark:text-slate-400">Jaipur, Rajasthan, India</p>
+                    </div>
+                </div>
+                <button onclick="window.closeShareModal()" class="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-500 hover:text-slate-900 dark:hover:text-white flex items-center justify-center">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <!-- Social Share Grid -->
+            <div class="space-y-2">
+                <span class="text-xs font-bold text-slate-500 dark:text-slate-400 block uppercase tracking-wider text-[10px]">Share via Social Media</span>
+                <div class="grid grid-cols-4 gap-2.5">
+                    <a id="shareWhatsAppBtn" href="#" target="_blank" class="p-3 rounded-2xl bg-emerald-50 dark:bg-emerald-950/50 border border-emerald-200 dark:border-emerald-800 hover:scale-105 transition-transform flex flex-col items-center justify-center gap-1 text-emerald-600">
+                        <i class="fa-brands fa-whatsapp text-xl"></i>
+                        <span class="text-[10px] font-bold">WhatsApp</span>
+                    </a>
+                    <a id="shareTwitterBtn" href="#" target="_blank" class="p-3 rounded-2xl bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:scale-105 transition-transform flex flex-col items-center justify-center gap-1 text-slate-800 dark:text-slate-200">
+                        <i class="fa-brands fa-x-twitter text-xl"></i>
+                        <span class="text-[10px] font-bold">X (Twitter)</span>
+                    </a>
+                    <a id="shareTelegramBtn" href="#" target="_blank" class="p-3 rounded-2xl bg-sky-50 dark:bg-sky-950/50 border border-sky-200 dark:border-sky-800 hover:scale-105 transition-transform flex flex-col items-center justify-center gap-1 text-sky-500">
+                        <i class="fa-brands fa-telegram text-xl"></i>
+                        <span class="text-[10px] font-bold">Telegram</span>
+                    </a>
+                    <a id="shareEmailBtn" href="#" target="_blank" class="p-3 rounded-2xl bg-purple-50 dark:bg-purple-950/50 border border-purple-200 dark:border-purple-800 hover:scale-105 transition-transform flex flex-col items-center justify-center gap-1 text-purple-600">
+                        <i class="fa-solid fa-envelope text-xl"></i>
+                        <span class="text-[10px] font-bold">Email</span>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Direct Link Copy Bar -->
+            <div class="space-y-2">
+                <span class="text-xs font-bold text-slate-500 dark:text-slate-400 block uppercase tracking-wider text-[10px]">Or Copy Trip Link</span>
+                <div class="relative flex items-center">
+                    <input type="text" id="shareTripLinkInput" readonly
+                           class="w-full pl-3 pr-24 py-2.5 rounded-xl bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-xs text-slate-600 dark:text-slate-300 font-mono select-all focus:outline-none">
+                    <button onclick="window.copyShareLinkToClipboard()" id="copyShareLinkBtn"
+                            class="absolute right-1 px-3 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs flex items-center gap-1 shadow-sm transition-all">
+                        <i class="fa-regular fa-copy"></i>
+                        <span>Copy</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    
+    <!-- Active Day Tour Guide Persistent Banner (When user follows a plan) -->
+    <div id="activeTourGuideBar" class="fixed bottom-4 left-3 right-3 sm:left-6 sm:right-auto sm:max-w-2xl z-40 hidden transition-all duration-300 pointer-events-auto">
+        <!-- Dynamically populated by renderActiveTourGuideCard() -->
+    </div>
+
+    <!-- Floating Action Buttons: WhatsApp App Purchase, Quick Location Optimizer & Food Finder -->
+    <div class="fixed bottom-3 right-2.5 sm:bottom-6 sm:right-6 z-40 flex flex-col items-end gap-1.5 sm:gap-3 pointer-events-auto">
+        <!-- Floating WhatsApp Purchase App Button -->
+        <a href="https://wa.me/917903933705?text=Hello!%20I%20want%20to%20purchase%20this%20Trip%20Travel%20AI%20app%20for%20personal%20use%20without%20lagging.%20Please%20share%20the%20details%20and%20pricing."
+           target="_blank" rel="noopener noreferrer"
+           title="Buy App for Personal Use (+91 7903933705)"
+           class="w-5 h-5 sm:w-auto sm:h-auto rounded-full sm:rounded-2xl bg-gradient-to-r from-emerald-500 via-green-600 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white font-extrabold sm:px-4 sm:py-3 shadow-lg sm:shadow-xl flex items-center justify-center sm:gap-2.5 hover:scale-110 active:scale-95 transition-all border border-white/30 sm:border-2 sm:border-white/20 cursor-pointer group">
+            <i class="fa-brands fa-whatsapp text-[10px] sm:text-lg text-white group-hover:scale-110 transition-transform"></i>
+            <span class="hidden sm:inline text-xs">Buy App for Personal Use (WhatsApp)</span>
+        </a>
+
+        <!-- Floating Food & Restaurant Finder Button -->
+        <button onclick="window.openFoodFinderModal('all')"
+                title="Find Food (Veg / Non-Veg)"
+                class="w-5 h-5 sm:w-auto sm:h-auto rounded-full sm:rounded-2xl bg-gradient-to-r from-amber-500 via-orange-500 to-rose-500 hover:from-amber-600 hover:to-rose-600 text-white font-extrabold sm:px-4 sm:py-3 shadow-lg sm:shadow-xl flex items-center justify-center sm:gap-2 hover:scale-110 active:scale-95 transition-all border border-white/30 sm:border-2 sm:border-white/20 cursor-pointer">
+            <span class="text-[9px] sm:text-base leading-none">🍽️</span>
+            <span class="hidden sm:inline text-xs">Find Food (Veg / Non-Veg)</span>
+        </button>
+
+        <!-- Floating Live Location Route Optimizer Button -->
+        <button onclick="window.requestUserLocationAndOpenPlanner()"
+                title="Share GPS & Create Day Plan"
+                class="w-5 h-5 sm:w-auto sm:h-auto rounded-full sm:rounded-2xl bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-extrabold sm:px-4 sm:py-3 shadow-lg sm:shadow-xl flex items-center justify-center sm:gap-2 hover:scale-110 active:scale-95 transition-all border border-white/30 sm:border-2 sm:border-white/20 cursor-pointer">
+            <i class="fa-solid fa-location-crosshairs text-[9px] sm:text-base"></i>
+            <span class="hidden sm:inline text-xs">Share GPS & Create Day Plan</span>
+        </button>
+    </div>
+
+    <!-- Periodic Meal Break Suggestion Pop-up (Positioned Above Bottom Bar on Mobile to Avoid Overlap) -->
+    <div id="mealBreakPopupNotification" class="fixed bottom-24 left-3 sm:bottom-6 sm:left-6 z-40 hidden max-w-[280px] sm:max-w-sm">
+        <div class="glass-panel p-3 sm:p-4 rounded-2xl sm:rounded-3xl shadow-2xl border-2 border-amber-500/80 bg-white/95 dark:bg-slate-900/95 space-y-2.5 pointer-events-auto">
+            <div class="flex items-start justify-between gap-2">
+                <div class="flex items-center gap-2">
+                    <div class="w-8 h-8 rounded-xl bg-amber-500 text-white flex items-center justify-center text-sm shrink-0">
+                        🍲
+                    </div>
+                    <div>
+                        <h4 class="font-heading font-bold text-xs text-slate-900 dark:text-white">Meal Break!</h4>
+                        <p class="text-[10px] sm:text-[11px] text-slate-500 dark:text-slate-400">Choose cuisine to find nearby spots.</p>
+                    </div>
+                </div>
+                <button type="button" onclick="window.dismissMealPopup(event)" class="w-7 h-7 rounded-full bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-500 hover:text-slate-900 dark:hover:text-white flex items-center justify-center transition-colors cursor-pointer shrink-0" title="Close" aria-label="Close">
+                    <i class="fa-solid fa-xmark text-xs pointer-events-none"></i>
+                </button>
+            </div>
+
+            <div class="grid grid-cols-2 gap-2 pt-0.5">
+                <button onclick="window.dismissMealPopup(); window.openFoodFinderModal('veg')"
+                        class="py-1.5 px-2 rounded-xl bg-emerald-100 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-300 font-bold text-[11px] sm:text-xs flex items-center justify-center gap-1 hover:bg-emerald-200 transition-colors">
+                    <span>🥗 Pure Veg</span>
+                </button>
+                <button onclick="window.dismissMealPopup(); window.openFoodFinderModal('nonveg')"
+                        class="py-1.5 px-2 rounded-xl bg-rose-100 dark:bg-rose-950 text-rose-700 dark:text-rose-300 font-bold text-[11px] sm:text-xs flex items-center justify-center gap-1 hover:bg-rose-200 transition-colors">
+                    <span>🍗 Non-Veg</span>
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Custom Multi-Place Day Route Planner Modal -->
+    <div id="customRoutePlannerModal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm hidden flex items-center justify-center p-4">
+        <div class="glass-panel w-full max-w-4xl rounded-3xl shadow-2xl p-6 sm:p-8 space-y-6 max-h-[90vh] flex flex-col border border-slate-200 dark:border-slate-800">
+            <!-- Modal Header -->
+            <div class="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-4">
+                <div class="flex items-center gap-3">
+                    <div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-blue-600 to-indigo-600 text-white flex items-center justify-center text-xl shadow-md">
+                        <i class="fa-solid fa-route"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-heading font-extrabold text-xl text-slate-900 dark:text-white">Customize Your Day Tour Plan</h3>
+                        <p class="text-xs text-slate-500 dark:text-slate-400">
+                            Select places you want to visit from your live GPS location. We compute the Shortest & Cheapest routes!
+                        </p>
+                    </div>
+                </div>
+                <button onclick="window.closeCustomRoutePlannerModal()" class="w-9 h-9 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-500 hover:text-slate-900 dark:hover:text-white flex items-center justify-center">
+                    <i class="fa-solid fa-xmark text-base"></i>
+                </button>
+            </div>
+
+            <!-- Starting Location Banner Inside Modal -->
+            <div class="p-3 rounded-2xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs">
+                <span id="plannerStartLocationBadge" class="text-emerald-900 dark:text-emerald-200 font-medium">
+                    <i class="fa-solid fa-location-dot text-emerald-500"></i> Starting: <strong>Your Current Location</strong>
+                </span>
+                <div class="flex items-center gap-2">
+                    <button onclick="window.requestUserLocationAndOpenPlanner()" class="px-2.5 py-1 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-[11px] flex items-center gap-1 shadow-sm transition-all">
+                        <i class="fa-solid fa-rotate"></i> Re-detect GPS
+                    </button>
+                </div>
+            </div>
+
+            <!-- Content Area: Place Selection + Plan Options -->
+            <div class="flex-1 overflow-y-auto space-y-6 pr-1">
+                <!-- Place Selection Section -->
+                <div class="space-y-3">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                        <div class="flex items-center gap-2">
+                            <span class="text-xs font-black uppercase tracking-wider text-slate-700 dark:text-slate-300">
+                                1. Pick Places to Visit Today:
+                            </span>
+                            <span id="selectedPlacesCountBadge" class="px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300">
+                                6 Places Selected
+                            </span>
+                        </div>
+                        <div class="flex flex-wrap items-center gap-1.5 text-xs">
+                            <button onclick="window.selectAllPlaces(true)" class="px-2.5 py-1 rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-blue-100 text-blue-600 font-bold transition-colors">Select All (15)</button>
+                            <button onclick="window.selectPresetPlaces(5)" class="px-2.5 py-1 rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-blue-100 text-blue-600 font-bold transition-colors">Top 5 Must-See</button>
+                            <button onclick="window.selectPresetPlaces(8)" class="px-2.5 py-1 rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-blue-100 text-blue-600 font-bold transition-colors">Full-Day (8)</button>
+                            <button onclick="window.selectAllPlaces(false)" class="px-2.5 py-1 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-500 font-bold hover:text-rose-600 transition-colors">Clear</button>
+                        </div>
+                    </div>
+
+                    <!-- Checkbox Grid -->
+                    <div id="placesCheckboxList" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5 max-h-56 overflow-y-auto p-1 bg-white/40 dark:bg-slate-900/40 rounded-2xl border border-slate-200/60 dark:border-slate-800">
+                        <!-- Populated by renderPlaceCheckboxes() -->
+                    </div>
+                </div>
+
+                <!-- Generated Plan Options (Shortest vs Cheapest vs Balanced) -->
+                <div class="space-y-3 pt-2">
+                    <span class="text-xs font-black uppercase tracking-wider text-slate-700 dark:text-slate-300 block">
+                        2. Choose Your Optimized Route Plan:
+                    </span>
+                    <div id="planOptionsContainer" class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <!-- Populated by recalculateDayPlanOptions() -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Food & Restaurant Finder Modal (Veg / Non-Veg / Vegan / Street Food) -->
+    <div id="foodFinderModal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm hidden flex items-center justify-center p-4">
+        <div class="glass-panel w-full max-w-4xl rounded-3xl shadow-2xl p-6 sm:p-8 space-y-5 max-h-[90vh] flex flex-col border border-slate-200 dark:border-slate-800">
+            <!-- Modal Header -->
+            <div class="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-4">
+                <div class="flex items-center gap-3">
+                    <div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-amber-500 to-orange-600 text-white flex items-center justify-center text-xl shadow-md">
+                        🍽️
+                    </div>
+                    <div>
+                        <h3 class="font-heading font-extrabold text-xl text-slate-900 dark:text-white">Local Food & Top Restaurants Near You</h3>
+                        <p class="text-xs text-slate-500 dark:text-slate-400">
+                            Restaurants sorted by closest distance to your live GPS coordinates with 1-click Google Maps directions.
+                        </p>
+                    </div>
+                </div>
+                <button onclick="window.closeFoodFinderModal()" class="w-9 h-9 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-500 hover:text-slate-900 dark:hover:text-white flex items-center justify-center cursor-pointer transition-colors">
+                    <i class="fa-solid fa-xmark text-base"></i>
+                </button>
+            </div>
+
+            <!-- Live GPS Status & Live Google Maps Actions -->
+            <div class="p-3.5 rounded-2xl bg-gradient-to-r from-blue-50 via-indigo-50 to-purple-50 dark:from-slate-900 dark:via-blue-950/40 dark:to-purple-950/40 border border-blue-200 dark:border-blue-900 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                <div class="flex items-center gap-2.5 text-xs">
+                    <div id="foodModalGpsPulse" class="w-3 h-3 rounded-full bg-emerald-500 animate-ping"></div>
+                    <div>
+                        <span class="font-bold text-slate-800 dark:text-slate-200">GPS Origin:</span>
+                        <span id="foodModalGpsStatusText" class="font-black text-blue-600 dark:text-blue-400 ml-1">Detecting your location...</span>
+                    </div>
+                </div>
+                <div class="flex items-center gap-2">
+                    <button onclick="window.requestUserLocationAndRefreshFood()"
+                            class="px-3 py-1.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs shadow-sm flex items-center gap-1.5 transition-all cursor-pointer">
+                        <i class="fa-solid fa-location-crosshairs"></i>
+                        <span>Update GPS</span>
+                    </button>
+                    <button id="foodModalLiveGoogleMapsBtn" onclick="window.openLiveGoogleMapsFoodSearch()"
+                            class="px-3 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs shadow-sm flex items-center gap-1.5 transition-all cursor-pointer">
+                        <i class="fa-brands fa-google text-xs"></i>
+                        <span>Search Live on Maps</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Cuisine & Diet Filter Tabs -->
+            <div class="flex flex-wrap items-center gap-2">
+                <button id="foodTabAll" onclick="window.filterFoodItems('all')"
+                        class="px-4 py-2 rounded-xl text-xs font-bold bg-blue-600 text-white shadow-sm transition-all cursor-pointer">
+                    🍴 All Cuisines
+                </button>
+                <button id="foodTabVeg" onclick="window.filterFoodItems('veg')"
+                        class="px-4 py-2 rounded-xl text-xs font-bold bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200 transition-all flex items-center gap-1.5 cursor-pointer">
+                    <span>🟢 100% Pure Veg</span>
+                </button>
+                <button id="foodTabNonVeg" onclick="window.filterFoodItems('nonveg')"
+                        class="px-4 py-2 rounded-xl text-xs font-bold bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200 transition-all flex items-center gap-1.5 cursor-pointer">
+                    <span>🔴 Non-Veg & Seafood</span>
+                </button>
+                <button id="foodTabVegan" onclick="window.filterFoodItems('vegan')"
+                        class="px-4 py-2 rounded-xl text-xs font-bold bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200 transition-all flex items-center gap-1.5 cursor-pointer">
+                    <span>🌱 Vegan / Organic</span>
+                </button>
+                <button id="foodTabStreet" onclick="window.filterFoodItems('streetfood')"
+                        class="px-4 py-2 rounded-xl text-xs font-bold bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200 transition-all flex items-center gap-1.5 cursor-pointer">
+                    <span>🍢 Street Delicacies</span>
+                </button>
+            </div>
+
+            <!-- Food Items & Restaurants Grid (Sorted Closest First) -->
+            <div class="flex-1 overflow-y-auto pr-1">
+                <div id="foodItemsListContainer" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <!-- Populated by renderFoodItemsList() -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+<footer class="glass-panel border-t border-slate-200 dark:border-slate-800 mt-20 py-12 text-slate-600 dark:text-slate-400 text-xs sm:text-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-4 gap-8">
+            <div class="space-y-3">
+                <div class="flex items-center gap-2">
+                    <div class="w-8 h-8 rounded-xl bg-blue-600 text-white flex items-center justify-center font-bold">
+                        <i class="fa-solid fa-compass"></i>
+                    </div>
+                    <span class="font-heading font-black text-lg text-slate-900 dark:text-white">Trip AI</span>
+                </div>
+                <p class="text-xs leading-relaxed">
+                    Elevating world travel with intelligent milestone routing, transparent expense breakdowns, verified transit schedules, and Google Gemini assistance.
+                </p>
+                <div class="flex flex-wrap gap-2 pt-1">
+                    <a href="https://supportsourcecode.lovable.app/home" target="_blank" rel="noopener noreferrer"
+                       class="px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 font-bold text-[11px] flex items-center gap-1 transition-all">
+                        <i class="fa-solid fa-house text-blue-600"></i> Main Page
+                    </a>
+                    <a href="https://interactive-media-display.lovable.app/" target="_blank" rel="noopener noreferrer"
+                       class="px-2.5 py-1 rounded-lg bg-purple-600 hover:bg-purple-700 text-white font-bold text-[11px] flex items-center gap-1 transition-all">
+                        <i class="fa-solid fa-bag-shopping text-amber-300"></i> App Store
+                    </a>
+                </div>
+            </div>
+
+            <div>
+                <h5 class="font-bold text-slate-900 dark:text-white mb-3 uppercase text-xs tracking-wider">Top Destinations</h5>
+                <ul class="space-y-1.5 text-xs">
+                    <li><a href="javascript:void(0)" onclick="window.quickSearch('Paris, France')" class="hover:text-blue-600">Paris, France</a></li>
+                    <li><a href="javascript:void(0)" onclick="window.quickSearch('Tokyo, Japan')" class="hover:text-blue-600">Tokyo, Japan</a></li>
+                    <li><a href="javascript:void(0)" onclick="window.quickSearch('Jaipur, India')" class="hover:text-blue-600">Jaipur, Rajasthan</a></li>
+                    <li><a href="javascript:void(0)" onclick="window.quickSearch('Dubai, UAE')" class="hover:text-blue-600">Dubai, Emirates</a></li>
+                    <li><a href="javascript:void(0)" onclick="window.quickSearch('Bali, Indonesia')" class="hover:text-blue-600">Bali, Indonesia</a></li>
+                </ul>
+            </div>
+
+            <div>
+                <h5 class="font-bold text-slate-900 dark:text-white mb-3 uppercase text-xs tracking-wider">Ecosystem & Features</h5>
+                <ul class="space-y-1.5 text-xs">
+                    <li><a href="https://supportsourcecode.lovable.app/home" target="_blank" rel="noopener noreferrer" class="hover:text-blue-600 font-bold flex items-center gap-1"><i class="fa-solid fa-house text-blue-500"></i> Main Portal Home</a></li>
+                    <li><a href="https://interactive-media-display.lovable.app/" target="_blank" rel="noopener noreferrer" class="hover:text-purple-600 font-bold flex items-center gap-1"><i class="fa-solid fa-bag-shopping text-purple-500"></i> Interactive App Store</a></li>
+                    <li><a href="https://wa.me/917903933705" target="_blank" rel="noopener noreferrer" class="hover:text-emerald-600 font-bold flex items-center gap-1"><i class="fa-brands fa-whatsapp text-emerald-500"></i> WhatsApp Support (+91 7903933705)</a></li>
+                    <li><span>📍 Milestone Turn-by-Turn Paths</span></li>
+                    <li><span>🚌 Public City & Private Intercity Bus</span></li>
+                </ul>
+            </div>
+
+            <div class="space-y-3">
+                <h5 class="font-bold text-slate-900 dark:text-white mb-1 uppercase text-xs tracking-wider">Customer Satisfaction</h5>
+                <div class="p-3 rounded-2xl bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800">
+                    <div class="flex items-center gap-2 mb-1 text-yellow-400 text-xs">
+                        <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                        <span class="font-black text-slate-800 dark:text-slate-100">4.9/5</span>
+                    </div>
+                    <p class="text-[11px] text-slate-500">Over 150,000 itineraries generated with 99.4% traveler retention rate.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 mt-8 border-t border-slate-200/60 dark:border-slate-800/60 flex flex-col sm:flex-row items-center justify-between text-xs gap-3">
+            <p>&copy; 2026 Trip AI. All rights reserved. Powered by Google Maps Platform & Google Gemini AI.</p>
+            <div class="flex gap-4">
+                <a href="#hero" class="hover:underline">Back to Top ↑</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Google Lens Saved Notes & Cookie Manager Modal -->
+    <div id="lensNotesModal" class="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm hidden flex items-center justify-center p-4">
+        <div class="glass-panel w-full max-w-4xl rounded-3xl shadow-2xl p-6 sm:p-8 space-y-5 max-h-[90vh] flex flex-col border border-slate-200 dark:border-slate-800">
+            <!-- Modal Header -->
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-4 gap-3">
+                <div class="flex items-center gap-3">
+                    <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-amber-500 via-orange-500 to-rose-500 text-white flex items-center justify-center text-xl shadow-lg">
+                        <i class="fa-solid fa-camera-retro"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-heading font-extrabold text-xl text-slate-900 dark:text-white flex items-center gap-2">
+                            Google Lens Saved Area Inspections
+                        </h3>
+                        <p class="text-xs text-slate-500 dark:text-slate-400">
+                            Saved questions & AI answers from your map area selections. Stored in cookies & browser cache.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Header Actions: HTML, Clear Cookies, Close -->
+                <div class="flex flex-wrap items-center gap-2">
+                    <button onclick="window.downloadLensNotesHTML()" title="Export all notes as standalone HTML file"
+                            class="px-3 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs shadow-md flex items-center gap-1.5 transition-all cursor-pointer">
+                        <i class="fa-solid fa-code text-blue-200"></i>
+                        <span>Download HTML</span>
+                    </button>
+                    <button onclick="window.clearLensCookiesAndNotes()" title="Clear all saved notes and delete cookies"
+                            class="px-3 py-2 rounded-xl bg-slate-200 hover:bg-rose-100 dark:bg-slate-800 dark:hover:bg-rose-950/60 text-slate-700 hover:text-rose-600 dark:text-slate-300 dark:hover:text-rose-400 font-bold text-xs shadow-sm flex items-center gap-1.5 transition-all cursor-pointer">
+                        <i class="fa-solid fa-trash-can text-amber-500"></i>
+                        <span>Clear Cookies</span>
+                    </button>
+                    <button onclick="window.closeLensNotesModal()" class="w-9 h-9 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-500 hover:text-slate-900 dark:hover:text-white flex items-center justify-center cursor-pointer transition-colors">
+                        <i class="fa-solid fa-xmark text-base"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Cookie Status & Storage Banner -->
+            <div class="p-3 rounded-2xl bg-gradient-to-r from-amber-50 via-orange-50 to-rose-50 dark:from-slate-900 dark:via-amber-950/30 dark:to-orange-950/30 border border-amber-200/80 dark:border-amber-900/50 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs">
+                <div class="flex items-center gap-2">
+                    <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                    <span class="font-bold text-slate-800 dark:text-slate-200">Cookie Storage:</span>
+                    <code class="px-2 py-0.5 rounded bg-white/80 dark:bg-slate-800 font-mono text-[11px] text-amber-700 dark:text-amber-300 font-bold">trip_lens_notes</code>
+                    <span class="text-slate-500 text-[11px]">(Auto-persists across page reloads)</span>
+                </div>
+                <div class="text-slate-500 dark:text-slate-400 text-[11px] font-medium">
+                    Double-click map anytime to inspect a new area
+                </div>
+            </div>
+
+            <!-- Notes List Container (Export Target) -->
+            <div class="flex-1 overflow-y-auto pr-1">
+                <div id="lensNotesListContainer" class="space-y-4">
+                    <!-- Rendered by renderLensNotesList() -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Google Maps API Key Setup & Management Modal -->
+    <div id="gmapsApiKeyModal" class="fixed inset-0 z-50 bg-black/75 backdrop-blur-md hidden flex items-center justify-center p-3 sm:p-4">
+        <div class="glass-panel w-full max-w-2xl rounded-3xl shadow-2xl p-5 sm:p-7 space-y-4 max-h-[92vh] flex flex-col border border-slate-200 dark:border-slate-800 bg-white/95 dark:bg-slate-900/95 overflow-hidden">
+            <!-- Header -->
+            <div class="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-3">
+                <div class="flex items-center gap-3">
+                    <div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-blue-600 via-indigo-600 to-purple-600 text-white flex items-center justify-center text-xl shadow-lg shrink-0">
+                        <i class="fa-solid fa-key text-amber-300"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-heading font-extrabold text-base sm:text-xl text-slate-900 dark:text-white flex items-center gap-2">
+                            <span>Google Maps API Key Setup</span>
+                            <span id="gmapsKeyStatusPill" class="text-[10px] font-extrabold px-2 py-0.5 rounded-full bg-amber-100 dark:bg-amber-900/60 text-amber-700 dark:text-amber-300 border border-amber-300 dark:border-amber-700">Not Set</span>
+                        </h3>
+                        <p class="text-xs text-slate-500 dark:text-slate-400">
+                            Connect your Google Maps API key to power live turn-by-turn directions & navigation.
+                        </p>
+                    </div>
+                </div>
+                <button onclick="window.closeGoogleMapsKeyModal()" class="w-9 h-9 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-500 hover:text-slate-900 dark:hover:text-white flex items-center justify-center cursor-pointer transition-colors shrink-0">
+                    <i class="fa-solid fa-xmark text-base"></i>
+                </button>
+            </div>
+
+            <!-- Scrollable Body -->
+            <div class="flex-1 overflow-y-auto pr-1 space-y-4 text-xs">
+                <!-- Context Intent Banner (Changes dynamically when user clicks directions to a location) -->
+                <div id="gmapsKeyIntentBanner" class="p-3.5 rounded-2xl bg-blue-50/90 dark:bg-blue-950/50 border border-blue-200 dark:border-blue-800/60 flex items-start gap-3">
+                    <div class="w-8 h-8 rounded-xl bg-blue-600 text-white flex items-center justify-center shrink-0 text-sm shadow-sm mt-0.5">
+                        <i class="fa-solid fa-diamond-turn-right text-amber-300"></i>
+                    </div>
+                    <div class="space-y-1">
+                        <div class="font-bold text-slate-900 dark:text-white" id="gmapsKeyIntentTitle">Live Turn-by-Turn Google Directions</div>
+                        <div class="text-[11px] text-slate-600 dark:text-slate-300 leading-relaxed" id="gmapsKeyIntentDesc">Provide your Google Maps API key to authorize route requests. Your key will be client-side encrypted and saved safely in your browser cookies.</div>
+                    </div>
+                </div>
+
+                <!-- Input Box & Actions -->
+                <div class="space-y-2 p-3.5 rounded-2xl bg-slate-100/80 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700">
+                    <label class="block font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider text-[11px]">
+                        <i class="fa-solid fa-shield-halved text-emerald-500 mr-1"></i> Paste Google Maps API Key:
+                    </label>
+                    <div class="flex flex-col sm:flex-row gap-2">
+                        <div class="relative flex-1">
+                            <input type="password" id="gmapsApiKeyInput" placeholder="AIzaSy..." 
+                                   class="w-full pl-9 pr-10 py-2.5 rounded-xl bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-slate-100 font-mono text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none transition-all">
+                            <i class="fa-solid fa-key absolute left-3 top-3 text-slate-400 text-xs"></i>
+                            <button type="button" onclick="window.toggleApiKeyVisibility()" title="Show/Hide Key" class="absolute right-3 top-2.5 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200">
+                                <i id="gmapsKeyVisibilityIcon" class="fa-solid fa-eye text-xs"></i>
+                            </button>
+                        </div>
+                        <button type="button" onclick="window.pasteGoogleMapsKeyFromClipboard()" 
+                                class="px-3.5 py-2.5 rounded-xl bg-white dark:bg-slate-900 hover:bg-slate-200 dark:hover:bg-slate-800 font-bold text-slate-700 dark:text-slate-200 flex items-center justify-center gap-1.5 border border-slate-300 dark:border-slate-700 transition-all cursor-pointer shrink-0">
+                            <i class="fa-regular fa-paste text-blue-500"></i>
+                            <span>Paste</span>
+                        </button>
+                        <button type="button" onclick="window.saveGoogleMapsKeyFromInput()" 
+                                class="px-4 py-2.5 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-extrabold flex items-center justify-center gap-1.5 shadow-md hover:scale-105 active:scale-95 transition-all cursor-pointer shrink-0">
+                            <i class="fa-solid fa-lock text-amber-300"></i>
+                            <span>Save &amp; Encrypt Key</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Active Encrypted Key Details Card (Visible when Key is Saved in Cookies) -->
+                <div id="gmapsSavedKeyCard" class="hidden p-3.5 rounded-2xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800/60 flex items-center justify-between gap-3">
+                    <div class="flex items-center gap-2.5">
+                        <span class="w-3 h-3 rounded-full bg-emerald-500 animate-pulse shrink-0"></span>
+                        <div>
+                            <div class="font-bold text-emerald-800 dark:text-emerald-300 flex items-center gap-2">
+                                <span>Key Encrypted &amp; Stored in Cookies</span>
+                                <span class="font-mono text-[10px] bg-emerald-200/80 dark:bg-emerald-900/80 px-2 py-0.5 rounded text-emerald-900 dark:text-emerald-200 font-bold" id="gmapsMaskedKeyPreview">AIzaSy...****</span>
+                            </div>
+                            <p class="text-[11px] text-emerald-700/80 dark:text-emerald-400">Cookie name: <code class="font-mono font-bold">trip_gmaps_api_key</code> (Expires in 30 days or on clearing cookies)</p>
+                        </div>
+                    </div>
+                    <button type="button" onclick="window.clearGoogleMapsKeyAndCookie()" class="px-3 py-1.5 rounded-lg bg-rose-100 hover:bg-rose-200 dark:bg-rose-950/60 dark:hover:bg-rose-900/80 text-rose-700 dark:text-rose-300 font-bold text-[11px] flex items-center gap-1 transition-all shrink-0 cursor-pointer">
+                        <i class="fa-solid fa-trash-can text-rose-500"></i>
+                        <span>Delete Key</span>
+                    </button>
+                </div>
+
+                <!-- Direct Link Banner to Google Cloud Console -->
+                <div class="p-4 rounded-2xl bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 text-white space-y-2.5 border border-indigo-500/30 shadow-lg">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
+                        <div>
+                            <span class="text-amber-400 font-black uppercase text-[10px] tracking-wider block">Official Google Cloud Link</span>
+                            <h4 class="font-heading font-extrabold text-sm text-white">Need a Google Maps API Key? Get one here:</h4>
+                        </div>
+                        <a href="https://console.cloud.google.com/google/maps-apis/overview" target="_blank" rel="noopener noreferrer"
+                           class="px-4 py-2.5 rounded-xl bg-blue-500 hover:bg-blue-400 text-white font-extrabold text-xs flex items-center justify-center gap-2 shadow-md hover:scale-105 active:scale-95 transition-all text-center shrink-0">
+                            <i class="fa-brands fa-google text-amber-300"></i>
+                            <span>Get Google Maps API Key</span>
+                            <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- 5 Easy Steps Guide Card -->
+                <div class="p-4 sm:p-5 rounded-2xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 space-y-3">
+                    <h4 class="font-heading font-extrabold text-xs uppercase tracking-wider text-slate-800 dark:text-slate-200 flex items-center gap-2">
+                        <i class="fa-solid fa-list-ol text-blue-500"></i>
+                        <span>5 Easy Steps to Get and Paste Your Key:</span>
+                    </h4>
+                    <div class="space-y-2.5 text-slate-600 dark:text-slate-300 text-[11px] leading-relaxed">
+                        <div class="flex items-start gap-2.5">
+                            <span class="w-5 h-5 rounded-full bg-blue-600 text-white font-black text-[10px] flex items-center justify-center shrink-0 mt-0.5">1</span>
+                            <div>
+                                <strong>Open Google Cloud Console:</strong> Click the <a href="https://console.cloud.google.com/google/maps-apis/overview" target="_blank" rel="noopener noreferrer" class="text-blue-600 dark:text-blue-400 font-bold underline">Google Maps Platform Overview</a> link and log in with your Google account.
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-2.5">
+                            <span class="w-5 h-5 rounded-full bg-blue-600 text-white font-black text-[10px] flex items-center justify-center shrink-0 mt-0.5">2</span>
+                            <div>
+                                <strong>Select or Create a Project:</strong> Click the project dropdown at the top-left, then select or click <strong>New Project</strong> (e.g. <em>Trip AI Travel</em>).
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-2.5">
+                            <span class="w-5 h-5 rounded-full bg-blue-600 text-white font-black text-[10px] flex items-center justify-center shrink-0 mt-0.5">3</span>
+                            <div>
+                                <strong>Enable Required APIs:</strong> In the left sidebar, navigate to <strong>APIs &amp; Services &gt; Library</strong>, search for and enable:
+                                <span class="inline-block font-semibold text-slate-800 dark:text-slate-200">Directions API</span>,
+                                <span class="inline-block font-semibold text-slate-800 dark:text-slate-200">Maps JavaScript API</span>,
+                                <span class="inline-block font-semibold text-slate-800 dark:text-slate-200">Geocoding API</span>, and
+                                <span class="inline-block font-semibold text-slate-800 dark:text-slate-200">Places API</span>.
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-2.5">
+                            <span class="w-5 h-5 rounded-full bg-blue-600 text-white font-black text-[10px] flex items-center justify-center shrink-0 mt-0.5">4</span>
+                            <div>
+                                <strong>Generate Credentials:</strong> Go to <strong>APIs &amp; Services &gt; Credentials</strong>, click <strong>+ CREATE CREDENTIALS</strong>, and select <strong>API key</strong>.
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-2.5">
+                            <span class="w-5 h-5 rounded-full bg-emerald-600 text-white font-black text-[10px] flex items-center justify-center shrink-0 mt-0.5">5</span>
+                            <div>
+                                <strong>Copy &amp; Paste:</strong> Copy your newly generated API key (starts with <code class="font-mono font-bold text-blue-600 dark:text-blue-400">AIzaSy...</code>), paste it into the box above, and click <strong>Save &amp; Encrypt Key</strong>.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Privacy & Cookie Security Notice -->
+                <div class="p-3 rounded-2xl bg-amber-50/70 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-900/40 text-[11px] text-amber-900 dark:text-amber-300 flex items-start gap-2">
+                    <i class="fa-solid fa-lock text-amber-600 mt-0.5 text-xs shrink-0"></i>
+                    <p>
+                        <strong>Cookie Privacy &amp; Encryption:</strong> Your key is encrypted on your local machine using cipher protection and saved strictly in your client-side browser cookies (under <code class="font-mono font-bold">trip_gmaps_api_key</code>). If you clear your browser cookies or click <strong>Delete Cookies</strong>, your key is immediately and permanently wiped.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Footer Actions -->
+            <div class="flex flex-col sm:flex-row items-center justify-between border-t border-slate-200 dark:border-slate-800 pt-3 gap-2">
+                <button type="button" onclick="window.proceedWithoutKey()" 
+                        class="w-full sm:w-auto px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs transition-colors flex items-center justify-center gap-1.5 cursor-pointer shadow-sm">
+                    <i class="fa-solid fa-map-location-dot text-xs"></i>
+                    <span>Open map</span>
+                </button>
+                <button type="button" onclick="window.closeGoogleMapsKeyModal()" 
+                        class="w-full sm:w-auto px-5 py-2 rounded-xl bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 font-bold text-xs transition-colors cursor-pointer">
+                    Close
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification Popup -->
+    <div id="toastNotification" class="fixed bottom-6 right-6 z-50 transform translate-y-24 opacity-0 transition-all duration-300 pointer-events-none">
+        <div class="glass-panel px-5 py-3.5 rounded-2xl shadow-2xl border border-blue-500/50 flex items-center gap-3 text-xs font-bold text-slate-800 dark:text-slate-100 bg-white/95 dark:bg-slate-900/95">
+            <span id="toastIcon" class="text-base text-blue-500"><i class="fa-solid fa-circle-check"></i></span>
+            <span id="toastMessage">Action completed successfully!</span>
+        </div>
+    </div>
+
+    <!-- Welcome / Desktop Mode Dialog -->
+    <div id="welcomeDesktopModal" style="position:fixed;inset:0;background:rgba(3,11,28,0.75);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center;z-index:99999;padding:16px;">
+        <div style="position:relative;width:min(490px,94vw);background:#ffffff;border:1px solid #e2e8f0;border-radius:20px;padding:34px 26px 22px;box-shadow:0 25px 70px rgba(0,0,0,0.45);text-align:center;">
+            <button onclick="document.getElementById('welcomeDesktopModal').style.display='none'" title="Close" aria-label="Close" style="position:absolute;top:14px;right:14px;width:32px;height:32px;border-radius:50%;border:1px solid #e2e8f0;background:#f8fafc;color:#64748b;font-size:14px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;transition:all .2s;" onmouseover="this.style.background='#ef4444';this.style.color='#fff';this.style.borderColor='#ef4444'" onmouseout="this.style.background='#f8fafc';this.style.color='#64748b';this.style.borderColor='#e2e8f0'">✕</button>
+            <div style="font-size:42px;line-height:1;margin-bottom:10px;">✈️</div>
+            <h2 style="margin:0 0 10px;font-size:21px;font-weight:800;color:#0f172a;">Welcome to Trip AI</h2>
+            <div style="background:linear-gradient(135deg,rgba(59,130,246,0.1),rgba(139,92,246,0.1));border:1.5px solid rgba(59,130,246,0.3);border-radius:12px;padding:12px 16px;margin:12px 0 14px;">
+                <p style="margin:0;font-size:14px;font-weight:800;color:#1d4ed8;">💡 For better experience , Try it in desktop mode</p>
+            </div>
+            <div style="margin-bottom:18px;font-size:12px;font-weight:800;color:#3b82f6;text-transform:uppercase;letter-spacing:0.5px;">👇 Click to know more</div>
+            <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:16px;">
+                <a href="help.html" target="_blank" rel="noopener noreferrer" style="display:flex;align-items:center;justify-content:space-between;padding:12px 18px;border-radius:12px;background:linear-gradient(135deg,#2563eb,#7c3aed);color:#fff;text-decoration:none;font-weight:700;font-size:14px;box-shadow:0 4px 14px rgba(37,99,235,0.35);">
+                    <span>📖 How to use this app</span>
+                    <span>➔</span>
+                </a>
+                <button type="button" onclick="document.getElementById('welcomeDesktopModal').style.display='none'" style="display:flex;align-items:center;justify-content:space-between;padding:12px 18px;border-radius:12px;background:linear-gradient(135deg,#059669,#0d9488);color:#fff;border:none;cursor:pointer;font-weight:700;font-size:14px;box-shadow:0 4px 14px rgba(13,148,136,0.35);">
+                    <span>🗺️ Open Travel Map &amp; Planner</span>
+                    <span>➔</span>
+                </button>
+            </div>
+            <button type="button" onclick="document.getElementById('welcomeDesktopModal').style.display='none'" style="background:transparent;border:none;color:#64748b;font-size:12.5px;font-weight:600;cursor:pointer;padding:6px 14px;">Continue to App ›</button>
+        </div>
+    </div>
+
+    <!-- Floating WhatsApp Support & Personal License Widget -->
+    <div id="waFloatingWidget" style="position:fixed;bottom:20px;right:20px;z-index:99999;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;">
+      <div style="position:relative;background:#ffffff;color:#0f172a;border-radius:16px;box-shadow:0 12px 36px rgba(0,0,0,0.25),0 0 0 1px rgba(37,211,102,0.35);padding:14px 16px;max-width:315px;display:flex;flex-direction:column;gap:8px;">
+        <button onclick="document.getElementById('waFloatingWidget').style.display='none'" title="Close" aria-label="Close" style="position:absolute;top:8px;right:8px;background:#f1f5f9;border:1px solid #cbd5e1;color:#64748b;width:24px;height:24px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;line-height:1;transition:all 0.2s;" onmouseover="this.style.background='#ef4444';this.style.color='#fff';this.style.borderColor='#ef4444'" onmouseout="this.style.background='#f1f5f9';this.style.color='#64748b';this.style.borderColor='#cbd5e1'">✕</button>
+        <div style="display:flex;align-items:center;gap:10px;padding-right:20px;">
+          <div style="width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,#25D366,#128C7E);display:flex;align-items:center;justify-content:center;color:#fff;font-size:22px;flex-shrink:0;box-shadow:0 4px 10px rgba(37,211,102,0.4);">
+            <svg style="width:22px;height:22px;fill:#ffffff;" viewBox="0 0 24 24"><path d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21 5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.816 9.816 0 0 0 12.04 2zm5.77 14.18c-.24.68-1.4 1.26-1.95 1.34-.52.08-1.2.12-3.48-.83-2.68-1.12-4.4-3.84-4.54-4.02-.13-.19-1.08-1.44-1.08-2.75 0-1.31.69-1.96.93-2.22.25-.26.54-.33.72-.33.18 0 .36 0 .52.01.17.01.4.06.61.56.22.53.75 1.83.82 1.96.07.14.11.3.02.48-.09.19-.14.3-.27.46-.14.16-.3.35-.42.47-.14.14-.29.3-.12.59.16.29.73 1.21 1.57 1.96 1.08.96 1.99 1.26 2.27 1.4.29.14.45.12.62-.07.17-.19.72-.84.92-1.13.19-.29.39-.24.66-.14.27.1 1.71.81 2.01.96.29.15.49.22.56.34.07.13.07.74-.17 1.42z"/></svg>
+          </div>
+          <div>
+            <div style="font-weight:800;font-size:13px;color:#0f172a;line-height:1.2;">WhatsApp Personal Link</div>
+            <div style="font-size:11px;font-weight:700;color:#16a34a;">+91-7903933705</div>
+          </div>
+        </div>
+        <p style="font-size:11.5px;line-height:1.45;color:#475569;margin:0;">
+          If you want to purchase this Trip Travel AI app for personal use without lagging, please WhatsApp us here.
+        </p>
+        <a href="https://wa.me/917903933705?text=Hello!%20I%20want%20to%20purchase%20this%20Trip%20Travel%20AI%20app%20for%20personal%20use%20without%20lagging.%20Please%20share%20the%20details%20and%20pricing." target="_blank" rel="noopener noreferrer" style="display:flex;align-items:center;justify-content:center;gap:6px;background:linear-gradient(135deg,#25D366,#128C7E);color:#ffffff;text-decoration:none;font-size:12px;font-weight:700;padding:8px 12px;border-radius:10px;box-shadow:0 3px 10px rgba(37,211,102,0.3);transition:filter 0.2s;" onmouseover="this.style.filter='brightness(1.1)'" onmouseout="this.style.filter='brightness(1)'">
+          <svg style="width:15px;height:15px;fill:#ffffff;" viewBox="0 0 24 24"><path d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21 5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.816 9.816 0 0 0 12.04 2zm5.77 14.18c-.24.68-1.4 1.26-1.95 1.34-.52.08-1.2.12-3.48-.83-2.68-1.12-4.4-3.84-4.54-4.02-.13-.19-1.08-1.44-1.08-2.75 0-1.31.69-1.96.93-2.22.25-.26.54-.33.72-.33.18 0 .36 0 .52.01.17.01.4.06.61.56.22.53.75 1.83.82 1.96.07.14.11.3.02.48-.09.19-.14.3-.27.46-.14.16-.3.35-.42.47-.14.14-.29.3-.12.59.16.29.73 1.21 1.57 1.96 1.08.96 1.99 1.26 2.27 1.4.29.14.45.12.62-.07.17-.19.72-.84.92-1.13.19-.29.39-.24.66-.14.27.1 1.71.81 2.01.96.29.15.49.22.56.34.07.13.07.74-.17 1.42z"/></svg>
+          <span>Chat on WhatsApp (+91 7903933705)</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- Application Script Engine -->
+    <script src="app.js"></script>
+</body>
+</html>

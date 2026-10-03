@@ -1,0 +1,2960 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, interactive-widget=resizes-content"/>
+  <title>Browser Assessment IDE — Online Server User Guide & Master Manual</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #6366f1;
+      --primary-hover: #4f46e5;
+      --primary-light: rgba(99, 102, 241, 0.12);
+      --secondary: #06b6d4;
+      --accent: #ec4899;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --navy: #061126;
+      --navy-light: #0b1e42;
+      
+      --bg: #f8fafc;
+      --card-bg: #ffffff;
+      --card-border: #e2e8f0;
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      --code-bg: #0b1329;
+      --code-text: #e2e8f0;
+      --sidebar-bg: #ffffff;
+      --hero-gradient: linear-gradient(135deg, #061126 0%, #1e1b4b 50%, #311042 100%);
+      --shadow-sm: 0 1px 3px rgba(0,0,0,0.06);
+      --shadow-md: 0 6px 16px -2px rgba(0,0,0,0.08), 0 2px 6px -1px rgba(0,0,0,0.04);
+      --shadow-lg: 0 14px 30px -4px rgba(0,0,0,0.12), 0 8px 12px -4px rgba(0,0,0,0.06);
+      --shadow-glow: 0 0 25px rgba(99, 102, 241, 0.35);
+      --radius: 16px;
+    }
+
+    body.dark {
+      --bg: #070c18;
+      --card-bg: #0f172a;
+      --card-border: #1e293b;
+      --text-main: #f1f5f9;
+      --text-muted: #94a3b8;
+      --code-bg: #030712;
+      --code-text: #f8fafc;
+      --sidebar-bg: #0b1222;
+      --hero-gradient: linear-gradient(135deg, #020617 0%, #0f172a 50%, #1c102a 100%);
+      --shadow-sm: 0 1px 3px rgba(0,0,0,0.35);
+      --shadow-md: 0 6px 18px rgba(0,0,0,0.45);
+      --shadow-lg: 0 16px 36px rgba(0,0,0,0.55);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      font-size: 16px;
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background-color: var(--bg);
+      color: var(--text-main);
+      line-height: 1.65;
+      transition: background-color 0.3s ease, color 0.3s ease;
+      overflow-x: hidden;
+    }
+
+    /* Top Sticky Navigation Bar */
+    .top-navbar {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      background: rgba(6, 17, 38, 0.92);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      color: #fff;
+      padding: 0 2rem;
+      height: 70px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1.5rem;
+    }
+
+    .brand-group {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+      color: #fff;
+    }
+
+    .brand-badge {
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, #6366f1, #ec4899);
+      display: grid;
+      place-items: center;
+      font-weight: 900;
+      font-size: 1.2rem;
+      box-shadow: 0 4px 14px rgba(99, 102, 241, 0.45);
+    }
+
+    .brand-text h1 {
+      font-size: 1.15rem;
+      font-weight: 800;
+      letter-spacing: -0.3px;
+      line-height: 1.2;
+    }
+
+    .brand-text span {
+      font-size: 0.75rem;
+      color: #38bdf8;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.9px;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .top-links {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .nav-link-btn {
+      color: #cbd5e1;
+      text-decoration: none;
+      font-size: 0.86rem;
+      font-weight: 600;
+      padding: 6px 12px;
+      border-radius: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      background: rgba(255, 255, 255, 0.05);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s ease;
+    }
+
+    .nav-link-btn:hover {
+      color: #ffffff;
+      background: rgba(255, 255, 255, 0.15);
+      border-color: rgba(255, 255, 255, 0.25);
+    }
+
+    .nav-tools {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .search-box {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    .search-box input {
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 20px;
+      padding: 8px 16px 8px 36px;
+      color: #fff;
+      font-size: 0.88rem;
+      width: 220px;
+      transition: all 0.25s ease;
+      outline: none;
+    }
+
+    .search-box input:focus {
+      width: 280px;
+      background: rgba(255, 255, 255, 0.18);
+      border-color: var(--secondary);
+      box-shadow: 0 0 0 3px rgba(6, 182, 212, 0.3);
+    }
+
+    .search-box .search-icon {
+      position: absolute;
+      left: 12px;
+      font-size: 0.9rem;
+      opacity: 0.75;
+      pointer-events: none;
+    }
+
+    .theme-toggle-btn, .action-link-btn {
+      height: 38px;
+      padding: 0 16px;
+      border-radius: 10px;
+      font-size: 0.88rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      text-decoration: none;
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+      white-space: nowrap;
+    }
+
+    .theme-toggle-btn {
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: #fff;
+    }
+
+    .theme-toggle-btn:hover {
+      background: rgba(255, 255, 255, 0.2);
+      transform: scale(1.04);
+    }
+
+    .action-link-btn {
+      background: linear-gradient(135deg, #4f46e5, #7c3aed);
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      color: #fff;
+      box-shadow: 0 4px 14px rgba(79, 70, 229, 0.4);
+    }
+
+    .action-link-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(79, 70, 229, 0.6);
+      filter: brightness(1.1);
+    }
+
+    /* Hero Section */
+    .hero {
+      background: var(--hero-gradient);
+      color: #fff;
+      padding: 4.5rem 2rem 4rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle at 50% 50%, rgba(99, 102, 241, 0.22) 0%, transparent 60%);
+      pointer-events: none;
+    }
+
+    .hero-content {
+      position: relative;
+      max-width: 980px;
+      margin: 0 auto;
+      z-index: 2;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 18px;
+      background: rgba(255, 255, 255, 0.12);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 30px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      margin-bottom: 1.25rem;
+      backdrop-filter: blur(8px);
+      color: #38bdf8;
+    }
+
+    .hero h1 {
+      font-size: 3rem;
+      font-weight: 800;
+      line-height: 1.15;
+      letter-spacing: -1.2px;
+      margin-bottom: 1.2rem;
+      background: linear-gradient(135deg, #ffffff 30%, #c7d2fe 70%, #f472b6 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero p {
+      font-size: 1.15rem;
+      color: #cbd5e1;
+      max-width: 840px;
+      margin: 0 auto 2rem;
+      line-height: 1.65;
+    }
+
+    /* Role Switcher in Hero */
+    .role-switcher {
+      display: inline-flex;
+      background: rgba(6, 17, 38, 0.65);
+      padding: 6px;
+      border-radius: 18px;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      gap: 6px;
+      margin-bottom: 0.5rem;
+      backdrop-filter: blur(14px);
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .role-btn {
+      padding: 10px 22px;
+      border-radius: 14px;
+      border: none;
+      font-size: 0.92rem;
+      font-weight: 700;
+      color: #94a3b8;
+      background: transparent;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.25s ease;
+    }
+
+    .role-btn.active {
+      background: #ffffff;
+      color: #061126;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.25);
+    }
+
+    body.dark .role-btn.active {
+      background: #6366f1;
+      color: #ffffff;
+    }
+
+    /* App Container Layout */
+    .app-layout {
+      max-width: 1440px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 290px 1fr;
+      gap: 2.5rem;
+      padding: 3.5rem 2rem 5rem;
+    }
+
+    /* Sticky Sidebar Navigation */
+    .sidebar {
+      position: sticky;
+      top: 90px;
+      height: calc(100vh - 110px);
+      overflow-y: auto;
+      background: var(--sidebar-bg);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius);
+      padding: 1.5rem 1rem;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .sidebar-title {
+      font-size: 0.8rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--text-muted);
+      padding: 0 0.75rem 0.75rem;
+      border-bottom: 1px solid var(--card-border);
+      margin-bottom: 0.75rem;
+    }
+
+    .sidebar-menu {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .sidebar-link {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 9px 12px;
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.88rem;
+      font-weight: 600;
+      border-radius: 10px;
+      transition: all 0.2s ease;
+    }
+
+    .sidebar-link:hover, .sidebar-link.active {
+      background: var(--primary-light);
+      color: var(--primary);
+    }
+
+    .sidebar-link .icon {
+      font-size: 1.15rem;
+    }
+
+    /* Main Content Area */
+    .content-area {
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 3.5rem;
+    }
+
+    .section-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius);
+      padding: 2.5rem;
+      box-shadow: var(--shadow-sm);
+      transition: border-color 0.25s ease, box-shadow 0.25s ease;
+      scroll-margin-top: 90px;
+    }
+
+    .section-card:hover {
+      box-shadow: var(--shadow-md);
+      border-color: rgba(99, 102, 241, 0.35);
+    }
+
+    .section-header {
+      display: flex;
+      align-items: flex-start;
+      gap: 1.25rem;
+      margin-bottom: 1.75rem;
+      padding-bottom: 1.25rem;
+      border-bottom: 1px solid var(--card-border);
+    }
+
+    .section-icon {
+      width: 54px;
+      height: 54px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      display: grid;
+      place-items: center;
+      font-size: 1.7rem;
+      color: #fff;
+      flex-shrink: 0;
+      box-shadow: 0 6px 16px rgba(99, 102, 241, 0.25);
+    }
+
+    .section-header h2 {
+      font-size: 1.85rem;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      color: var(--text-main);
+      line-height: 1.25;
+    }
+
+    .section-header p {
+      color: var(--text-muted);
+      font-size: 1rem;
+      margin-top: 4px;
+    }
+
+    .online-highlight-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(16, 185, 129, 0.12);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      color: #059669;
+      font-size: 0.82rem;
+      font-weight: 800;
+      padding: 4px 12px;
+      border-radius: 20px;
+      margin-bottom: 1rem;
+    }
+    body.dark .online-highlight-badge {
+      color: #34d399;
+    }
+
+    /* Feature Grid Cards */
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+      margin: 1.75rem 0;
+    }
+
+    .feature-box {
+      background: var(--bg);
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      padding: 1.5rem;
+      transition: all 0.25s ease;
+    }
+
+    .feature-box:hover {
+      transform: translateY(-3px);
+      border-color: var(--primary);
+      box-shadow: var(--shadow-md);
+    }
+
+    .feature-box .box-icon {
+      font-size: 1.8rem;
+      margin-bottom: 0.75rem;
+      display: inline-block;
+    }
+
+    .feature-box h3 {
+      font-size: 1.15rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      color: var(--text-main);
+    }
+
+    .feature-box p {
+      font-size: 0.92rem;
+      color: var(--text-muted);
+      line-height: 1.55;
+    }
+
+    /* Step-by-Step Flow Cards */
+    .steps-container {
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+      margin: 1.75rem 0;
+    }
+
+    .step-card {
+      display: grid;
+      grid-template-columns: 50px 1fr;
+      gap: 1.25rem;
+      background: var(--bg);
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      padding: 1.5rem;
+      position: relative;
+    }
+
+    .step-number {
+      width: 46px;
+      height: 46px;
+      border-radius: 50%;
+      background: var(--primary);
+      color: #fff;
+      display: grid;
+      place-items: center;
+      font-weight: 800;
+      font-size: 1.2rem;
+      box-shadow: 0 4px 12px rgba(99, 102, 241, 0.35);
+    }
+
+    .step-content h4 {
+      font-size: 1.2rem;
+      font-weight: 700;
+      margin-bottom: 0.4rem;
+      color: var(--text-main);
+    }
+
+    .step-content p {
+      font-size: 0.95rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+
+    /* Alert / Callout Boxes */
+    .alert-box {
+      border-radius: 14px;
+      padding: 1.25rem 1.5rem;
+      margin: 1.5rem 0;
+      display: flex;
+      gap: 1rem;
+      align-items: flex-start;
+      border-left: 5px solid;
+    }
+
+    .alert-box.tip {
+      background: rgba(16, 185, 129, 0.08);
+      border-color: var(--success);
+      color: var(--text-main);
+    }
+
+    .alert-box.important {
+      background: rgba(99, 102, 241, 0.08);
+      border-color: var(--primary);
+      color: var(--text-main);
+    }
+
+    .alert-box.warning {
+      background: rgba(245, 158, 11, 0.1);
+      border-color: var(--warning);
+      color: var(--text-main);
+    }
+
+    .alert-box.danger {
+      background: rgba(239, 68, 68, 0.08);
+      border-color: var(--danger);
+      color: var(--text-main);
+    }
+
+    .alert-box .alert-icon {
+      font-size: 1.4rem;
+      line-height: 1;
+      flex-shrink: 0;
+    }
+
+    .alert-box-content {
+      font-size: 0.95rem;
+      line-height: 1.55;
+    }
+
+    .alert-box-content strong {
+      display: block;
+      margin-bottom: 4px;
+      font-size: 1rem;
+    }
+
+    /* Live Interactive Sandbox Preview Simulation */
+    .mock-editor-container {
+      background: #0b1329;
+      border: 1px solid #1e293b;
+      border-radius: 14px;
+      overflow: hidden;
+      margin: 2rem 0;
+      box-shadow: 0 12px 35px rgba(0,0,0,0.3);
+    }
+
+    .mock-header {
+      background: #060e20;
+      padding: 10px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid #1e293b;
+    }
+
+    .mock-dots {
+      display: flex;
+      gap: 6px;
+    }
+
+    .mock-dot {
+      width: 11px;
+      height: 11px;
+      border-radius: 50%;
+    }
+    .mock-dot.red { background: #ef4444; }
+    .mock-dot.yellow { background: #f59e0b; }
+    .mock-dot.green { background: #10b981; }
+
+    .mock-tabs {
+      display: flex;
+      gap: 4px;
+    }
+
+    .mock-tab {
+      padding: 6px 14px;
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: #94a3b8;
+      background: transparent;
+      border: 1px solid transparent;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .mock-tab.active {
+      background: #1e293b;
+      color: #38bdf8;
+      border-color: #334155;
+    }
+
+    .mock-body {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      min-height: 240px;
+    }
+
+    .mock-code-pane {
+      padding: 16px;
+      font-family: 'Fira Code', Consolas, monospace;
+      font-size: 0.88rem;
+      color: #f8fafc;
+      background: #080f22;
+      border-right: 1px solid #1e293b;
+      line-height: 1.6;
+      white-space: pre-wrap;
+    }
+
+    .mock-preview-pane {
+      background: #ffffff;
+      padding: 20px;
+      color: #0f172a;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+
+    .mock-btn-sample {
+      padding: 10px 20px;
+      background: linear-gradient(135deg, #6366f1, #8b5cf6);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
+      margin-top: 12px;
+      transition: transform 0.2s;
+    }
+    .mock-btn-sample:hover {
+      transform: scale(1.05);
+    }
+
+    /* Comparison / Specification Tables */
+    .table-wrap {
+      overflow-x: auto;
+      margin: 1.75rem 0;
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+    }
+
+    table.custom-table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 0.95rem;
+    }
+
+    table.custom-table th {
+      background: var(--bg);
+      color: var(--text-main);
+      padding: 14px 18px;
+      font-weight: 700;
+      border-bottom: 2px solid var(--card-border);
+    }
+
+    table.custom-table td {
+      padding: 14px 18px;
+      border-bottom: 1px solid var(--card-border);
+      color: var(--text-muted);
+    }
+
+    table.custom-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    table.custom-table tr:hover td {
+      background: var(--primary-light);
+      color: var(--text-main);
+    }
+
+    .badge-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 3px 10px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 700;
+    }
+
+    .badge-pill.blue { background: rgba(99, 102, 241, 0.15); color: #4f46e5; }
+    .badge-pill.purple { background: rgba(168, 85, 247, 0.15); color: #9333ea; }
+    .badge-pill.green { background: rgba(16, 185, 129, 0.15); color: #059669; }
+    .badge-pill.amber { background: rgba(245, 158, 11, 0.15); color: #d97706; }
+
+    /* Code Blocks */
+    .code-block-wrapper {
+      position: relative;
+      background: var(--code-bg);
+      border-radius: 12px;
+      margin: 1.25rem 0;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .code-block-header {
+      background: rgba(255, 255, 255, 0.05);
+      padding: 8px 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.8rem;
+      color: #94a3b8;
+      font-family: 'Fira Code', monospace;
+    }
+
+    .copy-btn {
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: #cbd5e1;
+      padding: 3px 10px;
+      border-radius: 6px;
+      font-size: 0.75rem;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.2s;
+    }
+
+    .copy-btn:hover {
+      background: var(--primary);
+      color: #fff;
+    }
+
+    pre.code-content {
+      padding: 16px;
+      color: var(--code-text);
+      font-family: 'Fira Code', Consolas, monospace;
+      font-size: 0.9rem;
+      line-height: 1.6;
+      overflow-x: auto;
+    }
+
+    /* Keyboard Shortcut Grid */
+    .keys-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1rem;
+      margin: 1.5rem 0;
+    }
+
+    .key-card {
+      background: var(--bg);
+      border: 1px solid var(--card-border);
+      border-radius: 10px;
+      padding: 1rem 1.25rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    kbd {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      box-shadow: 0 2px 0 var(--card-border);
+      border-radius: 6px;
+      padding: 4px 8px;
+      font-family: 'Fira Code', monospace;
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: var(--primary);
+    }
+
+    /* Interactive Checklist */
+    .checklist {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin: 1.5rem 0;
+    }
+
+    .checklist-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: var(--bg);
+      padding: 12px 16px;
+      border-radius: 12px;
+      border: 1px solid var(--card-border);
+      cursor: pointer;
+      user-select: none;
+      transition: all 0.2s ease;
+    }
+
+    .checklist-item:hover {
+      border-color: var(--primary);
+    }
+
+    .checklist-item.checked {
+      background: rgba(16, 185, 129, 0.08);
+      border-color: var(--success);
+      text-decoration: line-through;
+      color: var(--text-muted);
+    }
+
+    .checklist-checkbox {
+      width: 20px;
+      height: 20px;
+      border-radius: 6px;
+      border: 2px solid var(--card-border);
+      display: grid;
+      place-items: center;
+      transition: all 0.2s;
+    }
+
+    .checklist-item.checked .checklist-checkbox {
+      background: var(--success);
+      border-color: var(--success);
+      color: #fff;
+    }
+
+    /* Accordion FAQ */
+    .faq-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin: 1.75rem 0;
+    }
+
+    .faq-item {
+      background: var(--bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      overflow: hidden;
+      transition: all 0.25s ease;
+    }
+
+    .faq-question {
+      padding: 1.25rem 1.5rem;
+      font-weight: 700;
+      font-size: 1.05rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+      user-select: none;
+      color: var(--text-main);
+    }
+
+    .faq-question:hover {
+      color: var(--primary);
+    }
+
+    .faq-arrow {
+      font-size: 1.1rem;
+      transition: transform 0.25s ease;
+      color: var(--text-muted);
+    }
+
+    .faq-item.open .faq-arrow {
+      transform: rotate(180deg);
+      color: var(--primary);
+    }
+
+    .faq-answer {
+      display: none;
+      padding: 0 1.5rem 1.25rem;
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      line-height: 1.6;
+      border-top: 1px solid transparent;
+    }
+
+    .faq-item.open .faq-answer {
+      display: block;
+      border-top-color: var(--card-border);
+      padding-top: 1rem;
+    }
+
+    /* Footer */
+    footer {
+      background: var(--navy);
+      color: #94a3b8;
+      padding: 4rem 2rem 2rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      text-align: center;
+    }
+
+    .footer-content {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .footer-links {
+      display: flex;
+      justify-content: center;
+      gap: 24px;
+      margin: 1.5rem 0 2rem;
+      flex-wrap: wrap;
+    }
+
+    .footer-links a {
+      color: #cbd5e1;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.9rem;
+      transition: color 0.2s;
+    }
+
+    .footer-links a:hover {
+      color: #38bdf8;
+    }
+
+    /* Role Filtering Classes */
+    body.filter-teacher .role-candidate-only {
+      display: none !important;
+    }
+
+    body.filter-candidate .role-teacher-only {
+      display: none !important;
+    }
+
+    /* Mobile Navigation & Drawer Component Styles */
+    .mobile-menu-btn {
+      display: none;
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      cursor: pointer;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+      padding: 0;
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      z-index: 1002;
+    }
+
+    .mobile-menu-btn:hover {
+      background: rgba(255, 255, 255, 0.2);
+      transform: scale(1.05);
+    }
+
+    .hamburger-bar {
+      width: 20px;
+      height: 2px;
+      background-color: #ffffff;
+      border-radius: 2px;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .mobile-menu-btn.active .hamburger-bar:nth-child(1) {
+      transform: translateY(7px) rotate(45deg);
+    }
+
+    .mobile-menu-btn.active .hamburger-bar:nth-child(2) {
+      opacity: 0;
+      transform: scale(0.2);
+    }
+
+    .mobile-menu-btn.active .hamburger-bar:nth-child(3) {
+      transform: translateY(-7px) rotate(-45deg);
+    }
+
+    /* Mobile Drawer Overlay */
+    .mobile-drawer-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(3, 11, 28, 0.78);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      z-index: 1050;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+
+    .mobile-drawer-overlay.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    /* Mobile Drawer Panel */
+    .mobile-drawer {
+      position: fixed;
+      top: 0;
+      right: 0;
+      width: min(350px, 88vw);
+      height: 100vh;
+      height: 100dvh;
+      background: var(--card-bg);
+      color: var(--text-main);
+      z-index: 1060;
+      box-shadow: -12px 0 40px rgba(0, 0, 0, 0.45);
+      border-left: 1px solid var(--card-border);
+      transform: translateX(100%);
+      transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+      display: flex;
+      flex-direction: column;
+      overflow-y: auto;
+      padding: 1.25rem 1.15rem 3rem;
+    }
+
+    .mobile-drawer.active {
+      transform: translateX(0);
+    }
+
+    .mobile-drawer-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid var(--card-border);
+      margin-bottom: 1rem;
+    }
+
+    .mobile-drawer-brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .drawer-title {
+      font-size: 1rem;
+      font-weight: 800;
+      color: var(--text-main);
+      line-height: 1.2;
+    }
+
+    .drawer-subtitle {
+      font-size: 0.72rem;
+      color: #06b6d4;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+    }
+
+    .drawer-close-btn {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: var(--bg);
+      border: 1px solid var(--card-border);
+      color: var(--text-muted);
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 700;
+      display: grid;
+      place-items: center;
+      transition: all 0.2s;
+    }
+
+    .drawer-close-btn:hover {
+      background: #ef4444;
+      color: #fff;
+      border-color: #ef4444;
+      transform: rotate(90deg);
+    }
+
+    .drawer-section-title {
+      font-size: 0.75rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--text-muted);
+      margin: 1.1rem 0 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .mobile-search-wrap {
+      position: relative;
+      margin-bottom: 0.75rem;
+    }
+
+    .mobile-search-wrap input {
+      width: 100%;
+      background: var(--bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 10px 14px 10px 38px;
+      color: var(--text-main);
+      font-size: 0.9rem;
+      outline: none;
+      transition: all 0.2s;
+    }
+
+    .mobile-search-wrap input:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+    }
+
+    .mobile-search-icon {
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 0.95rem;
+      opacity: 0.7;
+      pointer-events: none;
+    }
+
+    .drawer-portal-links {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .drawer-portal-btn {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 14px;
+      border-radius: 10px;
+      background: var(--bg);
+      border: 1px solid var(--card-border);
+      color: var(--text-main);
+      text-decoration: none;
+      font-size: 0.88rem;
+      font-weight: 700;
+      transition: all 0.2s ease;
+    }
+
+    .drawer-portal-btn:hover {
+      background: var(--primary-light);
+      border-color: var(--primary);
+      color: var(--primary);
+      transform: translateX(3px);
+    }
+
+    .drawer-portal-btn.primary {
+      background: linear-gradient(135deg, #4f46e5, #7c3aed);
+      color: #ffffff;
+      border-color: transparent;
+      box-shadow: 0 4px 14px rgba(79, 70, 229, 0.35);
+    }
+
+    .drawer-portal-btn.primary:hover {
+      filter: brightness(1.1);
+      transform: translateX(3px);
+    }
+
+    .mobile-role-switcher {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 6px;
+      background: var(--bg);
+      padding: 4px;
+      border-radius: 12px;
+      border: 1px solid var(--card-border);
+    }
+
+    .mobile-role-btn {
+      padding: 8px 4px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      border-radius: 8px;
+      border: none;
+      background: transparent;
+      color: var(--text-muted);
+      cursor: pointer;
+      text-align: center;
+      transition: all 0.2s ease;
+    }
+
+    .mobile-role-btn.active {
+      background: var(--primary);
+      color: #ffffff;
+      box-shadow: 0 2px 8px rgba(99, 102, 241, 0.35);
+    }
+
+    .mobile-theme-btn {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 10px;
+      border-radius: 10px;
+      background: var(--bg);
+      border: 1px solid var(--card-border);
+      color: var(--text-main);
+      font-size: 0.88rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .mobile-theme-btn:hover {
+      border-color: var(--primary);
+      background: var(--primary-light);
+    }
+
+    .mobile-toc-menu {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      margin-top: 4px;
+    }
+
+    .mobile-toc-link {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 12px;
+      border-radius: 10px;
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.88rem;
+      font-weight: 600;
+      transition: all 0.2s ease;
+    }
+
+    .mobile-toc-link:hover, .mobile-toc-link.active {
+      background: var(--primary-light);
+      color: var(--primary);
+      font-weight: 700;
+    }
+
+    .mobile-toc-link .icon {
+      font-size: 1.1rem;
+      flex-shrink: 0;
+    }
+
+    /* Floating Mobile Quick-Access Dock */
+    .mobile-floating-nav {
+      display: none;
+      position: fixed;
+      bottom: 20px;
+      left: 20px;
+      z-index: 9998;
+      background: rgba(6, 17, 38, 0.88);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 30px;
+      padding: 5px 8px;
+      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.4);
+      gap: 6px;
+      align-items: center;
+    }
+
+    .mobile-floating-nav button, .mobile-floating-nav a {
+      background: transparent;
+      border: none;
+      color: #ffffff;
+      font-size: 0.82rem;
+      font-weight: 700;
+      padding: 6px 12px;
+      border-radius: 20px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      text-decoration: none;
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+
+    .mobile-floating-nav button:hover, .mobile-floating-nav a:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+    .mobile-floating-nav .fab-primary {
+      background: linear-gradient(135deg, #6366f1, #8b5cf6);
+      box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
+    }
+
+    .mobile-floating-nav .fab-primary:hover {
+      filter: brightness(1.1);
+    }
+
+    /* Mobile Virtual Keyboard Auto-Scroll Friendly Margins */
+    input, textarea, [contenteditable="true"], .search-box input, .mobile-search-wrap input {
+      scroll-margin-top: 85px;
+      scroll-margin-bottom: 220px;
+    }
+
+    /* Mobile Responsiveness */
+    @media (max-width: 1024px) {
+      .app-layout {
+        grid-template-columns: 1fr;
+        padding: 1.5rem 1rem 3rem;
+      }
+      .sidebar {
+        display: none;
+      }
+      .mobile-menu-btn {
+        display: flex;
+      }
+      .mobile-floating-nav {
+        display: flex;
+      }
+      .hero h1 {
+        font-size: 2.3rem;
+      }
+      .hero p {
+        font-size: 1.05rem;
+      }
+      .mock-body {
+        grid-template-columns: 1fr;
+      }
+      .mock-code-pane {
+        border-right: none;
+        border-bottom: 1px solid #1e293b;
+      }
+      .top-navbar {
+        padding: 0 1rem;
+        height: auto;
+        min-height: 64px;
+        gap: 12px;
+      }
+      .top-links {
+        display: flex;
+        gap: 8px;
+      }
+      .search-box input {
+        width: 150px;
+      }
+      .search-box input:focus {
+        width: 190px;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .top-navbar {
+        padding: 10px 12px;
+        height: auto;
+        min-height: unset;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 8px;
+      }
+      .brand-group {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
+      }
+      .brand-badge {
+        width: 36px;
+        height: 36px;
+        font-size: 1.05rem;
+        border-radius: 9px;
+      }
+      .brand-text h1 {
+        font-size: 0.98rem;
+      }
+      .brand-text span {
+        font-size: 0.68rem;
+      }
+      .search-box {
+        display: none;
+      }
+      
+      /* Upper navigation buttons in 2 rows in mobile view */
+      .top-links {
+        display: grid !important;
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 6px !important;
+        width: 100% !important;
+      }
+      .top-links .nav-link-btn {
+        width: 100% !important;
+        height: 34px !important;
+        padding: 0 8px !important;
+        font-size: 0.8rem !important;
+        border-radius: 8px !important;
+        justify-content: center !important;
+        align-items: center !important;
+        display: inline-flex !important;
+      }
+      .nav-tools {
+        display: grid !important;
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 6px !important;
+        width: 100% !important;
+      }
+      .theme-toggle-btn {
+        display: inline-flex !important;
+        height: 34px !important;
+        padding: 0 8px !important;
+        font-size: 0.8rem !important;
+        border-radius: 8px !important;
+        justify-content: center !important;
+        align-items: center !important;
+        width: 100% !important;
+      }
+      .action-link-btn {
+        display: inline-flex !important;
+        height: 34px !important;
+        padding: 0 8px !important;
+        font-size: 0.8rem !important;
+        border-radius: 8px !important;
+        justify-content: center !important;
+        align-items: center !important;
+        width: 100% !important;
+      }
+      .mobile-menu-btn {
+        margin-left: auto;
+      }
+      .hero {
+        padding: 3rem 1rem 2.5rem;
+      }
+      .hero h1 {
+        font-size: 1.85rem;
+        letter-spacing: -0.5px;
+      }
+      .hero p {
+        font-size: 0.95rem;
+      }
+      .role-switcher {
+        width: 100%;
+        border-radius: 14px;
+      }
+      .role-btn {
+        padding: 8px 12px;
+        font-size: 0.82rem;
+        flex: 1 1 auto;
+        justify-content: center;
+      }
+      .section-card {
+        padding: 1.4rem 1.1rem;
+      }
+      .section-header {
+        gap: 0.85rem;
+      }
+      .section-icon {
+        width: 44px;
+        height: 44px;
+        font-size: 1.35rem;
+        border-radius: 11px;
+      }
+      .section-header h2 {
+        font-size: 1.35rem;
+      }
+      .feature-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+      }
+      .step-card {
+        grid-template-columns: 40px 1fr;
+        gap: 1rem;
+        padding: 1.15rem;
+      }
+      .step-number {
+        width: 38px;
+        height: 38px;
+        font-size: 1rem;
+      }
+      .step-content h4 {
+        font-size: 1.05rem;
+      }
+      .keys-grid {
+        grid-template-columns: 1fr;
+      }
+      .mobile-floating-nav {
+        bottom: 14px;
+        left: 12px;
+        padding: 4px 6px;
+      }
+      .mobile-floating-nav button, .mobile-floating-nav a {
+        padding: 5px 9px;
+        font-size: 0.75rem;
+      }
+      #waFloatingWidget {
+        bottom: 74px !important;
+        right: 12px !important;
+        max-width: calc(100vw - 24px) !important;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .brand-text span {
+        display: none;
+      }
+      .brand-text h1 {
+        font-size: 0.92rem;
+      }
+      .action-link-btn span:last-child {
+        display: inline;
+      }
+      .hero h1 {
+        font-size: 1.6rem;
+      }
+      .step-card {
+        grid-template-columns: 1fr;
+      }
+      .step-number {
+        display: inline-flex;
+        width: 34px;
+        height: 34px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Sticky Navigation Bar -->
+  <header class="top-navbar">
+    <div class="brand-group">
+      <a href="index.html" class="brand" title="Launch Assessment IDE">
+        <div class="brand-badge">Py</div>
+        <div class="brand-text">
+          <h1>Browser Assessment IDE</h1>
+          <span>⚡ Online Cloud & Server Guide</span>
+        </div>
+      </a>
+      <div class="top-links">
+        <a class="nav-link-btn" href="https://supportsourcecode.lovable.app/home" target="_blank" rel="noopener noreferrer" title="Home Portal">
+          <span>🏠</span> Home
+        </a>
+        <a class="nav-link-btn" href="https://interactive-media-display.lovable.app/" target="_blank" rel="noopener noreferrer" title="App Store">
+          <span>🛍️</span> App store
+        </a>
+      </div>
+    </div>
+
+    <div class="nav-tools">
+      <div class="search-box">
+        <span class="search-icon">🔍</span>
+        <input type="text" id="guideSearch" placeholder="Search guide topics..." aria-label="Search documentation"/>
+      </div>
+      <button class="theme-toggle-btn" id="themeToggle" title="Toggle Dark/Light Mode">
+        <span id="themeIcon">☾</span> Dark Mode
+      </button>
+      <a href="index.html" class="action-link-btn" title="Back to Application">
+        <span>🚀</span> Open IDE
+      </a>
+      <!-- Mobile Hamburger Menu Button -->
+      <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Toggle navigation menu" aria-expanded="false" title="Menu">
+        <span class="hamburger-bar"></span>
+        <span class="hamburger-bar"></span>
+        <span class="hamburger-bar"></span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Mobile Navigation Drawer Overlay & Panel -->
+  <div class="mobile-drawer-overlay" id="mobileDrawerOverlay"></div>
+  <nav class="mobile-drawer" id="mobileDrawer" aria-label="Mobile Navigation Menu">
+    <div class="mobile-drawer-header">
+      <div class="mobile-drawer-brand">
+        <div class="brand-badge" style="width:34px; height:34px; font-size:1rem;">Py</div>
+        <div>
+          <div class="drawer-title">Assessment IDE</div>
+          <div class="drawer-subtitle">User Guide & TOC</div>
+        </div>
+      </div>
+      <button class="drawer-close-btn" id="drawerCloseBtn" aria-label="Close menu" title="Close Menu">✕</button>
+    </div>
+
+    <!-- Mobile Search -->
+    <div class="mobile-search-wrap">
+      <span class="mobile-search-icon">🔍</span>
+      <input type="text" id="mobileGuideSearch" placeholder="Search guide topics..." aria-label="Search documentation in mobile drawer"/>
+    </div>
+
+    <!-- Quick Portals -->
+    <div class="drawer-section-title">Quick Portals</div>
+    <div class="drawer-portal-links">
+      <a href="index.html" class="drawer-portal-btn primary">
+        <span><span>🚀</span> Launch Assessment IDE</span>
+        <span>›</span>
+      </a>
+      <a href="https://supportsourcecode.lovable.app/home" target="_blank" rel="noopener noreferrer" class="drawer-portal-btn">
+        <span><span>🏠</span> Home Portal</span>
+        <span>↗</span>
+      </a>
+      <a href="https://interactive-media-display.lovable.app/" target="_blank" rel="noopener noreferrer" class="drawer-portal-btn">
+        <span><span>🛍️</span> App Store</span>
+        <span>↗</span>
+      </a>
+    </div>
+
+    <!-- Mobile Audience Filter -->
+    <div class="drawer-section-title">Filter by Audience</div>
+    <div class="mobile-role-switcher" role="tablist" aria-label="Mobile Role Filter">
+      <button class="mobile-role-btn active" data-role="all" role="tab" aria-selected="true">🌟 All</button>
+      <button class="mobile-role-btn" data-role="teacher" role="tab" aria-selected="false">👨‍🏫 Teacher</button>
+      <button class="mobile-role-btn" data-role="candidate" role="tab" aria-selected="false">👨‍🎓 Candidate</button>
+    </div>
+
+    <!-- Mobile Theme Toggle -->
+    <div class="drawer-section-title">Preferences</div>
+    <button class="mobile-theme-btn" id="mobileThemeToggle" type="button">
+      <span id="mobileThemeIcon">☾</span> <span id="mobileThemeText">Dark Mode</span>
+    </button>
+
+    <!-- Mobile Table of Contents -->
+    <div class="drawer-section-title">Table of Contents</div>
+    <ul class="mobile-toc-menu">
+      <li><a href="#online-architecture" class="mobile-toc-link"><span class="icon">☁️</span> Online Architecture</a></li>
+      <li><a href="#quickstart" class="mobile-toc-link"><span class="icon">🚀</span> 60-Second Quick Start</a></li>
+      <li><a href="#welcome-mock-data" class="mobile-toc-link"><span class="icon">🧪</span> Welcome & Mock Data</a></li>
+      <li><a href="#frontend-workspace" class="mobile-toc-link"><span class="icon">🖥️</span> Front-End Workspace</a></li>
+      <li class="role-teacher-only"><a href="#teacher-guide" class="mobile-toc-link"><span class="icon">👨‍🏫</span> Teacher Master Guide</a></li>
+      <li class="role-teacher-only"><a href="#rich-editor" class="mobile-toc-link"><span class="icon">✍️</span> Rich Statement & Media</a></li>
+      <li class="role-teacher-only"><a href="#locks-security" class="mobile-toc-link"><span class="icon">🔒</span> Teacher Locks & Security</a></li>
+      <li class="role-candidate-only"><a href="#candidate-guide" class="mobile-toc-link"><span class="icon">👨‍🎓</span> Candidate Verification</a></li>
+      <li><a href="#proctoring-evidence" class="mobile-toc-link"><span class="icon">🛡️</span> Camera & Screen Evidence</a></li>
+      <li><a href="#backup-export" class="mobile-toc-link"><span class="icon">📦</span> Complete JSON & Export</a></li>
+      <li><a href="#mock-challenges" class="mobile-toc-link"><span class="icon">💡</span> Built-In Challenge Sets</a></li>
+      <li><a href="#shortcuts" class="mobile-toc-link"><span class="icon">⌨️</span> Hotkeys & Shortcuts</a></li>
+      <li><a href="#checklist" class="mobile-toc-link"><span class="icon">📋</span> Pre-Exam Checklist</a></li>
+      <li><a href="#faq" class="mobile-toc-link"><span class="icon">❓</span> FAQ & Troubleshooting</a></li>
+    </ul>
+  </nav>
+
+  <!-- Mobile Floating Quick-Access Dock -->
+  <div class="mobile-floating-nav" id="mobileFloatingNav">
+    <button id="mobileNavTocBtn" class="fab-primary" title="Open Table of Contents">
+      <span>📑</span> Contents
+    </button>
+    <a href="index.html" title="Launch IDE">
+      <span>🚀</span> IDE
+    </a>
+    <button id="mobileBackToTop" title="Scroll to Top">
+      <span>↑</span> Top
+    </button>
+  </div>
+
+  <!-- Hero Header -->
+  <section class="hero">
+    <div class="hero-content">
+      <div class="hero-badge">
+        <span>☁️</span> Online Server & Cloud Deployment Guide
+      </div>
+      <h1>End-to-End Online Assessment Guide</h1>
+      <p>
+        Learn how to build, run, proctor, and submit front-end assessments seamlessly on the online server. Zero installation needed—powered 100% by secure browser technology.
+      </p>
+
+      <!-- Role Switcher -->
+      <div class="role-switcher" role="tablist" aria-label="Role selector">
+        <button class="role-btn active" data-role="all" role="tab" aria-selected="true">
+          <span>🌟</span> All Guide Sections
+        </button>
+        <button class="role-btn" data-role="teacher" role="tab" aria-selected="false">
+          <span>👨‍🏫</span> Examiner / Teacher Mode
+        </button>
+        <button class="role-btn" data-role="candidate" role="tab" aria-selected="false">
+          <span>👨‍🎓</span> Candidate / Student Mode
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Main Container -->
+  <div class="app-layout">
+    
+    <!-- Sticky Navigation Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-title">Table of Contents</div>
+      <ul class="sidebar-menu">
+        <li><a href="#online-architecture" class="sidebar-link active"><span class="icon">☁️</span> Online Architecture</a></li>
+        <li><a href="#quickstart" class="sidebar-link"><span class="icon">🚀</span> 60-Second Quick Start</a></li>
+        <li><a href="#welcome-mock-data" class="sidebar-link"><span class="icon">🧪</span> Welcome & Mock Data</a></li>
+        <li><a href="#frontend-workspace" class="sidebar-link"><span class="icon">🖥️</span> Front-End Workspace</a></li>
+        <li class="role-teacher-only"><a href="#teacher-guide" class="sidebar-link"><span class="icon">👨‍🏫</span> Teacher Master Setup</a></li>
+        <li class="role-teacher-only"><a href="#rich-editor" class="sidebar-link"><span class="icon">✍️</span> Rich Statement & Media</a></li>
+        <li class="role-teacher-only"><a href="#locks-security" class="sidebar-link"><span class="icon">🔒</span> Teacher Locks & Security</a></li>
+        <li class="role-candidate-only"><a href="#candidate-guide" class="sidebar-link"><span class="icon">👨‍🎓</span> Candidate Verification</a></li>
+        <li><a href="#proctoring-evidence" class="sidebar-link"><span class="icon">🛡️</span> Camera & Screen Evidence</a></li>
+        <li><a href="#backup-export" class="sidebar-link"><span class="icon">📦</span> Complete JSON & Export</a></li>
+        <li><a href="#mock-challenges" class="sidebar-link"><span class="icon">💡</span> Built-In Challenge Sets</a></li>
+        <li><a href="#shortcuts" class="sidebar-link"><span class="icon">⌨️</span> Hotkeys & Shortcuts</a></li>
+        <li><a href="#checklist" class="sidebar-link"><span class="icon">📋</span> Pre-Exam Checklist</a></li>
+        <li><a href="#faq" class="sidebar-link"><span class="icon">❓</span> FAQ & Troubleshooting</a></li>
+      </ul>
+    </aside>
+
+    <!-- Content Sections -->
+    <main class="content-area">
+
+      <!-- Section 0: Online Server Architecture -->
+      <section class="section-card" id="online-architecture">
+        <div class="section-header">
+          <div class="section-icon">☁️</div>
+          <div>
+            <h2>Running on Online Server / HTTPS</h2>
+            <p>How the online web deployment delivers fast, secure, and zero-setup assessment capabilities.</p>
+          </div>
+        </div>
+
+        <div class="online-highlight-badge">
+          <span>●</span> Hosted on Online Web Server (HTTPS Supported)
+        </div>
+
+        <p>
+          Because this application runs directly on an online web server (over HTTPS or hosted domain), you gain immediate enterprise advantages with zero software downloads or terminal commands:
+        </p>
+
+        <div class="feature-grid">
+          <div class="feature-box">
+            <span class="box-icon">🔒</span>
+            <h3>Native HTTPS Security</h3>
+            <p>Webcam, microphone, and screen recording permissions work out-of-the-box via browser WebRTC APIs without running local Python servers.</p>
+          </div>
+          <div class="feature-box">
+            <span class="box-icon">⚡</span>
+            <h3>Zero-Latency Client-Side Execution</h3>
+            <p>All HTML/CSS/JS compilation, live sandbox rendering, ZIP packaging, and PDF generation execute 100% in the user's browser.</p>
+          </div>
+          <div class="feature-box">
+            <span class="box-icon">🌐</span>
+            <h3>Universal URL Access</h3>
+            <p>Examiners and students simply open the web URL in Google Chrome, Microsoft Edge, Firefox, or Safari on any computer.</p>
+          </div>
+          <div class="feature-box">
+            <span class="box-icon">🛡️</span>
+            <h3>Network Fluctuation Proof</h3>
+            <p>All code inputs, question states, and remaining timer values are continuously saved to browser LocalStorage. Network glitches won't erase work.</p>
+          </div>
+        </div>
+
+        <div class="alert-box tip">
+          <span class="alert-icon">💡</span>
+          <div class="alert-box-content">
+            <strong>Direct Web Link Access</strong>
+            Teachers can simply send the website URL to candidates along with the assessment ZIP or JSON file. No developer tools or command lines required!
+          </div>
+        </div>
+      </section>
+
+      <!-- Section 1: Quickstart -->
+      <section class="section-card" id="quickstart">
+        <div class="section-header">
+          <div class="section-icon">🚀</div>
+          <div>
+            <h2>60-Second Quick Start</h2>
+            <p>Get started immediately in two simple flows.</p>
+          </div>
+        </div>
+
+        <div class="steps-container">
+          <div class="step-card">
+            <div class="step-number">A</div>
+            <div class="step-content">
+              <h4>If you are a Teacher / Examiner</h4>
+              <p>
+                1. Open the app link in your browser.<br>
+                2. Use <strong>+ Question</strong> to write problem statements, embed images/GIFs/videos, and provide starter code.<br>
+                3. Configure duration and click <strong>🔓 Lock Timer</strong> and <strong>Exam Setup</strong>.<br>
+                4. Click <strong>Export Set ZIP</strong> or <strong>Export JSON</strong> to download the exam file to distribute to candidates.
+              </p>
+            </div>
+          </div>
+
+          <div class="step-card">
+            <div class="step-number">B</div>
+            <div class="step-content">
+              <h4>If you are a Candidate / Student</h4>
+              <p>
+                1. Open the app link in Google Chrome or Microsoft Edge on a Desktop/Laptop.<br>
+                2. Click <strong>Import ZIP</strong> or <strong>Import JSON</strong> and select your test file.<br>
+                3. Enter your Full Name and Roll Number, allow Camera & Screen Share permissions.<br>
+                4. Code your solutions in HTML, CSS, and JS tabs, then click <strong>Finish Assessment</strong> to export your submission bundle.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="alert-box important">
+          <span class="alert-icon">🖥️</span>
+          <div class="alert-box-content">
+            <strong>Desktop Display Recommendation</strong>
+            For the optimal experience with side-by-side problem statements, multi-language code tabs, and live preview rendering, please use desktop or laptop computers (minimum 1080p recommended).
+          </div>
+        </div>
+      </section>
+
+      <!-- Section 2: Welcome Screen & Mock Test Data -->
+      <section class="section-card" id="welcome-mock-data">
+        <div class="section-header">
+          <div class="section-icon">🧪</div>
+          <div>
+            <h2>Welcome Dialog & 1-Click Mock Test Dataset</h2>
+            <p>Instant access to interactive evaluation tasks and guided desktop onboarding.</p>
+          </div>
+        </div>
+
+        <p>
+          Upon launching the IDE, the app displays a modern onboarding dialog tailored for both students and instructors:
+        </p>
+
+        <div class="feature-grid">
+          <div class="feature-box">
+            <span class="box-icon">🖥️</span>
+            <h3>Desktop Mode Recommendation</h3>
+            <p>Highlights the recommendation banner: <em>"For better experience, Try it in desktop mode"</em> to ensure candidates utilize full-width split panes.</p>
+          </div>
+          <div class="feature-box">
+            <span class="box-icon">📖</span>
+            <h3>How To Use Quick Link</h3>
+            <p>Direct button connecting users straight to this complete guide manual in a new tab without interrupting assessment workflow.</p>
+          </div>
+          <div class="feature-box">
+            <span class="box-icon">🧪</span>
+            <h3>1-Click Mock Dataset Loading</h3>
+            <p>Clicking <strong>Try with mock test data</strong> instantly populates the IDE with 7 real-world interactive front-end challenges complete with starter code and problem requirements.</p>
+          </div>
+          <div class="feature-box">
+            <span class="box-icon">⚡</span>
+            <h3>Zero Upload Testing</h3>
+            <p>Allows educators and candidates to test all IDE features—live auto-refresh, console debugging, font resizing, and timers—without uploading any files.</p>
+          </div>
+        </div>
+
+        <div class="alert-box tip">
+          <span class="alert-icon">💡</span>
+          <div class="alert-box-content">
+            <strong>Dismissing the Welcome Screen</strong>
+            You can dismiss the welcome modal at any time by clicking <em>Continue to App ›</em>, the <em>✕</em> close icon, pressing <kbd>Escape</kbd>, or clicking the outside dark backdrop.
+          </div>
+        </div>
+      </section>
+
+      <!-- Section 3: Front-End Coding Workspace -->
+      <section class="section-card" id="frontend-workspace">
+        <div class="section-header">
+          <div class="section-icon">🖥️</div>
+          <div>
+            <h2>Front-End Coding Playground</h2>
+            <p>Develop, style, and debug HTML, CSS, and JavaScript with instant live previews.</p>
+          </div>
+        </div>
+
+        <p>
+          The workspace features a synchronized multi-language editor designed specifically for modern web application testing:
+        </p>
+
+        <div class="feature-grid">
+          <div class="feature-box">
+            <span class="box-icon">&lt;/&gt;</span>
+            <h3>Tri-Tab Editor</h3>
+            <p>Switch seamlessly between <strong>&lt;/&gt; HTML</strong>, <strong># CSS</strong>, and <strong>JS JavaScript</strong> tabs with line numbers and 2-space smart indentation.</p>
+          </div>
+          <div class="feature-box">
+            <span class="box-icon">⚡</span>
+            <h3>Sandboxed Live Preview</h3>
+            <p>Your code renders inside a secure isolated <code>&lt;iframe&gt;</code> that automatically combines markup, stylesheets, and scripts with zero page refresh.</p>
+          </div>
+          <div class="feature-box">
+            <span class="box-icon">🎛️</span>
+            <h3>Auto-Refresh Control</h3>
+            <p>Toggle auto-rendering on or off, or customize the debounce delay (<strong>150 ms</strong>, <strong>350 ms</strong>, <strong>700 ms</strong>, or <strong>1.2 sec</strong>).</p>
+          </div>
+          <div class="feature-box">
+            <span class="box-icon">📟</span>
+            <h3>Live Browser Console</h3>
+            <p>Intercepts preview logs, warnings, runtime errors, and unhandled promise rejections directly into a color-coded inspection panel.</p>
+          </div>
+          <div class="feature-box">
+            <span class="box-icon">⛶</span>
+            <h3>Full Screen IDE & Zen Modes</h3>
+            <p>Toggle whole-workspace fullscreen via the <strong>Full Screen IDE</strong> button (<kbd>Fn + F11</kbd> / <kbd>F11</kbd>), maximize code pane, or expand live output for distraction-free testing.</p>
+          </div>
+          <div class="feature-box">
+            <span class="box-icon">🌗</span>
+            <h3>Adaptive Dark Mode Contrast</h3>
+            <p>Dark mode dynamically converts hardcoded black problem text and editor typography to clean, high-contrast white for eye comfort.</p>
+          </div>
+          <div class="feature-box">
+            <span class="box-icon">🔤</span>
+            <h3>Adjustable Typography</h3>
+            <p>Scale editor font sizes up or down using the <strong>A+</strong> and <strong>A-</strong> buttons to match your comfort level.</p>
+          </div>
+        </div>
+
+        <!-- Interactive Sandbox Simulation -->
+        <h3 style="margin-top: 2rem; margin-bottom: 0.75rem;">Interactive Editor Architecture</h3>
+        <div class="mock-editor-container">
+          <div class="mock-header">
+            <div class="mock-dots">
+              <span class="mock-dot red"></span>
+              <span class="mock-dot yellow"></span>
+              <span class="mock-dot green"></span>
+            </div>
+            <div class="mock-tabs">
+              <button class="mock-tab active">&lt;/&gt; HTML</button>
+              <button class="mock-tab"># CSS</button>
+              <button class="mock-tab">JS JavaScript</button>
+            </div>
+            <span style="color: #10b981; font-size: 0.75rem; font-weight: 700;">● Auto Refresh Ready</span>
+          </div>
+          <div class="mock-body">
+            <div class="mock-code-pane">1 &lt;main class="card"&gt;
+2   &lt;h1&gt;Online Front-End Task&lt;/h1&gt;
+3   &lt;p&gt;Edit HTML, CSS, and JS&lt;/p&gt;
+4   &lt;button id="cta"&gt;Click me&lt;/button&gt;
+5 &lt;/main&gt;</div>
+            <div class="mock-preview-pane">
+              <h3 style="color:#2d3748; margin-bottom: 4px;">Online Front-End Task</h3>
+              <p style="color:#718096; font-size: 0.85rem;">Live Sandboxed Output</p>
+              <button class="mock-btn-sample" onclick="alert('Live Sandbox Clicked!')">Click me</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="alert-box important">
+          <span class="alert-icon">⚡</span>
+          <div class="alert-box-content">
+            <strong>Pro Tip: Instant Compilation Shortcut</strong>
+            Press <kbd>Ctrl + Enter</kbd> (or <kbd>Cmd + Enter</kbd> on macOS) at any time to instantly trigger preview recompilation and execute your JavaScript!
+          </div>
+        </div>
+      </section>
+
+      <!-- Section 4: Teacher / Examiner Guide -->
+      <section class="section-card role-teacher-only" id="teacher-guide">
+        <div class="section-header">
+          <div class="section-icon">👨‍🏫</div>
+          <div>
+            <h2>Examiner & Teacher Master Guide</h2>
+            <p>Design challenging assessments, configure test locks, and export protected evaluation packages.</p>
+          </div>
+        </div>
+
+        <div class="steps-container">
+          <div class="step-card">
+            <div class="step-number">1</div>
+            <div class="step-content">
+              <h4>Create & Organize Questions</h4>
+              <p>
+                Click <strong>+ Question</strong> to add new challenges. Click the question dropdown picker (e.g. <em>Question 1 ▾</em>) to view the visual question matrix palette. Reorganize, test, or delete questions with 1 click.
+              </p>
+            </div>
+          </div>
+
+          <div class="step-card">
+            <div class="step-number">2</div>
+            <div class="step-content">
+              <h4>Write Rich Problem Statements</h4>
+              <p>
+                Use the full WYSIWYG problem editor to create professional instructions. Format headers, bold/italic styles, bulleted lists, code blocks, embed architecture diagrams, UI mockups, instructional GIFs, video guides, and custom typography.
+              </p>
+            </div>
+          </div>
+
+          <div class="step-card">
+            <div class="step-number">3</div>
+            <div class="step-content">
+              <h4>Configure Exam Setup & Owner Email</h4>
+              <p>
+                Click <strong>Exam Setup</strong> in the top header. Enter the <strong>Owner Email</strong> (where candidate submissions should be emailed) and the <strong>Submission Window</strong> (e.g., 10 minutes grace period post-timer).
+              </p>
+            </div>
+          </div>
+
+          <div class="step-card">
+            <div class="step-number">4</div>
+            <div class="step-content">
+              <h4>Lock Timer & Lock Problem Statements</h4>
+              <p>
+                Set the exam duration (e.g., 60 mins). Click <strong>🔓 Lock Timer</strong> and set a 4+ digit passcode. Then click <strong>🔓 Lock Editing</strong> on the problem statements. This ensures students cannot modify rules or bypass the timer.
+              </p>
+            </div>
+          </div>
+
+          <div class="step-card">
+            <div class="step-number">5</div>
+            <div class="step-content">
+              <h4>Export Assessment Package (JSON or ZIP)</h4>
+              <p>
+                Click <strong>Export JSON</strong> for a single-file portable backup of all questions and media, or <strong>Export Set ZIP</strong> with optional exam password protection to distribute to candidates.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Section 5: Rich Problem Editor & Media -->
+      <section class="section-card role-teacher-only" id="rich-editor">
+        <div class="section-header">
+          <div class="section-icon">✍️</div>
+          <div>
+            <h2>Rich Statement Editor & Media Embedding</h2>
+            <p>Craft visually engaging test descriptions with embedded media and custom fonts.</p>
+          </div>
+        </div>
+
+        <div class="table-wrap">
+          <table class="custom-table">
+            <thead>
+              <tr>
+                <th>Feature</th>
+                <th>Button / Action</th>
+                <th>Description & Capability</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Formatting</strong></td>
+                <td><span class="badge-pill blue">H1, H2, H3, Code</span></td>
+                <td>Format standard headings, paragraphs, and preformatted <code>&lt;pre&gt;</code> code snippets.</td>
+              </tr>
+              <tr>
+                <td><strong>Clipboard Paste</strong></td>
+                <td><kbd>Ctrl + V</kbd></td>
+                <td>Paste copied images directly from the clipboard. Images are automatically converted to portable Data URLs.</td>
+              </tr>
+              <tr>
+                <td><strong>Image / GIF Upload</strong></td>
+                <td><span class="badge-pill purple">Image/GIF</span></td>
+                <td>Embed local <code>.png</code>, <code>.jpg</code>, <code>.svg</code>, or animated <code>.gif</code> files with captions.</td>
+              </tr>
+              <tr>
+                <td><strong>Video Upload</strong></td>
+                <td><span class="badge-pill green">Video</span></td>
+                <td>Embed local MP4/WebM video demonstrations directly into the problem statement.</td>
+              </tr>
+              <tr>
+                <td><strong>Custom Web Fonts</strong></td>
+                <td><span class="badge-pill amber">Font</span></td>
+                <td>Upload custom <code>.woff</code>, <code>.woff2</code>, <code>.ttf</code>, or <code>.otf</code> typography for brand guidelines.</td>
+              </tr>
+              <tr>
+                <td><strong>Right-Click Deletion</strong></td>
+                <td>Right-Click Media</td>
+                <td>Right-click any embedded image or video to trigger the <em>Delete selected media</em> context menu.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- Section 6: Teacher Locks & Security -->
+      <section class="section-card role-teacher-only" id="locks-security">
+        <div class="section-header">
+          <div class="section-icon">🔒</div>
+          <div>
+            <h2>Teacher Passcode Locks & Security Architecture</h2>
+            <p>Prevent tampering, restrict unauthorized tab navigation, and enforce academic honesty.</p>
+          </div>
+        </div>
+
+        <div class="feature-grid">
+          <div class="feature-box">
+            <span class="box-icon">🔐</span>
+            <h3>Auto-Locked Navigation & Setup</h3>
+            <p>Upon importing an assessment ZIP for testing, navigation buttons (<strong>📖 Help Guide</strong>, <strong>🏠 Home</strong>, <strong>🛍️ App store</strong>) and <strong>Exam Setup</strong> are automatically locked. Clicking prompts <em>"Enter password"</em>—use <code>12345</code> to unlock.</p>
+          </div>
+          <div class="feature-box">
+            <span class="box-icon">⏱️</span>
+            <h3>Passcode-Locked Timer</h3>
+            <p>Prevents candidates from altering minutes or resetting the countdown. The timer starts strictly after student confirmation.</p>
+          </div>
+          <div class="feature-box">
+            <span class="box-icon">📝</span>
+            <h3>Locked Problem Statement</h3>
+            <p>Disables text editing, media deletion, and formatting toolbar. Candidates can read and fullscreen the statement without altering text.</p>
+          </div>
+          <div class="feature-box">
+            <span class="box-icon">🛡️</span>
+            <h3>Safe Full Screen Resilience</h3>
+            <p>Exiting full screen will not abort, terminate, or fail an active exam session. Candidates can toggle full screen freely (<kbd>Fn + F11</kbd>) without risk of losing progress.</p>
+          </div>
+          <div class="feature-box">
+            <span class="box-icon">🔑</span>
+            <h3>SHA-256 Passcode Security</h3>
+            <p>Teacher passcodes and lock hashes are salted and verified using browser-native Web Crypto SHA-256 so plain text is never exposed.</p>
+          </div>
+          <div class="feature-box">
+            <span class="box-icon">💾</span>
+            <h3>Instant Pre-Refresh Autosave</h3>
+            <p>Keystrokes are mirrored instantly to LocalStorage. Browser refresh or accidental tab switches trigger immediate state serialization.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Section 7: Candidate / Student Guide -->
+      <section class="section-card role-candidate-only" id="candidate-guide">
+        <div class="section-header">
+          <div class="section-icon">👨‍🎓</div>
+          <div>
+            <h2>Candidate & Student Online Exam Guide</h2>
+            <p>Step-by-step instructions for verifying your identity, completing challenges, mobile navigation, and submitting.</p>
+          </div>
+        </div>
+
+        <div class="steps-container">
+          <div class="step-card">
+            <div class="step-number">1</div>
+            <div class="step-content">
+              <h4>Import Assessment File & Auto-Lock</h4>
+              <p>
+                Click <strong>Import ZIP</strong> or <strong>Import JSON</strong> and select your assessment file. If password-protected, enter the exam passcode. Upon import, top navigation links (<strong>📖 Help Guide</strong>, <strong>🏠 Home</strong>, <strong>🛍️ App store</strong>) and <strong>Exam Setup</strong> are auto-locked (passcode <code>12345</code>) to maintain strict testing focus.
+              </p>
+            </div>
+          </div>
+
+          <div class="step-card">
+            <div class="step-number">2</div>
+            <div class="step-content">
+              <h4>Candidate Verification & Consent</h4>
+              <p>
+                Fill in your <strong>Full Name</strong> and <strong>Roll Number</strong>. Read the academic integrity guidelines. Tick the camera and screen recording consent checkboxes.
+              </p>
+            </div>
+          </div>
+
+          <div class="step-card">
+            <div class="step-number">3</div>
+            <div class="step-content">
+              <h4>Camera, Screen Sharing & Safe Full Screen</h4>
+              <p>
+                Click <strong>Open Camera</strong> and <strong>Share Screen</strong> (select entire screen). Once verified, click <strong>Ready to Exam</strong>. Toggle full screen with <strong>Full Screen IDE</strong> (<kbd>Fn + F11</kbd>). If you close or exit full screen, the exam <strong>will not terminate</strong>—you can safely refocus and continue coding.
+              </p>
+            </div>
+          </div>
+
+          <div class="step-card">
+            <div class="step-number">4</div>
+            <div class="step-content">
+              <h4>Sequential Execution, Pre-Refresh Autosave & Mobile Floating Tools</h4>
+              <p>
+                Solve questions in order using HTML, CSS, and JS tabs. All code is autosaved on every stroke and flushed immediately before page refresh. On mobile devices:<br>
+                • <strong>Top-Right Floating Timer:</strong> The capsule <code>[ ⏱ MM:SS | Finish Assessment ]</code> sticks to the screen header as you scroll down.<br>
+                • <strong>Bottom-Right Floating Navigation:</strong> Tap the floating <code>Next Question ›</code> button at the bottom-right to advance, which dynamically becomes <code>Finish Assessment ✓</code> on the final challenge.
+              </p>
+            </div>
+          </div>
+
+          <div class="step-card">
+            <div class="step-number">5</div>
+            <div class="step-content">
+              <h4>Finish Assessment & Export Submission Bundle</h4>
+              <p>
+                When done, click <strong>Finish Assessment</strong> (available in the bottom dock, top floating capsule, or bottom-right floating button), or let the countdown reach zero. The system bundles and downloads your verified <code>{RollNumber}-{Name}-completed.zip</code>, PDF report, screen recording, and camera evidence.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Section 8: Proctoring & Evidence Capture -->
+      <section class="section-card" id="proctoring-evidence">
+        <div class="section-header">
+          <div class="section-icon">🛡️</div>
+          <div>
+            <h2>Proctoring, Anti-Cheat & Evidence System</h2>
+            <p>Transparent, consent-based proctoring built for verified assessment integrity on online servers.</p>
+          </div>
+        </div>
+
+        <div class="feature-grid">
+          <div class="feature-box">
+            <span class="box-icon">📷</span>
+            <h3>Watermarked Camera Snapshots</h3>
+            <p>Captures lightweight periodic video frames with cryptographic timestamp stamps embedded directly onto the canvas.</p>
+          </div>
+          <div class="feature-box">
+            <span class="box-icon">🎥</span>
+            <h3>Continuous Screen Recording</h3>
+            <p>Records the candidate's active exam screen into an MP4 video stream stored inside <code>screen-recording/exam-screen.mp4</code> in the submission ZIP package.</p>
+          </div>
+          <div class="feature-box">
+            <span class="box-icon">🔐</span>
+            <h3>Auto-Locked Navigation & Setup</h3>
+            <p>External links (<strong>📖 Help Guide</strong>, <strong>🏠 Home</strong>, <strong>🛍️ App store</strong>) and <strong>Exam Setup</strong> are locked with passcode <code>12345</code> to ensure candidate focus.</p>
+          </div>
+          <div class="feature-box">
+            <span class="box-icon">🚫</span>
+            <h3>Anti-Tamper Protections</h3>
+            <p>During active exams, unauthorized copy/paste, cut, drag, drop, and right-click context menus are restricted to protect question integrity.</p>
+          </div>
+          <div class="feature-box">
+            <span class="box-icon">🛡️</span>
+            <h3>Safe Full Screen Policy</h3>
+            <p>Exiting full screen will not abort or terminate the exam. Candidates continue seamlessly and can re-enter full screen (<kbd>Fn + F11</kbd>) at any time.</p>
+          </div>
+          <div class="feature-box">
+            <span class="box-icon">🔄</span>
+            <h3>Instant Pre-Refresh Autosave</h3>
+            <p>Every keystroke is saved immediately, and state is safely flushed before any tab refresh, restoring the exact code and UTC remaining time.</p>
+          </div>
+        </div>
+
+        <div class="alert-box important">
+          <span class="alert-icon">⚖️</span>
+          <div class="alert-box-content">
+            <strong>Privacy & Ethics Assurance</strong>
+            This application does not perform automated face recognition, emotion scanning, gaze tracking, or AI-based cheating decisions. All captured evidence is stored locally in the submission package for authorized manual teacher review only.
+          </div>
+        </div>
+      </section>
+
+      <!-- Section 9: Backup & Export Workflows -->
+      <section class="section-card" id="backup-export">
+        <div class="section-header">
+          <div class="section-icon">📦</div>
+          <div>
+            <h2>Import & Export Specifications (JSON & ZIP)</h2>
+            <p>Complete guide to assessment formats, single-file JSON backups, and submission bundles.</p>
+          </div>
+        </div>
+
+        <div class="table-wrap">
+          <table class="custom-table">
+            <thead>
+              <tr>
+                <th>Action</th>
+                <th>File Format</th>
+                <th>Included Contents & Purpose</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Export JSON</strong></td>
+                <td><code>-all-questions.json</code></td>
+                <td>Complete teacher single-file backup containing all questions, rich HTML statements, base64 media, custom fonts, HTML/CSS/JS code, tests, timer locks, and owner configuration.</td>
+              </tr>
+              <tr>
+                <td><strong>Import JSON</strong></td>
+                <td><code>.json</code></td>
+                <td>Restores all questions, starter code, embedded media, and timer settings directly into teacher workspace with 1 click.</td>
+              </tr>
+              <tr>
+                <td><strong>Export Set ZIP</strong></td>
+                <td><code>.zip</code></td>
+                <td>Standard multi-question exam archive with <code>assessment.json</code> manifest and question files. Supports password locking.</td>
+              </tr>
+              <tr>
+                <td><strong>Export Question</strong></td>
+                <td><code>.question.json</code></td>
+                <td>Single question export with embedded media, HTML/CSS/JS, and individual timer settings.</td>
+              </tr>
+              <tr>
+                <td><strong>Submission Bundle</strong></td>
+                <td><code>-completed.zip</code> + <code>.pdf</code></td>
+                <td>Complete student output bundle containing all code files, camera evidence folder, <code>screen-recording/exam-screen.mp4</code>, PDF report, camera-evidence.html, and <code>instruction.txt</code>.</td>
+              </tr>
+              <tr>
+                <td><strong>Export HTML / Word</strong></td>
+                <td><code>.html</code> / <code>.doc</code></td>
+                <td>Printable and editable evaluation reports formatted for grading and offline archiving.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- Section 10: Built-In Mock Challenges Reference -->
+      <section class="section-card" id="mock-challenges">
+        <div class="section-header">
+          <div class="section-icon">💡</div>
+          <div>
+            <h2>Built-In Mock Challenge Problem Sets</h2>
+            <p>Overview of the 7 pre-configured real-world front-end test projects available in the IDE.</p>
+          </div>
+        </div>
+
+        <div class="feature-grid">
+          <div class="feature-box">
+            <span class="box-icon">🔢</span>
+            <h3>1. Interactive Counter</h3>
+            <p><strong>Focus:</strong> State management & event listeners. Increment, decrement with zero-floor limit, reset, and dynamic color shift (green when positive).</p>
+          </div>
+          <div class="feature-box">
+            <span class="box-icon">📝</span>
+            <h3>2. Dynamic Todo List</h3>
+            <p><strong>Focus:</strong> DOM manipulation & input validation. Add task via Enter key or button, toggle completed strikethrough, and item deletion.</p>
+          </div>
+          <div class="feature-box">
+            <span class="box-icon">📂</span>
+            <h3>3. Accordion FAQ Component</h3>
+            <p><strong>Focus:</strong> Class toggling & mutually exclusive panels. Expand/collapse FAQ items with dynamic (+/-) indicator update.</p>
+          </div>
+          <div class="feature-box">
+            <span class="box-icon">🪟</span>
+            <h3>4. Modal Dialog Popup</h3>
+            <p><strong>Focus:</strong> Overlay visibility & event delegation. Open modal, close on button click, outside backdrop click, and <kbd>Escape</kbd> key handler.</p>
+          </div>
+          <div class="feature-box">
+            <span class="box-icon">🌗</span>
+            <h3>5. Theme Toggle Switcher</h3>
+            <p><strong>Focus:</strong> CSS custom properties & smooth transitions. Switch between dark and light themes with button label and icon changes.</p>
+          </div>
+          <div class="feature-box">
+            <span class="box-icon">⏱️</span>
+            <h3>6. Digital Stopwatch & Laps</h3>
+            <p><strong>Focus:</strong> Timers & formatting. High precision (centiseconds), start/pause/reset controls, lap recording, and zero-padded display (<code>00:00:00</code>).</p>
+          </div>
+          <div class="feature-box">
+            <span class="box-icon">📊</span>
+            <h3>7. Character & Word Counter</h3>
+            <p><strong>Focus:</strong> Real-time text analysis. Word tokenizer, character capacity tracking (up to 200), dynamic progress fill, and warning state alerts.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Section 11: Keyboard Shortcuts Cheat Sheet -->
+      <section class="section-card" id="shortcuts">
+        <div class="section-header">
+          <div class="section-icon">⌨️</div>
+          <div>
+            <h2>Hotkeys & Shortcuts Cheat Sheet</h2>
+            <p>Work at lightning speed with built-in productivity shortcuts.</p>
+          </div>
+        </div>
+
+        <div class="keys-grid">
+          <div class="key-card">
+            <span>Toggle Full Screen IDE</span>
+            <kbd>Fn + F11</kbd> / <kbd>F11</kbd>
+          </div>
+          <div class="key-card">
+            <span>Refresh Live Preview</span>
+            <kbd>Ctrl + Enter</kbd>
+          </div>
+          <div class="key-card">
+            <span>Insert 2-Space Indent</span>
+            <kbd>Tab</kbd>
+          </div>
+          <div class="key-card">
+            <span>Undo Editor Change</span>
+            <kbd>Ctrl + Z</kbd>
+          </div>
+          <div class="key-card">
+            <span>Redo Editor Change</span>
+            <kbd>Ctrl + Y</kbd>
+          </div>
+          <div class="key-card">
+            <span>Paste Media into Problem</span>
+            <kbd>Ctrl + V</kbd>
+          </div>
+          <div class="key-card">
+            <span>Exit Fullscreen / Modal</span>
+            <kbd>Escape</kbd>
+          </div>
+        </div>
+      </section>
+
+      <!-- Section 12: Pre-Exam Checklist -->
+      <section class="section-card" id="checklist">
+        <div class="section-header">
+          <div class="section-icon">📋</div>
+          <div>
+            <h2>Interactive Pre-Exam Readiness Checklist</h2>
+            <p>Tick off each item before starting your test to ensure a seamless online session.</p>
+          </div>
+        </div>
+
+        <ul class="checklist" id="preExamChecklist">
+          <li class="checklist-item" onclick="toggleCheck(this)">
+            <div class="checklist-checkbox">✓</div>
+            <span>Open online assessment URL in Google Chrome or Microsoft Edge on Desktop / Laptop.</span>
+          </li>
+          <li class="checklist-item" onclick="toggleCheck(this)">
+            <div class="checklist-checkbox">✓</div>
+            <span>Allow camera & microphone browser permissions when prompted by HTTPS domain.</span>
+          </li>
+          <li class="checklist-item" onclick="toggleCheck(this)">
+            <div class="checklist-checkbox">✓</div>
+            <span>Allow screen sharing permission (select entire screen or application window).</span>
+          </li>
+          <li class="checklist-item" onclick="toggleCheck(this)">
+            <div class="checklist-checkbox">✓</div>
+            <span>Have candidate Roll Number and Full Name ready for the verification modal.</span>
+          </li>
+          <li class="checklist-item" onclick="toggleCheck(this)">
+            <div class="checklist-checkbox">✓</div>
+            <span>Close unnecessary background tabs or video streams to optimize browser CPU & memory.</span>
+          </li>
+          <li class="checklist-item" onclick="toggleCheck(this)">
+            <div class="checklist-checkbox">✓</div>
+            <span>Note the examiner email address for sharing the exported submission ZIP/PDF files.</span>
+          </li>
+        </ul>
+      </section>
+
+      <!-- Section 13: FAQ & Troubleshooting -->
+      <section class="section-card" id="faq">
+        <div class="section-header">
+          <div class="section-icon">❓</div>
+          <div>
+            <h2>Online Server FAQ & Troubleshooting</h2>
+            <p>Instant answers to common online deployment and examination questions.</p>
+          </div>
+        </div>
+
+        <div class="faq-list">
+          <div class="faq-item">
+            <div class="faq-question">
+              <span>Why are "📖 Help Guide", "🏠 Home", "🛍️ App store", and "Exam Setup" locked, and what is the password?</span>
+              <span class="faq-arrow">▼</span>
+            </div>
+            <div class="faq-answer">
+              After importing an assessment ZIP for testing, external navigation and administrative setup are automatically locked to prevent candidates from leaving the exam or altering configurations. When clicked, a modal prompts <em>"Enter password"</em>. The default teacher unlock password is <strong>12345</strong>.
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <div class="faq-question">
+              <span>What happens if a student exits full screen during the exam?</span>
+              <span class="faq-arrow">▼</span>
+            </div>
+            <div class="faq-answer">
+              The assessment <strong>will not terminate or submit</strong>. Candidates remain safely on their current question with their code intact, and can re-enter full screen at any moment using the <strong>Full Screen IDE</strong> (<kbd>Fn + F11</kbd>) button next to Lock Timer.
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <div class="faq-question">
+              <span>What happens if the candidate accidentally refreshes the browser?</span>
+              <span class="faq-arrow">▼</span>
+            </div>
+            <div class="faq-answer">
+              The application uses instant pre-refresh autosave (flushed automatically on <code>beforeunload</code> and <code>pagehide</code>) combined with UTC deadline storage. On reload, the assessment automatically restores the active question, all typed HTML/CSS/JS code, and continues the exact remaining countdown without losing progress.
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <div class="faq-question">
+              <span>How do mobile and tablet candidates view the timer and navigate questions?</span>
+              <span class="faq-arrow">▼</span>
+            </div>
+            <div class="faq-answer">
+              On mobile devices, a floating capsule at the top right displays <code>[ ⏱ MM:SS | Finish Assessment ]</code> permanently so candidates always see the timer while scrolling. Additionally, a floating button at the bottom right provides <strong>Next Question ›</strong> to navigate smoothly, turning into <strong>Finish Assessment ✓</strong> on the final question.
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <div class="faq-question">
+              <span>How do I try out the assessment IDE without creating questions from scratch?</span>
+              <span class="faq-arrow">▼</span>
+            </div>
+            <div class="faq-answer">
+              Click the <strong>Try with mock test data</strong> button on the welcome dialog (or click <em>Import JSON</em> and select <code>SET-MUK5KO3I-all-questions.json</code>). This instantly loads 7 complete front-end tasks with problem statements and pre-configured starter templates.
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <div class="faq-question">
+              <span>Why is camera or screen sharing not opening on the online server?</span>
+              <span class="faq-arrow">▼</span>
+            </div>
+            <div class="faq-answer">
+              Ensure you are accessing the website over <strong>HTTPS</strong> (e.g. <code>https://...</code>) or <code>http://127.0.0.1</code>. Modern browsers block webcam and screen access on insecure HTTP origins. Also, click the padlock/tune icon next to the URL in your address bar and ensure <em>Camera</em> and <em>Screen Sharing</em> permissions are set to <strong>Allow</strong>.
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <div class="faq-question">
+              <span>Does candidate work get lost if the internet disconnects during the exam?</span>
+              <span class="faq-arrow">▼</span>
+            </div>
+            <div class="faq-answer">
+              <strong>No!</strong> The application runs entirely inside the client's browser using LocalStorage and Web Workers. Even if the internet connection temporarily drops, the candidate can continue coding, previewing, and finishing the exam. Once finished, the ZIP and PDF download directly to their local disk without needing active server bandwidth.
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <div class="faq-question">
+              <span>What is the difference between Export Set ZIP and Export JSON?</span>
+              <span class="faq-arrow">▼</span>
+            </div>
+            <div class="faq-answer">
+              <strong>Export Set ZIP</strong> compiles a multi-file compressed exam bundle with optional candidate password protection designed for student distribution. <strong>Export JSON</strong> creates a single portable JSON file capturing all rich text, embedded media Data URLs, custom fonts, code, timer lock hashes, and owner settings for complete teacher backup and restore.
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <div class="faq-question">
+              <span>How do students send their completed test files to the examiner?</span>
+              <span class="faq-arrow">▼</span>
+            </div>
+            <div class="faq-answer">
+              When the assessment is finished (either manually or upon timeout), the browser automatically generates and downloads: <code>{RollNumber}-{Name}-completed.zip</code>, <code>{RollNumber}-{Name}-completed.pdf</code>, <code>{RollNumber}-{Name}-camera-evidence.html</code>, and <code>{RollNumber}-{Name}-instruction.txt</code>. Students email the completed ZIP and PDF files to the examiner email within the configured submission window.
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <div class="faq-question">
+              <span>How do I delete an embedded image or video from the problem statement?</span>
+              <span class="faq-arrow">▼</span>
+            </div>
+            <div class="faq-answer">
+              Simply click the image or video to select it (a highlight outline appears), then press <kbd>Delete</kbd> or <kbd>Backspace</kbd> on your keyboard. Alternatively, right-click the media item and choose <em>Delete selected media</em>.
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <div class="faq-question">
+              <span>How do I reset all exam data and clear saved local storage?</span>
+              <span class="faq-arrow">▼</span>
+            </div>
+            <div class="faq-answer">
+              Click the <strong>Clear Cookies</strong> button in the top header. This wipes all active session keys, cookies, and local storage, restoring the IDE to fresh teacher default mode.
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <div class="footer-content">
+      <div class="brand" style="justify-content: center; margin-bottom: 1rem;">
+        <div class="brand-badge">Py</div>
+        <div class="brand-text" style="text-align: left;">
+          <h1 style="color:#fff;">Browser Assessment IDE</h1>
+          <span>Secure Online Front-End Testing Environment</span>
+        </div>
+      </div>
+      <p style="font-size: 0.9rem; margin-bottom: 1.5rem;">
+        Empowering educators, examiners, and candidates with seamless, browser-native web assessments on the online server.
+      </p>
+      <div class="footer-links">
+        <a href="index.html">🚀 Launch App</a>
+        <a href="https://supportsourcecode.lovable.app/home" target="_blank" rel="noopener noreferrer">🏠 Home Portal</a>
+        <a href="https://interactive-media-display.lovable.app/" target="_blank" rel="noopener noreferrer">🛍️ App Store</a>
+        <a href="#welcome-mock-data">Mock Test Data</a>
+        <a href="#frontend-workspace">Workspace</a>
+        <a href="#backup-export">JSON & ZIP Backup</a>
+        <a href="#proctoring-evidence">Evidence Capture</a>
+        <a href="#faq">FAQ</a>
+      </div>
+      <p style="font-size: 0.8rem; color: #64748b;">
+        © 2026 Browser Assessment IDE. Client-side sandboxed execution for modern online education.
+      </p>
+    </div>
+  </footer>
+
+  <!-- Interactive JavaScript for Search, Theme Toggle, Role Filter, FAQ, Checklist & Mobile Nav -->
+  <script>
+    // Theme Switcher Logic (Desktop + Mobile Drawer Synchronized)
+    const themeBtn = document.getElementById('themeToggle');
+    const themeIcon = document.getElementById('themeIcon');
+    const mobileThemeToggle = document.getElementById('mobileThemeToggle');
+    const mobileThemeIcon = document.getElementById('mobileThemeIcon');
+    const mobileThemeText = document.getElementById('mobileThemeText');
+    
+    function applyTheme(isDark) {
+      if (isDark) {
+        document.body.classList.add('dark');
+        if (themeIcon) themeIcon.textContent = '☀';
+        if (themeBtn) themeBtn.innerHTML = '<span>☀</span> Light Mode';
+        if (mobileThemeIcon) mobileThemeIcon.textContent = '☀';
+        if (mobileThemeText) mobileThemeText.textContent = 'Switch to Light Mode';
+      } else {
+        document.body.classList.remove('dark');
+        if (themeIcon) themeIcon.textContent = '☾';
+        if (themeBtn) themeBtn.innerHTML = '<span>☾</span> Dark Mode';
+        if (mobileThemeIcon) mobileThemeIcon.textContent = '☾';
+        if (mobileThemeText) mobileThemeText.textContent = 'Switch to Dark Mode';
+      }
+      localStorage.setItem('guide-theme', isDark ? 'dark' : 'light');
+    }
+
+    // Check saved theme or system preference
+    const savedTheme = localStorage.getItem('guide-theme');
+    const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
+      applyTheme(true);
+    } else {
+      applyTheme(false);
+    }
+
+    if (themeBtn) {
+      themeBtn.addEventListener('click', () => {
+        const isDark = !document.body.classList.contains('dark');
+        applyTheme(isDark);
+      });
+    }
+
+    if (mobileThemeToggle) {
+      mobileThemeToggle.addEventListener('click', () => {
+        const isDark = !document.body.classList.contains('dark');
+        applyTheme(isDark);
+      });
+    }
+
+    // Mobile Navigation Drawer Toggle & Controls
+    const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+    const mobileDrawer = document.getElementById('mobileDrawer');
+    const mobileDrawerOverlay = document.getElementById('mobileDrawerOverlay');
+    const drawerCloseBtn = document.getElementById('drawerCloseBtn');
+    const mobileNavTocBtn = document.getElementById('mobileNavTocBtn');
+    const mobileBackToTop = document.getElementById('mobileBackToTop');
+
+    function openMobileDrawer() {
+      if (mobileDrawer && mobileDrawerOverlay) {
+        mobileDrawer.classList.add('active');
+        mobileDrawerOverlay.classList.add('active');
+        if (mobileMenuBtn) {
+          mobileMenuBtn.classList.add('active');
+          mobileMenuBtn.setAttribute('aria-expanded', 'true');
+        }
+        document.body.style.overflow = 'hidden';
+      }
+    }
+
+    function closeMobileDrawer() {
+      if (mobileDrawer && mobileDrawerOverlay) {
+        mobileDrawer.classList.remove('active');
+        mobileDrawerOverlay.classList.remove('active');
+        if (mobileMenuBtn) {
+          mobileMenuBtn.classList.remove('active');
+          mobileMenuBtn.setAttribute('aria-expanded', 'false');
+        }
+        document.body.style.overflow = '';
+      }
+    }
+
+    if (mobileMenuBtn) {
+      mobileMenuBtn.addEventListener('click', () => {
+        if (mobileDrawer.classList.contains('active')) {
+          closeMobileDrawer();
+        } else {
+          openMobileDrawer();
+        }
+      });
+    }
+
+    if (drawerCloseBtn) {
+      drawerCloseBtn.addEventListener('click', closeMobileDrawer);
+    }
+
+    if (mobileDrawerOverlay) {
+      mobileDrawerOverlay.addEventListener('click', closeMobileDrawer);
+    }
+
+    if (mobileNavTocBtn) {
+      mobileNavTocBtn.addEventListener('click', openMobileDrawer);
+    }
+
+    if (mobileBackToTop) {
+      mobileBackToTop.addEventListener('click', () => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+    }
+
+    // Close drawer on link click
+    document.querySelectorAll('.mobile-toc-link, .drawer-portal-btn').forEach(link => {
+      link.addEventListener('click', () => {
+        closeMobileDrawer();
+      });
+    });
+
+    // Close drawer on Escape key
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && mobileDrawer && mobileDrawer.classList.contains('active')) {
+        closeMobileDrawer();
+      }
+    });
+
+    // Role Switcher / Filter (Synced between Desktop Hero and Mobile Drawer)
+    const heroRoleBtns = document.querySelectorAll('.hero .role-btn');
+    const mobileRoleBtns = document.querySelectorAll('.mobile-role-btn');
+
+    function setRole(role) {
+      document.body.classList.remove('filter-teacher', 'filter-candidate');
+      if (role === 'teacher') {
+        document.body.classList.add('filter-teacher');
+      } else if (role === 'candidate') {
+        document.body.classList.add('filter-candidate');
+      }
+
+      heroRoleBtns.forEach(b => {
+        const active = b.dataset.role === role;
+        b.classList.toggle('active', active);
+        b.setAttribute('aria-selected', active ? 'true' : 'false');
+      });
+
+      mobileRoleBtns.forEach(b => {
+        const active = b.dataset.role === role;
+        b.classList.toggle('active', active);
+        b.setAttribute('aria-selected', active ? 'true' : 'false');
+      });
+    }
+
+    heroRoleBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        setRole(btn.dataset.role);
+      });
+    });
+
+    mobileRoleBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        setRole(btn.dataset.role);
+      });
+    });
+
+    // FAQ Accordion
+    document.querySelectorAll('.faq-question').forEach(q => {
+      q.addEventListener('click', () => {
+        const item = q.parentElement;
+        item.classList.toggle('open');
+      });
+    });
+
+    // Checklist Item Toggle
+    function toggleCheck(item) {
+      item.classList.toggle('checked');
+    }
+
+    // Live Search Filter (Synchronized across Desktop and Mobile Drawer)
+    const searchInput = document.getElementById('guideSearch');
+    const mobileSearchInput = document.getElementById('mobileGuideSearch');
+
+    function filterGuide(query) {
+      const q = query.toLowerCase().trim();
+      const sections = document.querySelectorAll('.section-card');
+      
+      sections.forEach(section => {
+        if (!q) {
+          section.style.display = '';
+          return;
+        }
+        const text = section.textContent.toLowerCase();
+        if (text.includes(q)) {
+          section.style.display = '';
+        } else {
+          section.style.display = 'none';
+        }
+      });
+    }
+
+    if (searchInput) {
+      searchInput.addEventListener('input', (e) => {
+        const val = e.target.value;
+        if (mobileSearchInput) mobileSearchInput.value = val;
+        filterGuide(val);
+      });
+    }
+
+    if (mobileSearchInput) {
+      mobileSearchInput.addEventListener('input', (e) => {
+        const val = e.target.value;
+        if (searchInput) searchInput.value = val;
+        filterGuide(val);
+      });
+    }
+
+    // Copy Code Helper
+    document.querySelectorAll('.copy-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const text = btn.dataset.copy;
+        navigator.clipboard.writeText(text).then(() => {
+          const original = btn.textContent;
+          btn.textContent = 'Copied!';
+          btn.style.background = '#10b981';
+          setTimeout(() => {
+            btn.textContent = original;
+            btn.style.background = '';
+          }, 1800);
+        });
+      });
+    });
+
+    // Active TOC link tracking on scroll (for both Sidebar & Mobile Drawer)
+    window.addEventListener('scroll', () => {
+      const scrollPos = window.scrollY + 140;
+      const sections = document.querySelectorAll('.section-card');
+      const sidebarLinks = document.querySelectorAll('.sidebar-link');
+      const mobileTocLinks = document.querySelectorAll('.mobile-toc-link');
+      
+      sections.forEach(sec => {
+        const top = sec.offsetTop;
+        const height = sec.offsetHeight;
+        const id = sec.getAttribute('id');
+        
+        if (scrollPos >= top && scrollPos < top + height) {
+          sidebarLinks.forEach(l => {
+            l.classList.toggle('active', l.getAttribute('href') === '#' + id);
+          });
+          mobileTocLinks.forEach(l => {
+            l.classList.toggle('active', l.getAttribute('href') === '#' + id);
+          });
+        }
+      });
+
+      // Show / hide floating back to top visibility
+      const floatingDock = document.getElementById('mobileFloatingNav');
+      if (floatingDock) {
+        if (window.scrollY > 300) {
+          if (mobileBackToTop) mobileBackToTop.style.display = 'inline-flex';
+        } else {
+          if (mobileBackToTop) mobileBackToTop.style.display = 'none';
+        }
+      }
+    });
+
+    // Initial check for scroll position
+    if (mobileBackToTop) {
+      mobileBackToTop.style.display = window.scrollY > 300 ? 'inline-flex' : 'none';
+    }
+
+    // Automatic Screen Scroll Up on Mobile Keyboard Pop-Up
+    function scrollElementIntoOptimalView(el) {
+      if (!el) return;
+      
+      // If inside the mobile drawer, ensure drawer scroll container keeps input and results visible
+      const drawer = el.closest('#mobileDrawer');
+      if (drawer) {
+        const drawerRect = drawer.getBoundingClientRect();
+        const elRect = el.getBoundingClientRect();
+        const relativeTop = elRect.top - drawerRect.top;
+        if (relativeTop > drawerRect.height / 2 || relativeTop < 60) {
+          drawer.scrollTo({
+            top: Math.max(0, drawer.scrollTop + relativeTop - 70),
+            behavior: 'smooth'
+          });
+        }
+        return;
+      }
+
+      // Calculate position relative to visible screen viewport
+      const visualViewportHeight = window.visualViewport ? window.visualViewport.height : window.innerHeight;
+      const rect = el.getBoundingClientRect();
+      const topOffset = rect.top;
+      
+      // Auto-scroll screen upwards smoothly so the typing area sits comfortably in the upper half
+      const targetScrollY = window.scrollY + topOffset - Math.max(75, Math.min(130, visualViewportHeight * 0.22));
+      window.scrollTo({
+        top: Math.max(0, targetScrollY),
+        behavior: 'smooth'
+      });
+    }
+
+    // Listen for focus on all inputs, search fields, textareas, and contenteditable elements
+    document.addEventListener('focusin', (e) => {
+      const target = e.target;
+      if (target && (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.isContentEditable)) {
+        scrollElementIntoOptimalView(target);
+        // Secondary adjustment after mobile keyboard slide animation finishes (280-320ms)
+        setTimeout(() => {
+          scrollElementIntoOptimalView(target);
+        }, 300);
+      }
+    });
+
+    // Modern Visual Viewport API for real-time virtual keyboard resize detection
+    if (window.visualViewport) {
+      let previousHeight = window.visualViewport.height;
+      window.visualViewport.addEventListener('resize', () => {
+        const currentHeight = window.visualViewport.height;
+        // When viewport height reduces (keyboard opens), ensure active input is shifted up into view
+        if (currentHeight < previousHeight - 80) {
+          const activeEl = document.activeElement;
+          if (activeEl && (activeEl.tagName === 'INPUT' || activeEl.tagName === 'TEXTAREA' || activeEl.isContentEditable)) {
+            setTimeout(() => {
+              scrollElementIntoOptimalView(activeEl);
+            }, 80);
+          }
+        }
+        previousHeight = currentHeight;
+      });
+    }
+  </script>
+
+  <!-- Floating WhatsApp Support & Personal License Widget -->
+  <div id="waFloatingWidget" style="position:fixed;bottom:20px;right:20px;z-index:99999;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;">
+    <div style="position:relative;background:#ffffff;color:#0f172a;border-radius:16px;box-shadow:0 12px 36px rgba(0,0,0,0.25),0 0 0 1px rgba(37,211,102,0.35);padding:14px 16px;max-width:315px;display:flex;flex-direction:column;gap:8px;">
+      <button onclick="document.getElementById('waFloatingWidget').style.display='none'" title="Close" aria-label="Close" style="position:absolute;top:8px;right:8px;background:#f1f5f9;border:1px solid #cbd5e1;color:#64748b;width:24px;height:24px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;line-height:1;transition:all 0.2s;" onmouseover="this.style.background='#ef4444';this.style.color='#fff';this.style.borderColor='#ef4444'" onmouseout="this.style.background='#f1f5f9';this.style.color='#64748b';this.style.borderColor='#cbd5e1'">✕</button>
+      <div style="display:flex;align-items:center;gap:10px;padding-right:20px;">
+        <div style="width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,#25D366,#128C7E);display:flex;align-items:center;justify-content:center;color:#fff;font-size:22px;flex-shrink:0;box-shadow:0 4px 10px rgba(37,211,102,0.4);">
+          <svg style="width:22px;height:22px;fill:#ffffff;" viewBox="0 0 24 24"><path d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21 5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.816 9.816 0 0 0 12.04 2zm5.77 14.18c-.24.68-1.4 1.26-1.95 1.34-.52.08-1.2.12-3.48-.83-2.68-1.12-4.4-3.84-4.54-4.02-.13-.19-1.08-1.44-1.08-2.75 0-1.31.69-1.96.93-2.22.25-.26.54-.33.72-.33.18 0 .36 0 .52.01.17.01.4.06.61.56.22.53.75 1.83.82 1.96.07.14.11.3.02.48-.09.19-.14.3-.27.46-.14.16-.3.35-.42.47-.14.14-.29.3-.12.59.16.29.73 1.21 1.57 1.96 1.08.96 1.99 1.26 2.27 1.4.29.14.45.12.62-.07.17-.19.72-.84.92-1.13.19-.29.39-.24.66-.14.27.1 1.71.81 2.01.96.29.15.49.22.56.34.07.13.07.74-.17 1.42z"/></svg>
+        </div>
+        <div>
+          <div style="font-weight:800;font-size:13px;color:#0f172a;line-height:1.2;">WhatsApp Personal Link</div>
+          <div style="font-size:11px;font-weight:700;color:#16a34a;">+91-7903933705</div>
+        </div>
+      </div>
+      <p style="font-size:11.5px;line-height:1.45;color:#475569;margin:0;">
+        If you want to use your personal link to access this app and feel free to slowness of app. Please WhatsApp us here and wait for response and when we will provide link then you can pay and purchase this app for personal use and take exam.
+      </p>
+      <a href="https://wa.me/917903933705?text=Hello!%20I%20want%20to%20use%20my%20personal%20link%20to%20access%20this%20app%20and%20feel%20free%20to%20slowness%20of%20app.%20Please%20provide%20the%20link." target="_blank" rel="noopener noreferrer" style="display:flex;align-items:center;justify-content:center;gap:6px;background:linear-gradient(135deg,#25D366,#128C7E);color:#ffffff;text-decoration:none;font-size:12px;font-weight:700;padding:8px 12px;border-radius:10px;box-shadow:0 3px 10px rgba(37,211,102,0.3);transition:filter 0.2s;" onmouseover="this.style.filter='brightness(1.1)'" onmouseout="this.style.filter='brightness(1)'">
+        <svg style="width:15px;height:15px;fill:#ffffff;" viewBox="0 0 24 24"><path d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21 5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.816 9.816 0 0 0 12.04 2zm5.77 14.18c-.24.68-1.4 1.26-1.95 1.34-.52.08-1.2.12-3.48-.83-2.68-1.12-4.4-3.84-4.54-4.02-.13-.19-1.08-1.44-1.08-2.75 0-1.31.69-1.96.93-2.22.25-.26.54-.33.72-.33.18 0 .36 0 .52.01.17.01.4.06.61.56.22.53.75 1.83.82 1.96.07.14.11.3.02.48-.09.19-.14.3-.27.46-.14.16-.3.35-.42.47-.14.14-.29.3-.12.59.16.29.73 1.21 1.57 1.96 1.08.96 1.99 1.26 2.27 1.4.29.14.45.12.62-.07.17-.19.72-.84.92-1.13.19-.29.39-.24.66-.14.27.1 1.71.81 2.01.96.29.15.49.22.56.34.07.13.07.74-.17 1.42z"/></svg>
+        <span>Chat on WhatsApp (+91 7903933705)</span>
+      </a>
+    </div>
+  </div>
+</body>
+</html>
