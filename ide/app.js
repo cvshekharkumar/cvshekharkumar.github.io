@@ -1,11 +1,218 @@
 const $=id=>document.getElementById(id),uid=()=>`Q-${Date.now().toString(36).toUpperCase()}-${Math.random().toString(36).slice(2,6).toUpperCase()}`;
 const starter=()=>({id:uid(),title:'Question',problemHtml:'<h2>Problem Statement</h2><p>Write a program that reads input and prints the required output.</p><p><b>Input Specification:</b><br>Read values from standard input.</p><p><b>Output Specification:</b><br>Print only the required answer.</p>',code:'# Write Python 3 code here\nvalue = input().strip()\nprint(value)',codes:{python:'# Write Python 3 code here\nvalue = input().strip()\nprint(value)',c:'#include <stdio.h>\nint main(void){\n    char value[1024];\n    if(fgets(value,sizeof value,stdin))\n        printf("%s",value);\n    return 0;\n}',cpp:'#include <iostream>\n#include <string>\nusing namespace std;\nint main(){\n    string value;\n    getline(cin,value);\n    cout << value;\n    return 0;\n}'},tests:[{input:'hello',expected:'hello'},{input:'42',expected:'42'}],customFonts:[]});
+let candidateRunning = false, packageProtected = false, assessmentStarted = false, autoExportStarted = false, importInProgress = false;
 let state={format:'python-assessment-set',version:2,setId:`SET-${Date.now().toString(36).toUpperCase()}`,title:'Python Assessment',timerMinutes:60,questions:[starter()]},current=0,history=[],remaining=3600,timerHandle;
 const code=$('code'),problem=$('problem'),lines=$('lines');function q(){return state.questions[current]}function esc(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}function toast(m){let t=$('toast');t.textContent=m;t.classList.add('show');clearTimeout(t.x);t.x=setTimeout(()=>t.classList.remove('show'),1700)}
-function applyFonts(x){(x.customFonts||[]).forEach(f=>{if(!document.getElementById('font-'+f.id)){let s=document.createElement('style');s.id='font-'+f.id;s.textContent=`@font-face{font-family:${JSON.stringify(f.name)};src:url(${JSON.stringify(f.data)})}`;document.head.appendChild(s)}if(![...$('fontName').options].some(o=>o.value===f.name)){$('fontName').add(new Option(f.name,f.name))}})}function saveCurrent(){let x=q();if(!x)return;x.problemHtml=problem.innerHTML;x.code=code.value;if(!x.codes)x.codes={};x.codes[x.language||state.language||'python']=code.value;save()}function save(){localStorage.setItem('assessment-rich-v3',JSON.stringify(state));$('saveState').textContent='Saved just now'}
-function load(){try{let s=JSON.parse(localStorage.getItem('assessment-rich-v3'));if(s?.questions?.length)state=s}catch(e){};$('setIdText').textContent=state.setId;$('timerMinutes').value=state.timerMinutes;openQuestion(0);setTimer(false)}function openQuestion(i){current=i;let x=q();if(!x)return;if(!x.problemHtml&&x.problem)x.problemHtml=`<p>${esc(x.problem).replace(/\n/g,'<br>')}</p>`;x.customFonts=x.customFonts||[];applyFonts(x);problem.innerHTML=x.problemHtml||'';const l=x.language||state.language||'python';if(x.codes&&x.codes[l]!==undefined)x.code=x.codes[l];code.value=x.code||'';$('questionTitle').textContent=`Question ${i+1}`;$('questionId').textContent=x.id;updateLines();renderTests();renderSteps()}function renderSteps(){$('steps').innerHTML=state.questions.map((x,i)=>`<button class="${i===current?'active':''}" onclick="go(${i})">${i+1}</button>`).join('');$('prev').disabled=current===0;$('next').disabled=current===state.questions.length-1}window.go=i=>{saveCurrent();openQuestion(i)};
-$('addQuestion').onclick=()=>{saveCurrent();state.questions.push(starter());openQuestion(state.questions.length-1);save()};$('prev').onclick=()=>current&&go(current-1);$('next').onclick=()=>current<state.questions.length-1&&go(current+1);$('deleteQuestion').onclick=()=>{if(state.questions.length<2)return toast('At least one question is required');if(confirm('Delete this question?')){state.questions.splice(current,1);openQuestion(Math.min(current,state.questions.length-1));save()}};
-let debounce;problem.oninput=code.oninput=()=>{updateLines();clearTimeout(debounce);debounce=setTimeout(saveCurrent,400)};problem.addEventListener('paste',async e=>{let items=[...(e.clipboardData?.items||[])],media=items.find(x=>x.type.startsWith('image/')||x.type.startsWith('video/'));if(media){e.preventDefault();insertFile(media.getAsFile())}});function updateLines(){lines.textContent=Array.from({length:code.value.split('\n').length},(_,i)=>i+1).join('\n');lines.scrollTop=code.scrollTop}code.onscroll=()=>lines.scrollTop=code.scrollTop;code.onkeydown=e=>{if(e.key==='Tab'){e.preventDefault();code.setRangeText('    ',code.selectionStart,code.selectionEnd,'end');updateLines()}if((e.ctrlKey||e.metaKey)&&e.key==='Enter'){e.preventDefault();runAll()}};
+function applyFonts(x){(x.customFonts||[]).forEach(f=>{if(!document.getElementById('font-'+f.id)){let s=document.createElement('style');s.id='font-'+f.id;s.textContent=`@font-face{font-family:${JSON.stringify(f.name)};src:url(${JSON.stringify(f.data)})}`;document.head.appendChild(s)}if(![...$('fontName').options].some(o=>o.value===f.name)){$('fontName').add(new Option(f.name,f.name))}})}
+function saveCurrent(){
+  let x=q();if(!x)return;
+  if(problem)x.problemHtml=problem.innerHTML;
+  if(code){
+    x.code=code.value;
+    if(!x.codes)x.codes={};
+    x.codes[x.language||state.language||'python']=code.value;
+  }
+  save();
+  try{
+    if(typeof readExamSession==='function'&&typeof writeExamSession==='function'){
+      const s=readExamSession();
+      if(s?.started&&s?.active){
+        writeExamSession({currentQuestion:current});
+      }
+    }
+  }catch(e){}
+}
+function save(){
+  try{localStorage.setItem('assessment-rich-v3',JSON.stringify(state));}catch(e){}
+  if($('saveState'))$('saveState').textContent='Saved just now';
+}
+
+function load(){
+  try{
+    let s=JSON.parse(localStorage.getItem('assessment-rich-v3'));
+    if(s?.questions?.length)state=s;
+  }catch(e){}
+  if($('setIdText'))$('setIdText').textContent=state.setId;
+  if($('timerMinutes'))$('timerMinutes').value=state.timerMinutes;
+  let targetQ=0;
+  try{
+    const s=JSON.parse(localStorage.getItem('browser-assessment-active-session-v18')||'null');
+    if(s?.active&&s?.started&&typeof s.currentQuestion==='number'){
+      targetQ=Math.max(0,Math.min(s.currentQuestion,state.questions.length-1));
+    }
+  }catch(e){}
+  openQuestion(targetQ);
+  try{
+    const s=JSON.parse(localStorage.getItem('browser-assessment-active-session-v18')||'null');
+    if(!(s?.active&&s?.started))setTimer(false);
+  }catch(e){setTimer(false);}
+  try{
+    if(localStorage.getItem('ide_header_nav_locked')==='true'||state.headerNavLocked){
+      if(typeof setHeaderNavLocked==='function')setHeaderNavLocked(true);
+    }
+  }catch(e){}
+}
+function openQuestion(i){
+  current=i;let x=q();if(!x)return;
+  if(!x.problemHtml&&x.problem)x.problemHtml=`<p>${esc(x.problem).replace(/\n/g,'<br>')}</p>`;
+  x.customFonts=x.customFonts||[];applyFonts(x);
+  if(problem)problem.innerHTML=x.problemHtml||'';
+  const l=x.language||state.language||'python';
+  if(x.codes&&x.codes[l]!==undefined)x.code=x.codes[l];
+  if(code)code.value=x.code||'';
+  if($('questionTitle'))$('questionTitle').textContent=`Question ${i+1}`;
+  if($('questionId'))$('questionId').textContent=x.id;
+  updateLines();if(typeof renderTests17==='function')renderTests17();else renderTests();renderSteps();
+}
+function renderSteps(){
+  $('steps').innerHTML=state.questions.map((x,i)=>`<button class="${i===current?'active':''}" onclick="go(${i})">${i+1}</button>`).join('');
+  $('prev').disabled=current===0;$('next').disabled=current===state.questions.length-1;
+}
+window.go=i=>{saveCurrent();openQuestion(i);};
+$('addQuestion').onclick=()=>{saveCurrent();state.questions.push(starter());openQuestion(state.questions.length-1);save()};
+$('prev').onclick=()=>current&&go(current-1);
+$('next').onclick=()=>current<state.questions.length-1&&go(current+1);
+$('deleteQuestion').onclick=()=>{if(state.questions.length<2)return toast('At least one question is required');if(confirm('Delete this question?')){state.questions.splice(current,1);openQuestion(Math.min(current,state.questions.length-1));save()}};
+function lang(){return q()?.language||state?.language||'python'}
+function highlightCode(rawCode, language) {
+  if (!rawCode) return '';
+  const l = (language || 'python').toLowerCase();
+  let masterRegex;
+  if (l === 'c' || l === 'cpp') {
+    masterRegex = new RegExp(
+      [
+        '(/\\*[\\s\\S]*?\\*/)',
+        '(//[^\\n]*)',
+        '(#[ \\t]*(?:include|define|undef|ifdef|ifndef|if|elif|else|endif|pragma|error|warning)[^\\n]*)',
+        '("(?:\\\\.|[^"\\\\\\n])*")',
+        "('(?:\\\\.|[^'\\\\\\n])*')",
+        '\\b(auto|break|case|char|const|continue|default|do|double|else|enum|extern|float|for|goto|if|inline|int|long|register|restrict|return|short|signed|sizeof|static|struct|switch|typedef|union|unsigned|void|volatile|while|_Bool|_Complex|_Imaginary|alignas|alignof|atomic|bool|catch|class|constexpr|const_cast|decltype|delete|dynamic_cast|explicit|export|false|friend|mutable|namespace|new|noexcept|nullptr|operator|private|protected|public|reinterpret_cast|static_assert|static_cast|template|this|thread_local|throw|true|try|typeid|typename|using|virtual)\\b',
+        '\\b(cin|cout|cerr|endl|string|vector|map|set|pair|make_pair|std|printf|scanf|fgets|puts|getchar|putchar|malloc|calloc|realloc|free|memset|memcpy|strcpy|strncpy|strlen|strcmp|strncmp|size_t|ssize_t|int8_t|int16_t|int32_t|int64_t|uint8_t|uint16_t|uint32_t|uint64_t|FILE|NULL|nullptr_t|priority_queue|deque|list|stack|queue|unordered_map|unordered_set|bitset|algorithm|iostream|cstdio|cstdlib|cmath|cstring|iomanip|fstream|sstream)\\b',
+        '\\b([a-zA-Z_]\\w*)(?=\\s*\\()',
+        '\\b(0[xX][0-9a-fA-F]+[uUlL]*|0[bB][01]+[uUlL]*|\\d+(?:\\.\\d+)?(?:[eE][+-]?\\d+)?[fFlLuU]*)\\b',
+        '(==|!=|<=|>=|&&|\\|\\||<<|>>|::|->|\\+\\+|--|\\+=|-=|\\*=|/=|%=|&=|\\|=|\\^=|<<=|>>=|[+\\-*/%<>=!&|^~?:])'
+      ].join('|'),
+      'g'
+    );
+  } else {
+    masterRegex = new RegExp(
+      [
+        '("""[\\s\\S]*?"""|\'\'\'[\\s\\S]*?\'\'\')',
+        '(#[^\\n]*)',
+        '("(?:\\\\.|[^"\\\\\\n])*"|\'(?:\\\\.|[^\'\\\\\\n])*\')',
+        '(@[a-zA-Z_]\\w*)',
+        '\\b(def)\\s+([a-zA-Z_]\\w*)',
+        '\\b(class)\\s+([a-zA-Z_]\\w*)',
+        '\\b(and|as|assert|async|await|break|case|class|continue|def|del|elif|else|except|finally|for|from|global|if|import|in|is|lambda|match|nonlocal|not|or|pass|raise|return|try|while|with|yield)\\b',
+        '\\b(True|False|None|self|cls|print|input|len|range|str|int|float|list|dict|set|tuple|bool|type|open|sum|min|max|abs|sorted|map|filter|zip|enumerate|isinstance|issubclass|super|all|any|bin|chr|dir|eval|format|hasattr|getattr|setattr|hex|id|iter|next|oct|ord|pow|repr|reversed|round|slice|vars)\\b',
+        '\\b([a-zA-Z_]\\w*)(?=\\s*\\()',
+        '\\b(0[xX][0-9a-fA-F]+|0[bB][01]+|0[oO][0-7]+|\\d+(?:\\.\\d+)?(?:[eE][+-]?\\d+)?j?)\\b',
+        '(==|!=|<=|>=|->|\\+=|-=|\\*=|/=|%=|&=|\\|=|\\^=|//|\\*\\*|[+\\-*/%<>=!&|^~])'
+      ].join('|'),
+      'g'
+    );
+  }
+  let result = '';
+  let lastIndex = 0;
+  let match;
+  while ((match = masterRegex.exec(rawCode)) !== null) {
+    const textBefore = rawCode.slice(lastIndex, match.index);
+    if (textBefore) result += esc(textBefore);
+    const full = match[0];
+    if (l === 'c' || l === 'cpp') {
+      if (match[1] || match[2]) result += '<span class="tok-comment">' + esc(full) + '</span>';
+      else if (match[3]) result += '<span class="tok-preprocessor">' + esc(full) + '</span>';
+      else if (match[4] || match[5]) result += '<span class="tok-string">' + esc(full) + '</span>';
+      else if (match[6]) result += '<span class="tok-keyword">' + esc(full) + '</span>';
+      else if (match[7]) result += '<span class="tok-builtin">' + esc(full) + '</span>';
+      else if (match[8]) result += '<span class="tok-func-call">' + esc(full) + '</span>';
+      else if (match[9]) result += '<span class="tok-number">' + esc(full) + '</span>';
+      else if (match[10]) result += '<span class="tok-operator">' + esc(full) + '</span>';
+      else result += esc(full);
+    } else {
+      if (match[1]) result += '<span class="tok-string">' + esc(full) + '</span>';
+      else if (match[2]) result += '<span class="tok-comment">' + esc(full) + '</span>';
+      else if (match[3]) result += '<span class="tok-string">' + esc(full) + '</span>';
+      else if (match[4]) result += '<span class="tok-preprocessor">' + esc(full) + '</span>';
+      else if (match[5] && match[6]) result += '<span class="tok-keyword">' + esc(match[5]) + '</span> <span class="tok-func-def">' + esc(match[6]) + '</span>';
+      else if (match[7] && match[8]) result += '<span class="tok-keyword">' + esc(match[7]) + '</span> <span class="tok-class-def">' + esc(match[8]) + '</span>';
+      else if (match[9]) result += '<span class="tok-keyword">' + esc(full) + '</span>';
+      else if (match[10]) result += '<span class="tok-builtin">' + esc(full) + '</span>';
+      else if (match[11]) result += '<span class="tok-func-call">' + esc(full) + '</span>';
+      else if (match[12]) result += '<span class="tok-number">' + esc(full) + '</span>';
+      else if (match[13]) result += '<span class="tok-operator">' + esc(full) + '</span>';
+      else result += esc(full);
+    }
+    lastIndex = masterRegex.lastIndex;
+  }
+  const remaining = rawCode.slice(lastIndex);
+  if (remaining) result += esc(remaining);
+  if (rawCode.endsWith('\n')) result += ' ';
+  return result;
+}
+
+function syncCodeScroll() {
+  if (lines) lines.scrollTop = code.scrollTop;
+  const hl = $('codeHighlight');
+  if (hl) {
+    hl.scrollTop = code.scrollTop;
+    hl.scrollLeft = code.scrollLeft;
+  }
+}
+
+function updateSyntaxHighlight() {
+  const hlContent = $('codeHighlightContent') || $('codeHighlight');
+  if (hlContent && code) {
+    hlContent.innerHTML = highlightCode(code.value, typeof lang === 'function' ? lang() : (q()?.language || 'python'));
+  }
+  syncCodeScroll();
+}
+
+let debounce;
+problem.oninput = () => {
+  let x = q();
+  if (x) x.problemHtml = problem.innerHTML;
+  clearTimeout(debounce);
+  debounce = setTimeout(saveCurrent, 150);
+};
+code.oninput = () => {
+  updateLines();
+  let x = q();
+  if (x) {
+    x.code = code.value;
+    if (!x.codes) x.codes = {};
+    x.codes[x.language || state.language || 'python'] = code.value;
+  }
+  clearTimeout(debounce);
+  debounce = setTimeout(saveCurrent, 150);
+};
+// Flush state synchronously so no data is ever lost on page refresh, navigation, or tab change
+window.addEventListener('beforeunload', () => { saveCurrent(); });
+window.addEventListener('pagehide', () => { saveCurrent(); });
+document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'hidden') saveCurrent(); });
+if (code) code.addEventListener('blur', () => saveCurrent());
+if (problem) problem.addEventListener('blur', () => saveCurrent());
+problem.addEventListener('paste', async e => {
+  let items = [...(e.clipboardData?.items || [])], media = items.find(x => x.type.startsWith('image/') || x.type.startsWith('video/'));
+  if (media) { e.preventDefault(); insertFile(media.getAsFile()); }
+});
+function updateLines() {
+  lines.textContent = Array.from({length: code.value.split('\n').length}, (_, i) => i + 1).join('\n');
+  syncCodeScroll();
+  updateSyntaxHighlight();
+}
+code.onscroll = syncCodeScroll;
+code.onkeydown = e => {
+  if (e.key === 'Tab') {
+    e.preventDefault();
+    code.setRangeText('    ', code.selectionStart, code.selectionEnd, 'end');
+    updateLines();
+  }
+  if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+    e.preventDefault();
+    runAll();
+  }
+};
 function keepFocus(){problem.focus()}document.querySelectorAll('[data-cmd]').forEach(b=>b.onclick=()=>{keepFocus();document.execCommand(b.dataset.cmd,false,null);saveCurrent()});$('styleFormat').onchange=e=>{keepFocus();document.execCommand('formatBlock',false,e.target.value);saveCurrent()};$('fontName').onchange=e=>{keepFocus();document.execCommand('fontName',false,e.target.value);saveCurrent()};$('fontSize').onchange=e=>{keepFocus();document.execCommand('fontSize',false,e.target.value);saveCurrent()};$('foreColor').oninput=e=>{keepFocus();document.execCommand('foreColor',false,e.target.value)};$('backColor').oninput=e=>{keepFocus();document.execCommand('hiliteColor',false,e.target.value)};$('clearFormat').onclick=()=>{keepFocus();document.execCommand('removeFormat');saveCurrent()};$('linkBtn').onclick=()=>{let u=prompt('Enter link URL:','https://');if(u){keepFocus();document.execCommand('createLink',false,u);saveCurrent()}};
 function insertHtml(html){problem.focus();document.execCommand('insertHTML',false,html);saveCurrent()}function readData(file){return new Promise((res,rej)=>{let r=new FileReader();r.onload=()=>res(r.result);r.onerror=rej;r.readAsDataURL(file)})}async function insertFile(file){if(!file)return;if(file.size>25*1024*1024&&!confirm('This media file is larger than 25 MB and will make exports very large. Continue?'))return;let data=await readData(file),safe=esc(file.name);if(file.type.startsWith('image/'))insertHtml(`<figure><img src="${data}" alt="${safe}"><figcaption>${safe}</figcaption></figure>`);else if(file.type.startsWith('video/'))insertHtml(`<figure><video controls src="${data}"></video><figcaption>${safe}</figcaption></figure>`);else toast('Unsupported media file')}$('insertImage').onclick=()=>{$('mediaFile').accept='image/*,.gif';$('mediaFile').click()};$('insertVideo').onclick=()=>{$('mediaFile').accept='video/*';$('mediaFile').click()};$('mediaFile').onchange=e=>{insertFile(e.target.files[0]);e.target.value=''};$('insertFont').onclick=()=>$('fontFile').click();$('fontFile').onchange=async e=>{let f=e.target.files[0];if(!f)return;let name=prompt('Font display name:',f.name.replace(/\.[^.]+$/,''));if(!name)return;let obj={id:Date.now().toString(36),name,data:await readData(f),fileName:f.name};q().customFonts.push(obj);applyFonts(q());$('fontName').value=name;problem.focus();document.execCommand('fontName',false,name);saveCurrent();toast('Font embedded in this question');e.target.value=''};$('problemFullscreen').onclick = () => {
     const panel = $('problemPanel');
@@ -47,8 +254,8 @@ if($('importQuestion'))$('importQuestion').onclick=()=>$('questionFile').click()
 $('questionFile').onchange=async e=>{await handleJsonImport(e.target.files[0]);e.target.value=''};
 $('exportSet').onclick=async()=>{saveCurrent();let r=await fetch('/api/export-set',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(state)});download(await r.blob(),`${state.setId}.zip`)};
 $('importSet').onclick=()=>$('setFile').click();
-$('setFile').onchange=async e=>{try{let arr=new Uint8Array(await e.target.files[0].arrayBuffer()),bin='';for(let b of arr)bin+=String.fromCharCode(b);let r=await fetch('/api/import-set',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({base64:btoa(bin)})}),d=await r.json();if(!d.ok)throw Error(d.error);state={...state,...d.manifest,questions:d.questions};$('setIdText').textContent=state.setId;$('timerMinutes').value=state.timerMinutes||60;openQuestion(0);setTimer(false);save();}catch(err){toast(err.message||'Invalid ZIP')}e.target.value=''};
-function setTimer(show=true){state.timerMinutes=Math.max(1,parseInt($('timerMinutes').value)||60);remaining=state.timerMinutes*60;clearInterval(timerHandle);tick();timerHandle=setInterval(()=>{remaining--;tick();if(remaining<=0){clearInterval(timerHandle);$('timeoutModal').classList.add('show')}},1000);save();if(show)toast('Timer set')}function tick(){let h=String(Math.floor(remaining/3600)).padStart(2,'0'),m=String(Math.floor(remaining%3600/60)).padStart(2,'0'),s=String(Math.max(0,remaining%60)).padStart(2,'0');$('timer').textContent=`${h}:${m}:${s}`}$('setTimer').onclick=()=>setTimer();document.querySelectorAll('.tabs button').forEach(b=>b.onclick=()=>{document.querySelectorAll('.tabs button,.tab').forEach(x=>x.classList.remove('active'));b.classList.add('active');$(b.dataset.tab).classList.add('active')});$('fontUp').onclick=()=>font(1);$('fontDown').onclick=()=>font(-1);function font(d){let s=parseInt(getComputedStyle(code).fontSize)+d;code.style.fontSize=Math.max(11,Math.min(22,s))+'px';lines.style.fontSize=code.style.fontSize}function initThemeHandler(){const saved=localStorage.getItem('ide_theme_mode');if(saved==='dark'){document.body.classList.add('dark')}const btn=$('theme');const syncText=()=>{if(btn){btn.textContent=document.body.classList.contains('dark')?'☀️ Light':'☾ Dark'}};syncText();const toggle=(e)=>{if(e&&e.type==='touchstart'){e.preventDefault()}document.body.classList.toggle('dark');const isDark=document.body.classList.contains('dark');localStorage.setItem('ide_theme_mode',isDark?'dark':'light');syncText()};if(btn){btn.onclick=toggle;btn.addEventListener('touchstart',toggle,{passive:false})}}initThemeHandler();load();
+$('setFile').onchange=async e=>{try{let arr=new Uint8Array(await e.target.files[0].arrayBuffer()),bin='';for(let b of arr)bin+=String.fromCharCode(b);let r=await fetch('/api/import-set',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({base64:btoa(bin)})}),d=await r.json();if(!d.ok)throw Error(d.error);state={...state,...d.manifest,questions:d.questions};$('setIdText').textContent=state.setId;$('timerMinutes').value=state.timerMinutes||60;openQuestion(0);setTimer(false);if(typeof setHeaderNavLocked==='function')setHeaderNavLocked(true);save();}catch(err){toast(err.message||'Invalid ZIP')}e.target.value=''};
+function setTimer(show=true){state.timerMinutes=Math.max(1,parseInt($('timerMinutes').value)||60);remaining=state.timerMinutes*60;clearInterval(timerHandle);tick();timerHandle=setInterval(()=>{remaining--;tick();if(remaining<=0){clearInterval(timerHandle);$('timeoutModal').classList.add('show')}},1000);save();if(show)toast('Timer set')}function tick(){let h=String(Math.floor(remaining/3600)).padStart(2,'0'),m=String(Math.floor(remaining%3600/60)).padStart(2,'0'),s=String(Math.max(0,remaining%60)).padStart(2,'0');$('timer').textContent=`${h}:${m}:${s}`}$('setTimer').onclick=()=>setTimer();document.querySelectorAll('.tabs button').forEach(b=>b.onclick=()=>{document.querySelectorAll('.tabs button,.tab').forEach(x=>x.classList.remove('active'));b.classList.add('active');$(b.dataset.tab).classList.add('active')});$('fontUp').onclick=()=>font(1);$('fontDown').onclick=()=>font(-1);function font(d){let s=parseInt(getComputedStyle(code).fontSize)+d;const sz=Math.max(11,Math.min(22,s))+'px';const lh=Math.round(parseInt(sz)*1.5)+'px';code.style.fontSize=sz;code.style.lineHeight=lh;lines.style.fontSize=sz;lines.style.lineHeight=lh;const hl=$('codeHighlight');if(hl){hl.style.fontSize=sz;hl.style.lineHeight=lh;}}function initThemeHandler(){const saved=localStorage.getItem('ide_theme_mode');if(saved==='dark'){document.body.classList.add('dark');document.documentElement.classList.add('dark')}const btn=$('theme');const syncText=()=>{if(btn){btn.textContent=document.body.classList.contains('dark')?'☀️ Light':'☾ Dark'}};syncText();const toggle=(e)=>{if(e&&e.type==='touchstart'){e.preventDefault()}document.body.classList.toggle('dark');document.documentElement.classList.toggle('dark');const isDark=document.body.classList.contains('dark');localStorage.setItem('ide_theme_mode',isDark?'dark':'light');syncText()};if(btn){btn.onclick=toggle;btn.addEventListener('touchstart',toggle,{passive:false})}}initThemeHandler();load();
 /* v4: rich media selection/deletion, undo/redo, and sequential reports */
 let selectedMedia=null;
 problem.addEventListener('click',e=>{const m=e.target.closest('video,img,figure');if(selectedMedia)selectedMedia.classList.remove('selected-media');selectedMedia=m;if(m)m.classList.add('selected-media')});
@@ -178,7 +385,6 @@ removeSelectedMedia=function(){if(isStatementLocked()){toast('Unlock the problem
 applyStatementLock();
 
 /* v9 teacher-locked timer, ready gate, and automatic time-up exports */
-let assessmentStarted=false, autoExportStarted=false;
 function timerOwner(){return state}
 function isTimerLocked(){return !!timerOwner().timerLocked}
 function updateTimerLockUI(){
@@ -210,6 +416,10 @@ async function lockTimer(){
 }
 $('timerLock').onclick=lockTimer;
 function showReadyGate(){
+  try{
+    const s=JSON.parse(localStorage.getItem('browser-assessment-active-session-v18')||'null');
+    if((s?.active&&s?.started)||candidateRunning)return;
+  }catch(e){}
   if(!isTimerLocked()||assessmentStarted)return;
   clearInterval(timerHandle); remaining=(Number(state.timerMinutes)||60)*60; tick();
   document.body.classList.add('timer-waiting');
@@ -254,7 +464,12 @@ $('questionFile').onchange=async e=>{await handleJsonImport(e.target.files[0]);e
 $('setFile').addEventListener('change',()=>setTimeout(()=>{updateTimerLockUI();if(isTimerLocked())showReadyGate()},500));
 updateTimerLockUI();
 // The original startup begins a timer immediately. Stop it when an imported/saved teacher lock exists.
-if(isTimerLocked())showReadyGate();
+if(isTimerLocked()){
+  try{
+    const s=JSON.parse(localStorage.getItem('browser-assessment-active-session-v18')||'null');
+    if(!(s?.active&&s?.started))showReadyGate();
+  }catch(e){showReadyGate();}
+}
 
 /* v10 imported candidate mode: first question, forward-only navigation, quiet failures */
 let candidateSequentialMode=false;
@@ -291,7 +506,11 @@ window.go=i=>{
 $('prev').onclick=()=>{if(candidateSequentialMode){toast('Previous questions cannot be reopened in candidate mode');return}if(current)window.go(current-1)};
 $('next').onclick=()=>{
   if(current<state.questions.length-1){window.go(current+1);applyCandidateMode()}
-  else toast('You are on the final question');
+  else{
+    if(confirm('Finish the assessment now and export the completed ZIP and PDF?')){
+      $('exportZip').click();
+    }
+  }
 };
 // Replace test execution feedback: no failure popup and no pass-count celebration unless every test succeeds.
 runAll=async function(){
@@ -333,13 +552,56 @@ applyCandidateMode();
 
 /* v17 retained teacher controls, protected candidate start, and browser compiler */
 const V17_DEFAULTS={python:'# Write Python 3 code here\nvalue = input().strip()\nprint(value)',c:'#include <stdio.h>\nint main(void){ char value[1024]; if(fgets(value,sizeof value,stdin)) printf("%s",value); return 0; }',cpp:'#include <iostream>\n#include <string>\nusing namespace std;\nint main(){ string value; getline(cin,value); cout << value; return 0; }'};
-let packageProtected=false,candidateRunning=false,importInProgress=false;
 function lang(){return q()?.language||state.language||'python'}function rid(){return Math.random().toString(36).slice(2)+Date.now().toString(36)}
-function setLanguageUI(){const l=lang();$('languageSelect').value=l;$('compilerStatus').textContent='Online compiler · '+l.toUpperCase()}
+function setLanguageUI(){const l=lang();$('languageSelect').value=l;$('compilerStatus').textContent='Online compiler · '+l.toUpperCase();updateSyntaxHighlight();}
 $('languageSelect').onchange=e=>{saveCurrent();const x=q(),next=e.target.value;if(x){x.language=next;if(!x.codes)x.codes={};if(x.codes[next]!==undefined){x.code=x.codes[next]}else if(V17_DEFAULTS[next]){x.code=V17_DEFAULTS[next];x.codes[next]=x.code}code.value=x.code||'';updateLines()}state.language=next;setLanguageUI();save()};
 const open17=openQuestion;openQuestion=function(i){open17(i);setLanguageUI();applyTestFreeze();applyCustomFreeze();applyCandidateSecurity()};
-$('codeFullscreen').onclick=()=>{const p=document.querySelector('.editor-card');p.classList.toggle('full');const f=p.classList.contains('full');document.body.classList.toggle('code-fullscreen-active',f);$('codeFullscreen').textContent=f?'✕ Exit Full Screen':'⛶ Full Screen'};
-document.addEventListener('keydown',e=>{if(e.key==='Escape'){const p=document.querySelector('.editor-card');if(p.classList.contains('full')){$('codeFullscreen').click()}}});
+function isDocFullscreen(){return!!(document.fullscreenElement||document.webkitFullscreenElement||document.mozFullScreenElement||document.msFullscreenElement||document.body.classList.contains('app-fullscreen-fallback'))}
+async function toggleMainFullscreen(){
+  if(isDocFullscreen()){
+    try{
+      if(document.exitFullscreen)await document.exitFullscreen();
+      else if(document.webkitExitFullscreen)await document.webkitExitFullscreen();
+      else if(document.webkitCancelFullScreen)await document.webkitCancelFullScreen();
+      else if(document.mozCancelFullScreen)await document.mozCancelFullScreen();
+      else if(document.msExitFullscreen)await document.msExitFullscreen();
+    }catch(e){console.warn('Exit fullscreen error:',e)}
+    document.body.classList.remove('app-fullscreen-fallback');
+    document.documentElement.classList.remove('app-fullscreen-fallback');
+  }else{
+    let entered=false;
+    const docEl=document.documentElement;
+    try{
+      if(docEl.requestFullscreen){await docEl.requestFullscreen();entered=true}
+      else if(docEl.webkitRequestFullscreen){await docEl.webkitRequestFullscreen();entered=true}
+      else if(docEl.webkitRequestFullScreen){await docEl.webkitRequestFullScreen();entered=true}
+      else if(docEl.mozRequestFullScreen){await docEl.mozRequestFullScreen();entered=true}
+      else if(docEl.msRequestFullscreen){await docEl.msRequestFullscreen();entered=true}
+    }catch(e){console.warn('requestFullscreen error, falling back:',e)}
+    if(!entered&&!isDocFullscreen()){
+      document.body.classList.add('app-fullscreen-fallback');
+      document.documentElement.classList.add('app-fullscreen-fallback');
+    }
+  }
+  syncMainFs();
+}
+function syncMainFs(){
+  const b=$('mainFullscreen');
+  if(!b)return;
+  const isFs=isDocFullscreen();
+  b.textContent=isFs?'✕ Exit Full Screen':'⛶ Full Screen';
+  b.title=isFs?'Exit Full Screen':'Toggle Full Screen';
+  b.classList.toggle('active',isFs);
+}
+if($('mainFullscreen')){$('mainFullscreen').onclick=toggleMainFullscreen}
+['fullscreenchange','webkitfullscreenchange','mozfullscreenchange','MSFullscreenChange'].forEach(evt=>{document.addEventListener(evt,syncMainFs)});
+document.addEventListener('keydown',e=>{
+  if(e.key==='Escape'&&document.body.classList.contains('app-fullscreen-fallback')){
+    document.body.classList.remove('app-fullscreen-fallback');
+    document.documentElement.classList.remove('app-fullscreen-fallback');
+    syncMainFs();
+  }
+});
 function packetText(p){return typeof p==='string'?p:String(p?.output??p?.error??p?.stderr??p?.message??'')}
 function stripNoise(v){return String(v||'').replace(/\x1b\[[0-?]*[ -\/]*[@-~]/g,'').replace(/\r\n?/g,'\n').split('\n').filter(line=>!/^\s*(>{3}|\$|\/tmp\/[\w.-]+\.(o|out|exe))\s*$/.test(line)).join('\n').replace(/^\s*[>$]\s?/gm,'').trim()}
 function removeEcho(out,input){out=stripNoise(out);input=String(input||'').replace(/\r\n?/g,'\n').trim();if(!input)return out;const o=out.split('\n'),n=input.split('\n');if(n.every((x,i)=>(o[i]||'').trimEnd()===x.trimEnd())&&o.length>n.length)return o.slice(n.length).join('\n').trim();return out}
@@ -360,11 +622,109 @@ $('customToggle').onchange=()=>{state.customInputChecked=$('customToggle').check
 $('customInputLock').onclick=async()=>{if(!state.customInputLocked){state.customInputChecked=$('customToggle').checked;const p=prompt(`Freeze Custom Input as ${state.customInputChecked?'checked':'not checked'}. Create password:`,'');if(!p||p.length<4)return toast('Use at least 4 characters');if(prompt('Confirm password:','')!==p)return toast('Passwords do not match');state.customInputLockHash=await pinHash(p);state.customInputLocked=true}else{const p=prompt('Enter Custom Input password:','');if(p===null)return;if(await pinHash(p)!==state.customInputLockHash)return toast('Incorrect password');state.customInputLocked=false}applyCustomFreeze();save()};
 $('addTest').onclick=()=>{q().tests.push({input:'',expected:'',studentDefined:true});renderTests17();save()};
 
-function applyCandidateSecurity(){document.body.classList.toggle('candidate-running',candidateRunning);$('deleteQuestion').disabled=packageProtected||candidateRunning;$('deleteQuestion').hidden=packageProtected||candidateRunning;if(candidateRunning){['addQuestion','importQuestion','exportQuestion','importJson','exportJson','importSet','exportSet'].forEach(id=>{const el=$(id);if(el)el.disabled=true})}}
+/* Header Navigation Auto-Lock (Help Guide, Home, App store) with password '12345' */
+const HEADER_NAV_PASSWORD = '12345';
+let isHeaderNavLocked = false;
+
+function setHeaderNavLocked(locked) {
+  isHeaderNavLocked = !!locked;
+  state.headerNavLocked = isHeaderNavLocked;
+  try {
+    localStorage.setItem('ide_header_nav_locked', isHeaderNavLocked ? 'true' : 'false');
+  } catch(e) {}
+  
+  const homeBtn = $('homeBtn');
+  const appStoreBtn = $('appStoreBtn');
+  const helpBtn = $('helpBtn');
+  
+  if (homeBtn) {
+    homeBtn.classList.toggle('nav-btn-locked', isHeaderNavLocked);
+    homeBtn.innerHTML = isHeaderNavLocked ? '🔒 Home' : 'Home';
+    homeBtn.title = isHeaderNavLocked ? 'Locked with password (Enter 12345 to unlock)' : 'Home';
+  }
+  if (appStoreBtn) {
+    appStoreBtn.classList.toggle('nav-btn-locked', isHeaderNavLocked);
+    appStoreBtn.innerHTML = isHeaderNavLocked ? '🔒 App store' : 'App store';
+    appStoreBtn.title = isHeaderNavLocked ? 'Locked with password (Enter 12345 to unlock)' : 'App store';
+  }
+  if (helpBtn) {
+    helpBtn.classList.toggle('nav-btn-locked', isHeaderNavLocked);
+    helpBtn.innerHTML = isHeaderNavLocked ? '🔒 Help Guide' : '📖 Help Guide';
+    helpBtn.title = isHeaderNavLocked ? 'Locked with password (Enter 12345 to unlock)' : 'Help Guide';
+  }
+  document.body.classList.toggle('header-nav-locked', isHeaderNavLocked);
+}
+
+function unlockHeaderNavPrompt(targetUrl) {
+  const entered = prompt('These buttons (Help Guide, Home, App store) are locked for the exam.\nEnter password to unlock:');
+  if (entered === null) {
+    return;
+  }
+  if (entered === HEADER_NAV_PASSWORD) {
+    setHeaderNavLocked(false);
+    toast('Buttons unlocked successfully');
+    if (targetUrl) {
+      window.open(targetUrl, '_blank', 'noopener,noreferrer');
+    }
+  } else {
+    toast('Incorrect password. Access to Help Guide, Home, and App store is locked.');
+  }
+}
+
+function handleLockedNavClick(e, targetUrl) {
+  if (!isHeaderNavLocked) return;
+  e.preventDefault();
+  e.stopPropagation();
+  e.stopImmediatePropagation();
+  unlockHeaderNavPrompt(targetUrl);
+}
+
+function initHeaderNavLockListeners() {
+  const lockedButtons = [
+    { id: 'homeBtn', url: 'https://supportsourcecode.lovable.app/home' },
+    { id: 'appStoreBtn', url: 'https://interactive-media-display.lovable.app/' },
+    { id: 'helpBtn', url: 'help.html' }
+  ];
+
+  lockedButtons.forEach(item => {
+    const el = $(item.id);
+    if (el) {
+      const clickHandler = (e) => {
+        if (isHeaderNavLocked) {
+          handleLockedNavClick(e, item.url || el.getAttribute('href'));
+        }
+      };
+      el.addEventListener('click', clickHandler, true);
+      el.addEventListener('auxclick', clickHandler, true);
+    }
+  });
+
+  const checkAndIntercept = (e) => {
+    if (!isHeaderNavLocked) return;
+    const a = e.target.closest('a');
+    if (!a) return;
+    const href = a.getAttribute('href') || '';
+    if (
+      a.id === 'homeBtn' || 
+      a.id === 'appStoreBtn' || 
+      a.id === 'helpBtn' || 
+      href === 'help.html' || 
+      href.includes('supportsourcecode.lovable.app') || 
+      href.includes('interactive-media-display.lovable.app')
+    ) {
+      handleLockedNavClick(e, href);
+    }
+  };
+
+  document.addEventListener('click', checkAndIntercept, true);
+  document.addEventListener('auxclick', checkAndIntercept, true);
+}
+
+function applyCandidateSecurity(){document.body.classList.toggle('candidate-running',candidateRunning);$('deleteQuestion').disabled=packageProtected||candidateRunning;$('deleteQuestion').hidden=packageProtected||candidateRunning;if(candidateRunning){['proctorSettings','addQuestion','importQuestion','exportQuestion','importJson','exportJson','importSet','exportSet'].forEach(id=>{const el=$(id);if(el)el.disabled=true})}}
 async function hashPack(p,s){return pinHash(s+'|'+p)}
 async function buildAssessmentZip(security,fileName){saveCurrent();const zip=new JSZip();const manifest={...state,questions:undefined,questionIds:state.questions.map(x=>x.id),packageSecurity:security};zip.file('assessment.json',JSON.stringify(manifest,null,2));state.questions.forEach((x,i)=>zip.file(`questions/${String(i+1).padStart(3,'0')}-${x.id}.json`,JSON.stringify(x,null,2)));zip.file('README.txt','Import this assessment ZIP using Browser Assessment IDE.');download(await zip.generateAsync({type:'blob',compression:'DEFLATE'}),fileName||`${state.setId}.zip`)}
 $('exportSet').onclick=async()=>{saveCurrent();const use=confirm('Do you want to save password?\n\nOK = Save password\nCancel = Export without password');let sec={protected:false,deleteQuestionsAllowed:true};if(use){const p=prompt('Teacher: enter ZIP password (minimum 4 characters):','');if(!p||p.length<4)return toast('Use at least 4 characters');if(prompt('Confirm ZIP password:','')!==p)return toast('Passwords do not match');const salt=rid();sec={protected:true,salt,hash:await hashPack(p,salt),deleteQuestionsAllowed:false}}else if(!confirm('Export without password?'))return;await buildAssessmentZip(sec,`${state.setId}.zip`)};
-$('setFile').onchange=async e=>{try{importInProgress=true;const zip=await JSZip.loadAsync(e.target.files[0]),manifest=JSON.parse(await zip.file('assessment.json').async('text')),sec=manifest.packageSecurity||{};if(sec.protected){const p=prompt('Enter password to open assessment ZIP:','');if(p===null)throw Error('Import cancelled');if(await hashPack(p,sec.salt)!==sec.hash)throw Error('Incorrect password')}const names=Object.keys(zip.files).filter(n=>/^questions\/.*\.json$/i.test(n)).sort(),questions=[];for(const n of names)questions.push(JSON.parse(await zip.file(n).async('text')));if(!questions.length)throw Error('No questions found');state={...state,...manifest,questions};if(sec.protected){state.packageSecurity=sec}packageProtected=!!sec.protected;current=0;$('setIdText').textContent=state.setId;$('timerMinutes').value=state.timerMinutes||60;openQuestion(0);save();candidateSequentialMode=true;applyCandidateMode();applyCandidateSecurity();updateTimerLockUI();applyCustomFreeze();if(isTimerLocked())showReadyGate();else{candidateRunning=true;applyCandidateSecurity()}}catch(err){toast(err.message||'Invalid ZIP')}finally{importInProgress=false;e.target.value=''}};
+$('setFile').onchange=async e=>{try{importInProgress=true;const zip=await JSZip.loadAsync(e.target.files[0]),manifest=JSON.parse(await zip.file('assessment.json').async('text')),sec=manifest.packageSecurity||{};if(sec.protected){const p=prompt('Enter password to open assessment ZIP:','');if(p===null)throw Error('Import cancelled');if(await hashPack(p,sec.salt)!==sec.hash)throw Error('Incorrect password')}const names=Object.keys(zip.files).filter(n=>/^questions\/.*\.json$/i.test(n)).sort(),questions=[];for(const n of names)questions.push(JSON.parse(await zip.file(n).async('text')));if(!questions.length)throw Error('No questions found');state={...state,...manifest,questions};if(sec.protected){state.packageSecurity=sec}packageProtected=!!sec.protected;current=0;$('setIdText').textContent=state.setId;$('timerMinutes').value=state.timerMinutes||60;openQuestion(0);save();candidateSequentialMode=true;applyCandidateMode();applyCandidateSecurity();updateTimerLockUI();applyCustomFreeze();setHeaderNavLocked(true);if(isTimerLocked())showReadyGate();else{candidateRunning=true;applyCandidateSecurity()}}catch(err){toast(err.message||'Invalid ZIP')}finally{importInProgress=false;e.target.value=''}};
 
 /* start gate: Not Yet terminates current attempt until page reload */
 const blocker=document.createElement('div');blocker.className='assessment-blocker';document.body.appendChild(blocker);
@@ -382,8 +742,8 @@ const EXAM_STATE_KEY='assessment-rich-v3';
 function examCookieNames(){return document.cookie.split(';').map(x=>decodeURIComponent((x.split('=')[0]||'').trim())).filter(n=>n.startsWith('assessment_')||n.startsWith('browser_assessment_'))}
 function clearExamCookies(){for(const name of examCookieNames()){document.cookie=`${encodeURIComponent(name)}=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/; SameSite=Lax`}}
 function readExamSession(){try{return JSON.parse(localStorage.getItem(EXAM_SESSION_KEY)||'null')}catch(e){return null}}
-function writeExamSession(extra={}){const previous=readExamSession()||{};const session={...previous,...extra,setId:state.setId,active:true,packageProtected:!!packageProtected,candidateSequentialMode:true,customInputChecked:!!state.customInputChecked,updatedAt:Date.now()};localStorage.setItem(EXAM_SESSION_KEY,JSON.stringify(session));return session}
-function clearExamSession(){clearInterval(timerHandle);localStorage.removeItem(EXAM_SESSION_KEY);localStorage.removeItem(EXAM_STATE_KEY);clearExamCookies();candidateRunning=false;packageProtected=false;assessmentStarted=false;autoExportStarted=false}
+function writeExamSession(extra={}){const previous=readExamSession()||{};const session={...previous,...extra,setId:state.setId,active:true,packageProtected:!!packageProtected,candidateSequentialMode:true,customInputChecked:!!state.customInputChecked,headerNavLocked:!!isHeaderNavLocked,updatedAt:Date.now()};localStorage.setItem(EXAM_SESSION_KEY,JSON.stringify(session));return session}
+function clearExamSession(){clearInterval(timerHandle);localStorage.removeItem(EXAM_SESSION_KEY);localStorage.removeItem(EXAM_STATE_KEY);localStorage.removeItem('ide_header_nav_locked');setHeaderNavLocked(false);clearExamCookies();candidateRunning=false;packageProtected=false;assessmentStarted=false;autoExportStarted=false;}
 function setCandidateToolbarLocked(locked){
   const controls=['addQuestion','importQuestion','exportQuestion','importJson','exportJson','importSet','exportSet','exportHtml','exportPdf','exportWord'];
   controls.forEach(id=>{const el=$(id);if(el){el.disabled=locked;el.setAttribute('aria-disabled',String(locked))}});
@@ -399,14 +759,21 @@ function startPersistentCountdown(deadline){
 }
 function beginPersistentAssessment(){
   const duration=Math.max(1,Number(state.timerMinutes)||60);const deadline=Date.now()+duration*60000;
-  writeExamSession({started:true,startTime:Date.now(),deadline,durationMinutes:duration});
+  writeExamSession({started:true,active:true,startTime:Date.now(),deadline,durationMinutes:duration,currentQuestion:current});
   startPersistentCountdown(deadline);
 }
 function resumePersistentAssessment(session){
-  packageProtected=!!session.packageProtected;candidateSequentialMode=true;candidateRunning=true;current=Math.max(0,Math.min(Number(session.currentQuestion)||0,state.questions.length-1));
+  if(typeof restoreCandidateMetaV191==='function')restoreCandidateMetaV191();
+  packageProtected=!!session.packageProtected;candidateSequentialMode=true;candidateRunning=true;
+  current=Math.max(0,Math.min(Number(session.currentQuestion)||0,state.questions.length-1));
   openQuestion(current);applyCandidateMode();applyCandidateSecurity();setCandidateToolbarLocked(true);applyCustomFreeze();updateTimerLockUI();
+  
+  const rm=$('readyModal');if(rm)rm.classList.remove('show');
+  const cm=$('candidateModal');if(cm)cm.classList.remove('show');
+  const blk=document.querySelector('.assessment-blocker');if(blk)blk.classList.remove('show');
+  
   if(session.deadline<=Date.now()){remaining=0;tick();finishAssessmentV18('timeout');return}
-  startPersistentCountdown(session.deadline);toast('Assessment resumed from the saved timer');
+  startPersistentCountdown(session.deadline);toast('Assessment resumed from saved session. Timer and code preserved.');
 }
 const goV18=window.go;window.go=i=>{goV18(i);const s=readExamSession();if(s?.started)writeExamSession({currentQuestion:current})};
 $('readyYes').onclick=()=>{$('readyModal').classList.remove('show');beginPersistentAssessment()};
@@ -445,11 +812,12 @@ const setFileV18=$('setFile');setFileV18.addEventListener('change',()=>setTimeou
 },900));
 
 // Resume only an assessment that was actually started. A clean/opened page remains in teacher/import mode.
-(function restoreActiveExamV18(){
+function restoreActiveExamV18(){
   const session=readExamSession();
-  if(session?.active&&session.started&&state?.setId===session.setId&&state?.questions?.length){resumePersistentAssessment(session)}
+  if(session?.active&&session.started&&state?.questions?.length){resumePersistentAssessment(session)}
   else{setCandidateToolbarLocked(false)}
-})();
+}
+restoreActiveExamV18();
 
 /* v19 candidate identity, consent-based camera evidence, full-screen gate, and submission package */
 const EXAM_EVIDENCE_KEY='browser-assessment-evidence-v19';
@@ -458,7 +826,29 @@ function formatIstDateTime(d){if(!d)return '';const date=typeof d==='string'||ty
 function formatIstDate(d){if(!d)return '';const date=typeof d==='string'||typeof d==='number'?new Date(d):d;if(isNaN(date.getTime()))return String(d);return date.toLocaleDateString('en-IN',{timeZone:'Asia/Kolkata'})}
 function formatIstTime(d){if(!d)return '';const date=typeof d==='string'||typeof d==='number'?new Date(d):d;if(isNaN(date.getTime()))return String(d);return date.toLocaleTimeString('en-IN',{timeZone:'Asia/Kolkata',hour:'2-digit',minute:'2-digit',hour12:false})}
 function examNowParts(){const d=new Date(),dateStr=d.toLocaleDateString('en-IN',{timeZone:'Asia/Kolkata'}),parts=new Intl.DateTimeFormat('en-IN',{timeZone:'Asia/Kolkata',hour:'2-digit',minute:'2-digit',hourCycle:'h23'}).formatToParts(d),hour=parts.find(p=>p.type==='hour')?.value||String(d.getHours()).padStart(2,'0'),minute=parts.find(p=>p.type==='minute')?.value||String(d.getMinutes()).padStart(2,'0');return {iso:d.toISOString(),date:dateStr,hour,minute,local:formatIstDateTime(d),ist:formatIstDateTime(d)}}
-function updateQuestionCountV19(){const el=$('candidateQuestionCount');if(el)el.textContent=`Total Questions: ${state.questions.length}`}
+function updateQuestionCountV19(){
+  const el=$('candidateQuestionCount');
+  const total=state?.questions?.length||0;
+  const curr=total>0?(current+1):0;
+  if(el) el.textContent=`Current/Total question : ${curr}/${total}`;
+  const mobCount=$('mobileQuestionCount');
+  if(mobCount) mobCount.textContent=`${curr}/${total}`;
+  const mobBtn=$('mobileNextBtn');
+  if(mobBtn){
+    const isLast=total>0&&current>=total-1;
+    const label=mobBtn.querySelector('.mobile-next-label');
+    const arrow=mobBtn.querySelector('.mobile-next-arrow');
+    if(isLast){
+      mobBtn.classList.add('is-last');
+      if(label) label.textContent='Last question';
+      if(arrow) arrow.textContent='•';
+    }else{
+      mobBtn.classList.remove('is-last');
+      if(label) label.textContent='Next';
+      if(arrow) arrow.textContent='›';
+    }
+  }
+}
 const renderStepsV19=renderSteps;renderSteps=function(){renderStepsV19();updateQuestionCountV19()};updateQuestionCountV19();
 function ownerConfig(){return state.ownerConfig||{email:'',submissionMinutes:10}}
 function applyOwnerConfig(){const c=ownerConfig();$('ownerEmail').value=c.email||'';$('submissionMinutes').value=c.submissionMinutes||10}
@@ -489,9 +879,19 @@ async function pdfBlobV19(reason,end){const holder=document.createElement('div')
 async function completedZipBlobV19(reason,end,pdfBlob,onProgress){saveCurrent();const zip=new JSZip(),manifest={...state,questions:undefined,questionIds:state.questions.map(x=>x.id),candidate:candidateMeta,completedAt:end.toISOString(),finishReason:reason,submission:true};zip.file('assessment.json',JSON.stringify(manifest,null,2));state.questions.forEach((x,i)=>zip.file(`questions/${String(i+1).padStart(3,'0')}-${x.id}.json`,JSON.stringify(x,null,2)));for(const f of evidenceFrames)zip.file(f.name,f.blob);zip.file('camera-evidence.html',evidenceHtmlV20(end));zip.file('instruction.txt',instructionTextV19(reason,end)+'\nCamera Evidence: camera-evidence.html\n');zip.file('assessment-report.pdf',pdfBlob);return zip.generateAsync({type:'blob',compression:'DEFLATE',compressionOptions:{level:1}},metadata=>{if(onProgress)onProgress(Math.round(metadata.percent))})}
 async function finishAssessmentV19(reason){if(finishV19Running)return;finishV19Running=true;autoExportStarted=true;clearInterval(timerHandle);captureEvidenceFrame();await new Promise(r=>setTimeout(r,250));stopEvidenceCapture();saveCurrent();const end=new Date(),base=safeName((candidateMeta?.rollNumber||state.setId||'assessment')+'-'+(candidateMeta?.fullName||'candidate'));let pdfBlob,zipBlob;const progressModal=document.createElement('div');progressModal.className='modal show';progressModal.style.zIndex='2147483647';progressModal.innerHTML=`<div class="setup-card" style="text-align:center;max-width:480px;padding:30px;"><h2 style="margin-top:0;color:var(--blue);">Creating Submission Package</h2><p style="margin:15px 0;font-weight:bold;line-height:1.5;color:var(--text);">Please wait for some minutes.<br>The process of ZIP and PDF creation is under progress...</p><div style="background:var(--soft);border-radius:10px;height:20px;width:100%;overflow:hidden;margin:20px 0;border:1px solid var(--line);"><div id="exportProgressBar" style="background:var(--blue);width:0%;height:100%;transition:width 0.1s ease;"></div></div><div id="exportProgressPercent" style="font-size:18px;font-weight:bold;color:var(--text);">0%</div></div>`;document.body.appendChild(progressModal);try{pdfBlob=await pdfBlobV19(reason,end);download(pdfBlob,base+'-completed.pdf');const evidenceHtml=evidenceHtmlV20(end);download(new Blob([evidenceHtml],{type:'text/html'}),base+'-camera-evidence.html');zipBlob=await completedZipBlobV19(reason,end,pdfBlob,percent=>{const bar=document.getElementById('exportProgressBar');const txt=document.getElementById('exportProgressPercent');if(bar)bar.style.width=percent+'%';if(txt)txt.textContent=percent+'%'});download(zipBlob,base+'-completed.zip');download(new Blob([instructionTextV19(reason,end)],{type:'text/plain'}),base+'-instruction.txt')}catch(e){console.error(e);toast('Export failed: '+e.message);finishV19Running=false;progressModal.remove();return}finally{progressModal.remove()}clearExamSession();localStorage.removeItem(EXAM_EVIDENCE_KEY);if(document.fullscreenElement)document.exitFullscreen().catch(()=>{});document.body.classList.add('submission-complete');const m=$('timeoutModal');m.querySelector('h2').textContent=reason==='timeout'?'Time is out':reason==='escape'?'Assessment ended by Esc':'Assessment finished';m.querySelector('p').textContent=`Share the exported PDF and ZIP within ${candidateMeta?.submissionMinutes||ownerConfig().submissionMinutes||10} minute(s) to ${candidateMeta?.ownerEmail||ownerConfig().email||'the exam owner email'}.`;const b=m.querySelector('button');b.textContent='Return to Import Screen';b.onclick=()=>location.reload();m.classList.add('show')}
 finishAssessmentV18=finishAssessmentV19;finishLockedAssessment=()=>finishAssessmentV19('timeout');$('finishAssessment').onclick=()=>{if(confirm('Finish now? This ends the attempt and exports the PDF, ZIP, and instruction file.'))finishAssessmentV19('manual')};
-let escapeArmed=false;document.addEventListener('keydown',e=>{if(candidateRunning&&e.key==='Escape'&&!escapeArmed){escapeArmed=true;e.preventDefault();finishAssessmentV19('escape')}},true);
-document.addEventListener('fullscreenchange',()=>{if(candidateRunning&&!document.fullscreenElement&&!finishV19Running){toast('Full screen exited. The assessment will be finished.');finishAssessmentV19('fullscreen-exit')}});
-window.addEventListener('beforeunload',e=>{if(candidateRunning&&!finishV19Running){e.preventDefault();e.returnValue='Your active assessment will be ended if you leave this page.'}});
+// Exiting full screen or pressing Escape will NOT close or finish the exam.
+let escapeArmed=true;
+window.addEventListener('beforeunload',e=>{
+  saveCurrent();
+  try{
+    const s=readExamSession();
+    if(s?.started&&s?.active)writeExamSession({currentQuestion:current});
+  }catch(err){}
+  if(candidateRunning&&!finishV19Running){
+    e.preventDefault();
+    e.returnValue='Your active assessment is in progress. Edits and time are saved, but refresh is monitored.';
+  }
+});
 const originalSetImportV19=$('setFile').onchange;$('setFile').onchange=async e=>{await originalSetImportV19.call($('setFile'),e);updateQuestionCountV19()};
 
 /* v19.1 fix: require candidate details/camera for every imported assessment and preserve metadata */
@@ -506,7 +906,7 @@ const startCandidateBeforeV191=startCandidateV19;
 startCandidateV19=async function(){if(!cameraStream||$('cameraPreview').readyState<2)return toast('Open the camera and wait until the preview is visible');await startCandidateBeforeV191()};
 $('candidateStart').onclick=startCandidateV19;
 // Every imported assessment, locked or unlocked, must pass through candidate verification.
-$('setFile').addEventListener('change',()=>setTimeout(()=>{if(!state?.questions?.length)return;clearInterval(timerHandle);assessmentStarted=false;candidateRunning=false;autoExportStarted=false;setCandidateToolbarLocked(false);applyCandidateSecurity();showCandidateGateV19()},1300));
+$('setFile').addEventListener('change',()=>setTimeout(()=>{if(!state?.questions?.length)return;clearInterval(timerHandle);assessmentStarted=false;candidateRunning=false;autoExportStarted=false;setCandidateToolbarLocked(false);applyCandidateSecurity();if(typeof setHeaderNavLocked==='function')setHeaderNavLocked(true);showCandidateGateV19()},1300));
 // Do not permit manual export/finish before identity and camera start are established.
 $('finishAssessment').onclick=()=>{if(!validCandidateMetaV191()||!candidateRunning)return toast('Start the assessment with candidate details and camera before finishing');if(confirm('Finish now? This ends the attempt and exports the PDF, ZIP, and instruction file.'))finishAssessmentV19('manual')};
 const finishAssessmentBeforeV191=finishAssessmentV19;
@@ -515,7 +915,7 @@ finishAssessmentV18=finishAssessmentV19;finishLockedAssessment=()=>finishAssessm
 
 /* v20 clear cookies, no forced fullscreen, keyboard-only code entry, and screen recording */
 let screenStream=null,screenRecorder=null,screenChunks=[],screenRecordingBlob=null,screenRecordingStartedAt=null;
-function clearAllAssessmentDataV20(){if(candidateRunning&&!confirm('An assessment is active. Clearing data will end it. Continue?'))return;try{stopEvidenceCapture()}catch(e){}try{stopScreenRecordingV20()}catch(e){}clearInterval(timerHandle);clearExamCookies();localStorage.removeItem(EXAM_SESSION_KEY);localStorage.removeItem(EXAM_STATE_KEY);localStorage.removeItem(EXAM_EVIDENCE_KEY);sessionStorage.clear();candidateMeta=null;evidenceFrames=[];state={format:'python-assessment-set',version:2,setId:`SET-${Date.now().toString(36).toUpperCase()}`,title:'Python Assessment',timerMinutes:60,questions:[starter()]};toast('Assessment cookies and local session data cleared');setTimeout(()=>location.reload(),400)}
+function clearAllAssessmentDataV20(){if(candidateRunning&&!confirm('An assessment is active. Clearing data will end it. Continue?'))return;try{stopEvidenceCapture()}catch(e){}try{stopScreenRecordingV20()}catch(e){}clearInterval(timerHandle);clearExamCookies();localStorage.removeItem(EXAM_SESSION_KEY);localStorage.removeItem(EXAM_STATE_KEY);localStorage.removeItem(EXAM_EVIDENCE_KEY);localStorage.removeItem('ide_header_nav_locked');if(typeof setHeaderNavLocked==='function')setHeaderNavLocked(false);sessionStorage.clear();candidateMeta=null;evidenceFrames=[];state={format:'python-assessment-set',version:2,setId:`SET-${Date.now().toString(36).toUpperCase()}`,title:'Python Assessment',timerMinutes:60,questions:[starter()]};toast('Assessment cookies and local session data cleared');setTimeout(()=>location.reload(),400)}
 $('clearExamData').onclick=clearAllAssessmentDataV20;
 async function openScreenCaptureV20(){try{if(!navigator.mediaDevices?.getDisplayMedia)throw Error('Screen sharing is not supported by this browser');if(screenStream)screenStream.getTracks().forEach(t=>t.stop());screenStream=await navigator.mediaDevices.getDisplayMedia({video:{frameRate:{ideal:8,max:12}},audio:true});const v=$('screenPreview');v.srcObject=screenStream;await v.play();$('screenStatus').textContent='Screen sharing is ready. Select the exam screen or browser tab and keep sharing until submission.';screenStream.getVideoTracks()[0].addEventListener('ended',()=>{if(candidateRunning&&!finishV20Running){$('screenStatus').textContent='Screen sharing stopped. The assessment will be finished.';finishAssessmentV20('screen-share-stopped')}});updateCandidateStartStateV20()}catch(e){screenStream=null;$('screenStatus').textContent='Screen sharing could not start: '+e.message;$('candidateStart').disabled=true;toast('Screen sharing permission is required for this configured assessment')}}
 $('openScreen').onclick=openScreenCaptureV20;
@@ -529,9 +929,9 @@ function stopScreenRecordingV20(){return new Promise(resolve=>{if(screenRecorder
 requestExamFullscreen=async function(){};
 const startCandidateBeforeV20=startCandidateV19;startCandidateV19=async function(){if(!screenStream||$('screenPreview').readyState<2)return toast('Share the exam screen and wait until the preview is visible');if(!$('screenConsent').checked)return toast('Screen-recording consent is required');await startCandidateBeforeV20();startScreenRecordingV20()};$('candidateStart').onclick=startCandidateV19;
 // During an active exam, typing is allowed only in the code editor. Clipboard operations and context menus are blocked everywhere.
-function blockExamInputV20(e){if(e.target&&e.target.closest&&(e.target.closest('.modal')||e.target.closest('.test-card.student-extra')))return;if(!candidateRunning)return;if(['copy','cut','paste','drop','dragstart'].includes(e.type)){e.preventDefault();e.stopImmediatePropagation();toast('Copy, paste, drag, and drop are disabled during the assessment');return}if(e.type==='beforeinput'&&e.target!==code){e.preventDefault();e.stopImmediatePropagation();return}if(e.type==='keydown'){const navigation=['Tab','Shift','Control','Alt','Meta','CapsLock','ArrowLeft','ArrowRight','ArrowUp','ArrowDown','Home','End','PageUp','PageDown','Backspace','Delete','Enter'];const shortcut=e.ctrlKey||e.metaKey||e.altKey;if(e.target!==code&&!navigation.includes(e.key)){e.preventDefault();e.stopImmediatePropagation()}if(shortcut&&['v','V','c','C','x','X','a','A','s','S','p','P'].includes(e.key)){e.preventDefault();e.stopImmediatePropagation();toast('Keyboard shortcuts are disabled during the assessment')}}}
+function blockExamInputV20(e){if(e.target&&e.target.closest&&(e.target.closest('.modal')||e.target.closest('.test-card.student-extra')||e.target.closest('.work-resizer')||e.target.closest('.split-btn')||e.target.closest('.main-resizer')||e.target.closest('.v-split-btn')))return;if(!candidateRunning)return;if(['copy','cut','paste','drop','dragstart'].includes(e.type)){e.preventDefault();e.stopImmediatePropagation();toast('Copy, paste, drag, and drop are disabled during the assessment');return}if(e.type==='beforeinput'&&e.target!==code){e.preventDefault();e.stopImmediatePropagation();return}if(e.type==='keydown'){const navigation=['Tab','Shift','Control','Alt','Meta','CapsLock','ArrowLeft','ArrowRight','ArrowUp','ArrowDown','Home','End','PageUp','PageDown','Backspace','Delete','Enter'];const shortcut=e.ctrlKey||e.metaKey||e.altKey;if(e.target!==code&&!navigation.includes(e.key)){e.preventDefault();e.stopImmediatePropagation()}if(shortcut&&['v','V','c','C','x','X','a','A','s','S','p','P'].includes(e.key)){e.preventDefault();e.stopImmediatePropagation();toast('Keyboard shortcuts are disabled during the assessment')}}}
 ['copy','cut','paste','drop','dragstart','beforeinput','keydown'].forEach(t=>document.addEventListener(t,blockExamInputV20,true));
-document.addEventListener('contextmenu',e=>{if(e.target&&e.target.closest&&(e.target.closest('.modal')||e.target.closest('.test-card.student-extra')))return;if(candidateRunning){e.preventDefault();e.stopImmediatePropagation();toast('Right-click is disabled during the assessment')}},true);
+document.addEventListener('contextmenu',e=>{if(e.target&&e.target.closest&&(e.target.closest('.modal')||e.target.closest('.test-card.student-extra')||e.target.closest('.work-resizer')||e.target.closest('.split-btn')||e.target.closest('.main-resizer')||e.target.closest('.v-split-btn')))return;if(candidateRunning){e.preventDefault();e.stopImmediatePropagation();toast('Right-click is disabled during the assessment')}},true);
 // Remove all exam termination behavior related to Escape or fullscreen changes.
 escapeArmed=true;
 let finishV20Running=false;
@@ -543,200 +943,868 @@ completedZipBlobV19=completedZipBlobV20;
 const finishBeforeV20=finishAssessmentV19;finishAssessmentV20=async function(reason){if(finishV20Running)return;finishV20Running=true;await stopScreenRecordingV20();finishV19Running=false;return finishBeforeV20(reason)};
 finishAssessmentV19=finishAssessmentV20;finishAssessmentV18=finishAssessmentV20;finishLockedAssessment=()=>finishAssessmentV20('timeout');$('finishAssessment').onclick=()=>{if(!validCandidateMetaV191()||!candidateRunning)return toast('Start the assessment with candidate details, camera, and screen sharing before finishing');if(confirm('Finish now? This ends the attempt and exports the PDF, ZIP, instruction file, camera evidence, and screen recording.'))finishAssessmentV20('manual')};
 
-/* Welcome desktop mode dialog */
-const welcomeModal=$('welcomeModal');
-function closeWelcomeModal(){if(welcomeModal)welcomeModal.classList.remove('show')}
-if($('welcomeClose'))$('welcomeClose').onclick=closeWelcomeModal;
-if($('welcomeDismiss'))$('welcomeDismiss').onclick=closeWelcomeModal;
-if(welcomeModal){
-  welcomeModal.addEventListener('click',e=>{if(e.target===welcomeModal)closeWelcomeModal()});
-}
-document.addEventListener('keydown',e=>{
-  if(e.key==='Escape'&&welcomeModal&&welcomeModal.classList.contains('show')){
-    closeWelcomeModal();
+
+
+/* ==========================================================================
+   FLEXIBLE WORK RESIZER (HORIZONTAL SPLITTER BETWEEN CODE & TEST CASES)
+   ========================================================================== */
+function initWorkResizer() {
+  const work = $('workSection') || document.querySelector('.work');
+  const resizer = $('workResizer');
+  const topBtn = $('splitTopBtn');
+  const midBtn = $('splitMidBtn');
+  const downBtn = $('splitDownBtn');
+  
+  if (!work || !resizer) return;
+
+  let isDragging = false;
+  let startY = 0;
+  let startEditorHeight = 0;
+
+  function updateActiveButton(mode) {
+    if (topBtn) topBtn.classList.toggle('active', mode === 'top');
+    if (midBtn) midBtn.classList.toggle('active', mode === 'mid');
+    if (downBtn) downBtn.classList.toggle('active', mode === 'down');
   }
+
+  function getAvailableHeight() {
+    const workRect = work.getBoundingClientRect();
+    const runbar = work.querySelector('.runbar');
+    const resizerHeight = resizer.offsetHeight || 24;
+    const runbarHeight = runbar ? runbar.offsetHeight : 44;
+    const padding = 14;
+    return Math.max(140, workRect.height - resizerHeight - runbarHeight - padding);
+  }
+
+  function setEditorHeight(heightPx, mode = 'custom', save = true) {
+    const totalAvail = getAvailableHeight();
+    const minH = 50;
+    const maxH = Math.max(minH, totalAvail - 50);
+    const clampedH = Math.max(minH, Math.min(maxH, Math.round(heightPx)));
+    
+    work.style.setProperty('--editor-height', `${clampedH}px`);
+    updateActiveButton(mode);
+
+    if (save) {
+      const ratio = totalAvail > 0 ? (clampedH / totalAvail) : 0.5;
+      localStorage.setItem('ide_work_editor_ratio', ratio.toFixed(3));
+      localStorage.setItem('ide_work_split_mode', mode);
+    }
+  }
+
+  function snapTop() {
+    // Top mode: editor minimized (52px), Test Cases & execution given maximum space to read during question
+    setEditorHeight(52, 'top', true);
+  }
+
+  function snapMid() {
+    // Balanced 50/50 view: both Code and Test cases visible at the same time
+    const totalAvail = getAvailableHeight();
+    setEditorHeight(Math.round(totalAvail * 0.48), 'mid', true);
+  }
+
+  function snapDown() {
+    // Down mode: Code editor maximized (~82%), Test cases minimized
+    const totalAvail = getAvailableHeight();
+    setEditorHeight(Math.round(totalAvail * 0.82), 'down', true);
+  }
+
+  // Quick Shift Buttons
+  if (topBtn) {
+    topBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      snapTop();
+    });
+  }
+  if (midBtn) {
+    midBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      snapMid();
+    });
+  }
+  if (downBtn) {
+    downBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      snapDown();
+    });
+  }
+
+  // Double-click resizer to toggle or reset to 50/50
+  resizer.addEventListener('dblclick', (e) => {
+    if (e.target && e.target.closest && e.target.closest('.split-btn')) return;
+    const currentMode = localStorage.getItem('ide_work_split_mode');
+    if (currentMode === 'mid') {
+      snapTop();
+    } else {
+      snapMid();
+    }
+  });
+
+  // Dragging handlers (Mouse & Touch)
+  function startDrag(clientY) {
+    isDragging = true;
+    startY = clientY;
+    const editorCard = $('editorCard') || work.querySelector('.editor-card');
+    startEditorHeight = editorCard ? editorCard.getBoundingClientRect().height : (getAvailableHeight() * 0.5);
+
+    resizer.classList.add('active');
+    work.classList.add('is-resizing');
+    document.body.classList.add('is-resizing-v');
+  }
+
+  function onDrag(clientY) {
+    if (!isDragging) return;
+    const deltaY = clientY - startY;
+    const targetH = startEditorHeight + deltaY;
+    setEditorHeight(targetH, 'custom', false);
+  }
+
+  function stopDrag() {
+    if (!isDragging) return;
+    isDragging = false;
+    resizer.classList.remove('active');
+    work.classList.remove('is-resizing');
+    document.body.classList.remove('is-resizing-v');
+
+    const editorCard = $('editorCard') || work.querySelector('.editor-card');
+    if (editorCard) {
+      const h = editorCard.getBoundingClientRect().height;
+      const totalAvail = getAvailableHeight();
+      const ratio = totalAvail > 0 ? (h / totalAvail) : 0.5;
+      localStorage.setItem('ide_work_editor_ratio', ratio.toFixed(3));
+      localStorage.setItem('ide_work_split_mode', 'custom');
+      updateActiveButton('custom');
+    }
+  }
+
+  // Mouse drag events
+  resizer.addEventListener('mousedown', (e) => {
+    if (e.target && e.target.closest && e.target.closest('.split-btn')) return;
+    e.preventDefault();
+    startDrag(e.clientY);
+  });
+
+  window.addEventListener('mousemove', (e) => {
+    if (isDragging) {
+      e.preventDefault();
+      onDrag(e.clientY);
+    }
+  });
+
+  window.addEventListener('mouseup', () => {
+    if (isDragging) stopDrag();
+  });
+
+  // Touch drag events
+  resizer.addEventListener('touchstart', (e) => {
+    if (e.target && e.target.closest && e.target.closest('.split-btn')) return;
+    if (e.touches && e.touches.length === 1) {
+      startDrag(e.touches[0].clientY);
+    }
+  }, { passive: true });
+
+  window.addEventListener('touchmove', (e) => {
+    if (isDragging && e.touches && e.touches.length === 1) {
+      onDrag(e.touches[0].clientY);
+    }
+  }, { passive: true });
+
+  window.addEventListener('touchend', () => {
+    if (isDragging) stopDrag();
+  });
+
+  // Restore saved preference on load
+  function restoreSavedSplit() {
+    const savedMode = localStorage.getItem('ide_work_split_mode');
+    const savedRatio = parseFloat(localStorage.getItem('ide_work_editor_ratio'));
+
+    if (savedMode === 'top') {
+      snapTop();
+    } else if (savedMode === 'down') {
+      snapDown();
+    } else if (savedMode === 'mid') {
+      snapMid();
+    } else if (!isNaN(savedRatio) && savedRatio > 0 && savedRatio < 1) {
+      const totalAvail = getAvailableHeight();
+      setEditorHeight(Math.round(totalAvail * savedRatio), 'custom', false);
+    } else {
+      snapMid();
+    }
+  }
+
+  setTimeout(restoreSavedSplit, 50);
+  window.addEventListener('resize', () => {
+    if (!isDragging) {
+      const savedMode = localStorage.getItem('ide_work_split_mode');
+      if (savedMode === 'top') snapTop();
+      else if (savedMode === 'down') snapDown();
+      else if (savedMode === 'mid') snapMid();
+    }
+  });
+}
+
+// Initialize work splitter
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initWorkResizer);
+} else {
+  initWorkResizer();
+}
+
+/* ==========================================================================
+   VERTICAL RESIZER (BETWEEN QUESTION PANEL & CODING/TESTS SECTION)
+   ========================================================================== */
+function initMainResizer() {
+  const main = document.querySelector('main');
+  const resizer = $('mainResizer');
+  const problemPanel = $('problemPanel');
+  const leftBtn = $('splitLeftBtn');
+  const midBtn = $('splitMainMidBtn');
+  const rightBtn = $('splitRightBtn');
+
+  if (!main || !resizer || !problemPanel) return;
+
+  let isDragging = false;
+  let startX = 0;
+  let startProblemWidth = 0;
+
+  function updateActiveButton(mode) {
+    if (leftBtn) leftBtn.classList.toggle('active', mode === 'left');
+    if (midBtn) midBtn.classList.toggle('active', mode === 'mid');
+    if (rightBtn) rightBtn.classList.toggle('active', mode === 'right');
+  }
+
+  function getAvailableWidth() {
+    const mainRect = main.getBoundingClientRect();
+    const resizerWidth = resizer.offsetWidth || 26;
+    return Math.max(300, mainRect.width - resizerWidth);
+  }
+
+  function setProblemWidth(widthPx, mode = 'custom', save = true) {
+    const totalAvail = getAvailableWidth();
+    const minW = 60;
+    const maxW = Math.max(minW, totalAvail - 120);
+    const clampedW = Math.max(minW, Math.min(maxW, Math.round(widthPx)));
+
+    problemPanel.style.setProperty('--problem-width', `${clampedW}px`);
+    updateActiveButton(mode);
+
+    if (save) {
+      const ratio = totalAvail > 0 ? (clampedW / totalAvail) : 0.43;
+      localStorage.setItem('ide_main_problem_ratio', ratio.toFixed(3));
+      localStorage.setItem('ide_main_split_mode', mode);
+    }
+  }
+
+  function snapLeft() {
+    // Left mode: Question minimized (~80px), Coding & Tests maximized
+    setProblemWidth(80, 'left', true);
+  }
+
+  function snapMid() {
+    // Balanced 50/50 view: Question and Code/Tests visible at the same time
+    const totalAvail = getAvailableWidth();
+    setProblemWidth(Math.round(totalAvail * 0.5), 'mid', true);
+  }
+
+  function snapRight() {
+    // Right mode: Question maximized (~72%), Code/Tests compacted
+    const totalAvail = getAvailableWidth();
+    setProblemWidth(Math.round(totalAvail * 0.72), 'right', true);
+  }
+
+  // Quick Shift Buttons
+  if (leftBtn) {
+    leftBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      snapLeft();
+    });
+  }
+  if (midBtn) {
+    midBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      snapMid();
+    });
+  }
+  if (rightBtn) {
+    rightBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      snapRight();
+    });
+  }
+
+  // Double-click resizer to toggle or reset to 50/50
+  resizer.addEventListener('dblclick', (e) => {
+    if (e.target && e.target.closest && e.target.closest('.v-split-btn')) return;
+    const currentMode = localStorage.getItem('ide_main_split_mode');
+    if (currentMode === 'mid') {
+      snapLeft();
+    } else {
+      snapMid();
+    }
+  });
+
+  // Dragging handlers (Mouse & Touch)
+  function startDrag(clientX) {
+    isDragging = true;
+    startX = clientX;
+    startProblemWidth = problemPanel.getBoundingClientRect().width;
+
+    resizer.classList.add('active');
+    main.classList.add('is-resizing-h');
+    document.body.classList.add('is-resizing-h');
+  }
+
+  function onDrag(clientX) {
+    if (!isDragging) return;
+    const deltaX = clientX - startX;
+    const targetW = startProblemWidth + deltaX;
+    setProblemWidth(targetW, 'custom', false);
+  }
+
+  function stopDrag() {
+    if (!isDragging) return;
+    isDragging = false;
+    resizer.classList.remove('active');
+    main.classList.remove('is-resizing-h');
+    document.body.classList.remove('is-resizing-h');
+
+    const w = problemPanel.getBoundingClientRect().width;
+    const totalAvail = getAvailableWidth();
+    const ratio = totalAvail > 0 ? (w / totalAvail) : 0.43;
+    localStorage.setItem('ide_main_problem_ratio', ratio.toFixed(3));
+    localStorage.setItem('ide_main_split_mode', 'custom');
+    updateActiveButton('custom');
+  }
+
+  // Mouse drag events
+  resizer.addEventListener('mousedown', (e) => {
+    if (e.target && e.target.closest && e.target.closest('.v-split-btn')) return;
+    e.preventDefault();
+    startDrag(e.clientX);
+  });
+
+  window.addEventListener('mousemove', (e) => {
+    if (isDragging) {
+      e.preventDefault();
+      onDrag(e.clientX);
+    }
+  });
+
+  window.addEventListener('mouseup', () => {
+    if (isDragging) stopDrag();
+  });
+
+  // Touch drag events
+  resizer.addEventListener('touchstart', (e) => {
+    if (e.target && e.target.closest && e.target.closest('.v-split-btn')) return;
+    if (e.touches && e.touches.length === 1) {
+      startDrag(e.touches[0].clientX);
+    }
+  }, { passive: true });
+
+  window.addEventListener('touchmove', (e) => {
+    if (isDragging && e.touches && e.touches.length === 1) {
+      onDrag(e.touches[0].clientX);
+    }
+  }, { passive: true });
+
+  window.addEventListener('touchend', () => {
+    if (isDragging) stopDrag();
+  });
+
+  // Restore saved preference on load
+  function restoreSavedSplit() {
+    if (window.innerWidth <= 1050) return;
+    const savedMode = localStorage.getItem('ide_main_split_mode');
+    const savedRatio = parseFloat(localStorage.getItem('ide_main_problem_ratio'));
+
+    if (savedMode === 'left') {
+      snapLeft();
+    } else if (savedMode === 'right') {
+      snapRight();
+    } else if (savedMode === 'mid') {
+      snapMid();
+    } else if (!isNaN(savedRatio) && savedRatio > 0 && savedRatio < 1) {
+      const totalAvail = getAvailableWidth();
+      setProblemWidth(Math.round(totalAvail * savedRatio), 'custom', false);
+    } else {
+      snapMid();
+    }
+  }
+
+  setTimeout(restoreSavedSplit, 50);
+  window.addEventListener('resize', () => {
+    if (window.innerWidth > 1050 && !isDragging) {
+      const savedMode = localStorage.getItem('ide_main_split_mode');
+      if (savedMode === 'left') snapLeft();
+      else if (savedMode === 'right') snapRight();
+      else if (savedMode === 'mid') snapMid();
+    }
+  });
+}
+
+// Initialize main vertical splitter
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initMainResizer);
+} else {
+  initMainResizer();
+}
+
+/* ==========================================================================
+   MOBILE KEYBOARD AUTO-SCROLL & VIEWPORT MANAGEMENT
+   ========================================================================== */
+function initMobileKeyboardAutoScroll() {
+  let scrollTimeout = null;
+  let isTyping = false;
+
+  function isMobile() {
+    return window.innerWidth <= 1050 || ('ontouchstart' in window && window.innerWidth <= 1200);
+  }
+
+  function isEditableElement(el) {
+    if (!el) return false;
+    const tag = el.tagName;
+    return tag === 'TEXTAREA' || tag === 'INPUT' || el.isContentEditable || (el.classList && el.classList.contains('rich-editor'));
+  }
+
+  function ensureVisibleAboveKeyboard(el, immediate = false) {
+    if (!el || !isMobile() || !isEditableElement(el)) return;
+
+    clearTimeout(scrollTimeout);
+    scrollTimeout = setTimeout(() => {
+      try {
+        const rect = el.getBoundingClientRect();
+        const vHeight = window.visualViewport ? window.visualViewport.height : window.innerHeight;
+        
+        // Target comfortable top position: ~12-20% from visible top
+        const desiredTopOffset = Math.max(60, vHeight * 0.16);
+        const currentAbsoluteTop = window.pageYOffset || document.documentElement.scrollTop || 0;
+        const targetScrollY = currentAbsoluteTop + rect.top - desiredTopOffset;
+
+        // Auto-scroll screen up so input is completely visible above keyboard
+        if (rect.bottom > vHeight - 35 || rect.top < 55) {
+          window.scrollTo({
+            top: Math.max(0, targetScrollY),
+            behavior: immediate ? 'auto' : 'smooth'
+          });
+        }
+
+        // If it's a textarea (like #code), also keep active line inside textarea visible
+        if (el.tagName === 'TEXTAREA' && typeof el.selectionStart === 'number') {
+          const val = el.value || '';
+          const pos = el.selectionStart;
+          const linesBefore = val.substring(0, pos).split('\n').length;
+          const lineHeight = 21; // Consolas line height
+          const cursorTopPx = (linesBefore - 1) * lineHeight;
+          
+          if (cursorTopPx < el.scrollTop || cursorTopPx > el.scrollTop + el.clientHeight - 45) {
+            el.scrollTop = Math.max(0, cursorTopPx - Math.floor(el.clientHeight / 2));
+          }
+          if (el.id === 'code') {
+            const linesEl = $('lines');
+            if (linesEl) linesEl.scrollTop = el.scrollTop;
+          }
+        }
+      } catch (err) {
+        try {
+          el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        } catch (e) {}
+      }
+    }, immediate ? 20 : 160);
+  }
+
+  // Handle focusin on any input / textarea / contenteditable
+  document.addEventListener('focusin', (e) => {
+    if (isEditableElement(e.target) && isMobile()) {
+      document.body.classList.add('keyboard-open');
+      ensureVisibleAboveKeyboard(e.target, false);
+      // Re-check once virtual keyboard slide animation completes
+      setTimeout(() => ensureVisibleAboveKeyboard(e.target, false), 350);
+    }
+  });
+
+  // Handle focusout
+  document.addEventListener('focusout', () => {
+    setTimeout(() => {
+      const active = document.activeElement;
+      if (!isEditableElement(active)) {
+        document.body.classList.remove('keyboard-open');
+      }
+    }, 200);
+  });
+
+  // Track visualViewport resize (virtual keyboard appearing/closing)
+  if (window.visualViewport) {
+    window.visualViewport.addEventListener('resize', () => {
+      if (!isMobile()) return;
+      const isKeyboardUp = window.visualViewport.height < window.innerHeight * 0.85;
+      document.body.classList.toggle('keyboard-open', isKeyboardUp);
+      
+      const active = document.activeElement;
+      if (isKeyboardUp && isEditableElement(active)) {
+        ensureVisibleAboveKeyboard(active, true);
+      }
+    });
+  }
+
+  // Track live typing input in code, problem, or textareas
+  let typingDebounce = null;
+  document.addEventListener('input', (e) => {
+    if (!isMobile() || !isEditableElement(e.target)) return;
+    clearTimeout(typingDebounce);
+    typingDebounce = setTimeout(() => {
+      ensureVisibleAboveKeyboard(e.target, false);
+    }, 250);
+  });
+
+  // Handle keyup navigation (Enter, Arrow keys)
+  document.addEventListener('keyup', (e) => {
+    if (!isMobile() || !isEditableElement(e.target)) return;
+    if (['Enter', 'ArrowUp', 'ArrowDown', 'Backspace'].includes(e.key)) {
+      ensureVisibleAboveKeyboard(e.target, false);
+    }
+  });
+
+  // Tap/click on editor to scroll immediately
+  if (code) {
+    code.addEventListener('click', () => {
+      if (isMobile()) ensureVisibleAboveKeyboard(code, false);
+    });
+  }
+  if (problem) {
+    problem.addEventListener('click', () => {
+      if (isMobile()) ensureVisibleAboveKeyboard(problem, false);
+    });
+  }
+}
+
+// Initialize mobile keyboard auto-scroll
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', () => {
+    initMobileKeyboardAutoScroll();
+    if (typeof restoreActiveExamV18 === 'function') restoreActiveExamV18();
+  });
+} else {
+  initMobileKeyboardAutoScroll();
+  if (typeof restoreActiveExamV18 === 'function') restoreActiveExamV18();
+}
+window.addEventListener('load', () => {
+  if (typeof restoreActiveExamV18 === 'function') restoreActiveExamV18();
 });
 
-/* Mock test data sample import */
-const MOCK_SAMPLE_QUESTIONS = {
-  format: "python-assessment-set",
-  version: 3,
-  setId: "SET-MUJDFHP0",
-  title: "Programming Assessment (C, C++, Python)",
-  timerMinutes: 60,
-  timerLocked: false,
-  timerLockHash: "",
-  customInputLocked: false,
-  customInputChecked: false,
-  customInputLockHash: "",
-  ownerConfig: {
-    email: "",
-    submissionMinutes: 10
+/* ==========================================================================
+   WELCOME / DESKTOP MODE RECOMMENDATION MODAL & MOCK DATA IMPORT
+   ========================================================================== */
+const SAMPLE_MOCK_DATA = {
+  "format": "python-assessment-set",
+  "version": 3,
+  "setId": "SET-MUJDFHP0",
+  "title": "Programming Assessment (C, C++, Python)",
+  "timerMinutes": 60,
+  "timerLocked": false,
+  "timerLockHash": "",
+  "customInputLocked": false,
+  "customInputChecked": false,
+  "customInputLockHash": "",
+  "ownerConfig": {
+    "email": "",
+    "submissionMinutes": 10
   },
-  language: "python",
-  packageSecurity: {
-    protected: false,
-    deleteQuestionsAllowed: true
+  "language": "python",
+  "packageSecurity": {
+    "protected": false,
+    "deleteQuestionsAllowed": true
   },
-  totalQuestions: 6,
-  exportedAt: "2026-09-27T18:04:30.673Z",
-  questions: [
+  "totalQuestions": 6,
+  "exportedAt": "2026-09-27T18:04:30.673Z",
+  "questions": [
     {
-      id: "Q-MUJDFHP1-QPOG",
-      title: "Question 1: Check Even or Odd",
-      problemHtml: "<h2>Problem Statement</h2><p>Write a program in C, C++, or Python that reads an integer from standard input and prints <code>Even</code> if the number is even, or <code>Odd</code> if the number is odd.</p><p><b>Input Specification:</b><br>A single integer <code>n</code>.</p><p><b>Output Specification:</b><br>Print <code>Even</code> or <code>Odd</code>.</p>",
-      code: "# Read input and write your solution here\nn = int(input().strip())\nif n % 2 == 0:\n    print(\"Even\")\nelse:\n    print(\"Odd\")",
-      codes: {
-        python: "# Read input and write your solution here\nn = int(input().strip())\nif n % 2 == 0:\n    print(\"Even\")\nelse:\n    print(\"Odd\")",
-        c: "#include <stdio.h>\n\nint main(void) {\n    int n;\n    if (scanf(\"%d\", &n) == 1) {\n        if (n % 2 == 0) {\n            printf(\"Even\\n\");\n        } else {\n            printf(\"Odd\\n\");\n        }\n    }\n    return 0;\n}",
-        cpp: "#include <iostream>\n\nusing namespace std;\n\nint main() {\n    int n;\n    if (cin >> n) {\n        if (n % 2 == 0) {\n            cout << \"Even\" << endl;\n        } else {\n            cout << \"Odd\" << endl;\n        }\n    }\n    return 0;\n}"
+      "id": "Q-MUJDFHP1-QPOG",
+      "title": "Question 1: Check Even or Odd",
+      "problemHtml": "<h2>Problem Statement</h2><p>Write a program in C, C++, or Python that reads an integer from standard input and prints <code>Even</code> if the number is even, or <code>Odd</code> if the number is odd.</p><p><b>Input Specification:</b><br>A single integer <code>n</code>.</p><p><b>Output Specification:</b><br>Print <code>Even</code> or <code>Odd</code>.</p>",
+      "code": "# Read input and write your solution here\nn = int(input().strip())\nif n % 2 == 0:\n    print(\"Even\")\nelse:\n    print(\"Odd\")",
+      "codes": {
+        "python": "# Read input and write your solution here\nn = int(input().strip())\nif n % 2 == 0:\n    print(\"Even\")\nelse:\n    print(\"Odd\")",
+        "c": "#include <stdio.h>\n\nint main(void) {\n    int n;\n    if (scanf(\"%d\", &n) == 1) {\n        if (n % 2 == 0) {\n            printf(\"Even\\n\");\n        } else {\n            printf(\"Odd\\n\");\n        }\n    }\n    return 0;\n}",
+        "cpp": "#include <iostream>\n\nusing namespace std;\n\nint main() {\n    int n;\n    if (cin >> n) {\n        if (n % 2 == 0) {\n            cout << \"Even\" << endl;\n        } else {\n            cout << \"Odd\" << endl;\n        }\n    }\n    return 0;\n}"
       },
-      language: "python",
-      problemLocked: false,
-      problemLockHash: "",
-      testsLocked: false,
-      testLockHash: "",
-      tests: [
-        { input: "4", expected: "Even", studentDefined: false },
-        { input: "7", expected: "Odd", studentDefined: false },
-        { input: "0", expected: "Even", studentDefined: false },
-        { input: "-3", expected: "Odd", studentDefined: false }
+      "language": "python",
+      "problemLocked": false,
+      "problemLockHash": "",
+      "testsLocked": false,
+      "testLockHash": "",
+      "tests": [
+        { "input": "4", "expected": "Even", "studentDefined": false },
+        { "input": "7", "expected": "Odd", "studentDefined": false },
+        { "input": "0", "expected": "Even", "studentDefined": false },
+        { "input": "-3", "expected": "Odd", "studentDefined": false }
       ],
-      customFonts: []
+      "customFonts": []
     },
     {
-      id: "Q-MUJVUFCF-9QJP",
-      title: "Question 2: Reverse a String",
-      problemHtml: "<h2>Problem Statement</h2><p>Write a program in C, C++, or Python that reads a string from standard input and prints the string reversed.</p><p><b>Input Specification:</b><br>A single line string.</p><p><b>Output Specification:</b><br>Print the reversed string.</p>",
-      code: "# Read input and write your solution here\ns = input().strip()\nprint(s[::-1])",
-      codes: {
-        python: "# Read input and write your solution here\ns = input().strip()\nprint(s[::-1])",
-        c: "#include <stdio.h>\n#include <string.h>\n\nint main(void) {\n    char s[1024];\n    if (fgets(s, sizeof(s), stdin)) {\n        s[strcspn(s, \"\\r\\n\")] = '\\0';\n        int len = strlen(s);\n        for (int i = 0; i < len / 2; i++) {\n            char temp = s[i];\n            s[i] = s[len - 1 - i];\n            s[len - 1 - i] = temp;\n        }\n        printf(\"%s\\n\", s);\n    }\n    return 0;\n}",
-        cpp: "#include <iostream>\n#include <string>\n#include <algorithm>\n\nusing namespace std;\n\nint main() {\n    string s;\n    if (getline(cin, s)) {\n        if (!s.empty() && s.back() == '\\r') s.pop_back();\n        reverse(s.begin(), s.end());\n        cout << s << endl;\n    }\n    return 0;\n}"
+      "id": "Q-MUJVUFCF-9QJP",
+      "title": "Question 2: Reverse a String",
+      "problemHtml": "<h2>Problem Statement</h2><p>Write a program in C, C++, or Python that reads a string from standard input and prints the string reversed.</p><p><b>Input Specification:</b><br>A single line string.</p><p><b>Output Specification:</b><br>Print the reversed string.</p>",
+      "code": "# Read input and write your solution here\ns = input().strip()\nprint(s[::-1])",
+      "codes": {
+        "python": "# Read input and write your solution here\ns = input().strip()\nprint(s[::-1])",
+        "c": "#include <stdio.h>\n#include <string.h>\n\nint main(void) {\n    char s[1024];\n    if (fgets(s, sizeof(s), stdin)) {\n        s[strcspn(s, \"\\r\\n\")] = '\\0';\n        int len = strlen(s);\n        for (int i = 0; i < len / 2; i++) {\n            char temp = s[i];\n            s[i] = s[len - 1 - i];\n            s[len - 1 - i] = temp;\n        }\n        printf(\"%s\\n\", s);\n    }\n    return 0;\n}",
+        "cpp": "#include <iostream>\n#include <string>\n#include <algorithm>\n\nusing namespace std;\n\nint main() {\n    string s;\n    if (getline(cin, s)) {\n        if (!s.empty() && s.back() == '\\r') s.pop_back();\n        reverse(s.begin(), s.end());\n        cout << s << endl;\n    }\n    return 0;\n}"
       },
-      language: "python",
-      problemLocked: false,
-      problemLockHash: "",
-      testsLocked: false,
-      testLockHash: "",
-      tests: [
-        { input: "hello", expected: "olleh", studentDefined: false },
-        { input: "Python", expected: "nohtyP", studentDefined: false },
-        { input: "12345", expected: "54321", studentDefined: false }
+      "language": "python",
+      "problemLocked": false,
+      "problemLockHash": "",
+      "testsLocked": false,
+      "testLockHash": "",
+      "tests": [
+        { "input": "hello", "expected": "olleh", "studentDefined": false },
+        { "input": "Python", "expected": "nohtyP", "studentDefined": false },
+        { "input": "12345", "expected": "54321", "studentDefined": false }
       ],
-      customFonts: []
+      "customFonts": []
     },
     {
-      id: "Q-MUK4OG7D-X5II",
-      title: "Question 3: Palindrome Check",
-      problemHtml: "<h2>Problem Statement</h2><p>Write a program in C, C++, or Python that checks whether a given string is a palindrome. A palindrome is a word or sequence that reads the same forwards and backwards.</p><p><b>Input Specification:</b><br>A single line containing a string.</p><p><b>Output Specification:</b><br>Print <code>True</code> if the string is a palindrome, otherwise print <code>False</code>.</p>",
-      code: "# Read input and write your solution here\ns = input().strip()\nprint(\"True\" if s == s[::-1] else \"False\")",
-      codes: {
-        python: "# Read input and write your solution here\ns = input().strip()\nprint(\"True\" if s == s[::-1] else \"False\")",
-        c: "#include <stdio.h>\n#include <string.h>\n\nint main(void) {\n    char s[1024];\n    if (fgets(s, sizeof(s), stdin)) {\n        s[strcspn(s, \"\\r\\n\")] = '\\0';\n        int len = strlen(s);\n        int isPal = 1;\n        for (int i = 0; i < len / 2; i++) {\n            if (s[i] != s[len - 1 - i]) {\n                isPal = 0;\n                break;\n            }\n        }\n        if (isPal) {\n            printf(\"True\\n\");\n        } else {\n            printf(\"False\\n\");\n        }\n    }\n    return 0;\n}",
-        cpp: "#include <iostream>\n#include <string>\n#include <algorithm>\n\nusing namespace std;\n\nint main() {\n    string s;\n    if (getline(cin, s)) {\n        if (!s.empty() && s.back() == '\\r') s.pop_back();\n        string rev = s;\n        reverse(rev.begin(), rev.end());\n        if (s == rev) {\n            cout << \"True\" << endl;\n        } else {\n            cout << \"False\" << endl;\n        }\n    }\n    return 0;\n}"
+      "id": "Q-MUK4OG7D-X5II",
+      "title": "Question 3: Palindrome Check",
+      "problemHtml": "<h2>Problem Statement</h2><p>Write a program in C, C++, or Python that checks whether a given string is a palindrome. A palindrome is a word or sequence that reads the same forwards and backwards.</p><p><b>Input Specification:</b><br>A single line containing a string.</p><p><b>Output Specification:</b><br>Print <code>True</code> if the string is a palindrome, otherwise print <code>False</code>.</p>",
+      "code": "# Read input and write your solution here\ns = input().strip()\nprint(\"True\" if s == s[::-1] else \"False\")",
+      "codes": {
+        "python": "# Read input and write your solution here\ns = input().strip()\nprint(\"True\" if s == s[::-1] else \"False\")",
+        "c": "#include <stdio.h>\n#include <string.h>\n\nint main(void) {\n    char s[1024];\n    if (fgets(s, sizeof(s), stdin)) {\n        s[strcspn(s, \"\\r\\n\")] = '\\0';\n        int len = strlen(s);\n        int isPal = 1;\n        for (int i = 0; i < len / 2; i++) {\n            if (s[i] != s[len - 1 - i]) {\n                isPal = 0;\n                break;\n            }\n        }\n        if (isPal) {\n            printf(\"True\\n\");\n        } else {\n            printf(\"False\\n\");\n        }\n    }\n    return 0;\n}",
+        "cpp": "#include <iostream>\n#include <string>\n#include <algorithm>\n\nusing namespace std;\n\nint main() {\n    string s;\n    if (getline(cin, s)) {\n        if (!s.empty() && s.back() == '\\r') s.pop_back();\n        string rev = s;\n        reverse(rev.begin(), rev.end());\n        if (s == rev) {\n            cout << \"True\" << endl;\n        } else {\n            cout << \"False\" << endl;\n        }\n    }\n    return 0;\n}"
       },
-      language: "python",
-      problemLocked: false,
-      problemLockHash: "",
-      testsLocked: false,
-      testLockHash: "",
-      tests: [
-        { input: "radar", expected: "True", studentDefined: false },
-        { input: "python", expected: "False", studentDefined: false },
-        { input: "level", expected: "True", studentDefined: false },
-        { input: "12321", expected: "True", studentDefined: false }
+      "language": "python",
+      "problemLocked": false,
+      "problemLockHash": "",
+      "testsLocked": false,
+      "testLockHash": "",
+      "tests": [
+        { "input": "radar", "expected": "True", "studentDefined": false },
+        { "input": "python", "expected": "False", "studentDefined": false },
+        { "input": "level", "expected": "True", "studentDefined": false },
+        { "input": "12321", "expected": "True", "studentDefined": false }
       ],
-      customFonts: []
+      "customFonts": []
     },
     {
-      id: "Q-MUK4OGM9-OU5Z",
-      title: "Question 4: Factorial of a Number",
-      problemHtml: "<h2>Problem Statement</h2><p>Write a program in C, C++, or Python that reads a non-negative integer <code>n</code> and computes its factorial (<code>n!</code>).</p><p><b>Input Specification:</b><br>A non-negative integer <code>n</code>.</p><p><b>Output Specification:</b><br>Print the factorial value of <code>n</code>.</p>",
-      code: "# Read input and write your solution here\nimport math\nn = int(input().strip())\nprint(math.factorial(n))",
-      codes: {
-        python: "# Read input and write your solution here\nimport math\nn = int(input().strip())\nprint(math.factorial(n))",
-        c: "#include <stdio.h>\n\nint main(void) {\n    int n;\n    if (scanf(\"%d\", &n) == 1) {\n        long long fact = 1;\n        for (int i = 1; i <= n; i++) {\n            fact *= i;\n        }\n        printf(\"%lld\\n\", fact);\n    }\n    return 0;\n}",
-        cpp: "#include <iostream>\n\nusing namespace std;\n\nint main() {\n    int n;\n    if (cin >> n) {\n        long long fact = 1;\n        for (int i = 1; i <= n; i++) {\n            fact *= i;\n        }\n        cout << fact << endl;\n    }\n    return 0;\n}"
+      "id": "Q-MUK4OGM9-OU5Z",
+      "title": "Question 4: Factorial of a Number",
+      "problemHtml": "<h2>Problem Statement</h2><p>Write a program in C, C++, or Python that reads a non-negative integer <code>n</code> and computes its factorial (<code>n!</code>).</p><p><b>Input Specification:</b><br>A non-negative integer <code>n</code>.</p><p><b>Output Specification:</b><br>Print the factorial value of <code>n</code>.</p>",
+      "code": "# Read input and write your solution here\nimport math\nn = int(input().strip())\nprint(math.factorial(n))",
+      "codes": {
+        "python": "# Read input and write your solution here\nimport math\nn = int(input().strip())\nprint(math.factorial(n))",
+        "c": "#include <stdio.h>\n\nint main(void) {\n    int n;\n    if (scanf(\"%d\", &n) == 1) {\n        long long fact = 1;\n        for (int i = 1; i <= n; i++) {\n            fact *= i;\n        }\n        printf(\"%lld\\n\", fact);\n    }\n    return 0;\n}",
+        "cpp": "#include <iostream>\n\nusing namespace std;\n\nint main() {\n    int n;\n    if (cin >> n) {\n        long long fact = 1;\n        for (int i = 1; i <= n; i++) {\n            fact *= i;\n        }\n        cout << fact << endl;\n    }\n    return 0;\n}"
       },
-      language: "python",
-      problemLocked: false,
-      problemLockHash: "",
-      testsLocked: false,
-      testLockHash: "",
-      tests: [
-        { input: "5", expected: "120", studentDefined: false },
-        { input: "0", expected: "1", studentDefined: false },
-        { input: "3", expected: "6", studentDefined: false },
-        { input: "7", expected: "5040", studentDefined: false }
+      "language": "python",
+      "problemLocked": false,
+      "problemLockHash": "",
+      "testsLocked": false,
+      "testLockHash": "",
+      "tests": [
+        { "input": "5", "expected": "120", "studentDefined": false },
+        { "input": "0", "expected": "1", "studentDefined": false },
+        { "input": "3", "expected": "6", "studentDefined": false },
+        { "input": "7", "expected": "5040", "studentDefined": false }
       ],
-      customFonts: []
+      "customFonts": []
     },
     {
-      id: "Q-MUK4OHA9-QW4L",
-      title: "Question 5: Sum of Array Elements",
-      problemHtml: "<h2>Problem Statement</h2><p>Write a program in C, C++, or Python that reads a space-separated sequence of integers on a single line and calculates the total sum of all elements.</p><p><b>Input Specification:</b><br>Space-separated integers.</p><p><b>Output Specification:</b><br>Print the integer sum of the elements.</p>",
-      code: "# Read input and write your solution here\nnums = list(map(int, input().strip().split()))\nprint(sum(nums))",
-      codes: {
-        python: "# Read input and write your solution here\nnums = list(map(int, input().strip().split()))\nprint(sum(nums))",
-        c: "#include <stdio.h>\n\nint main(void) {\n    int val, sum = 0;\n    while (scanf(\"%d\", &val) == 1) {\n        sum += val;\n    }\n    printf(\"%d\\n\", sum);\n    return 0;\n}",
-        cpp: "#include <iostream>\n\nusing namespace std;\n\nint main() {\n    int val, sum = 0;\n    while (cin >> val) {\n        sum += val;\n    }\n    cout << sum << endl;\n    return 0;\n}"
+      "id": "Q-MUK4OHA9-QW4L",
+      "title": "Question 5: Sum of Array Elements",
+      "problemHtml": "<h2>Problem Statement</h2><p>Write a program in C, C++, or Python that reads a space-separated sequence of integers on a single line and calculates the total sum of all elements.</p><p><b>Input Specification:</b><br>Space-separated integers.</p><p><b>Output Specification:</b><br>Print the integer sum of the elements.</p>",
+      "code": "# Read input and write your solution here\nnums = list(map(int, input().strip().split()))\nprint(sum(nums))",
+      "codes": {
+        "python": "# Read input and write your solution here\nnums = list(map(int, input().strip().split()))\nprint(sum(nums))",
+        "c": "#include <stdio.h>\n\nint main(void) {\n    int val, sum = 0;\n    while (scanf(\"%d\", &val) == 1) {\n        sum += val;\n    }\n    printf(\"%d\\n\", sum);\n    return 0;\n}",
+        "cpp": "#include <iostream>\n\nusing namespace std;\n\nint main() {\n    int val, sum = 0;\n    while (cin >> val) {\n        sum += val;\n    }\n    cout << sum << endl;\n    return 0;\n}"
       },
-      language: "python",
-      problemLocked: false,
-      problemLockHash: "",
-      testsLocked: false,
-      testLockHash: "",
-      tests: [
-        { input: "1 2 3 4 5", expected: "15", studentDefined: false },
-        { input: "10 -2 5", expected: "13", studentDefined: false },
-        { input: "100", expected: "100", studentDefined: false },
-        { input: "0 0 0", expected: "0", studentDefined: false }
+      "language": "python",
+      "problemLocked": false,
+      "problemLockHash": "",
+      "testsLocked": false,
+      "testLockHash": "",
+      "tests": [
+        { "input": "1 2 3 4 5", "expected": "15", "studentDefined": false },
+        { "input": "10 -2 5", "expected": "13", "studentDefined": false },
+        { "input": "100", "expected": "100", "studentDefined": false },
+        { "input": "0 0 0", "expected": "0", "studentDefined": false }
       ],
-      customFonts: []
+      "customFonts": []
     },
     {
-      id: "Q-MUK4OHPL-8KOA",
-      title: "Question 6: Find Maximum in List",
-      problemHtml: "<h2>Problem Statement</h2><p>Write a program in C, C++, or Python that reads a space-separated sequence of integers on a single line and finds the maximum value.</p><p><b>Input Specification:</b><br>Space-separated integers.</p><p><b>Output Specification:</b><br>Print the maximum integer value.</p>",
-      code: "# Read input and write your solution here\nnums = list(map(int, input().strip().split()))\nprint(max(nums))",
-      codes: {
-        python: "# Read input and write your solution here\nnums = list(map(int, input().strip().split()))\nprint(max(nums))",
-        c: "#include <stdio.h>\n\nint main(void) {\n    int val, max_val;\n    if (scanf(\"%d\", &max_val) == 1) {\n        while (scanf(\"%d\", &val) == 1) {\n            if (val > max_val) {\n                max_val = val;\n            }\n        }\n        printf(\"%d\\n\", max_val);\n    }\n    return 0;\n}",
-        cpp: "#include <iostream>\n\nusing namespace std;\n\nint main() {\n    int val, max_val;\n    if (cin >> max_val) {\n        while (cin >> val) {\n            if (val > max_val) {\n                max_val = val;\n            }\n        }\n        cout << max_val << endl;\n    }\n    return 0;\n}"
+      "id": "Q-MUK4OHPL-8KOA",
+      "title": "Question 6: Find Maximum in List",
+      "problemHtml": "<h2>Problem Statement</h2><p>Write a program in C, C++, or Python that reads a space-separated sequence of integers on a single line and finds the maximum value.</p><p><b>Input Specification:</b><br>Space-separated integers.</p><p><b>Output Specification:</b><br>Print the maximum integer value.</p>",
+      "code": "# Read input and write your solution here\nnums = list(map(int, input().strip().split()))\nprint(max(nums))",
+      "codes": {
+        "python": "# Read input and write your solution here\nnums = list(map(int, input().strip().split()))\nprint(max(nums))",
+        "c": "#include <stdio.h>\n\nint main(void) {\n    int val, max_val;\n    if (scanf(\"%d\", &max_val) == 1) {\n        while (scanf(\"%d\", &val) == 1) {\n            if (val > max_val) {\n                max_val = val;\n            }\n        }\n        printf(\"%d\\n\", max_val);\n    }\n    return 0;\n}",
+        "cpp": "#include <iostream>\n\nusing namespace std;\n\nint main() {\n    int val, max_val;\n    if (cin >> max_val) {\n        while (cin >> val) {\n            if (val > max_val) {\n                max_val = val;\n            }\n        }\n        cout << max_val << endl;\n    }\n    return 0;\n}"
       },
-      language: "python",
-      problemLocked: false,
-      problemLockHash: "",
-      testsLocked: false,
-      testLockHash: "",
-      tests: [
-        { input: "3 7 2 9 5", expected: "9", studentDefined: false },
-        { input: "-10 -5 -20 -1", expected: "-1", studentDefined: false },
-        { input: "42", expected: "42", studentDefined: false },
-        { input: "8 8 8 8", expected: "8", studentDefined: false }
+      "language": "python",
+      "problemLocked": false,
+      "problemLockHash": "",
+      "testsLocked": false,
+      "testLockHash": "",
+      "tests": [
+        { "input": "3 7 2 9 5", "expected": "9", "studentDefined": false },
+        { "input": "-10 -5 -20 -1", "expected": "-1", "studentDefined": false },
+        { "input": "42", "expected": "42", "studentDefined": false },
+        { "input": "8 8 8 8", "expected": "8", "studentDefined": false }
       ],
-      customFonts: []
+      "customFonts": []
     }
   ]
 };
 
-async function importMockTestData(){
-  closeWelcomeModal();
-  try{
-    const res=await fetch('SET-MUJDFHP0-all-questions.json');
-    if(res.ok){
-      const data=await res.json();
-      await handleJsonImport(data);
-      return;
-    }
-  }catch(e){
-    console.warn('Direct fetch failed, falling back to embedded sample data:',e);
-  }
-  if(typeof MOCK_SAMPLE_QUESTIONS!=='undefined'){
-    await handleJsonImport(MOCK_SAMPLE_QUESTIONS);
+const welcomeModal = $('welcomeModal');
+
+function closeWelcomeDialog() {
+  if (welcomeModal) {
+    welcomeModal.classList.remove('show');
+    welcomeModal.style.display = 'none';
   }
 }
-if($('tryMockData'))$('tryMockData').onclick=importMockTestData;
+window.closeWelcomeDialog = closeWelcomeDialog;
+window.closeWelcomeModal = closeWelcomeDialog;
+
+if ($('closeWelcomeModal')) $('closeWelcomeModal').onclick = closeWelcomeDialog;
+if ($('dismissWelcomeModal')) $('dismissWelcomeModal').onclick = closeWelcomeDialog;
+
+async function loadSampleMockData() {
+  try {
+    const res = await fetch('SET-MUJDFHP0-all-questions.json');
+    if (res.ok) {
+      return await res.json();
+    }
+  } catch (e) {}
+  return SAMPLE_MOCK_DATA;
+}
+
+async function loadMockTestData() {
+  const m = $('welcomeModal');
+  if (m) {
+    m.classList.remove('show');
+    m.style.display = 'none';
+  }
+  if (typeof window.closeWelcomeDialog === 'function') window.closeWelcomeDialog();
+  if (typeof candidateRunning !== 'undefined' && candidateRunning) return;
+
+  try {
+    let packet = null;
+    try {
+      packet = await loadSampleMockData();
+    } catch (e) {}
+    if (!packet && typeof SAMPLE_MOCK_DATA !== 'undefined') {
+      packet = SAMPLE_MOCK_DATA;
+    }
+    if (packet) {
+      await handleJsonImport(packet);
+      toast('Mock test data loaded successfully!');
+    }
+  } catch (err) {
+    console.error('Mock data error:', err);
+    try {
+      await handleJsonImport(SAMPLE_MOCK_DATA);
+      toast('Mock test data loaded successfully!');
+    } catch (e2) {
+      toast('Failed to load mock data');
+    }
+  }
+}
+window.loadMockTestData = loadMockTestData;
+
+if ($('tryMockData')) {
+  $('tryMockData').onclick = async (e) => {
+    if (e) e.preventDefault();
+    await loadMockTestData();
+  };
+}
+
+if (welcomeModal) {
+  welcomeModal.addEventListener('click', (e) => {
+    if (e.target === welcomeModal) closeWelcomeDialog();
+  });
+}
+
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape' && welcomeModal && (welcomeModal.classList.contains('show') || welcomeModal.style.display === 'grid' || welcomeModal.style.display === 'flex')) {
+    closeWelcomeDialog();
+  }
+});
+
+// Ensure all button aliases and actions are wired up and responsive
+function initAllIDEButtonListeners() {
+  if (typeof initHeaderNavLockListeners === 'function') initHeaderNavLockListeners();
+  if (localStorage.getItem('ide_header_nav_locked') === 'true' || state?.headerNavLocked) {
+    if (typeof setHeaderNavLocked === 'function') setHeaderNavLocked(true);
+  }
+  if ($('mainFullscreen')) $('mainFullscreen').onclick = toggleMainFullscreen;
+  if ($('workspaceFullscreen')) $('workspaceFullscreen').onclick = toggleMainFullscreen;
+  if ($('addQuestion')) $('addQuestion').onclick = () => { saveCurrent(); state.questions.push(starter()); openQuestion(state.questions.length - 1); save(); };
+  if ($('importJson')) $('importJson').onclick = () => $('questionFile').click();
+  if ($('importAllJson')) $('importAllJson').onclick = () => $('questionFile').click();
+  if ($('exportJson')) $('exportJson').onclick = exportAllQuestionsJson;
+  if ($('exportAllJson')) $('exportAllJson').onclick = exportAllQuestionsJson;
+  if ($('exportQuestion')) $('exportQuestion').onclick = exportSingleQuestionJson;
+  if ($('importQuestion')) $('importQuestion').onclick = () => $('questionFile').click();
+  if ($('importSet')) $('importSet').onclick = () => $('setFile').click();
+  if ($('prev')) $('prev').onclick = () => current && go(current - 1);
+  if ($('next')) $('next').onclick = () => current < state.questions.length - 1 && go(current + 1);
+  if ($('deleteQuestion')) $('deleteQuestion').onclick = () => { if (state.questions.length < 2) return toast('At least one question is required'); if (confirm('Delete this question?')) { state.questions.splice(current, 1); openQuestion(Math.min(current, state.questions.length - 1)); save(); } };
+  if ($('runTests')) $('runTests').onclick = runAll;
+  if ($('runCustom')) $('runCustom').onclick = (typeof runCurrentMode === 'function') ? runCurrentMode : runCustom;
+  if ($('fontUp')) $('fontUp').onclick = () => font(1);
+  if ($('fontDown')) $('fontDown').onclick = () => font(-1);
+  if ($('setTimer')) $('setTimer').onclick = () => setTimer();
+  if ($('timerLock')) $('timerLock').onclick = lockTimer;
+  if ($('proctorSettings')) $('proctorSettings').onclick = () => { applyOwnerConfig(); $('ownerModal').classList.add('show'); };
+  if ($('ownerCancel')) $('ownerCancel').onclick = () => $('ownerModal').classList.remove('show');
+  if ($('clearExamData')) $('clearExamData').onclick = clearAllAssessmentDataV20;
+  if ($('mobileNextBtn')) $('mobileNextBtn').onclick = () => { if ($('next')) $('next').click(); };
+  syncMobileTimerPlacement();
+}
+
+function syncMobileTimerPlacement() {
+  const hud = $('examTimerFinishHud');
+  const addBtn = $('addQuestion');
+  const headActions = document.querySelector('.head-actions');
+  const mainFullscreen = $('mainFullscreen');
+  if (!hud || !addBtn) return;
+
+  const isMobile = window.innerWidth <= 768;
+  if (isMobile) {
+    if (addBtn.previousElementSibling !== hud && addBtn.parentNode) {
+      addBtn.parentNode.insertBefore(hud, addBtn);
+    }
+  } else {
+    if (headActions && !headActions.contains(hud)) {
+      if (mainFullscreen && mainFullscreen.parentNode === headActions) {
+        headActions.insertBefore(hud, mainFullscreen);
+      } else {
+        headActions.appendChild(hud);
+      }
+    }
+  }
+}
+
+window.addEventListener('resize', syncMobileTimerPlacement);
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', () => {
+    initAllIDEButtonListeners();
+    syncMobileTimerPlacement();
+  });
+} else {
+  initAllIDEButtonListeners();
+  syncMobileTimerPlacement();
+}
+
+
+
+
+
+
 
 

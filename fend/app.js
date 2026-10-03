@@ -813,7 +813,26 @@ const openQuestionBeforeFront=openQuestion;
 openQuestion=function(i){openQuestionBeforeFront(i);const x=q();ensureFrontFields(x);code.value=x.frontEndHtml;cssEditor.value=x.frontEndCss;jsEditor.value=x.frontEndJs;activateFrontEditor(activeFrontEditor,false);scheduleFrontPreview(true);updateMobileFloatingNextUI()};
 function frontEditor(kind){return kind==='css'?cssEditor:kind==='javascript'?jsEditor:code}
 function updateFrontLines(){const editor=frontEditor(activeFrontEditor);lines.textContent=Array.from({length:editor.value.split('\n').length},(_,i)=>i+1).join('\n');lines.scrollTop=editor.scrollTop}
-function activateFrontEditor(kind,focus=true){activeFrontEditor=kind;document.querySelectorAll('.editor-tab').forEach(b=>{const on=b.dataset.editor===kind;b.classList.toggle('active',on);b.setAttribute('aria-selected',String(on))});document.querySelectorAll('.frontend-code').forEach(e=>e.classList.toggle('active',e.dataset.kind===kind));updateFrontLines();if(focus)frontEditor(kind).focus()}
+function activateFrontEditor(kind,focus=true){
+  activeFrontEditor=kind;
+  document.querySelectorAll('.editor-tab').forEach(b=>{
+    const on=b.dataset.editor===kind;
+    b.classList.toggle('active',on);
+    b.setAttribute('aria-selected',String(on));
+  });
+  document.querySelectorAll('.frontend-code').forEach(e=>e.classList.toggle('active',e.dataset.kind===kind));
+  updateFrontLines();
+  if(focus){
+    const el=frontEditor(kind);
+    el.focus();
+    try {
+      el.setSelectionRange(0, 0);
+    } catch(err) {}
+    el.scrollTop = 0;
+    el.scrollLeft = 0;
+    lines.scrollTop = 0;
+  }
+}
 document.querySelectorAll('.editor-tab').forEach(b=>b.onclick=()=>activateFrontEditor(b.dataset.editor));
 for(const editor of [code,cssEditor,jsEditor]){
   editor.oninput=()=>{
