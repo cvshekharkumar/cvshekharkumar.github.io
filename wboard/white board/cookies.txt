@@ -1,0 +1,12 @@
+# HTTrack Website Copier Cookie File
+# This file format is compatible with Netscape cookies
+.shekharpoint.com	TRUE	/	FALSE	1999999999	PHPSESSID	ohor6dfkfiqdu3ct7242ghqrr4
+.shekharpoint.com	TRUE	/	FALSE	1999999999	QASESSIONID	qtthlqkcl4nao89ovavqslv5t2
+w.shekharpoint.com	TRUE	/	FALSE	1999999999	user_mode	S
+.google.com	TRUE	/	FALSE	1999999999	1P_JAR	2020-10-07-04
+.google.com	TRUE	/	FALSE	1999999999	NID	204=Po8JXKXOP6Qu0x7WWKOOwx13r6oSRPEsa4O7jaSdwQQKZ_3cUugl9yKlpBMdEIBZ2bZMNFX8_4AUSGL1awKp8eW8cpNoDVyv4uSwrZtVZUncr7OBs-cl62oY_ybX1lrrbrfBvz43hMjMs4aYJsjFdC6_ufd9OgfAW4sPrfNgI6k
+w.shekharpoint.com	TRUE	/	FALSE	1999999999	cart_item	589
+w.shekharpoint.com	TRUE	/	FALSE	1999999999	subscription_purchased	0
+.mathjax.org	TRUE	/	FALSE	1999999999	__cfduid	defc36eccb8990bdc95d2815828bb46f51602053443
+cdn.mathjax.org	TRUE	/	FALSE	1999999999	SameSite	Lax
+
