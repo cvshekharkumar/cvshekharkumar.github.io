@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Browser Assessment IDE — Ultimate End-to-End User Guide</title>
+  <title>Browser Assessment IDE — Complete Platform & Technical User Guide</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -65,7 +65,7 @@
       transition: background 0.3s ease, color 0.3s ease;
     }
 
-    /* Background futuristic glow blobs */
+    /* Futuristic glow blobs */
     .bg-blob-1, .bg-blob-2, .bg-blob-3 {
       position: fixed;
       border-radius: 50%;
@@ -85,12 +85,12 @@
       z-index: 1000;
       backdrop-filter: blur(16px);
       -webkit-backdrop-filter: blur(16px);
-      background: rgba(11, 19, 41, 0.82);
+      background: rgba(11, 19, 41, 0.85);
       border-bottom: 1px solid var(--card-border);
       transition: all 0.3s ease;
     }
     body.light-theme header.guide-header {
-      background: rgba(255, 255, 255, 0.85);
+      background: rgba(255, 255, 255, 0.88);
     }
     .header-inner {
       max-width: 1360px;
@@ -307,9 +307,9 @@
       -webkit-text-fill-color: transparent;
     }
     .hero-desc {
-      max-width: 820px;
+      max-width: 860px;
       margin: 0 auto 28px;
-      font-size: 17px;
+      font-size: 16.5px;
       color: var(--text-muted);
       font-weight: 400;
     }
@@ -364,7 +364,7 @@
       border: 1px solid var(--card-border);
     }
     .role-card h3 {
-      font-size: 20px;
+      font-size: 19px;
       font-weight: 700;
       margin-bottom: 8px;
       display: flex;
@@ -375,6 +375,7 @@
       font-size: 13.5px;
       color: var(--text-muted);
       margin-bottom: 16px;
+      line-height: 1.5;
     }
     .role-tag-list {
       display: flex;
@@ -421,18 +422,18 @@
       letter-spacing: 1px;
       font-weight: 800;
       color: var(--text-dim);
-      padding: 8px 12px;
-      margin-bottom: 4px;
+      padding: 8px 12px 4px;
+      margin-top: 6px;
     }
     .nav-link {
       display: flex;
       align-items: center;
       gap: 10px;
-      padding: 10px 12px;
+      padding: 9px 12px;
       border-radius: var(--radius-sm);
       color: var(--text-muted);
       text-decoration: none;
-      font-size: 13.5px;
+      font-size: 13px;
       font-weight: 600;
       transition: all 0.2s ease;
       margin-bottom: 3px;
@@ -486,7 +487,7 @@
       flex-shrink: 0;
     }
     .section-header h2 {
-      font-size: 24px;
+      font-size: 23px;
       font-weight: 800;
       letter-spacing: -0.5px;
       color: var(--text);
@@ -499,7 +500,7 @@
 
     /* Subheadings and feature items */
     h3.step-title {
-      font-size: 18px;
+      font-size: 17.5px;
       font-weight: 700;
       margin: 28px 0 14px;
       display: flex;
@@ -523,6 +524,7 @@
       font-size: 14.5px;
       color: var(--text-muted);
       margin-bottom: 16px;
+      line-height: 1.6;
     }
 
     /* Feature Grid */
@@ -570,12 +572,12 @@
       overflow-x: auto;
     }
     .workflow-tab-btn {
-      padding: 12px 20px;
+      padding: 12px 18px;
       background: transparent;
       border: 0;
       border-bottom: 2px solid transparent;
       color: var(--text-muted);
-      font-size: 13.5px;
+      font-size: 13px;
       font-weight: 700;
       cursor: pointer;
       display: flex;
@@ -675,6 +677,7 @@
       border-radius: var(--radius-sm);
       padding: 12px;
       font-size: 12.5px;
+      line-height: 1.45;
     }
     .anatomy-item b {
       color: var(--primary);
@@ -742,7 +745,7 @@
       justify-content: space-between;
       cursor: pointer;
       font-weight: 700;
-      font-size: 15px;
+      font-size: 14.5px;
       color: var(--text);
       user-select: none;
     }
@@ -766,7 +769,7 @@
     }
     .faq-item.open .faq-body {
       padding: 0 20px 18px;
-      max-height: 500px;
+      max-height: 600px;
     }
 
     /* Floating Action Quick Navigation */
@@ -831,20 +834,11 @@
       scrollbar-width: thin;
       scrollbar-color: var(--primary) var(--code-bg);
     }
-    .table-responsive::-webkit-scrollbar {
-      height: 6px;
-    }
-    .table-responsive::-webkit-scrollbar-thumb {
-      background: var(--primary);
-      border-radius: 4px;
-    }
-    .table-responsive .cheatsheet-table {
-      min-width: 520px;
-      width: 100%;
-      margin: 0;
-    }
+    .table-responsive::-webkit-scrollbar { height: 6px; }
+    .table-responsive::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 4px; }
+    .table-responsive .cheatsheet-table { min-width: 540px; width: 100%; margin: 0; }
 
-    /* Mobile Hamburger / Navigation Toggle Button */
+    /* Mobile Navigation Drawer & Bottom Dock */
     .mobile-nav-toggle {
       display: none;
       width: 40px;
@@ -864,10 +858,7 @@
       flex-shrink: 0;
       z-index: 1001;
     }
-    .mobile-nav-toggle:hover {
-      border-color: var(--primary);
-      background: var(--tag-bg);
-    }
+    .mobile-nav-toggle:hover { border-color: var(--primary); background: var(--tag-bg); }
     .mobile-nav-toggle span {
       display: block;
       width: 20px;
@@ -876,18 +867,10 @@
       border-radius: 2px;
       transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
     }
-    .mobile-nav-toggle.open span:nth-child(1) {
-      transform: translateY(7px) rotate(45deg);
-    }
-    .mobile-nav-toggle.open span:nth-child(2) {
-      opacity: 0;
-      transform: scaleX(0);
-    }
-    .mobile-nav-toggle.open span:nth-child(3) {
-      transform: translateY(-7px) rotate(-45deg);
-    }
+    .mobile-nav-toggle.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .mobile-nav-toggle.open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+    .mobile-nav-toggle.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
 
-    /* Mobile Navigation Drawer & Backdrop Overlay */
     .mobile-nav-overlay {
       position: fixed;
       inset: 0;
@@ -899,10 +882,7 @@
       visibility: hidden;
       transition: opacity 0.3s ease, visibility 0.3s ease;
     }
-    .mobile-nav-overlay.active {
-      opacity: 1;
-      visibility: visible;
-    }
+    .mobile-nav-overlay.active { opacity: 1; visibility: visible; }
     .mobile-nav-drawer {
       position: fixed;
       top: 0;
@@ -918,13 +898,8 @@
       transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
       box-shadow: 0 0 50px rgba(0, 0, 0, 0.6);
     }
-    body.light-theme .mobile-nav-drawer {
-      background: var(--bg);
-      box-shadow: 0 0 50px rgba(0, 0, 0, 0.15);
-    }
-    .mobile-nav-drawer.open {
-      transform: translateX(0);
-    }
+    body.light-theme .mobile-nav-drawer { background: var(--bg); box-shadow: 0 0 50px rgba(0, 0, 0, 0.15); }
+    .mobile-nav-drawer.open { transform: translateX(0); }
     .mobile-drawer-header {
       display: flex;
       align-items: center;
@@ -947,35 +922,21 @@
       cursor: pointer;
       transition: all 0.2s ease;
     }
-    .mobile-drawer-close:hover {
-      background: var(--danger);
-      color: #fff;
-      border-color: var(--danger);
-    }
+    .mobile-drawer-close:hover { background: var(--danger); color: #fff; border-color: var(--danger); }
     .mobile-search-wrap {
       padding: 14px 16px;
       border-bottom: 1px solid var(--card-border);
       background: rgba(255, 255, 255, 0.015);
     }
-    .mobile-search-wrap .search-bar {
-      width: 100%;
-    }
-    .mobile-search-wrap .search-bar input {
-      width: 100% !important;
-      font-size: 13.5px;
-      height: 40px;
-    }
+    .mobile-search-wrap .search-bar { width: 100%; }
+    .mobile-search-wrap .search-bar input { width: 100% !important; font-size: 13.5px; height: 40px; }
     .mobile-drawer-content {
       flex: 1;
       overflow-y: auto;
       padding: 14px 12px 24px;
       -webkit-overflow-scrolling: touch;
     }
-    .mobile-drawer-content .nav-link {
-      padding: 12px 14px;
-      font-size: 14px;
-      border-radius: var(--radius-sm);
-    }
+    .mobile-drawer-content .nav-link { padding: 11px 14px; font-size: 13.5px; border-radius: var(--radius-sm); }
     .mobile-drawer-footer {
       padding: 14px 16px;
       border-top: 1px solid var(--card-border);
@@ -985,7 +946,6 @@
       gap: 10px;
     }
 
-    /* Mobile Bottom Navigation Dock */
     .mobile-bottom-nav {
       display: none;
       position: fixed;
@@ -1008,14 +968,8 @@
       background: rgba(255, 255, 255, 0.95);
       box-shadow: 0 -6px 20px rgba(0, 0, 0, 0.08);
     }
-    body.keyboard-open .mobile-bottom-nav {
-      transform: translateY(110%);
-      opacity: 0;
-      pointer-events: none;
-    }
-    body.keyboard-open #waFloatingWidget {
-      display: none !important;
-    }
+    body.keyboard-open .mobile-bottom-nav,
+    body.keyboard-open #waFloatingWidget,
     body.keyboard-open .floating-back-btn {
       display: none !important;
     }
@@ -1038,24 +992,10 @@
       max-width: 68px;
       height: 52px;
     }
-    .mobile-bottom-btn:hover, .mobile-bottom-btn:active {
-      color: var(--primary);
-      background: var(--tag-bg);
-    }
-    .bottom-nav-icon {
-      font-size: 19px;
-      line-height: 1;
-      display: grid;
-      place-items: center;
-    }
-    .bottom-nav-label {
-      font-size: 10.5px;
-      font-weight: 700;
-      letter-spacing: 0.2px;
-    }
-    .mobile-bottom-btn.primary-action {
-      color: #fff;
-    }
+    .mobile-bottom-btn:hover, .mobile-bottom-btn:active { color: var(--primary); background: var(--tag-bg); }
+    .bottom-nav-icon { font-size: 19px; line-height: 1; display: grid; place-items: center; }
+    .bottom-nav-label { font-size: 10.5px; font-weight: 700; letter-spacing: 0.2px; }
+    .mobile-bottom-btn.primary-action { color: #fff; }
     .mobile-bottom-btn.primary-action .bottom-nav-icon {
       width: 32px;
       height: 32px;
@@ -1064,11 +1004,9 @@
       font-size: 15px;
       box-shadow: 0 2px 10px var(--primary-glow);
     }
-    .mobile-bottom-btn.primary-action .bottom-nav-label {
-      color: var(--primary);
-    }
+    .mobile-bottom-btn.primary-action .bottom-nav-label { color: var(--primary); }
 
-    /* Responsive */
+    /* Responsive Breakpoints */
     @media (max-width: 960px) {
       .guide-container { grid-template-columns: 1fr; padding: 0 16px; }
       .guide-sidebar { display: none; }
@@ -1083,108 +1021,23 @@
       .mobile-bottom-nav { display: flex; }
       .floating-back-btn { display: none; }
       
-      /* Mobile 2-Row Top Navigation Header - Clean containment within mobile area */
-      header.guide-header {
-        position: sticky;
-        top: 0;
-        z-index: 1000;
-        width: 100%;
-        overflow: hidden;
-      }
-      header.guide-header .header-inner {
-        padding: 8px 12px 10px;
-        flex-direction: column;
-        gap: 8px;
-        width: 100%;
-        box-sizing: border-box;
-      }
-      /* Upper Top Row (Row 1): Logo/Title on Left, Controls on Right */
-      .header-top-row {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        width: 100%;
-        box-sizing: border-box;
-      }
-      .brand-group {
-        gap: 10px;
-        min-width: 0;
-      }
-      .logo-badge {
-        width: 34px;
-        height: 34px;
-        font-size: 16px;
-        border-radius: 9px;
-        flex-shrink: 0;
-      }
-      .brand-meta h1 {
-        font-size: 14.5px;
-        white-space: nowrap;
-        gap: 6px;
-      }
-      .brand-meta span.version-tag {
-        font-size: 9px;
-        padding: 1px 6px;
-      }
-      .brand-meta p {
-        display: none;
-      }
-      .header-top-controls {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        flex-shrink: 0;
-      }
-      .theme-toggle-btn {
-        width: 34px;
-        height: 34px;
-        font-size: 14px;
-        border-radius: 8px;
-        flex-shrink: 0;
-      }
-      .mobile-nav-toggle {
-        display: flex;
-        width: 34px;
-        height: 34px;
-        border-radius: 8px;
-        flex-shrink: 0;
-      }
+      header.guide-header { position: sticky; top: 0; z-index: 1000; width: 100%; overflow: hidden; }
+      header.guide-header .header-inner { padding: 8px 12px 10px; flex-direction: column; gap: 8px; width: 100%; box-sizing: border-box; }
+      .header-top-row { display: flex; align-items: center; justify-content: space-between; width: 100%; box-sizing: border-box; }
+      .brand-group { gap: 10px; min-width: 0; }
+      .logo-badge { width: 34px; height: 34px; font-size: 16px; border-radius: 9px; flex-shrink: 0; }
+      .brand-meta h1 { font-size: 14.5px; white-space: nowrap; gap: 6px; }
+      .brand-meta span.version-tag { font-size: 9px; padding: 1px 6px; }
+      .brand-meta p { display: none; }
+      .header-top-controls { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+      .theme-toggle-btn { width: 34px; height: 34px; font-size: 14px; border-radius: 8px; flex-shrink: 0; }
+      .mobile-nav-toggle { display: flex; width: 34px; height: 34px; border-radius: 8px; flex-shrink: 0; }
       
-      /* Show upper navigation buttons in 2 rows in mobile view */
-      .header-actions {
-        display: grid !important;
-        grid-template-columns: repeat(2, 1fr) !important;
-        gap: 6px !important;
-        width: 100% !important;
-        box-sizing: border-box !important;
-      }
-      .header-actions .search-bar {
-        display: none !important;
-      }
-      .header-actions .btn-nav-link {
-        width: 100% !important;
-        min-width: 0 !important;
-        height: 34px !important;
-        font-size: 12px !important;
-        padding: 0 8px !important;
-        border-radius: 8px !important;
-        justify-content: center !important;
-        text-align: center !important;
-      }
-      .header-actions .btn-primary {
-        grid-column: span 2 !important;
-        width: 100% !important;
-        min-width: 0 !important;
-        height: 34px !important;
-        font-size: 12px !important;
-        padding: 0 8px !important;
-        border-radius: 8px !important;
-        justify-content: center !important;
-        text-align: center !important;
-        white-space: nowrap !important;
-      }
+      .header-actions { display: grid !important; grid-template-columns: repeat(2, 1fr) !important; gap: 6px !important; width: 100% !important; box-sizing: border-box !important; }
+      .header-actions .search-bar { display: none !important; }
+      .header-actions .btn-nav-link { width: 100% !important; min-width: 0 !important; height: 34px !important; font-size: 12px !important; padding: 0 8px !important; border-radius: 8px !important; justify-content: center !important; text-align: center !important; }
+      .header-actions .btn-primary { grid-column: span 2 !important; width: 100% !important; min-width: 0 !important; height: 34px !important; font-size: 12px !important; padding: 0 8px !important; border-radius: 8px !important; justify-content: center !important; text-align: center !important; white-space: nowrap !important; }
 
-      /* Hero & Sections responsive typography and spacing */
       .hero-section { margin: 16px auto 12px; padding: 0 14px; }
       .hero-title { font-size: 26px; letter-spacing: -0.5px; line-height: 1.25; }
       .hero-desc { font-size: 13.5px; margin-bottom: 20px; line-height: 1.55; }
@@ -1197,28 +1050,11 @@
       .feature-grid { grid-template-columns: 1fr; gap: 12px; }
       .anatomy-grid { grid-template-columns: 1fr; }
       
-      /* Middle Content sliding & touch readability */
-      .workflow-tab-nav {
-        padding: 6px 6px;
-        gap: 6px;
-        -webkit-overflow-scrolling: touch;
-      }
-      .workflow-tab-btn {
-        padding: 8px 12px;
-        font-size: 12px;
-        border-radius: 6px;
-      }
-      .workflow-tab-content {
-        padding: 16px 12px;
-      }
-      .table-swipe-hint {
-        display: flex;
-      }
-      .callout {
-        padding: 12px 14px;
-        font-size: 13px;
-        gap: 10px;
-      }
+      .workflow-tab-nav { padding: 6px 6px; gap: 6px; -webkit-overflow-scrolling: touch; }
+      .workflow-tab-btn { padding: 8px 12px; font-size: 12px; border-radius: 6px; }
+      .workflow-tab-content { padding: 16px 12px; }
+      .table-swipe-hint { display: flex; }
+      .callout { padding: 12px 14px; font-size: 13px; gap: 10px; }
       
       #waFloatingWidget {
         bottom: 74px !important;
@@ -1240,7 +1076,7 @@
 </head>
 <body>
 
-  <!-- Futuristic Background Glows -->
+  <!-- Background Glows -->
   <div class="bg-blob-1"></div>
   <div class="bg-blob-2"></div>
   <div class="bg-blob-3"></div>
@@ -1272,22 +1108,23 @@
       <div class="sidebar-title">Getting Started</div>
       <a href="#overview" class="nav-link active"><span class="nav-icon">📌</span> Platform Overview</a>
       <a href="#ui-anatomy" class="nav-link"><span class="nav-icon">🗺️</span> Workspace Anatomy</a>
+      <a href="#split-resizers" class="nav-link"><span class="nav-icon">⬌</span> Split Resizers & View Modes</a>
 
       <div class="sidebar-title">Teacher & Examiner</div>
       <a href="#teacher-guide" class="nav-link"><span class="nav-icon">🧑‍🏫</span> Authoring Questions</a>
-      <a href="#rich-editor" class="nav-link"><span class="nav-icon">🎨</span> Rich Text & Media</a>
-      <a href="#test-cases-setup" class="nav-link"><span class="nav-icon">🧪</span> Test Cases & Freeze</a>
-      <a href="#teacher-locks" class="nav-link"><span class="nav-icon">🔒</span> Passcodes & Locks</a>
-      <a href="#reports-export" class="nav-link"><span class="nav-icon">📦</span> Packaging & Exports</a>
+      <a href="#rich-editor" class="nav-link"><span class="nav-icon">🎨</span> Rich Text, Media & Fonts</a>
+      <a href="#test-cases-setup" class="nav-link"><span class="nav-icon">🧪</span> Test Suites & Auto-Evaluation</a>
+      <a href="#teacher-locks" class="nav-link"><span class="nav-icon">🔒</span> Passcodes & Multi-Tier Locks</a>
+      <a href="#reports-export" class="nav-link"><span class="nav-icon">📦</span> Package Formats & Exports</a>
 
       <div class="sidebar-title">Candidate & Student</div>
-      <a href="#candidate-guide" class="nav-link"><span class="nav-icon">👨‍🎓</span> Taking an Exam</a>
-      <a href="#proctoring-setup" class="nav-link"><span class="nav-icon">📷</span> Cam & Screen Consent</a>
-      <a href="#coding-studio" class="nav-link"><span class="nav-icon">💻</span> Multi-Language IDE</a>
-      <a href="#submission-workflow" class="nav-link"><span class="nav-icon">📤</span> Exam Submission</a>
+      <a href="#candidate-guide" class="nav-link"><span class="nav-icon">👨‍🎓</span> Taking an Assessment</a>
+      <a href="#proctoring-setup" class="nav-link"><span class="nav-icon">📷</span> Dual Cam & Screen Consent</a>
+      <a href="#compiler-engine" class="nav-link"><span class="nav-icon">⚡</span> Multi-Language Execution Engine</a>
+      <a href="#submission-workflow" class="nav-link"><span class="nav-icon">📤</span> Exam Submission Workflow</a>
 
-      <div class="sidebar-title">Reference & Help</div>
-      <a href="#proctoring-security" class="nav-link"><span class="nav-icon">🛡️</span> Privacy & Security</a>
+      <div class="sidebar-title">Security & Reference</div>
+      <a href="#proctoring-security" class="nav-link"><span class="nav-icon">🛡️</span> Privacy & Anti-Tamper Security</a>
       <a href="#shortcuts-table" class="nav-link"><span class="nav-icon">⌨️</span> Hotkeys & Shortcuts</a>
       <a href="#troubleshooting" class="nav-link"><span class="nav-icon">❓</span> FAQs & Troubleshooting</a>
 
@@ -1327,7 +1164,7 @@
         <a href="https://supportsourcecode.lovable.app/home" target="_blank" rel="noopener noreferrer" class="btn btn-nav-link" id="headerHomeBtn" title="Home (Main Portal)">🏠 Home</a>
         <a href="https://interactive-media-display.lovable.app/" target="_blank" rel="noopener noreferrer" class="btn btn-nav-link" id="headerAppBtn" title="Interactive App Store">🛍️ App</a>
         <div class="search-bar">
-          <svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 14z"/></svg>
+          <svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
           <input type="text" id="guideSearch" placeholder="Search guide (e.g. camera, lock, compiler)..." autocomplete="off">
         </div>
         <a href="index.html" class="btn btn-primary" id="headerIdeBtn">🚀 Open IDE Workspace</a>
@@ -1337,10 +1174,10 @@
 
   <!-- Hero Section -->
   <section class="hero-section">
-    <div class="hero-badge">✨ Master the Entire Ecosystem</div>
-    <h1 class="hero-title">How to Use Browser Assessment IDE</h1>
+    <div class="hero-badge">✨ Comprehensive Technical Ecosystem</div>
+    <h1 class="hero-title">Browser Assessment IDE Guide</h1>
     <p class="hero-desc">
-      A zero-installation, portable, and secure browser-based assessment platform. Whether you are an <b>Examiner/Teacher</b> crafting rich problem sets or a <b>Candidate</b> taking a proctored coding assessment, this guide covers every detail step-by-step.
+      A zero-installation, portable, and secure browser-based assessment suite. Designed for <b>Examiners & Teachers</b> authoring rich multi-language coding questions and <b>Candidates</b> taking proctored assessments with live camera watermarking, screen recording, and automated evaluation.
     </p>
 
     <!-- Role Quick Jump Cards -->
@@ -1348,10 +1185,10 @@
       <div class="role-card" onclick="scrollToSection('teacher-guide')">
         <div class="role-icon-box">🧑‍🏫</div>
         <h3>Teacher / Examiner Guide <span>➔</span></h3>
-        <p>Create questions, embed media & fonts, set up test cases, password-lock timers & statements, and export encrypted ZIP packages.</p>
+        <p>Create rich questions, embed images/GIFs/videos/fonts, configure test suites in Python/C/C++, configure timer/statement locks, and export encrypted ZIPs.</p>
         <div class="role-tag-list">
           <span class="mini-tag">Rich Editor</span>
-          <span class="mini-tag">Lock Passcodes</span>
+          <span class="mini-tag">Multi-Lock Security</span>
           <span class="mini-tag">ZIP / PDF / DOCX</span>
         </div>
       </div>
@@ -1359,33 +1196,33 @@
       <div class="role-card" onclick="scrollToSection('candidate-guide')">
         <div class="role-icon-box">👨‍🎓</div>
         <h3>Candidate / Student Guide <span>➔</span></h3>
-        <p>Import package, complete identity verification & dual camera/screen consent, write code in Python 3/C/C++, and export submission bundles.</p>
+        <p>1-Click mock test load, identity verification, camera & screen consent, online compiler execution, auto-scoring, and one-click submission packages.</p>
         <div class="role-tag-list">
+          <span class="mini-tag">Mock Test Data</span>
           <span class="mini-tag">Proctored Session</span>
-          <span class="mini-tag">Multi-Language</span>
           <span class="mini-tag">Auto-Submit</span>
         </div>
       </div>
 
       <div class="role-card" onclick="scrollToSection('proctoring-security')">
         <div class="role-icon-box">🛡️</div>
-        <h3>Proctoring & Privacy <span>➔</span></h3>
-        <p>Understand timestamped watermarked camera evidence, full screen recording, clipboard lockdown, and zero-AI ethical privacy.</p>
+        <h3>Proctoring & Security <span>➔</span></h3>
+        <p>Continuous 1 FPS watermarked camera capture, WebM/MP4 screen recordings, anti-tamper clipboard lockdown, and zero-AI ethical human review.</p>
         <div class="role-tag-list">
-          <span class="mini-tag">1 FPS Timestamping</span>
+          <span class="mini-tag">1 FPS Watermark</span>
           <span class="mini-tag">Screen WebM/MP4</span>
-          <span class="mini-tag">Anti-Tamper</span>
+          <span class="mini-tag">Crash-Resilient</span>
         </div>
       </div>
 
       <div class="role-card" onclick="scrollToSection('troubleshooting')">
         <div class="role-icon-box">⚡</div>
         <h3>Shortcuts & Troubleshooting <span>➔</span></h3>
-        <p>Keyboard shortcuts, browser download permission fixes, camera/screen access troubleshooting, and local server commands.</p>
+        <p>Hotkeys, keyboard shortcuts, multi-file download permission fixes, HTTPS camera/screen sharing troubleshooting, and data clearing.</p>
         <div class="role-tag-list">
           <span class="mini-tag">Ctrl+Enter</span>
           <span class="mini-tag">Download Fix</span>
-          <span class="mini-tag">FAQ</span>
+          <span class="mini-tag">Clear Cookies</span>
         </div>
       </div>
     </div>
@@ -1399,22 +1236,23 @@
       <div class="sidebar-title">Getting Started</div>
       <a href="#overview" class="nav-link active"><span class="nav-icon">📌</span> Platform Overview</a>
       <a href="#ui-anatomy" class="nav-link"><span class="nav-icon">🗺️</span> Workspace Anatomy</a>
+      <a href="#split-resizers" class="nav-link"><span class="nav-icon">⬌</span> Split Resizers & Layouts</a>
 
       <div class="sidebar-title">Teacher & Examiner</div>
       <a href="#teacher-guide" class="nav-link"><span class="nav-icon">🧑‍🏫</span> Authoring Questions</a>
-      <a href="#rich-editor" class="nav-link"><span class="nav-icon">🎨</span> Rich Text & Media</a>
-      <a href="#test-cases-setup" class="nav-link"><span class="nav-icon">🧪</span> Test Cases & Freeze</a>
-      <a href="#teacher-locks" class="nav-link"><span class="nav-icon">🔒</span> Passcodes & Locks</a>
-      <a href="#reports-export" class="nav-link"><span class="nav-icon">📦</span> Packaging & Exports</a>
+      <a href="#rich-editor" class="nav-link"><span class="nav-icon">🎨</span> Rich Media & Custom Fonts</a>
+      <a href="#test-cases-setup" class="nav-link"><span class="nav-icon">🧪</span> Test Suites & Freeze</a>
+      <a href="#teacher-locks" class="nav-link"><span class="nav-icon">🔒</span> Passcodes & Multi-Tier Locks</a>
+      <a href="#reports-export" class="nav-link"><span class="nav-icon">📦</span> Package Formats & Exports</a>
 
       <div class="sidebar-title">Candidate & Student</div>
-      <a href="#candidate-guide" class="nav-link"><span class="nav-icon">👨‍🎓</span> Taking an Exam</a>
-      <a href="#proctoring-setup" class="nav-link"><span class="nav-icon">📷</span> Cam & Screen Consent</a>
-      <a href="#coding-studio" class="nav-link"><span class="nav-icon">💻</span> Multi-Language IDE</a>
-      <a href="#submission-workflow" class="nav-link"><span class="nav-icon">📤</span> Exam Submission</a>
+      <a href="#candidate-guide" class="nav-link"><span class="nav-icon">👨‍🎓</span> Taking an Assessment</a>
+      <a href="#proctoring-setup" class="nav-link"><span class="nav-icon">📷</span> Dual Cam & Screen Consent</a>
+      <a href="#compiler-engine" class="nav-link"><span class="nav-icon">⚡</span> Multi-Language Execution</a>
+      <a href="#submission-workflow" class="nav-link"><span class="nav-icon">📤</span> Exam Submission Workflow</a>
 
-      <div class="sidebar-title">Reference & Help</div>
-      <a href="#proctoring-security" class="nav-link"><span class="nav-icon">🛡️</span> Privacy & Security</a>
+      <div class="sidebar-title">Security & Reference</div>
+      <a href="#proctoring-security" class="nav-link"><span class="nav-icon">🛡️</span> Privacy & Anti-Tamper</a>
       <a href="#shortcuts-table" class="nav-link"><span class="nav-icon">⌨️</span> Hotkeys & Shortcuts</a>
       <a href="#troubleshooting" class="nav-link"><span class="nav-icon">❓</span> FAQs & Troubleshooting</a>
     </aside>
@@ -1428,31 +1266,32 @@
           <div class="section-icon-large">🌟</div>
           <div>
             <h2>1. Platform Architecture & Overview</h2>
-            <p>High-performance client-side browser evaluation suite with zero cloud dependency.</p>
+            <p>High-performance client-side browser evaluation suite with zero server installation requirements.</p>
           </div>
         </div>
 
         <p class="step-desc">
-          <b>Browser Assessment IDE</b> is an all-in-one assessment and examination platform engineered to run seamlessly directly inside any modern web browser. It combines a rich WYSIWYG document authoring studio, an online multi-language compiler for <b>Python 3, C, and C++</b>, an automated test runner, and a consent-driven proctoring engine.
+          <b>Browser Assessment IDE</b> is an all-in-one assessment, examination, and coding evaluation platform engineered to run entirely inside any modern web browser. It combines a rich WYSIWYG document authoring studio, an online multi-language compiler for <b>Python 3, C (GCC), and C++ (G++)</b>, an automated test runner, and a consent-driven proctoring engine.
         </p>
 
         <div class="feature-grid">
           <div class="feature-box">
             <b>🌐 100% Self-Contained & Portable</b>
-            <p>Every image, video, font, test case, and lock passcode is embedded directly as Base64 Data URLs inside single JSONs or complete ZIPs.</p>
+            <p>Every image, video, custom font, test suite, and lock passcode is embedded directly as Base64 Data URLs inside single JSON files or complete ZIP packages.</p>
           </div>
           <div class="feature-box">
-            <b>⚡ Cloud WebSocket Compilers</b>
-            <p>Connects via real-time WebSockets to compile and execute Python 3, C, and C++ programs with input/output sanitization.</p>
+            <b>⚡ Cloud WebSocket Multi-Compiler</b>
+            <p>Connects via real-time WebSockets to compile and execute Python 3, C, and C++ programs with input/output sanitization, stderr isolation, and ANSI filter stripping.</p>
           </div>
           <div class="feature-box">
-            <b>🛡️ Privacy-First Evidence Proctoring</b>
-            <p>Captures continuous timestamped camera watermarks and full-session screen recordings without invasive automated AI guessing.</p>
+            <b>🛡️ Privacy-First Dual Proctoring</b>
+            <p>Captures continuous timestamped camera watermarks (1 FPS) and full-session screen recordings without invasive or inaccurate automated AI guessing.</p>
           </div>
           <div class="feature-box">
             <b>💾 Refresh & Crash Resilience</b>
-            <p>Active exam timers calculate absolute deadlines in LocalStorage. Browser refresh or accidental tab reload seamlessly resumes the timer.</p>
+            <p>Active exam timers calculate absolute deadlines in LocalStorage. A browser refresh or accidental tab reload seamlessly resumes the timer and candidate state.</p>
           </div>
+        </div>
       </section>
 
       <!-- Section 2: UI Anatomy -->
@@ -1461,208 +1300,301 @@
           <div class="section-icon-large">🗺️</div>
           <div>
             <h2>2. Interactive Workspace Anatomy</h2>
-            <p>Learn every button, toolbar control, and panel layout in the interface.</p>
+            <p>Detailed breakdown of every toolbar control, action button, and panel layout in the interface.</p>
           </div>
         </div>
 
         <div class="anatomy-box">
           <span class="anatomy-tag">Layout Map</span>
-          <p style="font-size:14px; color:var(--text-muted);">The IDE workspace is divided into 4 primary functional zones:</p>
+          <p style="font-size:14px; color:var(--text-muted);">The IDE workspace is structured into 5 core functional zones:</p>
 
           <div class="anatomy-grid">
             <div class="anatomy-item">
-              <b>1. Sticky Top Navigation Bar</b>
-              Timer duration, 🔓 Lock Timer button, Live Countdown, Clear Cookies, Exam Setup, and Dark/Light Mode toggle.
+              <b>1. Top Header & Timer Bar</b>
+              Brand Logo & Title with Set ID display (<code>setIdText</code>), Home portal link, App store link, 📖 Help Guide link, Save indicator (<code>Saved</code>), Duration minutes input, <code>Set</code> button, 🔓 <code>Lock Timer</code> button, Countdown HUD (<code>01:00:00</code>) with <code>Finish Assessment</code> button, <code>Clear Cookies</code>, Question Counter, and Dark/Light Theme toggle.
             </div>
             <div class="anatomy-item">
-              <b>2. Actions & Question Palette</b>
-              <code>+ Question</code>, <code>Import JSON</code>, <code>Export JSON</code>, <code>Export 1 Question</code>, <code>Import ZIP</code>, <code>Export Set ZIP</code>, Multi-format exports (HTML, PDF, DOCX), and the All Questions Palette picker.
+              <b>2. Actions & Navigation Bar</b>
+              <code>Exam Setup</code> (owner email & window), <code>+ Question</code>, <code>Import JSON</code>, <code>Export JSON</code>, <code>Export 1 Question</code>, <code>Import ZIP</code>, <code>Export Set ZIP</code>, Export menu (HTML, PDF, Word DOCX), <code>‹ Previous</code>, <code>Question Selector</code>, and <code>Next ›</code>.
             </div>
             <div class="anatomy-item">
-              <b>3. Rich Problem Panel (Left)</b>
-              Rich text formatting toolbar (Headings, fonts, bold, colors, lists, media insertion, custom font embedding), Undo/Redo, and ⛶ Fullscreen.
+              <b>3. Rich Problem Statement (Left)</b>
+              Question Title, Question ID badge, Problem Lock status & toggle button, Fullscreen button, Rich Text Toolbar (Headings, fonts, sizes, formatting, colors, lists, media insertion, custom font upload, clear format), and Undo/Redo controls.
             </div>
             <div class="anatomy-item">
-              <b>4. Code Studio & Test Runner (Right)</b>
-              Language selector (Python 3/C/C++), Line-numbered editor, Custom Input toggle, Compile & Test runner, and Pass/Fail summary badges.
+              <b>4. Code Studio & Split Resizers</b>
+              Language selector (Python 3, C, C++), Line numbers, Syntax-highlighted code editor, Font zoom (<code>A-</code>/<code>A+</code>), Code Fullscreen, Vertical Resizer (Left / 50:50 / Right), and Horizontal Resizer (Top / 50:50 / Down).
+            </div>
+            <div class="anatomy-item">
+              <b>5. Runbar & Evaluation Tabs (Bottom)</b>
+              <code>Custom Input</code> checkbox & <code>Freeze Custom Input</code> lock, <code>Run Code</code> button, <code>Compile and Test</code> button, <code>Freeze Test Cases</code> lock, <code>Delete Question</code>, and Tabs: <b>Test Cases</b>, <b>Code Execution</b>, and <b>History</b>.
             </div>
           </div>
         </div>
       </section>
 
-      <!-- Section 3: Teacher / Examiner Guide -->
+      <!-- Section 3: Split-Screen Resizers -->
+      <section id="split-resizers" class="guide-section">
+        <div class="section-header">
+          <div class="section-icon-large">⬌</div>
+          <div>
+            <h2>3. Split-Screen Resizers & View Modes</h2>
+            <p>Customizable two-dimensional layout controls for balanced reading and coding.</p>
+          </div>
+        </div>
+
+        <p class="step-desc">
+          The IDE provides two independent splitters with quick-action snap buttons, mouse/touch dragging, and persistent memory across browser sessions.
+        </p>
+
+        <div class="feature-grid">
+          <div class="feature-box">
+            <b>📐 Vertical Splitter (Problem vs Code)</b>
+            <p>Drag the vertical divider between the left problem panel and right coding area. Use quick snap buttons:</p>
+            <ul style="margin-left:18px; margin-top:6px; font-size:12.5px; color:var(--text-muted);">
+              <li><code>◀ Left</code>: Minimized question (80px), maximizes coding & test areas.</li>
+              <li><code>⬌ 50:50</code>: Balanced side-by-side view (default).</li>
+              <li><code>▶ Right</code>: Maximized question (72% width) for rich reading.</li>
+              <li><b>Double-Click:</b> Instantly resets or toggles to 50:50 view.</li>
+            </ul>
+          </div>
+          <div class="feature-box">
+            <b>📐 Horizontal Splitter (Code vs Test Cases)</b>
+            <p>Drag the horizontal divider between the code editor and bottom test tabs. Use quick snap buttons:</p>
+            <ul style="margin-left:18px; margin-top:6px; font-size:12.5px; color:var(--text-muted);">
+              <li><code>▲ Top</code>: Shifts up to maximize test cases and console output.</li>
+              <li><code>⬍ 50:50</code>: Balanced view displaying code and tests simultaneously.</li>
+              <li><code>▼ Down</code>: Shifts down to maximize code writing space.</li>
+              <li><b>Double-Click:</b> Instantly resets or toggles to 50:50 split.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="callout callout-info">
+          <span class="callout-icon">💡</span>
+          <div>
+            <b>Automatic Ratio Persistence:</b> Both splitters save your custom dragging ratios to <code>localStorage</code> (<code>ide_main_problem_ratio</code> and <code>ide_work_editor_ratio</code>) so your preferred viewing layout is automatically restored whenever you reopen the page.
+          </div>
+        </div>
+      </section>
+
+      <!-- Section 4: Teacher / Examiner Guide -->
       <section id="teacher-guide" class="guide-section">
         <div class="section-header">
           <div class="section-icon-large">🧑‍🏫</div>
           <div>
-            <h2>3. Teacher & Examiner Guide: End-to-End Workflow</h2>
-            <p>How to design, configure, protect, and distribute foolproof assessments.</p>
+            <h2>4. Teacher & Examiner Guide: End-to-End Workflow</h2>
+            <p>Complete step-by-step authoring guide to create, protect, and distribute bulletproof assessments.</p>
           </div>
         </div>
 
         <!-- Interactive Workflow Tabs for Teachers -->
         <div class="workflow-tab-container">
           <div class="workflow-tab-nav">
-            <button class="workflow-tab-btn active" onclick="switchWorkflowTab(event, 'w-step-1')">Step 1: Create Questions</button>
+            <button class="workflow-tab-btn active" onclick="switchWorkflowTab(event, 'w-step-1')">Step 1: Questions & Navigation</button>
             <button class="workflow-tab-btn" onclick="switchWorkflowTab(event, 'w-step-2')">Step 2: Rich Media & Fonts</button>
-            <button class="workflow-tab-btn" onclick="switchWorkflowTab(event, 'w-step-3')">Step 3: Test Cases & Code</button>
-            <button class="workflow-tab-btn" onclick="switchWorkflowTab(event, 'w-step-4')">Step 4: Lock Down & Proctor</button>
-            <button class="workflow-tab-btn" onclick="switchWorkflowTab(event, 'w-step-5')">Step 5: Export & Distribute</button>
+            <button class="workflow-tab-btn" onclick="switchWorkflowTab(event, 'w-step-3')">Step 3: Multi-Language Starter Code</button>
+            <button class="workflow-tab-btn" onclick="switchWorkflowTab(event, 'w-step-4')">Step 4: Test Suites & Freeze</button>
+            <button class="workflow-tab-btn" onclick="switchWorkflowTab(event, 'w-step-5')">Step 5: Multi-Tier Locks & Export</button>
           </div>
 
           <!-- Tab 1 -->
           <div id="w-step-1" class="workflow-tab-content active">
-            <h3 class="step-title"><span class="step-number">1</span> Adding and Organizing Questions</h3>
+            <h3 class="step-title"><span class="step-number">1</span> Managing Questions & Navigation Palette</h3>
             <p class="step-desc">
-              Click the <b>+ Question</b> button in the action row to create a new problem instance. You can navigate between questions using <b>‹ Previous</b>, <b>Next ›</b>, or by clicking the <b>Question Selector dropdown</b> to reveal the visual <b>All Questions Palette</b>.
+              Author single or multi-question assessment packages with individual unique identifiers:
             </p>
             <ul>
-              <li style="margin-left:20px; margin-bottom:8px;">Every question receives a unique cryptographic Question ID (e.g. <code>Q-M1K...</code>).</li>
-              <li style="margin-left:20px; margin-bottom:8px;">Auto-Save: Changes to problem statements and code automatically persist to browser LocalStorage in real time.</li>
-              <li style="margin-left:20px; margin-bottom:8px;">Use the <b>Delete</b> button in the bottom right of the runbar to remove unwanted questions (minimum 1 question required).</li>
+              <li style="margin-left:20px; margin-bottom:8px;"><b>+ Question:</b> Appends a fresh question object with unique Question ID (e.g. <code>Q-MUK4OG...</code>) and starter templates.</li>
+              <li style="margin-left:20px; margin-bottom:8px;"><b>Question Palette:</b> Click the <code>Question Selector</code> dropdown to open the interactive All Questions grid. Active questions are highlighted with blue indicators.</li>
+              <li style="margin-left:20px; margin-bottom:8px;"><b>Previous / Next:</b> Move seamlessly back and forth between questions during question creation.</li>
+              <li style="margin-left:20px; margin-bottom:8px;"><b>Delete Question:</b> Click the red <code>Delete</code> button in the bottom right to remove an unwanted question (the IDE enforces a minimum of 1 question).</li>
+              <li style="margin-left:20px; margin-bottom:8px;"><b>Real-Time Auto-Save:</b> All edits to problem text, multi-language code templates, and test cases automatically persist to browser storage.</li>
             </ul>
           </div>
 
           <!-- Tab 2 -->
-          <div id="w-step-2" class="workflow-tab-content">
-            <h3 class="step-title"><span class="step-number">2</span> Rich Problem Formatting, Media & Custom Fonts</h3>
+          <div id="w-step-2" class="workflow-tab-content" id="rich-editor">
+            <h3 class="step-title"><span class="step-number">2</span> Rich Problem Formatting, Media & Custom Typography</h3>
             <p class="step-desc">
-              Transform standard text into immersive, visually appealing problem statements using the top formatting toolbar.
+              Transform standard code problem statements into rich, multimedia-enhanced learning challenges:
             </p>
             <div class="feature-grid">
               <div class="feature-box">
-                <b>🖼️ Embed Images & Animated GIFs</b>
-                <p>Click <b>Image/GIF</b> or press <span class="kbd">Ctrl+V</span> with any copied clipboard screenshot. The image is instantly rendered and embedded.</p>
+                <b>📝 Formatting & Typography</b>
+                <p>Support for Headings (H1, H2, H3), Paragraph (p), Code block (pre), standard fonts (Arial, Calibri, Cambria, Georgia, Times New Roman, Verdana, Consolas), sizes 10 to 36, Bold, Italic, Underline, Strike-through, text color, highlight color, and lists.</p>
               </div>
               <div class="feature-box">
-                <b>🎥 Embed Video Clips</b>
-                <p>Click <b>Video</b> to embed MP4/WebM clips with built-in native player controls (play, pause, seek, volume).</p>
+                <b>🖼️ Embedded Images & GIFs</b>
+                <p>Click <b>Image/GIF</b> to upload local images or press <span class="kbd">Ctrl+V</span> with any copied screenshot in your clipboard. Images are converted into Base64 Data URLs embedded directly into the question JSON.</p>
               </div>
               <div class="feature-box">
-                <b>🔤 Embed Custom Typography</b>
-                <p>Click <b>Font</b> to upload <code>.woff</code>, <code>.woff2</code>, <code>.ttf</code>, or <code>.otf</code> font files. The font is embedded into the question package and added to the font picker.</p>
+                <b>🎥 Embedded Video Clips</b>
+                <p>Click <b>Video</b> to embed local MP4 or WebM video clips. Embedded videos feature full native HTML5 video player controls (play, pause, timeline seek, volume, and fullscreen).</p>
               </div>
               <div class="feature-box">
-                <b>🗑️ Delete Selected Media</b>
-                <p>Click any image/video to highlight with a red border, then press <span class="kbd">Delete</span> or right-click and choose <b>Delete selected media</b>.</p>
+                <b>🔤 Custom Font Upload</b>
+                <p>Click <b>Font</b> to upload <code>.woff</code>, <code>.woff2</code>, <code>.ttf</code>, or <code>.otf</code> typography files. The font is embedded via dynamic <code>@font-face</code> injection and automatically added to the font dropdown.</p>
+              </div>
+            </div>
+            <div class="callout callout-info">
+              <span class="callout-icon">🗑️</span>
+              <div>
+                <b>Deleting Media:</b> Click any image, GIF, or video figure to select it (highlighted with a red boundary), then press <span class="kbd">Delete</span> or <span class="kbd">Backspace</span>. Alternatively, right-click the media element to bring up the custom context menu and select <b>Delete selected media</b>.
               </div>
             </div>
           </div>
 
           <!-- Tab 3 -->
           <div id="w-step-3" class="workflow-tab-content">
-            <h3 class="step-title"><span class="step-number">3</span> Authoring Starter Code & Test Suites</h3>
+            <h3 class="step-title"><span class="step-number">3</span> Multi-Language Starter Code & Preservation</h3>
             <p class="step-desc">
-              Define the language, initial starter template, and input/output validation criteria for candidates.
+              Provide language-specific starter templates for <b>Python 3, C, and C++</b>:
             </p>
             <ul>
-              <li style="margin-left:20px; margin-bottom:8px;"><b>Language Selector:</b> Choose between <b>Python 3</b>, <b>C</b>, or <b>C++</b>. Starter templates update automatically.</li>
-              <li style="margin-left:20px; margin-bottom:8px;"><b>Adding Test Cases:</b> Click <b>+ Add Test</b> in the Test Cases tab. Fill in the <b>INPUT</b> (what candidate code reads via stdin) and <b>EXPECTED OUTPUT</b>.</li>
-              <li style="margin-left:20px; margin-bottom:8px;"><b>Testing the Solution:</b> Click <b>Compile and Test</b> or press <span class="kbd">Ctrl+Enter</span> to run all test cases and verify that your sample solution passes 100%.</li>
+              <li style="margin-left:20px; margin-bottom:8px;"><b>Language Selector:</b> Switch between <code>Python 3</code>, <code>C</code>, and <code>C++</code> from the dropdown above the code editor.</li>
+              <li style="margin-left:20px; margin-bottom:8px;"><b>Code Preservation:</b> The IDE maintains an internal multi-language dictionary (<code>question.codes</code>) for every problem. Writing Python code, switching to C++ to add a starter template, and switching back preserves the code written for each language independently without data loss.</li>
+              <li style="margin-left:20px; margin-bottom:8px;"><b>Font Scaling:</b> Adjust editor text size with <code>A-</code> and <code>A+</code> buttons (scalable from 11px to 22px with proportional line-height matching).</li>
+              <li style="margin-left:20px; margin-bottom:8px;"><b>Fullscreen Editor:</b> Click <code>⛶ Full Screen</code> in the code top bar to expand the code editor into distraction-free focus mode.</li>
             </ul>
           </div>
 
           <!-- Tab 4 -->
-          <div id="w-step-4" class="workflow-tab-content">
-            <h3 class="step-title"><span class="step-number">4</span> Setting Up Exam Security & Teacher Locks</h3>
+          <div id="w-step-4" class="workflow-tab-content" id="test-cases-setup">
+            <h3 class="step-title"><span class="step-number">4</span> Test Suite Authoring & Auto-Evaluation</h3>
             <p class="step-desc">
-              Prevent students from tampering with the problem statement, test cases, or exam timer.
+              Define input/output validation criteria for automated candidate scoring:
             </p>
-            <div class="feature-grid">
-              <div class="feature-box">
-                <b>🔒 Lock Problem Statement</b>
-                <p>Click <b>🔓 Lock Editing</b> in the panel title. Enter a 4+ character passcode. The editor becomes read-only and formatting tools are disabled.</p>
-              </div>
-              <div class="feature-box">
-                <b>⏱️ Lock Assessment Timer</b>
-                <p>Set duration in minutes (e.g. <code>60</code>), click <b>🔓 Lock Timer</b>, and set a teacher passcode. Students cannot modify or reset the countdown.</p>
-              </div>
-              <div class="feature-box">
-                <b>🔒 Freeze Test Cases</b>
-                <p>Click <b>🔓 Freeze Test Cases</b> in the runbar. Teacher test cases turn yellow and become read-only. Students can only add extra practice tests.</p>
-              </div>
-              <div class="feature-box">
-                <b>📧 Exam Setup (Proctoring)</b>
-                <p>Click <b>Exam Setup</b> in the top header. Enter the <b>Examiner Email</b> and <b>Post-Exam Submission Window</b> (e.g. 10 mins). This metadata is saved inside the exported ZIP.</p>
-              </div>
-            </div>
+            <ul>
+              <li style="margin-left:20px; margin-bottom:8px;"><b>+ Add Test:</b> Click <code>+ Add Test</code> in the Test Cases tab to add a test case.</li>
+              <li style="margin-left:20px; margin-bottom:8px;"><b>INPUT & EXPECTED OUTPUT:</b> Enter the raw standard input (passed to stdin) and the exact expected output string. The normalization engine (<code>norm17</code>) handles trailing whitespaces and Windows/Unix line ending differences cleanly.</li>
+              <li style="margin-left:20px; margin-bottom:8px;"><b>Compile and Test:</b> Click <code>Compile and Test</code> or press <span class="kbd">Ctrl+Enter</span> to run your solution against all configured test cases. Passed tests show green <code>Passed</code> badges, failed tests show red <code>Failed</code> badges, and actual program output is displayed.</li>
+              <li style="margin-left:20px; margin-bottom:8px;"><b>Success Celebration:</b> When all configured test cases pass 100%, the application triggers a celebratory centered confetti animation and solution success badge.</li>
+            </ul>
           </div>
 
           <!-- Tab 5 -->
-          <div id="w-step-5" class="workflow-tab-content">
-            <h3 class="step-title"><span class="step-number">5</span> Exporting Assessment Packages & Multi-Format Reports</h3>
+          <div id="w-step-5" class="workflow-tab-content" id="teacher-locks">
+            <h3 class="step-title"><span class="step-number">5</span> Multi-Tier Locks, Passcodes & Packaging</h3>
             <p class="step-desc">
-              Package the complete assessment set into encrypted, portable files ready for sharing.
+              Protect your assessment against tampering with cryptographic multi-tier locks:
             </p>
-            <div class="table-swipe-hint"><span>👈</span> Swipe table horizontally to read all formats <span>👉</span></div>
-            <div class="table-responsive">
-              <table class="cheatsheet-table">
-                <thead>
-                  <tr>
-                    <th>Export Button</th>
-                    <th>File Format</th>
-                    <th>Best Used For</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td><b>Export Set ZIP</b></td>
-                    <td><code>.zip</code></td>
-                    <td><b>Primary Exam Package</b>. Bundles all questions, embedded media, fonts, locks, and test cases. Optional ZIP password protection with SHA-256 salt hashing.</td>
-                  </tr>
-                  <tr>
-                    <td><b>Export JSON</b></td>
-                    <td><code>-all-questions.json</code></td>
-                    <td><b>Complete Assessment JSON</b>. Exports all questions data together including embedded images, videos, GIFs, fonts, test cases, code, timer lock settings, and metadata in a single JSON document.</td>
-                  </tr>
-                  <tr>
-                    <td><b>Export 1 Question</b></td>
-                    <td><code>.question.json</code></td>
-                    <td>Single question portable sharing with embedded images, videos, fonts, and tests.</td>
-                  </tr>
-                  <tr>
-                    <td><b>Export HTML</b></td>
-                    <td><code>-report.html</code></td>
-                    <td>Self-contained rich interactive document with playable videos, animated GIFs, and code.</td>
-                  </tr>
-                  <tr>
-                    <td><b>Export PDF</b></td>
-                    <td><code>-report.pdf</code></td>
-                    <td>Printable sequential question report with code and test cases.</td>
-                  </tr>
-                  <tr>
-                    <td><b>Export Word</b></td>
-                    <td><code>-report.docx</code></td>
-                    <td>Editable Microsoft Word document formatted for offline distribution or grading.</td>
-                  </tr>
-                </tbody>
-              </table>
+            <div class="feature-grid">
+              <div class="feature-box">
+                <b>🔒 Problem Statement Lock</b>
+                <p>Click <code>🔓 Enable Editing</code> in the problem title. Enter a 4+ character teacher passcode. Problem statement text becomes read-only and formatting tools are disabled.</p>
+              </div>
+              <div class="feature-box">
+                <b>⏱️ Assessment Timer Lock</b>
+                <p>Set duration in minutes (e.g. <code>60</code>), click <code>🔓 Lock Timer</code>, and set a teacher passcode. Students cannot modify the countdown or use Set without the passcode.</p>
+              </div>
+              <div class="feature-box">
+                <b>🧪 Freeze Test Cases</b>
+                <p>Click <code>🔓 Freeze Test Cases</code> in the runbar. Teacher test cases turn yellow (<code>Teacher frozen</code>) and cannot be edited or deleted by students.</p>
+              </div>
+              <div class="feature-box">
+                <b>🔒 Freeze Custom Input</b>
+                <p>Click <code>🔓 Freeze Custom Input</code> to lock the Custom Input toggle in checked or unchecked state with a password hash.</p>
+              </div>
+            </div>
+            <div class="callout callout-warning">
+              <span class="callout-icon">🛡️</span>
+              <div>
+                <b>Header Navigation Auto-Lock:</b> When an assessment is started or an assessment package is imported, the top header links (<b>Home</b>, <b>App store</b>, and <b>📖 Help Guide</b>) are automatically locked (displaying 🔒) to quarantine candidates inside the exam. Clicking these locked icons prompts for the <b>Teacher / Proctor Master Passcode</b>.
+              </div>
             </div>
           </div>
         </div>
       </section>
 
-      <!-- Section 4: Candidate / Student Guide -->
+      <!-- Section 5: Package Formats & Exports -->
+      <section id="reports-export" class="guide-section">
+        <div class="section-header">
+          <div class="section-icon-large">📦</div>
+          <div>
+            <h2>5. Assessment Package Formats & Multi-Format Exports</h2>
+            <p>Comprehensive reference of all 6 export and reporting mechanisms supported by the platform.</p>
+          </div>
+        </div>
+
+        <p class="step-desc">
+          Every export format is generated client-side with full asset embedding for maximum portability.
+        </p>
+
+        <div class="table-swipe-hint"><span>👈</span> Swipe table horizontally to view all export formats <span>👉</span></div>
+        <div class="table-responsive">
+          <table class="cheatsheet-table">
+            <thead>
+              <tr>
+                <th>Export Action</th>
+                <th>File Generated</th>
+                <th>Underlying Data & Assets Included</th>
+                <th>Primary Use Case</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><b>Export Set ZIP</b></td>
+                <td><code>[SetID].zip</code></td>
+                <td>Includes <code>assessment.json</code> manifest, <code>questions/*.json</code> for all questions, embedded Base64 media, custom fonts, test suites, teacher lock hashes, and optional ZIP password protection (with salt & SHA-256 hash).</td>
+                <td><b>Primary Exam Distribution Format</b>. Deliver this ZIP to candidates for secure proctored examination.</td>
+              </tr>
+              <tr>
+                <td><b>Export JSON</b></td>
+                <td><code>[SetID]-all-questions.json</code></td>
+                <td>Single unified JSON document containing the entire assessment bundle: all question texts, multi-language codes, test cases, custom fonts, and timer configurations.</td>
+                <td><b>Complete Assessment Backup</b>. Easy single-file sharing and version control of assessment sets.</td>
+              </tr>
+              <tr>
+                <td><b>Export 1 Question</b></td>
+                <td><code>[QuestionID].question.json</code></td>
+                <td>Standalone JSON file for the currently active question, with embedded media, custom fonts, test cases, and lock states.</td>
+                <td><b>Modular Question Sharing</b>. Share or import individual questions between different question banks.</td>
+              </tr>
+              <tr>
+                <td><b>Export HTML</b></td>
+                <td><code>[SetID]-report.html</code></td>
+                <td>Self-contained, styled HTML report with sequential questions, embedded playable video players, animated GIFs, code blocks, and test cases.</td>
+                <td><b>Interactive Rich Report</b>. Offline review and grading with playable videos and high-fidelity formatting.</td>
+              </tr>
+              <tr>
+                <td><b>Export PDF</b></td>
+                <td><code>[SetID]-report.pdf</code></td>
+                <td>Clean, printable A4 PDF generated client-side via <code>html2pdf.js</code> featuring question statements, code, and test case tables.</td>
+                <td><b>Printable Official Report</b>. Archiving, paper evaluation, and formal student submission documentation.</td>
+              </tr>
+              <tr>
+                <td><b>Export Word</b></td>
+                <td><code>[SetID]-report.doc</code></td>
+                <td>Formatted Microsoft Word document generated via client-side Blob containing question statements, code snippets, and test results.</td>
+                <td><b>Editable Document</b>. For teachers needing to copy questions into exam papers or edit offline.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- Section 6: Candidate & Student Guide -->
       <section id="candidate-guide" class="guide-section">
         <div class="section-header">
           <div class="section-icon-large">👨‍🎓</div>
           <div>
-            <h2>4. Candidate & Student Guide: Taking an Assessment</h2>
+            <h2>6. Candidate & Student Guide: Taking an Assessment</h2>
             <p>Step-by-step instructions for test takers from import to final submission.</p>
           </div>
         </div>
 
-        <h3 class="step-title"><span class="step-number">1</span> Importing the Assessment Package</h3>
+        <h3 class="step-title"><span class="step-number">1</span> Launching & Importing the Assessment</h3>
         <p class="step-desc">
-          Open the IDE in Google Chrome, Microsoft Edge, or Mozilla Firefox. You can import an assessment using any of these methods:
+          Open the IDE in Google Chrome, Microsoft Edge, or Mozilla Firefox. You can start in one of three ways:
         </p>
         <ul>
-          <li style="margin-left:20px; margin-bottom:8px;"><b>⚡ Try with Mock Test Data:</b> Click <b>Try with mock test data</b> in the welcome dialogue to immediately load a full 6-question programming assessment set (C, C++, Python 3) with pre-configured test cases without choosing any files.</li>
-          <li style="margin-left:20px; margin-bottom:8px;"><b>📄 Import JSON:</b> Click <b>Import JSON</b> to load complete question sets (<code>-all-questions.json</code>) or single questions (<code>.question.json</code>) with embedded media, tests, and locks.</li>
-          <li style="margin-left:20px; margin-bottom:8px;"><b>📦 Import ZIP:</b> Click <b>Import ZIP</b> to load an assessment package (<code>.zip</code>) provided by your instructor or examiner. Enter the student access password if prompted.</li>
+          <li style="margin-left:20px; margin-bottom:8px;"><b>🧪 Try with Mock Test Data:</b> Click <b>Try with mock test data</b> in the welcome modal to immediately load a 6-question programming assessment set (covering Python, C, and C++ with automated test cases) without needing to choose any files.</li>
+          <li style="margin-left:20px; margin-bottom:8px;"><b>📦 Import ZIP:</b> Click <b>Import ZIP</b> to select the assessment package (<code>.zip</code>) provided by your examiner. Enter the student access password if prompted.</li>
+          <li style="margin-left:20px; margin-bottom:8px;"><b>📄 Import JSON:</b> Click <b>Import JSON</b> to load a <code>-all-questions.json</code> or single <code>.question.json</code> file.</li>
         </ul>
 
-        <h3 class="step-title"><span class="step-number">2</span> Identity Verification & Proctoring Consent</h3>
+        <h3 class="step-title" id="proctoring-setup"><span class="step-number">2</span> Identity Verification & Dual Proctoring Consent</h3>
         <p class="step-desc">
           Before entering the exam, the <b>Candidate Verification</b> security gate appears:
         </p>
@@ -1671,19 +1603,19 @@
           <div class="feature-grid">
             <div class="feature-box">
               <b>1. Enter Credentials</b>
-              <p>Type your <b>Full Name</b> and <b>Roll Number / Student ID</b>. The current date and exact start time are automatically captured from your device clock.</p>
+              <p>Type your <b>Full Name</b> and <b>Roll Number / Student ID</b>. The current date, hour, and minute are automatically populated from the device clock (Asia/Kolkata IST).</p>
             </div>
             <div class="feature-box">
               <b>2. Camera Consent & Preview</b>
-              <p>Check the camera consent box and click <b>Open Camera</b>. Allow browser camera permissions and ensure your face is clearly visible in the preview box.</p>
+              <p>Check the camera consent box and click <b>Open Camera</b>. Allow browser camera permission and ensure your face is clearly visible in the preview window.</p>
             </div>
             <div class="feature-box">
-              <b>3. Screen Sharing Consent</b>
-              <p>Check the screen consent box and click <b>Share Screen</b>. Select <b>Entire Screen</b> or the browser window and confirm.</p>
+              <b>3. Screen Sharing Consent & Preview</b>
+              <p>Check the screen consent box and click <b>Share Screen</b>. Select <b>Entire Screen</b> or your browser window and confirm sharing.</p>
             </div>
             <div class="feature-box">
               <b>4. Ready to Exam</b>
-              <p>Once both previews are active and consents are checked, click the blue <b>Ready to Exam</b> button to begin.</p>
+              <p>Once both previews are streaming and all details are complete, the blue <b>Ready to Exam</b> button activates. Click it to start your proctored session.</p>
             </div>
           </div>
         </div>
@@ -1692,140 +1624,182 @@
           <span class="callout-icon">⚠️</span>
           <div>
             <b>Proctored Environment Rules:</b><br>
-            • <b>Clipboard Disabled:</b> Copying, cutting, and pasting (<span class="kbd">Ctrl+C</span> / <span class="kbd">Ctrl+V</span>) are blocked. You must write code directly.<br>
-            • <b>Right-Click Disabled:</b> Context menus are restricted.<br>
-            • <b>Sequential Forward Navigation:</b> You advance questions forward using <b>Next ›</b>. You cannot return to previous questions once submitted.<br>
-            • <b>Do Not Stop Screen Sharing:</b> Stopping screen sharing will immediately conclude the exam and generate the submission package.
+            • <b>Clipboard Disabled:</b> Copying, cutting, and pasting (<span class="kbd">Ctrl+C</span> / <span class="kbd">Ctrl+V</span> / <span class="kbd">Ctrl+X</span>) are blocked. You must write your solution directly in the code editor.<br>
+            • <b>Right-Click Disabled:</b> Context inspection menus are restricted.<br>
+            • <b>Forward-Only Navigation:</b> Questions advance sequentially with <b>Next ›</b> (or the mobile Next button). You cannot return to previous questions once submitted.<br>
+            • <b>Do Not Stop Screen Sharing:</b> Stopping screen sharing will immediately conclude the exam attempt and trigger the submission export pipeline.
           </div>
         </div>
 
         <h3 class="step-title"><span class="step-number">3</span> Solving Problems, Compiling & Evaluating</h3>
         <p class="step-desc">
-          Write your solution in the code editor on the right:
+          Write and test your solution in the coding environment:
         </p>
         <ul>
           <li style="margin-left:20px; margin-bottom:8px;"><b>Tab Indentation:</b> Press <span class="kbd">Tab</span> inside the editor for clean 4-space indentation.</li>
-          <li style="margin-left:20px; margin-bottom:8px;"><b>Compile and Test (<span class="kbd">Ctrl+Enter</span>):</b> Runs your code against all test cases. The summary badge updates (e.g. <code>All test cases passed</code> or <code>X of Y test cases passed</code>).</li>
-          <li style="margin-left:20px; margin-bottom:8px;"><b>Custom Input:</b> Check <b>Custom Input</b> and click <b>Run</b> to test with your own custom manual inputs. Output appears in the <b>Code Execution</b> tab.</li>
-          <li style="margin-left:20px; margin-bottom:8px;"><b>Font Scaling:</b> Use <b>A-</b> and <b>A+</b> to adjust code editor text size for optimal readability.</li>
-          <li style="margin-left:20px; margin-bottom:8px;"><b>Full Screen (⛶):</b> Toggle full-screen mode on either the problem statement or code editor for distraction-free focus.</li>
+          <li style="margin-left:20px; margin-bottom:8px;"><b>Compile and Test (<span class="kbd">Ctrl+Enter</span>):</b> Runs your code against all test cases. The summary badge updates (e.g. <code>All test cases passed</code> or <code>X of Y passed</code>).</li>
+          <li style="margin-left:20px; margin-bottom:8px;"><b>Custom Input Mode:</b> Check <b>Custom Input</b> and click <b>Run Code</b> to test custom standard input strings. Output is displayed in the <b>Code Execution</b> tab.</li>
+          <li style="margin-left:20px; margin-bottom:8px;"><b>History Tab:</b> View previous compile and test run records with timestamps and pass statistics.</li>
         </ul>
 
         <h3 class="step-title" id="submission-workflow"><span class="step-number">4</span> Submitting the Exam & Sharing Results</h3>
         <p class="step-desc">
-          When you finish all questions or when the timer reaches zero, the automated submission pipeline triggers:
+          When you finish all questions (or when the timer reaches zero), the automated submission pipeline triggers:
         </p>
         <div class="feature-grid">
           <div class="feature-box">
             <b>1. Automated Package Generation</b>
-            <p>A progress modal shows ZIP, PDF, and media compilation progress from 0% to 100%.</p>
+            <p>A progress dialog displays ZIP, PDF, and media compilation progress from 0% to 100%.</p>
           </div>
           <div class="feature-box">
             <b>2. Auto-Downloaded Files</b>
             <p>Your browser downloads 4 files: <code>[Roll]-[Name]-completed.zip</code>, <code>-completed.pdf</code>, <code>-camera-evidence.html</code>, and <code>-instruction.txt</code>.</p>
           </div>
           <div class="feature-box">
-            <b>3. Email to Examiner</b>
-            <p>Follow the instructions on the screen and in <code>instruction.txt</code>. Email both the completed ZIP and PDF to the examiner within the configured submission window.</p>
+            <b>3. Completed ZIP Contents</b>
+            <p>The completed ZIP includes <code>assessment.json</code>, all question files, <code>camera-evidence.html</code>, <code>instruction.txt</code>, <code>assessment-report.pdf</code>, all timestamped PNG evidence frames in <code>evidence/</code>, and the screen recording in <code>screen-recording/exam-screen.mp4</code>.</p>
+          </div>
+          <div class="feature-box">
+            <b>4. Email to Examiner</b>
+            <p>Follow the instructions on screen. Email both the completed ZIP and PDF to the configured examiner email within the submission window (e.g. 10 minutes).</p>
           </div>
         </div>
 
         <div class="callout callout-success">
           <span class="callout-icon">🎉</span>
           <div>
-            <b>Browser Download Permission Note:</b><br>
-            If your browser shows a popup asking <i>"Allow site to download multiple files?"</i>, click <b>Allow</b> so all submission evidence files are saved successfully.
+            <b>Browser Multiple Downloads Permission:</b><br>
+            If your browser prompts <i>"Allow site to download multiple files?"</i>, click <b>Allow</b> so all 4 submission files are saved to your device.
           </div>
         </div>
       </section>
 
-      <!-- Section 5: Proctoring & Privacy Security -->
+      <!-- Section 7: Remote Compiler Engine -->
+      <section id="compiler-engine" class="guide-section">
+        <div class="section-header">
+          <div class="section-icon-large">⚡</div>
+          <div>
+            <h2>7. Multi-Language Remote Compiler & Execution Engine</h2>
+            <p>Technical architecture of real-time cloud WebSocket compilation and standard I/O streaming.</p>
+          </div>
+        </div>
+
+        <p class="step-desc">
+          The IDE communicates over secure WebSockets with remote compiler servers to execute Python 3, C, and C++ code with sandboxed stdin feeding:
+        </p>
+
+        <div class="feature-grid">
+          <div class="feature-box">
+            <b>🐍 Python 3 Execution</b>
+            <p>Executes standard Python 3 code with complete standard library support (math, sys, collections, itertools, etc.) and runtime exception backtraces.</p>
+          </div>
+          <div class="feature-box">
+            <b>⚙️ C (GCC) Execution</b>
+            <p>Compiles standard C code with full stdio/stdlib runtime, handling standard input buffers via <code>scanf</code>, <code>fgets</code>, and <code>getchar</code>.</p>
+          </div>
+          <div class="feature-box">
+            <b>🚀 C++ (G++) Execution</b>
+            <p>Compiles modern C++ with STL support (vector, string, algorithm, map, set, iostream) and standard stream input via <code>std::cin</code> and <code>getline</code>.</p>
+          </div>
+          <div class="feature-box">
+            <b>🧹 Output Sanitization & Echo Filter</b>
+            <p>The engine automatically strips ANSI color escape codes (<code>stripNoise</code>), removes terminal prompt echoes (<code>removeEcho</code>), and flags syntax errors, segmentation faults, and tracebacks.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Section 8: Proctoring & Anti-Tamper Security -->
       <section id="proctoring-security" class="guide-section">
         <div class="section-header">
           <div class="section-icon-large">🛡️</div>
           <div>
-            <h2>5. Proctoring, Security & Privacy Architecture</h2>
-            <p>Transparent, ethical evidence recording designed for human review.</p>
+            <h2>8. Proctoring, Anti-Tamper & Privacy Architecture</h2>
+            <p>Transparent, ethical evidence recording designed for human review without automated algorithmic bias.</p>
           </div>
         </div>
 
         <div class="feature-grid">
           <div class="feature-box">
-            <b>📸 Continuous 1 FPS Watermarked Frames</b>
-            <p>Captures 480x270 camera frames every second with millisecond timestamps and green checkmark authenticity patterns embedded permanently into the canvas.</p>
+            <b>📸 1 FPS Watermarked Camera Capture</b>
+            <p>Captures 480x270 PNG webcam frames every second. Each frame is permanently stamped on canvas with an exact IST timestamp (down to milliseconds) and a repeating green checkmark (<code>✓</code>) authenticity watermark pattern.</p>
           </div>
           <div class="feature-box">
-            <b>🎥 Full HD Screen Recording</b>
-            <p>Records the candidate's shared exam screen and audio stream using the browser MediaRecorder API, saved into the ZIP as <code>screen-recording/exam-screen.mp4</code>.</p>
+            <b>🎥 Full Exam Screen Recording</b>
+            <p>Records the candidate's shared exam screen and audio stream using the browser MediaRecorder API (VP9/VP8/WebM), saved into the ZIP as <code>screen-recording/exam-screen.mp4</code>.</p>
           </div>
           <div class="feature-box">
             <b>🚫 Zero Inaccurate AI Biometrics</b>
-            <p>No facial recognition, eye tracking, emotion AI, or automatic cheating disqualifications. All evidence is archived purely for authorized human examiner review.</p>
+            <p>No facial recognition, eye tracking, emotion AI, or automated cheating disqualifications. All evidence is archived purely for authorized human examiner review under applicable institutional policy.</p>
           </div>
           <div class="feature-box">
-            <b>🔒 Sandboxed Integrity Guards</b>
-            <p>Disables external clipboard injection, right-click inspection, drag-and-drop text insertion, and accidental page navigation.</p>
+            <b>🔒 Anti-Cheating Lockdown</b>
+            <p>Disables external clipboard injection (<span class="kbd">Ctrl+V</span>), copying (<span class="kbd">Ctrl+C</span>), cutting (<span class="kbd">Ctrl+X</span>), drag-and-drop text insertion, and right-click context menus during active exams.</p>
           </div>
         </div>
       </section>
 
-      <!-- Section 6: Shortcuts Table -->
+      <!-- Section 9: Keyboard Shortcuts Table -->
       <section id="shortcuts-table" class="guide-section">
         <div class="section-header">
           <div class="section-icon-large">⌨️</div>
           <div>
-            <h2>6. Keyboard Shortcuts & Quick Action Cheatsheet</h2>
-            <p>Boost your productivity with quick keyboard triggers.</p>
+            <h2>9. Keyboard Shortcuts & Quick Action Cheatsheet</h2>
+            <p>Comprehensive productivity cheatsheet for teachers, examiners, and candidates.</p>
           </div>
         </div>
 
-        <div class="table-swipe-hint"><span>👈</span> Swipe table horizontally to read all shortcuts <span>👉</span></div>
+        <div class="table-swipe-hint"><span>👈</span> Swipe table horizontally to view all shortcuts <span>👉</span></div>
         <div class="table-responsive">
           <table class="cheatsheet-table">
             <thead>
               <tr>
                 <th>Shortcut Key</th>
-                <th>Context</th>
-                <th>Action Triggered</th>
+                <th>Active Context</th>
+                <th>Function / Action Triggered</th>
               </tr>
             </thead>
             <tbody>
               <tr>
                 <td><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span> (or <span class="kbd">Cmd</span> + <span class="kbd">Enter</span>)</td>
                 <td>Code Editor</td>
-                <td><b>Compile and Test</b> — Runs code against all configured test cases.</td>
+                <td><b>Compile and Test</b> — Evaluates code against all configured test cases.</td>
               </tr>
               <tr>
                 <td><span class="kbd">Tab</span></td>
                 <td>Code Editor</td>
-                <td>Inserts 4-space indentation at current cursor position.</td>
+                <td>Inserts clean 4-space indentation at cursor position.</td>
               </tr>
               <tr>
                 <td><span class="kbd">Ctrl</span> + <span class="kbd">V</span></td>
                 <td>Problem Editor (Teacher)</td>
-                <td>Pastes rich text or directly embeds clipboard screenshot image.</td>
+                <td>Pastes rich text or directly embeds clipboard screenshot images as Base64 Data URLs.</td>
               </tr>
               <tr>
                 <td><span class="kbd">Delete</span> / <span class="kbd">Backspace</span></td>
                 <td>Selected Media (Teacher)</td>
-                <td>Deletes the selected image, GIF, or video figure.</td>
+                <td>Deletes the selected image, animated GIF, or video figure.</td>
               </tr>
               <tr>
                 <td><span class="kbd">Escape</span></td>
-                <td>Fullscreen Mode / Modals</td>
-                <td>Exits fullscreen problem/code view or closes active modal dialogs.</td>
+                <td>Modals & Fullscreen</td>
+                <td>Exits problem/code fullscreen or closes welcome/setup dialogs.</td>
+              </tr>
+              <tr>
+                <td><span class="kbd">A-</span> / <span class="kbd">A+</span></td>
+                <td>Code Editor Top Bar</td>
+                <td>Scales font size between 11px and 22px with matching line-height.</td>
               </tr>
             </tbody>
           </table>
         </div>
       </section>
 
-      <!-- Section 7: Troubleshooting & FAQ -->
+      <!-- Section 10: Troubleshooting & FAQ -->
       <section id="troubleshooting" class="guide-section">
         <div class="section-header">
           <div class="section-icon-large">❓</div>
           <div>
-            <h2>7. Frequently Asked Questions & Troubleshooting</h2>
+            <h2>10. Frequently Asked Questions & Troubleshooting</h2>
             <p>Quick answers to common questions and edge-case resolutions.</p>
           </div>
         </div>
@@ -1837,47 +1811,47 @@
               <span class="faq-arrow">▼</span>
             </div>
             <div class="faq-body">
-              Make sure you are accessing the application via a secure online connection (<code>https://...</code>). Modern web browsers require an active HTTPS connection to allow camera capture and screen sharing permissions. In your browser address bar, click the lock/tune icon next to the URL, set <b>Camera</b> and <b>Screen sharing</b> permissions to <b>Allow</b>, and refresh the page.
+              Make sure you are accessing the application via a secure connection (<code>https://...</code>) or <code>http://localhost</code> / <code>http://127.0.0.1</code>. Modern web browsers require an active HTTPS connection to allow camera capture and screen sharing permissions. In your browser address bar, click the lock/tune icon next to the URL, set <b>Camera</b> and <b>Screen sharing</b> permissions to <b>Allow</b>, and refresh the page.
             </div>
           </div>
 
           <div class="faq-item">
             <div class="faq-header" onclick="toggleFaq(this)">
-              <span>Q2: What happens if the student accidentally refreshes or closes the browser tab?</span>
+              <span>Q2: What happens if the student accidentally refreshes or closes the browser tab during an exam?</span>
               <span class="faq-arrow">▼</span>
             </div>
             <div class="faq-body">
-              The assessment state and timer deadline are saved in browser LocalStorage. Refreshing the browser resumes the exact remaining countdown without restarting the timer. Candidate details and current question progress are safely restored.
+              The assessment state, candidate metadata, and timer deadline are saved in browser LocalStorage. Refreshing the browser resumes the exact remaining countdown without restarting or extending the timer. Candidate details and current question progress are safely restored.
             </div>
           </div>
 
           <div class="faq-item">
             <div class="faq-header" onclick="toggleFaq(this)">
-              <span>Q3: The browser only downloaded one file instead of all four submission files. What happened?</span>
+              <span>Q3: Why are the Home, App store, and Help Guide links locked with a 🔒 icon?</span>
               <span class="faq-arrow">▼</span>
             </div>
             <div class="faq-body">
-              Modern browsers often block multiple simultaneous downloads by default. Look for a notification icon in the right side of the browser URL bar (or download bar) that says <i>"Multiple files were blocked"</i>. Click it and select <b>Always allow multiple downloads from this site</b>.
+              When an assessment is actively running or an assessment package is imported, the top header navigation links are automatically locked by the system to maintain exam integrity and quarantine candidates within the assessment. Clicking any locked navigation link prompts for the <b>Teacher / Proctor Master Passcode</b>. Only authorized examiners with the passcode can unlock or access external portals.
             </div>
           </div>
 
           <div class="faq-item">
             <div class="faq-header" onclick="toggleFaq(this)">
-              <span>Q4: How do I completely clear all stored assessment data and start fresh?</span>
+              <span>Q4: The browser only downloaded one file instead of all four submission files. What happened?</span>
               <span class="faq-arrow">▼</span>
             </div>
             <div class="faq-body">
-              Click the <b>Clear Cookies</b> button in the top right header. This will stop active media recording streams, clear all assessment cookies, wipe LocalStorage/SessionStorage session keys, and reload a pristine starter workspace.
+              Modern browsers often block multiple automatic file downloads by default. Look for a notification icon in the right side of the browser URL bar (or download bar) that says <i>"Multiple files were blocked"</i>. Click it and select <b>Always allow multiple downloads from this site</b>.
             </div>
           </div>
 
           <div class="faq-item">
             <div class="faq-header" onclick="toggleFaq(this)">
-              <span>Q5: What programming languages are supported in the built-in compiler?</span>
+              <span>Q5: How do I completely clear all stored assessment data and reset the workspace?</span>
               <span class="faq-arrow">▼</span>
             </div>
             <div class="faq-body">
-              The IDE natively supports <b>Python 3</b>, <b>C (GCC)</b>, and <b>C++ (G++)</b>. Code execution connects through real-time cloud WebSocket compilers with automatic prompt/echo stripping, stderr isolation, and syntax error diagnostics.
+              Click the <b>Clear Cookies</b> button in the top right header. During an active exam, this button is locked with password <b>12345</b> to safeguard candidate attempts against accidental data loss. Clearing data will stop active media recording streams, clear all assessment cookies, wipe LocalStorage/SessionStorage session keys, and reload a pristine starter workspace.
             </div>
           </div>
 
@@ -1887,7 +1861,7 @@
               <span class="faq-arrow">▼</span>
             </div>
             <div class="faq-body">
-              When launching the IDE, click the <b>⚡ Try with mock test data</b> button in the welcome dialogue. It will instantly import the built-in 6-question programming assessment set (covering C, C++, and Python 3 with automated test cases) so you can test and explore the IDE immediately without needing to upload any files.
+              When launching the IDE, click the <b>🧪 Try with mock test data</b> button in the welcome modal. It will instantly import the built-in 6-question programming assessment set (covering Python, C, and C++ with automated test cases) so you can test and explore the IDE immediately without needing to upload any files.
             </div>
           </div>
         </div>
@@ -1928,7 +1902,7 @@
   <!-- Footer -->
   <footer class="guide-footer">
     <p><b>Browser Assessment IDE Pro</b> — Rich Interactive Assessment & Proctoring System</p>
-    <p style="margin-top:8px;">Designed with ❤️ for Educators, Students, and Software Engineers worldwide.</p>
+    <p style="margin-top:8px;">Designed for Educators, Students, and Software Engineers worldwide.</p>
   </footer>
 
   <script>

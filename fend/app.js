@@ -1,29 +1,206 @@
 const $=id=>document.getElementById(id),uid=()=>`Q-${Date.now().toString(36).toUpperCase()}-${Math.random().toString(36).slice(2,6).toUpperCase()}`;
-const starter=()=>({id:uid(),title:'Question',problemHtml:'<h2>Problem Statement</h2><p>Write a Python program that reads input and prints the required output.</p><p><b>Input Specification:</b><br>Read values using <code>input()</code>.</p><p><b>Output Specification:</b><br>Print only the required answer.</p>',code:'# Read input and write your solution here\nvalue = input().strip()\nprint(value)',tests:[{input:'hello',expected:'hello'},{input:'42',expected:'42'}],customFonts:[]});
-let state={format:'frontend-assessment-set',version:2,setId:`SET-${Date.now().toString(36).toUpperCase()}`,title:'Front-End Assessment',timerMinutes:60,questions:[starter()]},current=0,history=[],remaining=3600,timerHandle;
+
+const FRONT_DEFAULTS = {
+  html: '<!doctype html>\n<html lang="en">\n<head>\n  <meta charset="UTF-8">\n  <meta name="viewport" content="width=device-width, initial-scale=1.0">\n  <title>Front-End Task</title>\n</head>\n<body>\n  <main class="card">\n    <h1>Hello Front End</h1>\n    <p>Edit HTML, CSS, and JavaScript to update this preview.</p>\n    <button id="actionBtn">Click me</button>\n  </main>\n</body>\n</html>',
+  css: '* { box-sizing: border-box; }\nbody {\n  margin: 0;\n  min-height: 100vh;\n  display: grid;\n  place-items: center;\n  font-family: Segoe UI, Arial, sans-serif;\n  background: linear-gradient(135deg, #8e44ad, #9b59b6);\n}\n.card {\n  width: min(440px, 90vw);\n  padding: 36px;\n  border-radius: 16px;\n  background: white;\n  text-align: center;\n  box-shadow: 0 18px 50px rgba(0,0,0,.2);\n}\nbutton { padding: 10px 18px; cursor: pointer; }',
+  javascript: "document.getElementById('actionBtn')?.addEventListener('click', () => {\n  console.log('Button clicked');\n});"
+};
+
+const SAMPLE_MOCK_DATA = {
+  "format": "frontend-assessment-complete-json",
+  "version": 1,
+  "exportedAt": "2026-09-27T18:29:42.170Z",
+  "assessment": {
+    "format": "frontend-assessment-set",
+    "version": 2,
+    "setId": "SET-MUK5KO3I",
+    "title": "Front-End Assessment",
+    "timerMinutes": 60,
+    "questions": [
+      {
+        "id": "Q-MUK5KO3I-LL17",
+        "title": "Interactive Counter Component",
+        "problemHtml": "<h2>Problem Statement: Interactive Counter</h2><p>Build an interactive counter component in HTML, CSS, and JavaScript with increment, decrement, and reset functionality.</p><h3>Requirements:</h3><ul><li>Display the current count in the element with <code>id=\"count\"</code> (initial value must be <code>0</code>).</li><li>Clicking <code>#incrementBtn</code> should increase the count by <code>1</code>.</li><li>Clicking <code>#decrementBtn</code> should decrease the count by <code>1</code> (do not allow the count to drop below <code>0</code>).</li><li>Clicking <code>#resetBtn</code> should reset the counter back to <code>0</code>.</li><li>Dynamically change the counter text color: <code>#27ae60</code> (green) when count > 0, and <code>#2c3e50</code> when count is 0.</li></ul>",
+        "code": "<!doctype html>\n<html lang=\"en\">\n<head>\n  <meta charset=\"UTF-8\">\n  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n  <title>Interactive Counter</title>\n</head>\n<body>\n  <main class=\"card\">\n    <h1>Counter App</h1>\n    <div class=\"counter-display\" id=\"count\">0</div>\n    <div class=\"button-group\">\n      <button id=\"decrementBtn\" class=\"btn btn-secondary\">- Decrement</button>\n      <button id=\"resetBtn\" class=\"btn btn-outline\">Reset</button>\n      <button id=\"incrementBtn\" class=\"btn btn-primary\">+ Increment</button>\n    </div>\n  </main>\n</body>\n</html>",
+        "tests": [],
+        "customFonts": [],
+        "problemLocked": false,
+        "frontEndHtml": "<!doctype html>\n<html lang=\"en\">\n<head>\n  <meta charset=\"UTF-8\">\n  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n  <title>Interactive Counter</title>\n</head>\n<body>\n  <main class=\"card\">\n    <h1>Counter App</h1>\n    <div class=\"counter-display\" id=\"count\">0</div>\n    <div class=\"button-group\">\n      <button id=\"decrementBtn\" class=\"btn btn-secondary\">- Decrement</button>\n      <button id=\"resetBtn\" class=\"btn btn-outline\">Reset</button>\n      <button id=\"incrementBtn\" class=\"btn btn-primary\">+ Increment</button>\n    </div>\n  </main>\n</body>\n</html>",
+        "frontEndCss": "* { box-sizing: border-box; }\nbody {\n  margin: 0;\n  min-height: 100vh;\n  display: grid;\n  place-items: center;\n  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;\n  background: linear-gradient(135deg, #667eea, #764ba2);\n}\n.card {\n  width: min(440px, 90vw);\n  padding: 32px;\n  border-radius: 16px;\n  background: #ffffff;\n  text-align: center;\n  box-shadow: 0 16px 40px rgba(0,0,0,0.18);\n}\nh1 { margin-top: 0; color: #1e293b; font-size: 1.6rem; }\n.counter-display {\n  font-size: 4rem;\n  font-weight: 700;\n  color: #2c3e50;\n  margin: 24px 0;\n  transition: color 0.2s ease;\n}\n.button-group {\n  display: flex;\n  gap: 12px;\n  justify-content: center;\n  flex-wrap: wrap;\n}\n.btn {\n  padding: 10px 18px;\n  font-size: 0.95rem;\n  font-weight: 600;\n  border-radius: 8px;\n  border: none;\n  cursor: pointer;\n  transition: transform 0.1s, opacity 0.2s;\n}\n.btn:active { transform: scale(0.96); }\n.btn-primary { background: #4f46e5; color: white; }\n.btn-secondary { background: #ef4444; color: white; }\n.btn-outline { background: #e2e8f0; color: #334155; }",
+        "frontEndJs": "// Write your Counter JavaScript logic here\nlet count = 0;\nconst countDisplay = document.getElementById('count');\nconst incrementBtn = document.getElementById('incrementBtn');\nconst decrementBtn = document.getElementById('decrementBtn');\nconst resetBtn = document.getElementById('resetBtn');\n\nfunction updateDisplay() {\n  countDisplay.textContent = count;\n  countDisplay.style.color = count > 0 ? '#27ae60' : '#2c3e50';\n}\n\nincrementBtn?.addEventListener('click', () => {\n  count++;\n  updateDisplay();\n});\n\ndecrementBtn?.addEventListener('click', () => {\n  if (count > 0) {\n    count--;\n    updateDisplay();\n  }\n});\n\nresetBtn?.addEventListener('click', () => {\n  count = 0;\n  updateDisplay();\n});",
+        "language": "html"
+      },
+      {
+        "id": "Q-MUK5KTUA-Q1B2",
+        "title": "Dynamic Todo List Application",
+        "problemHtml": "<h2>Problem Statement: Dynamic Todo List</h2><p>Create a functional Todo List application where users can add tasks, mark tasks as completed, and remove tasks.</p><h3>Requirements:</h3><ul><li>User types a task inside <code>#taskInput</code> and clicks <code>#addTaskBtn</code> (or presses Enter) to add it.</li><li>Ignore empty or whitespace-only task entries.</li><li>Each new task is appended as a <code>&lt;li&gt;</code> to <code>#taskList</code> with a task title span and a delete button (<code>class=\"delete-btn\"</code>).</li><li>Clicking a task's text toggles the <code>completed</code> class on the task item (striking through the text).</li><li>Clicking the delete button removes the corresponding item from the list.</li><li>Clear the input field and keep it focused after adding a task.</li></ul>",
+        "code": "<!doctype html>\n<html lang=\"en\">\n<head>\n  <meta charset=\"UTF-8\">\n  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n  <title>Todo List</title>\n</head>\n<body>\n  <main class=\"card\">\n    <h1>My Tasks</h1>\n    <div class=\"input-row\">\n      <input type=\"text\" id=\"taskInput\" placeholder=\"What needs to be done?\" autocomplete=\"off\">\n      <button id=\"addTaskBtn\">Add</button>\n    </div>\n    <ul id=\"taskList\" class=\"task-list\"></ul>\n  </main>\n</body>\n</html>",
+        "tests": [],
+        "customFonts": [],
+        "problemLocked": false,
+        "frontEndHtml": "<!doctype html>\n<html lang=\"en\">\n<head>\n  <meta charset=\"UTF-8\">\n  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n  <title>Todo List</title>\n</head>\n<body>\n  <main class=\"card\">\n    <h1>My Tasks</h1>\n    <div class=\"input-row\">\n      <input type=\"text\" id=\"taskInput\" placeholder=\"What needs to be done?\" autocomplete=\"off\">\n      <button id=\"addTaskBtn\">Add</button>\n    </div>\n    <ul id=\"taskList\" class=\"task-list\"></ul>\n  </main>\n</body>\n</html>",
+        "frontEndCss": "* { box-sizing: border-box; }\nbody {\n  margin: 0;\n  min-height: 100vh;\n  display: grid;\n  place-items: center;\n  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;\n  background: linear-gradient(135deg, #1e3c72, #2a5298);\n}\n.card {\n  width: min(480px, 92vw);\n  padding: 28px;\n  border-radius: 14px;\n  background: #ffffff;\n  box-shadow: 0 14px 35px rgba(0,0,0,0.2);\n}\nh1 { margin-top: 0; color: #1e293b; font-size: 1.5rem; text-align: center; }\n.input-row {\n  display: flex;\n  gap: 8px;\n  margin-bottom: 20px;\n}\n#taskInput {\n  flex: 1;\n  padding: 10px 14px;\n  border: 1px solid #cbd5e1;\n  border-radius: 8px;\n  font-size: 0.95rem;\n  outline: none;\n}\n#taskInput:focus { border-color: #2563eb; }\n#addTaskBtn {\n  padding: 10px 20px;\n  background: #2563eb;\n  color: white;\n  border: none;\n  border-radius: 8px;\n  font-weight: 600;\n  cursor: pointer;\n}\n.task-list {\n  list-style: none;\n  padding: 0;\n  margin: 0;\n  max-height: 280px;\n  overflow-y: auto;\n}\n.task-item {\n  display: flex;\n  align-items: center;\n  justify-content: space-between;\n  padding: 10px 12px;\n  background: #f8fafc;\n  border-radius: 8px;\n  margin-bottom: 8px;\n}\n.task-text {\n  cursor: pointer;\n  flex: 1;\n  word-break: break-word;\n}\n.task-item.completed .task-text {\n  text-decoration: line-through;\n  color: #94a3b8;\n}\n.delete-btn {\n  background: #fee2e2;\n  color: #dc2626;\n  border: none;\n  padding: 6px 10px;\n  border-radius: 6px;\n  cursor: pointer;\n  font-size: 0.85rem;\n}",
+        "frontEndJs": "// Write your Todo List JavaScript logic here\nconst taskInput = document.getElementById('taskInput');\nconst addTaskBtn = document.getElementById('addTaskBtn');\nconst taskList = document.getElementById('taskList');\n\nfunction addTask() {\n  const text = taskInput.value.trim();\n  if (!text) return;\n\n  const li = document.createElement('li');\n  li.className = 'task-item';\n  li.innerHTML = `\n    <span class=\"task-text\">${text}</span>\n    <button class=\"delete-btn\">Delete</button>\n  `;\n\n  li.querySelector('.task-text').addEventListener('click', () => {\n    li.classList.toggle('completed');\n  });\n\n  li.querySelector('.delete-btn').addEventListener('click', () => {\n    li.remove();\n  });\n\n  taskList.appendChild(li);\n  taskInput.value = '';\n  taskInput.focus();\n}\n\naddTaskBtn?.addEventListener('click', addTask);\ntaskInput?.addEventListener('keydown', (e) => {\n  if (e.key === 'Enter') addTask();\n});",
+        "language": "html"
+      },
+      {
+        "id": "Q-MUK5KUBD-L8LX",
+        "title": "Interactive Accordion FAQ Component",
+        "problemHtml": "<h2>Problem Statement: Interactive Accordion FAQ</h2><p>Build a responsive FAQ accordion component with collapsible question panels.</p><h3>Requirements:</h3><ul><li>Render at least 3 accordion items inside <code>#accordion</code>.</li><li>Each item contains a header button (<code>class=\"accordion-header\"</code>) and a body panel (<code>class=\"accordion-body\"</code>).</li><li>Clicking an item's header toggles its open/closed state by toggling the <code>active</code> class.</li><li>Only one accordion item should remain expanded at any time (opening an item automatically collapses all other items).</li><li>Include an indicator icon (<code>+</code>/<code>-</code> or arrow) that updates according to the active state.</li></ul>",
+        "code": "<!doctype html>\n<html lang=\"en\">\n<head>\n  <meta charset=\"UTF-8\">\n  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n  <title>FAQ Accordion</title>\n</head>\n<body>\n  <main class=\"card\">\n    <h1>Frequently Asked Questions</h1>\n    <div id=\"accordion\" class=\"accordion\">\n      <div class=\"accordion-item active\">\n        <button class=\"accordion-header\">\n          <span>What is this assessment platform?</span>\n          <span class=\"icon\">−</span>\n        </button>\n        <div class=\"accordion-body\">\n          <p>This is a live interactive front-end coding environment supporting HTML, CSS, and JS with instant preview.</p>\n        </div>\n      </div>\n      <div class=\"accordion-item\">\n        <button class=\"accordion-header\">\n          <span>How do I submit my answers?</span>\n          <span class=\"icon\">+</span>\n        </button>\n        <div class=\"accordion-body\">\n          <p>When you complete all tasks, click the Finish Assessment button to generate your submission report.</p>\n        </div>\n      </div>\n      <div class=\"accordion-item\">\n        <button class=\"accordion-header\">\n          <span>Are shortcuts enabled during testing?</span>\n          <span class=\"icon\">+</span>\n        </button>\n        <div class=\"accordion-body\">\n          <p>Pressing Tab indents code by two spaces, and Ctrl+Enter triggers an immediate preview refresh.</p>\n        </div>\n      </div>\n    </div>\n  </main>\n</body>\n</html>",
+        "tests": [],
+        "customFonts": [],
+        "problemLocked": false,
+        "frontEndHtml": "<!doctype html>\n<html lang=\"en\">\n<head>\n  <meta charset=\"UTF-8\">\n  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n  <title>FAQ Accordion</title>\n</head>\n<body>\n  <main class=\"card\">\n    <h1>Frequently Asked Questions</h1>\n    <div id=\"accordion\" class=\"accordion\">\n      <div class=\"accordion-item active\">\n        <button class=\"accordion-header\">\n          <span>What is this assessment platform?</span>\n          <span class=\"icon\">−</span>\n        </button>\n        <div class=\"accordion-body\">\n          <p>This is a live interactive front-end coding environment supporting HTML, CSS, and JS with instant preview.</p>\n        </div>\n      </div>\n      <div class=\"accordion-item\">\n        <button class=\"accordion-header\">\n          <span>How do I submit my answers?</span>\n          <span class=\"icon\">+</span>\n        </button>\n        <div class=\"accordion-body\">\n          <p>When you complete all tasks, click the Finish Assessment button to generate your submission report.</p>\n        </div>\n      </div>\n      <div class=\"accordion-item\">\n        <button class=\"accordion-header\">\n          <span>Are shortcuts enabled during testing?</span>\n          <span class=\"icon\">+</span>\n        </button>\n        <div class=\"accordion-body\">\n          <p>Pressing Tab indents code by two spaces, and Ctrl+Enter triggers an immediate preview refresh.</p>\n        </div>\n      </div>\n    </div>\n  </main>\n</body>\n</html>",
+        "frontEndCss": "* { box-sizing: border-box; }\nbody {\n  margin: 0;\n  min-height: 100vh;\n  display: grid;\n  place-items: center;\n  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;\n  background: linear-gradient(135deg, #0ba360, #3cba92);\n}\n.card {\n  width: min(520px, 92vw);\n  padding: 30px;\n  border-radius: 16px;\n  background: #ffffff;\n  box-shadow: 0 16px 40px rgba(0,0,0,0.15);\n}\nh1 { margin-top: 0; color: #1e293b; font-size: 1.4rem; text-align: center; margin-bottom: 20px; }\n.accordion { display: flex; flex-direction: column; gap: 10px; }\n.accordion-item {\n  border: 1px solid #e2e8f0;\n  border-radius: 8px;\n  overflow: hidden;\n  transition: border-color 0.2s;\n}\n.accordion-item.active { border-color: #0ba360; }\n.accordion-header {\n  width: 100%;\n  padding: 14px 16px;\n  background: #f8fafc;\n  border: none;\n  text-align: left;\n  font-size: 0.95rem;\n  font-weight: 600;\n  color: #334155;\n  display: flex;\n  justify-content: space-between;\n  align-items: center;\n  cursor: pointer;\n}\n.accordion-header:hover { background: #f1f5f9; }\n.accordion-item.active .accordion-header {\n  background: #e6f7ef;\n  color: #0ba360;\n}\n.icon { font-size: 1.2rem; font-weight: bold; }\n.accordion-body {\n  display: none;\n  padding: 14px 16px;\n  background: #ffffff;\n  color: #64748b;\n  font-size: 0.9rem;\n  line-height: 1.5;\n}\n.accordion-item.active .accordion-body {\n  display: block;\n}\n.accordion-body p { margin: 0; }",
+        "frontEndJs": "// Write your Accordion JavaScript logic here\nconst items = document.querySelectorAll('.accordion-item');\n\nitems.forEach((item) => {\n  const header = item.querySelector('.accordion-header');\n  header?.addEventListener('click', () => {\n    const isActive = item.classList.contains('active');\n    \n    // Close all items\n    items.forEach((other) => {\n      other.classList.remove('active');\n      const icon = other.querySelector('.icon');\n      if (icon) icon.textContent = '+';\n    });\n\n    // If it was not active, open it\n    if (!isActive) {\n      item.classList.add('active');\n      const icon = item.querySelector('.icon');\n      if (icon) icon.textContent = '−';\n    }\n  });\n});",
+        "language": "html"
+      },
+      {
+        "id": "Q-MUK5KUJD-SSFA",
+        "title": "Modal Popup Dialog Component",
+        "problemHtml": "<h2>Problem Statement: Modal Dialog Popup</h2><p>Build a customizable Modal Dialog window with open, close, and outside-click dismiss functionality.</p><h3>Requirements:</h3><ul><li>A trigger button <code>#openModalBtn</code> that opens the modal dialog.</li><li>The modal backdrop (<code>#modalOverlay</code>) should start hidden (<code>display: none</code> or <code>opacity: 0</code>).</li><li>Clicking <code>#openModalBtn</code> opens the modal with <code>class=\"active\"</code> on <code>#modalOverlay</code>.</li><li>Clicking <code>#closeModalBtn</code> inside the dialog closes the modal.</li><li>Clicking on the background overlay outside <code>#modalBox</code> closes the modal.</li><li>Pressing the <code>Escape</code> key closes the modal if currently open.</li></ul>",
+        "code": "<!doctype html>\n<html lang=\"en\">\n<head>\n  <meta charset=\"UTF-8\">\n  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n  <title>Modal Popup</title>\n</head>\n<body>\n  <main class=\"card\">\n    <h1>Modal Demo</h1>\n    <p>Click below to test the modal dialog component.</p>\n    <button id=\"openModalBtn\" class=\"btn-primary\">Open Dialog</button>\n  </main>\n\n  <div id=\"modalOverlay\" class=\"modal-overlay\">\n    <div id=\"modalBox\" class=\"modal-box\">\n      <div class=\"modal-header\">\n        <h2>Confirmation</h2>\n        <button id=\"closeModalBtn\" class=\"close-btn\" aria-label=\"Close\">&times;</button>\n      </div>\n      <div class=\"modal-body\">\n        <p>This is an accessible modal popup window. You can close it via the button, clicking outside, or pressing Escape.</p>\n      </div>\n      <div class=\"modal-footer\">\n        <button id=\"confirmModalBtn\" class=\"btn-primary\">Got it!</button>\n      </div>\n    </div>\n  </div>\n</body>\n</html>",
+        "tests": [],
+        "customFonts": [],
+        "problemLocked": false,
+        "frontEndHtml": "<!doctype html>\n<html lang=\"en\">\n<head>\n  <meta charset=\"UTF-8\">\n  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n  <title>Modal Popup</title>\n</head>\n<body>\n  <main class=\"card\">\n    <h1>Modal Demo</h1>\n    <p>Click below to test the modal dialog component.</p>\n    <button id=\"openModalBtn\" class=\"btn-primary\">Open Dialog</button>\n  </main>\n\n  <div id=\"modalOverlay\" class=\"modal-overlay\">\n    <div id=\"modalBox\" class=\"modal-box\">\n      <div class=\"modal-header\">\n        <h2>Confirmation</h2>\n        <button id=\"closeModalBtn\" class=\"close-btn\" aria-label=\"Close\">&times;</button>\n      </div>\n      <div class=\"modal-body\">\n        <p>This is an accessible modal popup window. You can close it via the button, clicking outside, or pressing Escape.</p>\n      </div>\n      <div class=\"modal-footer\">\n        <button id=\"confirmModalBtn\" class=\"btn-primary\">Got it!</button>\n      </div>\n    </div>\n  </div>\n</body>\n</html>",
+        "frontEndCss": "* { box-sizing: border-box; }\nbody {\n  margin: 0;\n  min-height: 100vh;\n  display: grid;\n  place-items: center;\n  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;\n  background: linear-gradient(135deg, #f093fb, #f5576c);\n}\n.card {\n  width: min(420px, 90vw);\n  padding: 32px;\n  border-radius: 14px;\n  background: #ffffff;\n  text-align: center;\n  box-shadow: 0 14px 35px rgba(0,0,0,0.15);\n}\nh1 { margin-top: 0; color: #1e293b; }\np { color: #64748b; margin-bottom: 24px; }\n.btn-primary {\n  padding: 10px 22px;\n  background: #f5576c;\n  color: white;\n  border: none;\n  border-radius: 8px;\n  font-weight: 600;\n  cursor: pointer;\n}\n.modal-overlay {\n  position: fixed;\n  inset: 0;\n  background: rgba(0, 0, 0, 0.5);\n  display: none;\n  place-items: center;\n  padding: 20px;\n  z-index: 100;\n}\n.modal-overlay.active {\n  display: grid;\n}\n.modal-box {\n  background: #ffffff;\n  border-radius: 12px;\n  width: min(440px, 100%);\n  box-shadow: 0 20px 50px rgba(0,0,0,0.3);\n  overflow: hidden;\n  animation: modalFadeIn 0.2s ease-out;\n}\n@keyframes modalFadeIn {\n  from { opacity: 0; transform: translateY(-16px); }\n  to { opacity: 1; transform: translateY(0); }\n}\n.modal-header {\n  display: flex;\n  justify-content: space-between;\n  align-items: center;\n  padding: 16px 20px;\n  border-bottom: 1px solid #e2e8f0;\n}\n.modal-header h2 { margin: 0; font-size: 1.2rem; color: #1e293b; }\n.close-btn {\n  background: none;\n  border: none;\n  font-size: 1.5rem;\n  cursor: pointer;\n  color: #94a3b8;\n}\n.modal-body { padding: 20px; color: #475569; font-size: 0.95rem; line-height: 1.5; }\n.modal-footer { padding: 14px 20px; background: #f8fafc; text-align: right; border-top: 1px solid #e2e8f0; }",
+        "frontEndJs": "// Write your Modal JavaScript logic here\nconst openModalBtn = document.getElementById('openModalBtn');\nconst closeModalBtn = document.getElementById('closeModalBtn');\nconst confirmModalBtn = document.getElementById('confirmModalBtn');\nconst modalOverlay = document.getElementById('modalOverlay');\nconst modalBox = document.getElementById('modalBox');\n\nfunction openModal() {\n  modalOverlay.classList.add('active');\n}\n\nfunction closeModal() {\n  modalOverlay.classList.remove('active');\n}\n\nopenModalBtn?.addEventListener('click', openModal);\ncloseModalBtn?.addEventListener('click', closeModal);\nconfirmModalBtn?.addEventListener('click', closeModal);\n\nmodalOverlay?.addEventListener('click', (e) => {\n  if (e.target === modalOverlay) {\n    closeModal();\n  }\n});\n\ndocument.addEventListener('keydown', (e) => {\n  if (e.key === 'Escape' && modalOverlay?.classList.contains('active')) {\n    closeModal();\n  }\n});",
+        "language": "html"
+      },
+      {
+        "id": "Q-MUK5KUOH-3TFH",
+        "title": "Dark / Light Theme Toggle Switcher",
+        "problemHtml": "<h2>Problem Statement: Dark / Light Theme Toggle</h2><p>Build a responsive Dark / Light theme switcher with persistent styling state and smooth color transitions.</p><h3>Requirements:</h3><ul><li>Add a toggle button <code>#themeToggleBtn</code> that switches between light and dark modes.</li><li>When switched to dark mode, toggle the <code>dark-mode</code> class on <code>document.body</code>.</li><li>Update the button label/icon: show <code>🌙 Dark Mode</code> in light state and <code>☀️ Light Mode</code> in dark state.</li><li>Ensure smooth CSS transitions (<code>0.3s</code>) for background and text colors.</li><li>In Light Mode: page background is <code>#f1f5f9</code>, card background is <code>#ffffff</code>, and text is <code>#0f172a</code>.</li><li>In Dark Mode: page background is <code>#0f172a</code>, card background is <code>#1e293b</code>, and text is <code>#f8fafc</code>.</li></ul>",
+        "code": "<!doctype html>\n<html lang=\"en\">\n<head>\n  <meta charset=\"UTF-8\">\n  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n  <title>Theme Switcher</title>\n</head>\n<body>\n  <main class=\"card\">\n    <div class=\"card-header\">\n      <h1>Theme Switcher</h1>\n      <button id=\"themeToggleBtn\" class=\"toggle-btn\">🌙 Dark Mode</button>\n    </div>\n    <p class=\"description\">Toggle between sleek light and dark themes with smooth transitions.</p>\n    <div class=\"demo-box\">\n      <h3>Live Feature Card</h3>\n      <p>Clean UI that adapts effortlessly to user theme preferences.</p>\n    </div>\n  </main>\n</body>\n</html>",
+        "tests": [],
+        "customFonts": [],
+        "problemLocked": false,
+        "frontEndHtml": "<!doctype html>\n<html lang=\"en\">\n<head>\n  <meta charset=\"UTF-8\">\n  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n  <title>Theme Switcher</title>\n</head>\n<body>\n  <main class=\"card\">\n    <div class=\"card-header\">\n      <h1>Theme Switcher</h1>\n      <button id=\"themeToggleBtn\" class=\"toggle-btn\">🌙 Dark Mode</button>\n    </div>\n    <p class=\"description\">Toggle between sleek light and dark themes with smooth transitions.</p>\n    <div class=\"demo-box\">\n      <h3>Live Feature Card</h3>\n      <p>Clean UI that adapts effortlessly to user theme preferences.</p>\n    </div>\n  </main>\n</body>\n</html>",
+        "frontEndCss": "* { box-sizing: border-box; }\nbody {\n  margin: 0;\n  min-height: 100vh;\n  display: grid;\n  place-items: center;\n  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;\n  background-color: #f1f5f9;\n  color: #0f172a;\n  transition: background-color 0.3s ease, color 0.3s ease;\n}\nbody.dark-mode {\n  background-color: #0f172a;\n  color: #f8fafc;\n}\n.card {\n  width: min(480px, 90vw);\n  padding: 30px;\n  border-radius: 16px;\n  background-color: #ffffff;\n  box-shadow: 0 16px 36px rgba(0,0,0,0.1);\n  transition: background-color 0.3s ease, box-shadow 0.3s ease;\n}\nbody.dark-mode .card {\n  background-color: #1e293b;\n  box-shadow: 0 16px 36px rgba(0,0,0,0.4);\n}\n.card-header {\n  display: flex;\n  justify-content: space-between;\n  align-items: center;\n  margin-bottom: 16px;\n}\nh1 { margin-top: 0; font-size: 1.4rem; }\n.toggle-btn {\n  padding: 8px 16px;\n  border-radius: 20px;\n  border: 1px solid #cbd5e1;\n  background: #f8fafc;\n  color: #334155;\n  font-weight: 600;\n  cursor: pointer;\n  transition: all 0.2s ease;\n}\nbody.dark-mode .toggle-btn {\n  background: #334155;\n  color: #f8fafc;\n  border-color: #475569;\n}\n.description { color: #64748b; font-size: 0.95rem; margin-bottom: 20px; }\nbody.dark-mode .description { color: #94a3b8; }\n.demo-box {\n  padding: 16px;\n  background: #f8fafc;\n  border-radius: 10px;\n  border: 1px solid #e2e8f0;\n}\nbody.dark-mode .demo-box {\n  background: #0f172a;\n  border-color: #334155;\n}\n.demo-box h3 { margin: 0 0 6px; font-size: 1rem; }\n.demo-box p { margin: 0; font-size: 0.88rem; color: #64748b; }\nbody.dark-mode .demo-box p { color: #94a3b8; }",
+        "frontEndJs": "// Write your Theme Toggle JavaScript logic here\nconst themeToggleBtn = document.getElementById('themeToggleBtn');\n\nthemeToggleBtn?.addEventListener('click', () => {\n  const isDark = document.body.classList.toggle('dark-mode');\n  themeToggleBtn.textContent = isDark ? '☀️ Light Mode' : '🌙 Dark Mode';\n});",
+        "language": "html"
+      },
+      {
+        "id": "Q-MUK5KUTT-D5MB",
+        "title": "Digital Stopwatch with Laps",
+        "problemHtml": "<h2>Problem Statement: Digital Stopwatch with Laps</h2><p>Build a high-precision digital stopwatch with start, pause, reset, and lap recording functionality.</p><h3>Requirements:</h3><ul><li>Display the time in <code>MM:SS:CS</code> (minutes, seconds, centiseconds/hundredths of a second) format in <code>#timeDisplay</code>.</li><li>Clicking <code>#startBtn</code> starts the timer ticking every 10 milliseconds.</li><li>Clicking <code>#pauseBtn</code> pauses the timer at its current value.</li><li>Clicking <code>#resetBtn</code> stops the timer, resets time to <code>00:00:00</code>, and clears the laps list.</li><li>Clicking <code>#lapBtn</code> records the current timestamp as a new <code>&lt;li&gt;</code> item inside <code>#lapsList</code>.</li><li>Two-digit zero-padding should always be applied for minutes, seconds, and centiseconds (e.g. <code>03:07:09</code>).</li></ul>",
+        "code": "<!doctype html>\n<html lang=\"en\">\n<head>\n  <meta charset=\"UTF-8\">\n  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n  <title>Digital Stopwatch</title>\n</head>\n<body>\n  <main class=\"card\">\n    <h1>Digital Stopwatch</h1>\n    <div id=\"timeDisplay\" class=\"time-display\">00:00:00</div>\n    <div class=\"controls\">\n      <button id=\"startBtn\" class=\"btn btn-start\">Start</button>\n      <button id=\"pauseBtn\" class=\"btn btn-pause\">Pause</button>\n      <button id=\"lapBtn\" class=\"btn btn-lap\">Lap</button>\n      <button id=\"resetBtn\" class=\"btn btn-reset\">Reset</button>\n    </div>\n    <div class=\"laps-container\">\n      <h3>Lap Times</h3>\n      <ul id=\"lapsList\" class=\"laps-list\"></ul>\n    </div>\n  </main>\n</body>\n</html>",
+        "tests": [],
+        "customFonts": [],
+        "problemLocked": false,
+        "frontEndHtml": "<!doctype html>\n<html lang=\"en\">\n<head>\n  <meta charset=\"UTF-8\">\n  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n  <title>Digital Stopwatch</title>\n</head>\n<body>\n  <main class=\"card\">\n    <h1>Digital Stopwatch</h1>\n    <div id=\"timeDisplay\" class=\"time-display\">00:00:00</div>\n    <div class=\"controls\">\n      <button id=\"startBtn\" class=\"btn btn-start\">Start</button>\n      <button id=\"pauseBtn\" class=\"btn btn-pause\">Pause</button>\n      <button id=\"lapBtn\" class=\"btn btn-lap\">Lap</button>\n      <button id=\"resetBtn\" class=\"btn btn-reset\">Reset</button>\n    </div>\n    <div class=\"laps-container\">\n      <h3>Lap Times</h3>\n      <ul id=\"lapsList\" class=\"laps-list\"></ul>\n    </div>\n  </main>\n</body>\n</html>",
+        "frontEndCss": "* { box-sizing: border-box; }\nbody {\n  margin: 0;\n  min-height: 100vh;\n  display: grid;\n  place-items: center;\n  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;\n  background: linear-gradient(135deg, #141e30, #243b55);\n}\n.card {\n  width: min(440px, 92vw);\n  padding: 30px;\n  border-radius: 16px;\n  background: #ffffff;\n  text-align: center;\n  box-shadow: 0 16px 40px rgba(0,0,0,0.3);\n}\nh1 { margin-top: 0; color: #1e293b; font-size: 1.4rem; }\n.time-display {\n  font-family: 'Consolas', 'Courier New', monospace;\n  font-size: 3rem;\n  font-weight: 700;\n  color: #0f172a;\n  margin: 20px 0;\n  letter-spacing: 2px;\n}\n.controls {\n  display: flex;\n  gap: 8px;\n  justify-content: center;\n  margin-bottom: 20px;\n}\n.btn {\n  padding: 9px 16px;\n  border: none;\n  border-radius: 8px;\n  font-weight: 600;\n  cursor: pointer;\n  transition: opacity 0.2s;\n}\n.btn:hover { opacity: 0.9; }\n.btn-start { background: #10b981; color: white; }\n.btn-pause { background: #f59e0b; color: white; }\n.btn-lap { background: #3b82f6; color: white; }\n.btn-reset { background: #ef4444; color: white; }\n.laps-container {\n  text-align: left;\n  border-top: 1px solid #e2e8f0;\n  padding-top: 14px;\n}\n.laps-container h3 { margin: 0 0 10px; font-size: 0.95rem; color: #64748b; }\n.laps-list {\n  list-style: none;\n  padding: 0;\n  margin: 0;\n  max-height: 140px;\n  overflow-y: auto;\n}\n.laps-list li {\n  display: flex;\n  justify-content: space-between;\n  padding: 6px 10px;\n  font-family: 'Consolas', monospace;\n  font-size: 0.9rem;\n  background: #f8fafc;\n  border-radius: 6px;\n  margin-bottom: 4px;\n}",
+        "frontEndJs": "// Write your Stopwatch JavaScript logic here\nlet startTime = 0;\nlet elapsedTime = 0;\nlet timerInterval = null;\nlet lapCount = 0;\n\nconst timeDisplay = document.getElementById('timeDisplay');\nconst startBtn = document.getElementById('startBtn');\nconst pauseBtn = document.getElementById('pauseBtn');\nconst lapBtn = document.getElementById('lapBtn');\nconst resetBtn = document.getElementById('resetBtn');\nconst lapsList = document.getElementById('lapsList');\n\nfunction formatTime(ms) {\n  const minutes = Math.floor(ms / 60000);\n  const seconds = Math.floor((ms % 60000) / 1000);\n  const centis = Math.floor((ms % 1000) / 10);\n  return (\n    String(minutes).padStart(2, '0') + ':' +\n    String(seconds).padStart(2, '0') + ':' +\n    String(centis).padStart(2, '0')\n  );\n}\n\nstartBtn?.addEventListener('click', () => {\n  if (timerInterval) return;\n  startTime = Date.now() - elapsedTime;\n  timerInterval = setInterval(() => {\n    elapsedTime = Date.now() - startTime;\n    timeDisplay.textContent = formatTime(elapsedTime);\n  }, 10);\n});\n\npauseBtn?.addEventListener('click', () => {\n  clearInterval(timerInterval);\n  timerInterval = null;\n});\n\nresetBtn?.addEventListener('click', () => {\n  clearInterval(timerInterval);\n  timerInterval = null;\n  elapsedTime = 0;\n  lapCount = 0;\n  timeDisplay.textContent = '00:00:00';\n  lapsList.innerHTML = '';\n});\n\nlapBtn?.addEventListener('click', () => {\n  if (elapsedTime === 0) return;\n  lapCount++;\n  const li = document.createElement('li');\n  li.innerHTML = `<span>Lap ${lapCount}</span><span>${formatTime(elapsedTime)}</span>`;\n  lapsList.prepend(li);\n});",
+        "language": "html"
+      },
+      {
+        "id": "Q-MUK5KVXL-VFVN",
+        "title": "Live Character and Word Counter",
+        "problemHtml": "<h2>Problem Statement: Live Character & Word Counter</h2><p>Build a real-time character, word, and limit tracker with dynamic progress feedback.</p><h3>Requirements:</h3><ul><li>Provide a <code>&lt;textarea id=\"textInput\" maxlength=\"200\"&gt;</code> for text input.</li><li>Update character count inside <code>#charCount</code> live as the user types (format: <code>X / 200</code>).</li><li>Calculate and display word count in <code>#wordCount</code> (correctly handling empty strings and consecutive whitespaces).</li><li>Update the width of <code>#progressBar</code> dynamically from <code>0%</code> to <code>100%</code> based on remaining character capacity.</li><li>When remaining characters are 15 or fewer, add <code>class=\"warning\"</code> to the progress bar and character count to highlight in red/amber.</li></ul>",
+        "code": "<!doctype html>\n<html lang=\"en\">\n<head>\n  <meta charset=\"UTF-8\">\n  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n  <title>Character & Word Counter</title>\n</head>\n<body>\n  <main class=\"card\">\n    <h1>Text Analyzer</h1>\n    <textarea id=\"textInput\" maxlength=\"200\" placeholder=\"Type or paste your text here...\"></textarea>\n    <div class=\"progress-track\">\n      <div id=\"progressBar\" class=\"progress-fill\"></div>\n    </div>\n    <div class=\"stats-row\">\n      <span>Words: <strong id=\"wordCount\">0</strong></span>\n      <span>Characters: <strong id=\"charCount\">0 / 200</strong></span>\n    </div>\n  </main>\n</body>\n</html>",
+        "tests": [],
+        "customFonts": [],
+        "problemLocked": false,
+        "frontEndHtml": "<!doctype html>\n<html lang=\"en\">\n<head>\n  <meta charset=\"UTF-8\">\n  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n  <title>Character & Word Counter</title>\n</head>\n<body>\n  <main class=\"card\">\n    <h1>Text Analyzer</h1>\n    <textarea id=\"textInput\" maxlength=\"200\" placeholder=\"Type or paste your text here...\"></textarea>\n    <div class=\"progress-track\">\n      <div id=\"progressBar\" class=\"progress-fill\"></div>\n    </div>\n    <div class=\"stats-row\">\n      <span>Words: <strong id=\"wordCount\">0</strong></span>\n      <span>Characters: <strong id=\"charCount\">0 / 200</strong></span>\n    </div>\n  </main>\n</body>\n</html>",
+        "frontEndCss": "* { box-sizing: border-box; }\nbody {\n  margin: 0;\n  min-height: 100vh;\n  display: grid;\n  place-items: center;\n  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;\n  background: linear-gradient(135deg, #43e97b, #38f9d7);\n}\n.card {\n  width: min(500px, 92vw);\n  padding: 30px;\n  border-radius: 16px;\n  background: #ffffff;\n  box-shadow: 0 16px 40px rgba(0,0,0,0.15);\n}\nh1 { margin-top: 0; color: #1e293b; font-size: 1.4rem; text-align: center; }\n#textInput {\n  width: 100%;\n  height: 140px;\n  padding: 14px;\n  border: 1px solid #cbd5e1;\n  border-radius: 10px;\n  font-size: 0.95rem;\n  font-family: inherit;\n  resize: vertical;\n  outline: none;\n  transition: border-color 0.2s;\n}\n#textInput:focus { border-color: #38f9d7; }\n.progress-track {\n  height: 6px;\n  background: #e2e8f0;\n  border-radius: 3px;\n  margin: 12px 0;\n  overflow: hidden;\n}\n.progress-fill {\n  height: 100%;\n  width: 0%;\n  background: #10b981;\n  transition: width 0.15s ease, background 0.2s ease;\n}\n.progress-fill.warning {\n  background: #ef4444;\n}\n.stats-row {\n  display: flex;\n  justify-content: space-between;\n  font-size: 0.9rem;\n  color: #64748b;\n}\n.stats-row strong.warning {\n  color: #ef4444;\n}",
+        "frontEndJs": "// Write your Character and Word Counter logic here\nconst textInput = document.getElementById('textInput');\nconst charCount = document.getElementById('charCount');\nconst wordCount = document.getElementById('wordCount');\nconst progressBar = document.getElementById('progressBar');\nconst MAX_CHARS = 200;\n\ntextInput?.addEventListener('input', () => {\n  const text = textInput.value;\n  const chars = text.length;\n  \n  // Count words\n  const trimmed = text.trim();\n  const words = trimmed ? trimmed.split(/\\s+/).length : 0;\n  \n  // Calculate percent\n  const percent = Math.min(100, (chars / MAX_CHARS) * 100);\n  const isNearLimit = MAX_CHARS - chars <= 15;\n  \n  charCount.textContent = `${chars} / ${MAX_CHARS}`;\n  wordCount.textContent = words;\n  progressBar.style.width = `${percent}%`;\n  \n  progressBar.classList.toggle('warning', isNearLimit);\n  charCount.classList.toggle('warning', isNearLimit);\n});",
+        "language": "html"
+      }
+    ]
+  }
+};
+
+function ensureFrontFields(x){
+  if(!x)return;
+  x.frontEndHtml=x.frontEndHtml!==undefined?x.frontEndHtml:(x.code!==undefined?x.code:'');
+  x.frontEndCss=x.frontEndCss!==undefined?x.frontEndCss:'';
+  x.frontEndJs=x.frontEndJs!==undefined?x.frontEndJs:'';
+  x.code=x.frontEndHtml;
+  x.language='html';
+  if(x.problemHtml===undefined)x.problemHtml=x.problem||'';
+  if(!Array.isArray(x.tests))x.tests=[];
+  if(!Array.isArray(x.customFonts))x.customFonts=[];
+}
+
+function getDefaultAssessmentState(){
+  const clone = JSON.parse(JSON.stringify(SAMPLE_MOCK_DATA.assessment));
+  clone.questions.forEach(ensureFrontFields);
+  return clone;
+}
+
+function getEmptyAssessmentState(){
+  return {
+    format: 'frontend-assessment-set',
+    version: 2,
+    setId: `SET-${Date.now().toString(36).toUpperCase()}`,
+    title: 'Front-End Assessment',
+    timerMinutes: 60,
+    questions: [starter()]
+  };
+}
+
+const starter = () => ({
+  id: uid(),
+  title: 'Question',
+  problemHtml: '',
+  code: '',
+  frontEndHtml: '',
+  frontEndCss: '',
+  frontEndJs: '',
+  language: 'html',
+  tests: [],
+  customFonts: [],
+  problemLocked: false
+});
+
+let state = getEmptyAssessmentState(), current = 0, history = [], remaining = 3600, timerHandle;
 const code=$('code'),problem=$('problem'),lines=$('lines');function q(){return state.questions[current]}function esc(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}function toast(m){let t=$('toast');t.textContent=m;t.classList.add('show');clearTimeout(t.x);t.x=setTimeout(()=>t.classList.remove('show'),1700)}
 function isVeryDarkColor(colorStr){if(!colorStr)return false;const s=String(colorStr).trim().toLowerCase();if(s==='black'||s==='#000'||s==='#000000'||s==='windowtext'||s==='#0f172a'||s==='#1e293b'||s==='#111827'||s==='#0a0a0a'||s==='#1a1a1a'||s==='#222'||s==='#222222'||s==='#333'||s==='#333333')return true;const rgb=s.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/);if(rgb){const r=parseInt(rgb[1],10),g=parseInt(rgb[2],10),b=parseInt(rgb[3],10);const lum=0.299*r+0.587*g+0.114*b;return lum<85}if(s.startsWith('#')){let hex=s.slice(1);if(hex.length===3)hex=hex.split('').map(c=>c+c).join('');if(hex.length===6){const r=parseInt(hex.slice(0,2),16),g=parseInt(hex.slice(2,4),16),b=parseInt(hex.slice(4,6),16);const lum=0.299*r+0.587*g+0.114*b;return lum<85}}return false}
 function syncQuestionDarkText(){const prob=$('problem');if(!prob)return;const isDark=document.body.classList.contains('dark');const elements=prob.querySelectorAll('[style*="color" i], font[color], font');elements.forEach(el=>{const col=el.style.color||el.getAttribute('color')||'';if(!col){if(el.tagName.toLowerCase()==='font')el.classList.toggle('dark-mode-white-text',isDark);return}if(isVeryDarkColor(col)){el.classList.toggle('dark-mode-white-text',isDark)}else{el.classList.remove('dark-mode-white-text')}})}
 function applyFonts(x){(x.customFonts||[]).forEach(f=>{if(!document.getElementById('font-'+f.id)){let s=document.createElement('style');s.id='font-'+f.id;s.textContent=`@font-face{font-family:${JSON.stringify(f.name)};src:url(${JSON.stringify(f.data)})}`;document.head.appendChild(s)}if(![...$('fontName').options].some(o=>o.value===f.name)){$('fontName').add(new Option(f.name,f.name))}})}function saveCurrent(){let x=q();if(!x)return;x.problemHtml=problem.innerHTML;x.code=code.value;save()}function save(){localStorage.setItem('assessment-rich-v3',JSON.stringify(state));$('saveState').textContent='Saved just now'}
-function load(){try{let s=JSON.parse(localStorage.getItem('assessment-rich-v3'));if(s?.questions?.length)state=s}catch(e){};$('setIdText').textContent=state.setId;$('timerMinutes').value=state.timerMinutes;openQuestion(0);setTimer(false);syncQuestionDarkText()}function openQuestion(i){current=i;let x=q();if(!x.problemHtml&&x.problem)x.problemHtml=`<p>${esc(x.problem).replace(/\n/g,'<br>')}</p>`;x.customFonts=x.customFonts||[];applyFonts(x);problem.innerHTML=x.problemHtml||'';syncQuestionDarkText();code.value=x.code||'';$('questionTitle').textContent=`Question ${i+1}`;$('questionId').textContent=x.id;updateLines();renderTests();renderSteps()}function renderSteps(){$('steps').innerHTML=state.questions.map((x,i)=>`<button class="${i===current?'active':''}" onclick="go(${i})">${i+1}</button>`).join('');$('prev').disabled=current===0;$('next').disabled=current===state.questions.length-1}window.go=i=>{saveCurrent();openQuestion(i)};
+function load(){try{let s=JSON.parse(localStorage.getItem('assessment-rich-v3'));if(s?.questions?.length){state=s}else{state=getEmptyAssessmentState()}}catch(e){state=getEmptyAssessmentState()};state.questions.forEach(ensureFrontFields);$('setIdText').textContent=state.setId;$('timerMinutes').value=state.timerMinutes||60;openQuestion(0);setTimer(false);syncQuestionDarkText()}function openQuestion(i){current=i;let x=q();if(!x.problemHtml&&x.problem)x.problemHtml=`<p>${esc(x.problem).replace(/\n/g,'<br>')}</p>`;x.customFonts=x.customFonts||[];applyFonts(x);problem.innerHTML=x.problemHtml||'';syncQuestionDarkText();code.value=x.code||'';$('questionTitle').textContent=`Question ${i+1}`;$('questionId').textContent=x.id;updateLines();renderTests();renderSteps()}function renderSteps(){$('steps').innerHTML=state.questions.map((x,i)=>`<button class="${i===current?'active':''}" onclick="go(${i})">${i+1}</button>`).join('');$('prev').disabled=current===0;$('next').disabled=current===state.questions.length-1}window.go=i=>{saveCurrent();openQuestion(i)};
 $('addQuestion').onclick=()=>{saveCurrent();state.questions.push(starter());openQuestion(state.questions.length-1);save()};$('prev').onclick=()=>current&&go(current-1);$('next').onclick=()=>current<state.questions.length-1&&go(current+1);$('deleteQuestion').onclick=()=>{if(state.questions.length<2)return toast('At least one question is required');if(confirm('Delete this question?')){state.questions.splice(current,1);openQuestion(Math.min(current,state.questions.length-1));save()}};
 let debounce;problem.oninput=code.oninput=()=>{updateLines();syncQuestionDarkText();clearTimeout(debounce);debounce=setTimeout(saveCurrent,400)};problem.addEventListener('paste',async e=>{let items=[...(e.clipboardData?.items||[])],media=items.find(x=>x.type.startsWith('image/')||x.type.startsWith('video/'));if(media){e.preventDefault();insertFile(media.getAsFile())}setTimeout(syncQuestionDarkText,50)});function updateLines(){lines.textContent=Array.from({length:code.value.split('\n').length},(_,i)=>i+1).join('\n');lines.scrollTop=code.scrollTop}code.onscroll=()=>lines.scrollTop=code.scrollTop;code.onkeydown=e=>{if(e.key==='Tab'){e.preventDefault();code.setRangeText('    ',code.selectionStart,code.selectionEnd,'end');updateLines()}if((e.ctrlKey||e.metaKey)&&e.key==='Enter'){e.preventDefault();runAll()}};
 function keepFocus(){problem.focus()}document.querySelectorAll('[data-cmd]').forEach(b=>b.onclick=()=>{keepFocus();document.execCommand(b.dataset.cmd,false,null);syncQuestionDarkText();saveCurrent()});$('styleFormat').onchange=e=>{keepFocus();document.execCommand('formatBlock',false,e.target.value);syncQuestionDarkText();saveCurrent()};$('fontName').onchange=e=>{keepFocus();document.execCommand('fontName',false,e.target.value);syncQuestionDarkText();saveCurrent()};$('fontSize').onchange=e=>{keepFocus();document.execCommand('fontSize',false,e.target.value);syncQuestionDarkText();saveCurrent()};$('foreColor').oninput=e=>{keepFocus();document.execCommand('foreColor',false,e.target.value);syncQuestionDarkText();saveCurrent()};$('backColor').oninput=e=>{keepFocus();document.execCommand('hiliteColor',false,e.target.value);syncQuestionDarkText();saveCurrent()};$('clearFormat').onclick=()=>{keepFocus();document.execCommand('removeFormat');syncQuestionDarkText();saveCurrent()};$('linkBtn').onclick=()=>{let u=prompt('Enter link URL:','https://');if(u){keepFocus();document.execCommand('createLink',false,u);syncQuestionDarkText();saveCurrent()}};
-function insertHtml(html){problem.focus();document.execCommand('insertHTML',false,html);syncQuestionDarkText();saveCurrent()}function readData(file){return new Promise((res,rej)=>{let r=new FileReader();r.onload=()=>res(r.result);r.onerror=rej;r.readAsDataURL(file)})}async function insertFile(file){if(!file)return;if(file.size>25*1024*1024&&!confirm('This media file is larger than 25 MB and will make exports very large. Continue?'))return;let data=await readData(file),safe=esc(file.name);if(file.type.startsWith('image/'))insertHtml(`<figure><img src="${data}" alt="${safe}"><figcaption>${safe}</figcaption></figure>`);else if(file.type.startsWith('video/'))insertHtml(`<figure><video controls src="${data}"></video><figcaption>${safe}</figcaption></figure>`);else toast('Unsupported media file')}$('insertImage').onclick=()=>{$('mediaFile').accept='image/*,.gif';$('mediaFile').click()};$('insertVideo').onclick=()=>{$('mediaFile').accept='video/*';$('mediaFile').click()};$('mediaFile').onchange=e=>{insertFile(e.target.files[0]);e.target.value=''};$('insertFont').onclick=()=>$('fontFile').click();$('fontFile').onchange=async e=>{let f=e.target.files[0];if(!f)return;let name=prompt('Font display name:',f.name.replace(/\.[^.]+$/,''));if(!name)return;let obj={id:Date.now().toString(36),name,data:await readData(f),fileName:f.name};q().customFonts.push(obj);applyFonts(q());$('fontName').value=name;problem.focus();document.execCommand('fontName',false,name);syncQuestionDarkText();saveCurrent();toast('Font embedded in this question');e.target.value=''};$('problemFullscreen').onclick = () => {
+function insertHtml(html){problem.focus();document.execCommand('insertHTML',false,html);syncQuestionDarkText();saveCurrent()}function readData(file){return new Promise((res,rej)=>{let r=new FileReader();r.onload=()=>res(r.result);r.onerror=rej;r.readAsDataURL(file)})}async function insertFile(file){if(!file)return;if(file.size>25*1024*1024&&!confirm('This media file is larger than 25 MB and will make exports very large. Continue?'))return;let data=await readData(file),safe=esc(file.name);if(file.type.startsWith('image/'))insertHtml(`<figure><img src="${data}" alt="${safe}"><figcaption>${safe}</figcaption></figure>`);else if(file.type.startsWith('video/'))insertHtml(`<figure><video controls src="${data}"></video><figcaption>${safe}</figcaption></figure>`);else toast('Unsupported media file')}$('insertImage').onclick=()=>{$('mediaFile').accept='image/*,.gif';$('mediaFile').click()};$('insertVideo').onclick=()=>{$('mediaFile').accept='video/*';$('mediaFile').click()};$('mediaFile').onchange=e=>{insertFile(e.target.files[0]);e.target.value=''};$('insertFont').onclick=()=>$('fontFile').click();$('fontFile').onchange=async e=>{let f=e.target.files[0];if(!f)return;let name=prompt('Font display name:',f.name.replace(/\.[^.]+$/,''));if(!name)return;let obj={id:Date.now().toString(36),name,data:await readData(f),fileName:f.name};q().customFonts.push(obj);applyFonts(q());$('fontName').value=name;problem.focus();document.execCommand('fontName',false,name);syncQuestionDarkText();saveCurrent();toast('Font embedded in this question');e.target.value=''};
+function toggleProblemFullscreen(force) {
     const panel = $('problemPanel');
-    panel.classList.toggle('full');
-
-    const isFull = panel.classList.contains('full');
-
-    $('problemFullscreen').textContent =
-        isFull ? '✕ Exit Full Screen' : '⛶ Full Screen';
-
-    document.body.classList.toggle('problem-fullscreen-active', isFull);
-
-    if (isFull) {
+    if (!panel) return;
+    const targetState = typeof force === 'boolean' ? force : !panel.classList.contains('full');
+    panel.classList.toggle('full', targetState);
+    const btn = $('problemFullscreen');
+    if (btn) btn.textContent = targetState ? '✕ Exit Full Screen' : '⛶ Full Screen';
+    document.body.classList.toggle('problem-fullscreen-active', targetState);
+    if (targetState) {
         window.scrollTo(0, 0);
     }
-};
+}
+function toggleCodeFullscreen(force) {
+    const card = document.querySelector('.frontend-editor-card') || document.querySelector('.editor-card');
+    if (!card) return;
+    const targetState = typeof force === 'boolean' ? force : !card.classList.contains('full');
+    card.classList.toggle('full', targetState);
+    const btn = $('codeFullscreen');
+    if (btn) btn.textContent = targetState ? '✕ Exit Full Screen' : '⛶ Full Screen';
+    document.body.classList.toggle('code-fullscreen-active', targetState);
+    if (targetState) {
+        window.scrollTo(0, 0);
+    }
+    if (typeof updateFrontLines === 'function') updateFrontLines();
+    if (typeof updateLines === 'function') updateLines();
+}
+function toggleResultFullscreen(force) {
+    const targetState = typeof force === 'boolean' ? force : !document.body.classList.contains('result-fullscreen');
+    document.body.classList.toggle('result-fullscreen', targetState);
+    const btn = $('resultFullscreen');
+    if (btn) btn.textContent = targetState ? '✕ Restore' : '⛶ Maximize';
+    if (targetState) {
+        window.scrollTo(0, 0);
+    }
+}
+if ($('problemFullscreen')) $('problemFullscreen').onclick = () => toggleProblemFullscreen();
 
 function isBrowserFullscreen() {
     return !!(document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement);
@@ -113,51 +290,30 @@ document.addEventListener('keydown', (e) => {
         if (document.body.classList.contains('workspace-fullscreen-active')) {
             toggleWorkspaceFullscreen(false);
         }
-        const panel = $('problemPanel');
-        if (panel && panel.classList.contains('full')) {
-            panel.classList.remove('full');
-            document.body.classList.remove('problem-fullscreen-active');
-            $('problemFullscreen').textContent = '⛶ Full Screen';
+        if (document.body.classList.contains('problem-fullscreen-active')) {
+            toggleProblemFullscreen(false);
         }
-        const card = document.querySelector('.frontend-editor-card') || document.querySelector('.editor-card');
-        if (card && card.classList.contains('full')) {
-            card.classList.remove('full');
-            document.body.classList.remove('code-fullscreen-active');
-            if ($('codeFullscreen')) $('codeFullscreen').textContent = '⛶ Full Screen';
-            if (typeof updateFrontLines === 'function') updateFrontLines();
+        if (document.body.classList.contains('code-fullscreen-active')) {
+            toggleCodeFullscreen(false);
         }
         if (document.body.classList.contains('result-fullscreen')) {
-            document.body.classList.remove('result-fullscreen');
-            if ($('resultFullscreen')) $('resultFullscreen').textContent = '⛶ Maximize';
+            toggleResultFullscreen(false);
         }
     }
 });
 
 if ($('codeFullscreen')) {
-    $('codeFullscreen').onclick = () => {
-        const card = document.querySelector('.frontend-editor-card') || document.querySelector('.editor-card');
-        if (!card) return;
-        card.classList.toggle('full');
-        const isFull = card.classList.contains('full');
-        $('codeFullscreen').textContent = isFull ? '✕ Exit Full Screen' : '⛶ Full Screen';
-        document.body.classList.toggle('code-fullscreen-active', isFull);
-        if (typeof updateFrontLines === 'function') updateFrontLines();
-        if (typeof updateLines === 'function') updateLines();
-    };
+    $('codeFullscreen').onclick = () => toggleCodeFullscreen();
 }
 
 if ($('resultFullscreen')) {
-    $('resultFullscreen').onclick = () => {
-        document.body.classList.toggle('result-fullscreen');
-        const isFull = document.body.classList.contains('result-fullscreen');
-        $('resultFullscreen').textContent = isFull ? '✕ Restore' : '⛶ Maximize';
-    };
+    $('resultFullscreen').onclick = () => toggleResultFullscreen();
 }
 function renderTests(){$('testCount').textContent=q().tests.length;$('testList').innerHTML=q().tests.map((t,i)=>`<div class="test-card"><div class="test-head"><b>Test Case ${i+1}</b><span><span id="badge${i}" class="badge">Not run</span><button class="delete" onclick="removeTest(${i})">✕</button></span></div><div class="test-grid"><div class="field"><label>INPUT</label><textarea oninput="setTest(${i},'input',this.value)">${esc(t.input)}</textarea></div><div class="field"><label>EXPECTED OUTPUT</label><textarea oninput="setTest(${i},'expected',this.value)">${esc(t.expected)}</textarea></div><div class="field actual"><label>ACTUAL OUTPUT</label><textarea id="actual${i}" readonly></textarea></div></div></div>`).join('')}window.setTest=(i,k,v)=>{q().tests[i][k]=v;save()};window.removeTest=i=>{q().tests.splice(i,1);renderTests();save()};$('addTest').onclick=()=>{q().tests.push({input:'',expected:''});renderTests();save()};async function execute(input){let r=await fetch('/api/run',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({code:code.value,input})});return r.json()}function norm(s){return String(s).replace(/\r\n/g,'\n').trimEnd()}function busy(v){$('runTests').disabled=$('runCustom').disabled=v;$('runTests').textContent=v?'Running...':'Compile and Test'}
 async function runAll(){saveCurrent();if(!q().tests.length)return toast('Add a test case');busy(true);document.querySelector('[data-tab=tests]').click();let pass=0;for(let i=0;i<q().tests.length;i++){let b=$('badge'+i);b.textContent='Running...';try{let d=await execute(q().tests[i].input),ok=d.ok&&norm(d.output)===norm(q().tests[i].expected);$('actual'+i).value=(d.output||'')+(d.error||'');b.textContent=ok?'Passed':'Failed';b.className='badge '+(ok?'pass':'fail');pass+=ok?1:0}catch(e){b.textContent='Runner error';b.className='badge fail'}}history.unshift({id:q().id,result:`${pass}/${q().tests.length} passed`,time:new Date().toLocaleTimeString()});renderHistory();busy(false);if(pass===q().tests.length)celebrate();else tryAgain(pass,q().tests.length)}async function runCustom(){busy(true);let input=$('customToggle').checked?(prompt('Enter custom input:','')||''):'';try{let d=await execute(input);showOutput((d.output||'')+(d.error?'\n'+d.error:''))}catch(e){showOutput('Cannot connect. Start server.py.')}busy(false)}function showOutput(t){document.querySelector('[data-tab=execution]').click();$('empty').hidden=true;$('console').hidden=false;$('console').textContent=t}function renderHistory(){$('historyList').innerHTML=history.map(h=>`<div class="history-row"><b>${esc(h.id)} · ${esc(h.result)}</b><span>${h.time}</span></div>`).join('')}$('runTests').onclick=runAll;$('runCustom').onclick=runCustom;
 function overlay(text,wrong=false){let o=$('resultOverlay');o.className='result-overlay show'+(wrong?' wrong':'');$('resultCard').textContent=text;setTimeout(()=>o.className='result-overlay',2600)}function tryAgain(p,n){overlay(`Try again · ${p}/${n} passed`,true)}function celebrate(){overlay('🎉 Excellent! All test cases passed! 🎉');let c=$('confetti'),x=c.getContext('2d');c.width=innerWidth;c.height=innerHeight;let pieces=Array.from({length:150},()=>({x:Math.random()*c.width,y:-20-Math.random()*c.height*.5,v:2+Math.random()*5,r:3+Math.random()*6,a:Math.random()*6.28,col:['#ff4d6d','#ffd60a','#22c55e','#3b82f6','#a855f7'][Math.floor(Math.random()*5)]})),start=performance.now();(function draw(t){x.clearRect(0,0,c.width,c.height);pieces.forEach(p=>{p.y+=p.v;p.x+=Math.sin(p.a+=.08)*1.5;x.fillStyle=p.col;x.fillRect(p.x,p.y,p.r,p.r*1.7)});if(t-start<2400)requestAnimationFrame(draw)})(start)}
 function download(blob,name){let a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),2000)}$('exportQuestion').onclick=()=>{saveCurrent();download(new Blob([JSON.stringify({format:'python-assessment-rich-question',version:2,question:q()},null,2)],{type:'application/json'}),`${q().id}.question.json`)};$('importQuestion').onclick=()=>$('questionFile').click();$('questionFile').onchange=async e=>{try{let d=JSON.parse(await e.target.files[0].text()),x=d.question||d;if(!x.id||!Array.isArray(x.tests))throw Error();saveCurrent();let i=state.questions.findIndex(v=>v.id===x.id);if(i>=0)state.questions[i]=x;else{state.questions.push(x);i=state.questions.length-1}openQuestion(i);save();toast('Question imported with embedded media and fonts')}catch(err){toast('Invalid question file')}e.target.value=''};$('exportSet').onclick=async()=>{saveCurrent();let r=await fetch('/api/export-set',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(state)});download(await r.blob(),`${state.setId}.zip`)};$('importSet').onclick=()=>$('setFile').click();$('setFile').onchange=async e=>{try{let arr=new Uint8Array(await e.target.files[0].arrayBuffer()),bin='';for(let b of arr)bin+=String.fromCharCode(b);let r=await fetch('/api/import-set',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({base64:btoa(bin)})}),d=await r.json();if(!d.ok)throw Error(d.error);state={...state,...d.manifest,questions:d.questions};$('setIdText').textContent=state.setId;$('timerMinutes').value=state.timerMinutes||60;openQuestion(0);setTimer(false);save();toast('Full set imported')}catch(err){toast(err.message||'Invalid ZIP')}e.target.value=''};
-function setTimer(show=true){state.timerMinutes=Math.max(1,parseInt($('timerMinutes').value)||60);remaining=state.timerMinutes*60;clearInterval(timerHandle);tick();timerHandle=setInterval(()=>{remaining--;tick();if(remaining<=0){clearInterval(timerHandle);$('timeoutModal').classList.add('show')}},1000);save();if(show)toast('Timer set')}function tick(){let h=String(Math.floor(remaining/3600)).padStart(2,'0'),m=String(Math.floor(remaining%3600/60)).padStart(2,'0'),s=String(Math.max(0,remaining%60)).padStart(2,'0');const formatted=`${h}:${m}:${s}`;const tEl=$('timer');if(tEl)tEl.textContent=formatted;const finishBtn=$('finishAssessment');if(finishBtn){if(document.body.classList.contains('candidate-running')){finishBtn.innerHTML=`<span class="finish-timer-badge">⏱ ${formatted}</span><span class="finish-divider">|</span><span>Finish Assessment</span>`}else{finishBtn.textContent='Finish Assessment'}}}$('setTimer').onclick=()=>setTimer();document.querySelectorAll('.tabs button').forEach(b=>b.onclick=()=>{document.querySelectorAll('.tabs button,.tab').forEach(x=>x.classList.remove('active'));b.classList.add('active');$(b.dataset.tab).classList.add('active')});$('fontUp').onclick=()=>font(1);$('fontDown').onclick=()=>font(-1);function font(d){let s=parseInt(getComputedStyle(code).fontSize)+d;code.style.fontSize=Math.max(11,Math.min(22,s))+'px';lines.style.fontSize=code.style.fontSize}function initThemeHandler(){const saved=localStorage.getItem('fend_theme_mode');if(saved==='dark'){document.body.classList.add('dark')}const btn=$('theme');const syncText=()=>{if(btn){btn.textContent=document.body.classList.contains('dark')?'☀️ Light':'☾ Dark'}};syncText();const toggle=(e)=>{if(e&&e.type==='touchstart'){e.preventDefault()}document.body.classList.toggle('dark');const isDark=document.body.classList.contains('dark');localStorage.setItem('fend_theme_mode',isDark?'dark':'light');syncText();syncQuestionDarkText()};if(btn){btn.onclick=toggle;btn.addEventListener('touchstart',toggle,{passive:false})}syncQuestionDarkText()}initThemeHandler();load();
+function setTimer(show=true){state.timerMinutes=Math.max(1,parseInt($('timerMinutes').value)||60);remaining=state.timerMinutes*60;clearInterval(timerHandle);tick();timerHandle=setInterval(()=>{remaining--;tick();if(remaining<=0){clearInterval(timerHandle);$('timeoutModal').classList.add('show')}},1000);save();if(show)toast('Timer set')}function tick(){let h=String(Math.floor(remaining/3600)).padStart(2,'0'),m=String(Math.floor(remaining%3600/60)).padStart(2,'0'),s=String(Math.max(0,remaining%60)).padStart(2,'0');const formatted=`${h}:${m}:${s}`;const tEl=$('timer');if(tEl)tEl.textContent=formatted;const finishBtn=$('finishAssessment');if(finishBtn){if(document.body.classList.contains('candidate-running')){finishBtn.innerHTML=`<span class="finish-timer-badge">⏱ ${formatted}</span><span class="finish-divider">|</span><span>Finish Assessment</span>`}else{finishBtn.textContent='Finish Assessment'}}}$('setTimer').onclick=()=>setTimer();document.querySelectorAll('.tabs button').forEach(b=>b.onclick=()=>{document.querySelectorAll('.tabs button,.tab').forEach(x=>x.classList.remove('active'));b.classList.add('active');$(b.dataset.tab).classList.add('active')});$('fontUp').onclick=()=>font(1);$('fontDown').onclick=()=>font(-1);function font(d){let s=parseInt(getComputedStyle(code).fontSize)+d;code.style.fontSize=Math.max(11,Math.min(22,s))+'px';lines.style.fontSize=code.style.fontSize}function initThemeHandler(){const saved=localStorage.getItem('fend_theme_mode');if(saved==='dark'){document.body.classList.add('dark')}const btn=$('theme');const syncText=()=>{if(btn){btn.textContent=document.body.classList.contains('dark')?'☀️ Light':'☾ Dark'}};syncText();const toggle=(e)=>{if(e&&e.type==='touchstart'){e.preventDefault()}document.body.classList.toggle('dark');const isDark=document.body.classList.contains('dark');localStorage.setItem('fend_theme_mode',isDark?'dark':'light');syncText();syncQuestionDarkText();if(typeof refreshFrontPreview==='function'){refreshFrontPreview()}};if(btn){btn.onclick=toggle;btn.addEventListener('touchstart',toggle,{passive:false})}syncQuestionDarkText()}initThemeHandler();load();
 /* v4: rich media selection/deletion, undo/redo, and sequential reports */
 let selectedMedia=null;
 problem.addEventListener('click',e=>{const m=e.target.closest('video,img,figure');if(selectedMedia)selectedMedia.classList.remove('selected-media');selectedMedia=m;if(m)m.classList.add('selected-media')});
@@ -534,7 +690,7 @@ setLanguageUI();applyTestFreeze();applyCustomFreeze();applyCandidateSecurity();
 const EXAM_SESSION_KEY='browser-assessment-active-session-v18';
 const EXAM_STATE_KEY='assessment-rich-v3';
 function examCookieNames(){return document.cookie.split(';').map(x=>decodeURIComponent((x.split('=')[0]||'').trim())).filter(n=>n.startsWith('assessment_')||n.startsWith('browser_assessment_'))}
-function clearExamCookies(){for(const name of examCookieNames()){document.cookie=`${encodeURIComponent(name)}=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/; SameSite=Lax`}}
+function clearExamCookies(){const cookies=document.cookie.split(';');for(const c of cookies){const eqPos=c.indexOf('=');const name=eqPos>-1?c.slice(0,eqPos).trim():c.trim();if(name){document.cookie=`${encodeURIComponent(name)}=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/; SameSite=Lax`;document.cookie=`${encodeURIComponent(name)}=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/`;document.cookie=`${encodeURIComponent(name)}=; expires=Thu, 01 Jan 1970 00:00:00 GMT`}}}
 function readExamSession(){try{return JSON.parse(localStorage.getItem(EXAM_SESSION_KEY)||'null')}catch(e){return null}}
 function writeExamSession(extra={}){const previous=readExamSession()||{};const session={...previous,...extra,setId:state.setId,active:true,packageProtected:!!packageProtected,candidateSequentialMode:true,customInputChecked:!!state.customInputChecked,updatedAt:Date.now()};localStorage.setItem(EXAM_SESSION_KEY,JSON.stringify(session));return session}
 function clearExamSession(){clearInterval(timerHandle);localStorage.removeItem(EXAM_SESSION_KEY);localStorage.removeItem(EXAM_STATE_KEY);clearExamCookies();candidateRunning=false;packageProtected=false;assessmentStarted=false;autoExportStarted=false;setExamNavLocked(false)}
@@ -573,6 +729,15 @@ function updateNavLockUI() {
       proctorBtn.setAttribute('title', 'Exam Setup - Locked');
     } else {
       proctorBtn.setAttribute('title', 'Exam Setup');
+    }
+  }
+  const clearBtn = $('clearExamData');
+  if (clearBtn) {
+    clearBtn.classList.toggle('nav-locked', locked);
+    if (locked) {
+      clearBtn.setAttribute('title', 'Clear Cookies - Password Locked');
+    } else {
+      clearBtn.setAttribute('title', 'Clear Cookies');
     }
   }
 }
@@ -727,7 +892,9 @@ async function finishAssessmentV19(reason){if(finishV19Running)return;finishV19R
 finishAssessmentV18=finishAssessmentV19;finishLockedAssessment=()=>finishAssessmentV19('timeout');$('finishAssessment').onclick=()=>{if(confirm('Finish now? This ends the attempt and exports the PDF, ZIP, and instruction file.'))finishAssessmentV19('manual')};
 let escapeArmed=true;document.addEventListener('keydown',e=>{if(candidateRunning&&e.key==='Escape'){/* Esc does not exit exam */}},true);
 // Fullscreen exit does not exit assessment - candidate can continue exam
+let clearingInProgress=false;
 function autoSaveOnRefreshOrExit(){
+  if(clearingInProgress)return;
   try{
     saveCurrent();
     const session=readExamSession();
@@ -738,7 +905,7 @@ function autoSaveOnRefreshOrExit(){
 }
 window.addEventListener('beforeunload',e=>{
   autoSaveOnRefreshOrExit();
-  if(candidateRunning&&!finishV19Running){
+  if(candidateRunning&&!finishV19Running&&!clearingInProgress){
     e.preventDefault();
     e.returnValue='Your active assessment changes are autosaved.';
   }
@@ -768,7 +935,71 @@ finishAssessmentV18=finishAssessmentV19;finishLockedAssessment=()=>finishAssessm
 
 /* v20 clear cookies, no forced fullscreen, keyboard-only code entry, and screen recording */
 let screenStream=null,screenRecorder=null,screenChunks=[],screenRecordingBlob=null,screenRecordingStartedAt=null;
-function clearAllAssessmentDataV20(){if(candidateRunning&&!confirm('An assessment is active. Clearing data will end it. Continue?'))return;try{stopEvidenceCapture()}catch(e){}try{stopScreenRecordingV20()}catch(e){}clearInterval(timerHandle);clearExamCookies();localStorage.removeItem(EXAM_SESSION_KEY);localStorage.removeItem(EXAM_STATE_KEY);localStorage.removeItem(EXAM_EVIDENCE_KEY);sessionStorage.clear();candidateMeta=null;evidenceFrames=[];setExamNavLocked(false);state={format:'frontend-assessment-set',version:2,setId:`SET-${Date.now().toString(36).toUpperCase()}`,title:'Front-End Assessment',timerMinutes:60,questions:[starter()]};toast('Assessment cookies and local session data cleared');setTimeout(()=>location.reload(),400)}
+function clearAllAssessmentDataV20(){
+  if(candidateRunning||isExamNavLocked()){
+    const input=prompt('Enter password:');
+    if(input!==EXAM_NAV_PASSWORD){
+      if(input!==null)toast('Incorrect password. Action locked.');
+      return;
+    }
+    if(!confirm('An assessment is active. Clearing data will end it. Continue?'))return;
+  }
+  clearingInProgress=true;
+  try{stopEvidenceCapture()}catch(e){}
+  try{stopScreenRecordingV20()}catch(e){}
+  clearInterval(timerHandle);
+  clearExamCookies();
+  localStorage.removeItem(EXAM_SESSION_KEY);
+  localStorage.removeItem(EXAM_STATE_KEY);
+  localStorage.removeItem(EXAM_EVIDENCE_KEY);
+  localStorage.removeItem('ide_header_nav_locked');
+  localStorage.removeItem('fend_header_nav_locked');
+  localStorage.removeItem('fend_problem_width_px');
+  localStorage.removeItem('fend_work_editor_ratio');
+  localStorage.removeItem('fend_work_split_mode');
+  localStorage.removeItem('fend_editor_font_size');
+  localStorage.removeItem('fend_editor_height_px');
+  sessionStorage.clear();
+  candidateMeta=null;
+  evidenceFrames=[];
+  candidateRunning=false;
+  packageProtected=false;
+  assessmentStarted=false;
+  autoExportStarted=false;
+  candidateSequentialMode=false;
+  history=[];
+  frontConsoleEntries=[];
+  if(typeof setExamNavLocked==='function')setExamNavLocked(false);
+  if(typeof setHeaderNavLocked==='function')setHeaderNavLocked(false);
+  if(typeof setCandidateToolbarLocked==='function')setCandidateToolbarLocked(false);
+  const emptyState=getEmptyAssessmentState();
+  state=emptyState;
+  current=0;
+  problem.innerHTML='';
+  code.value='';
+  cssEditor.value='';
+  jsEditor.value='';
+  $('questionTitle').textContent='Question 1';
+  $('questionId').textContent=state.questions[0].id;
+  $('setIdText').textContent=state.setId;
+  $('timerMinutes').value=60;
+  remaining=3600;
+  if(typeof tick==='function')tick();
+  updateLines();
+  updateFrontLines();
+  syncQuestionDarkText();
+  previewFrame.srcdoc='';
+  if($('empty'))$('empty').hidden=false;
+  renderFrontConsole();
+  renderHistory();
+  renderTests();
+  renderSteps();
+  if(typeof updateQuestionCountV19==='function')updateQuestionCountV19();
+  $('liveStatus').textContent='Ready';
+  localStorage.setItem(EXAM_STATE_KEY,JSON.stringify(emptyState));
+  toast('All cookies, session data, and workspace cleared');
+  setTimeout(()=>{clearingInProgress=false},500);
+}
 $('clearExamData').onclick=clearAllAssessmentDataV20;
 async function openScreenCaptureV20(){try{if(!navigator.mediaDevices?.getDisplayMedia)throw Error('Screen sharing is not supported by this browser');if(screenStream)screenStream.getTracks().forEach(t=>t.stop());screenStream=await navigator.mediaDevices.getDisplayMedia({video:{frameRate:{ideal:8,max:12}},audio:true});const v=$('screenPreview');v.srcObject=screenStream;await v.play();$('screenStatus').textContent='Screen sharing is ready. Select the exam screen or browser tab and keep sharing until submission.';screenStream.getVideoTracks()[0].addEventListener('ended',()=>{if(candidateRunning&&!finishV20Running){$('screenStatus').textContent='Screen sharing stopped. The assessment will be finished.';finishAssessmentV20('screen-share-stopped')}});updateCandidateStartStateV20()}catch(e){screenStream=null;$('screenStatus').textContent='Screen sharing could not start: '+e.message;$('candidateStart').disabled=true;toast('Screen sharing permission is required for this configured assessment')}}
 $('openScreen').onclick=openScreenCaptureV20;
@@ -782,9 +1013,9 @@ function stopScreenRecordingV20(){return new Promise(resolve=>{if(screenRecorder
 requestExamFullscreen=async function(){};
 const startCandidateBeforeV20=startCandidateV19;startCandidateV19=async function(){if(!screenStream||$('screenPreview').readyState<2)return toast('Share the exam screen and wait until the preview is visible');if(!$('screenConsent').checked)return toast('Screen-recording consent is required');await startCandidateBeforeV20();startScreenRecordingV20()};$('candidateStart').onclick=startCandidateV19;
 // During an active exam, typing is allowed only in the code editor. Clipboard operations and context menus are blocked everywhere.
-function blockExamInputV20(e){if(e.target&&e.target.closest&&(e.target.closest('.modal')||e.target.closest('.test-card.student-extra')))return;if(!candidateRunning)return;if(['copy','cut','paste','drop','dragstart'].includes(e.type)){e.preventDefault();e.stopImmediatePropagation();toast('Copy, paste, drag, and drop are disabled during the assessment');return}if(e.type==='beforeinput'&&e.target!==code){e.preventDefault();e.stopImmediatePropagation();return}if(e.type==='keydown'){const navigation=['Tab','Shift','Control','Alt','Meta','CapsLock','ArrowLeft','ArrowRight','ArrowUp','ArrowDown','Home','End','PageUp','PageDown','Backspace','Delete','Enter'];const shortcut=e.ctrlKey||e.metaKey||e.altKey;if(e.target!==code&&!navigation.includes(e.key)){e.preventDefault();e.stopImmediatePropagation()}if(shortcut&&['v','V','c','C','x','X','a','A','s','S','p','P'].includes(e.key)){e.preventDefault();e.stopImmediatePropagation();toast('Keyboard shortcuts are disabled during the assessment')}}}
+function blockExamInputV20(e){if(e.target&&e.target.closest&&(e.target.closest('.modal')||e.target.closest('.test-card.student-extra')||e.target.closest('.work-splitter')||e.target.closest('.main-vertical-splitter')))return;if(!candidateRunning)return;if(['copy','cut','paste','drop','dragstart'].includes(e.type)){e.preventDefault();e.stopImmediatePropagation();toast('Copy, paste, drag, and drop are disabled during the assessment');return}if(e.type==='beforeinput'&&e.target!==code&&e.target!==cssEditor&&e.target!==jsEditor){e.preventDefault();e.stopImmediatePropagation();return}if(e.type==='keydown'){const navigation=['Tab','Shift','Control','Alt','Meta','CapsLock','ArrowLeft','ArrowRight','ArrowUp','ArrowDown','Home','End','PageUp','PageDown','Backspace','Delete','Enter'];const shortcut=e.ctrlKey||e.metaKey||e.altKey;if(e.target!==code&&e.target!==cssEditor&&e.target!==jsEditor&&!navigation.includes(e.key)){e.preventDefault();e.stopImmediatePropagation()}if(shortcut&&['v','V','c','C','x','X','a','A','s','S','p','P'].includes(e.key)){e.preventDefault();e.stopImmediatePropagation();toast('Keyboard shortcuts are disabled during the assessment')}}}
 ['copy','cut','paste','drop','dragstart','beforeinput','keydown'].forEach(t=>document.addEventListener(t,blockExamInputV20,true));
-document.addEventListener('contextmenu',e=>{if(e.target&&e.target.closest&&(e.target.closest('.modal')||e.target.closest('.test-card.student-extra')))return;if(candidateRunning){e.preventDefault();e.stopImmediatePropagation();toast('Right-click is disabled during the assessment')}},true);
+document.addEventListener('contextmenu',e=>{if(e.target&&e.target.closest&&(e.target.closest('.modal')||e.target.closest('.test-card.student-extra')||e.target.closest('.work-splitter')||e.target.closest('.main-vertical-splitter')))return;if(candidateRunning){e.preventDefault();e.stopImmediatePropagation();toast('Right-click is disabled during the assessment')}},true);
 // Remove all exam termination behavior related to Escape or fullscreen changes.
 escapeArmed=true;
 let finishV20Running=false;
@@ -794,18 +1025,12 @@ reportHtmlV19=reportHtmlV20;
 async function completedZipBlobV20(reason,end,pdfBlob,onProgress){saveCurrent();const zip=new JSZip(),manifest={...state,questions:undefined,questionIds:state.questions.map(x=>x.id),candidate:candidateMeta,completedAt:end.toISOString(),finishReason:reason,submission:true,screenRecording:{file:'screen-recording/exam-screen.mp4',startedAt:screenRecordingStartedAt?.toISOString()||'',endedAt:end.toISOString()}};zip.file('assessment.json',JSON.stringify(manifest,null,2));state.questions.forEach((x,i)=>zip.file(`questions/${String(i+1).padStart(3,'0')}-${x.id}.json`,JSON.stringify(x,null,2)));for(const f of evidenceFrames)zip.file(f.name,f.blob);zip.file('camera-evidence.html',evidenceHtmlV20(end));zip.file('instruction.txt',instructionTextV19(reason,end)+'\nScreen Recording: screen-recording/exam-screen.mp4\nCamera Evidence: camera-evidence.html\n');zip.file('assessment-report.pdf',pdfBlob);if(screenRecordingBlob?.size)zip.file('screen-recording/exam-screen.mp4',screenRecordingBlob);return zip.generateAsync({type:'blob',compression:'DEFLATE',compressionOptions:{level:1}},metadata=>{if(onProgress)onProgress(Math.round(metadata.percent))})}
 completedZipBlobV19=completedZipBlobV20;
 const finishBeforeV20=finishAssessmentV19;finishAssessmentV20=async function(reason){if(finishV20Running)return;finishV20Running=true;await stopScreenRecordingV20();finishV19Running=false;return finishBeforeV20(reason)};
-finishAssessmentV19=finishAssessmentV20;finishAssessmentV18=finishAssessmentV20;finishLockedAssessment=()=>finishAssessmentV20('timeout');$('finishAssessment').onclick=()=>{if(!validCandidateMetaV191()||!candidateRunning)return toast("It's last question");if(confirm('Finish now? This ends the attempt and exports the PDF, ZIP, instruction file, camera evidence, and screen recording.'))finishAssessmentV20('manual')};
+finishAssessmentV19=finishAssessmentV20;finishAssessmentV18=finishAssessmentV20;finishLockedAssessment=()=>finishAssessmentV20('timeout');$('finishAssessment').onclick=()=>{if(!validCandidateMetaV191()||!candidateRunning)return toast("Start the assessment with candidate details, camera, and screen sharing before finishing");if(confirm('Finish now? This ends the attempt and exports the PDF, ZIP, instruction file, camera evidence, and screen recording.'))finishAssessmentV20('manual')};
 
 
 /* v21 front-end coding workspace: HTML, CSS, JavaScript live preview and console */
 const cssEditor=$('cssCode'),jsEditor=$('jsCode'),previewFrame=$('previewFrame');
 let activeFrontEditor='html',frontRefreshTimer=null,frontConsoleEntries=[];
-const FRONT_DEFAULTS={
- html:'<!doctype html>\n<html lang="en">\n<head>\n  <meta charset="UTF-8">\n  <meta name="viewport" content="width=device-width, initial-scale=1.0">\n  <title>Front-End Task</title>\n</head>\n<body>\n  <main class="card">\n    <h1>Hello Front End</h1>\n    <p>Edit HTML, CSS, and JavaScript to update this preview.</p>\n    <button id="actionBtn">Click me</button>\n  </main>\n</body>\n</html>',
- css:'* { box-sizing: border-box; }\nbody {\n  margin: 0;\n  min-height: 100vh;\n  display: grid;\n  place-items: center;\n  font-family: Segoe UI, Arial, sans-serif;\n  background: linear-gradient(135deg, #8e44ad, #9b59b6);\n}\n.card {\n  width: min(440px, 90vw);\n  padding: 36px;\n  border-radius: 16px;\n  background: white;\n  text-align: center;\n  box-shadow: 0 18px 50px rgba(0,0,0,.2);\n}\nbutton { padding: 10px 18px; cursor: pointer; }',
- javascript:"document.getElementById('actionBtn')?.addEventListener('click', () => {\n  console.log('Button clicked');\n});"
-};
-function ensureFrontFields(x){if(!x)return;x.frontEndHtml=x.frontEndHtml??((x.code&&/^\s*</.test(x.code))?x.code:FRONT_DEFAULTS.html);x.frontEndCss=x.frontEndCss??FRONT_DEFAULTS.css;x.frontEndJs=x.frontEndJs??FRONT_DEFAULTS.javascript;x.code=x.frontEndHtml;x.language='html'}
 state.format='frontend-assessment-set';state.title=state.title==='Python Assessment'?'Front-End Assessment':state.title;state.questions.forEach(ensureFrontFields);
 const saveCurrentBeforeFront=saveCurrent;
 saveCurrent=function(){const x=q();if(!x)return;x.problemHtml=problem.innerHTML;x.frontEndHtml=code.value;x.frontEndCss=cssEditor.value;x.frontEndJs=jsEditor.value;x.code=x.frontEndHtml;x.language='html';save()};
@@ -859,13 +1084,28 @@ function consoleValue(v){if(v instanceof Error)return v.stack||v.message;try{ret
 function addFrontConsole(level,args){const stamp=new Date().toLocaleTimeString(),text=args.map(consoleValue).join(' ');frontConsoleEntries.push({level,text,stamp});if(frontConsoleEntries.length>300)frontConsoleEntries.shift();renderFrontConsole()}
 function renderFrontConsole(){const c=$('console');c.innerHTML=frontConsoleEntries.length?frontConsoleEntries.map(e=>`<div class="console-entry ${esc(e.level)}"><b>[${esc(e.stamp)}] ${esc(e.level.toUpperCase())}</b> ${esc(e.text)}</div>`).join(''):'<span class="console-empty">Console is clear. Preview errors and console messages will appear here.</span>';$('consoleCount').textContent=frontConsoleEntries.length;c.scrollTop=c.scrollHeight}
 function clearFrontConsole(){frontConsoleEntries=[];renderFrontConsole();toast('Console erased')}
-function previewDocument(){let markup=code.value||'';const style=`<style id="assessment-live-css">${cssEditor.value||''}</style>`;const bridge=`<script>(function(){const send=(level,args)=>parent.postMessage({source:'front-assessment-console',level,args:Array.from(args).map(v=>{try{return typeof v==='string'?v:JSON.stringify(v)}catch(e){return String(v)}})},'*');['log','info','warn','error'].forEach(level=>{const original=console[level];console[level]=function(){send(level,arguments);original.apply(console,arguments)}});window.addEventListener('error',e=>send('error',[e.message+' at '+e.filename+':'+e.lineno+':'+e.colno]));window.addEventListener('unhandledrejection',e=>send('error',['Unhandled promise rejection: '+String(e.reason)]));})();<\/script>`;const script=`<script>${jsEditor.value||''}<\/script>`;if(/<\/head\s*>/i.test(markup))markup=markup.replace(/<\/head\s*>/i,style+'\n'+bridge+'\n</head>');else markup=style+bridge+markup;if(/<\/body\s*>/i.test(markup))markup=markup.replace(/<\/body\s*>/i,script+'\n</body>');else markup+=script;return markup}
+function previewDocument(){
+  let markup=code.value||'';
+  const cssVal=cssEditor.value||'';
+  const jsVal=jsEditor.value||'';
+  const isDark=document.body.classList.contains('dark');
+  if(!markup.trim()&&!cssVal.trim()&&!jsVal.trim()){
+    return isDark?`<!doctype html><html><head><meta charset="utf-8"><style>:root{color-scheme:dark;}body{margin:0;min-height:100vh;background:#0f172a;color:#94a3b8;display:flex;align-items:center;justify-content:center;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;font-size:13px;}</style></head><body><div style="opacity:0.6;">Preview will appear here</div></body></html>`:''
+  }
+  const baseThemeStyle=isDark?`<style id="assessment-base-theme">:root{color-scheme:dark;}body{background-color:#0f172a;color:#f8fafc;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;margin:0;min-height:100vh;}</style>`:'';
+  const style=`${baseThemeStyle}\n<style id="assessment-live-css">${cssVal}</style>`;
+  const bridge=`<script>(function(){const send=(level,args)=>parent.postMessage({source:'front-assessment-console',level,args:Array.from(args).map(v=>{try{return typeof v==='string'?v:JSON.stringify(v)}catch(e){return String(v)}})},'*');['log','info','warn','error'].forEach(level=>{const original=console[level];console[level]=function(){send(level,arguments);original.apply(console,arguments)}});window.addEventListener('error',e=>send('error',[e.message+' at '+e.filename+':'+e.lineno+':'+e.colno]));window.addEventListener('unhandledrejection',e=>send('error',['Unhandled promise rejection: '+String(e.reason)]));})();<\/script>`;
+  const script=`<script>${jsVal}<\/script>`;
+  if(/<\/head\s*>/i.test(markup))markup=markup.replace(/<\/head\s*>/i,style+'\n'+bridge+'\n</head>');else markup=style+bridge+markup;
+  if(/<\/body\s*>/i.test(markup))markup=markup.replace(/<\/body\s*>/i,script+'\n</body>');else markup+=script;
+  return markup;
+}
 function refreshFrontPreview(){saveCurrent();frontConsoleEntries=[];renderFrontConsole();previewFrame.srcdoc=previewDocument();$('liveStatus').textContent='Refreshed '+new Date().toLocaleTimeString();history.unshift({id:q().id,result:'Preview refreshed',time:new Date().toLocaleTimeString()});renderHistory()}
 function scheduleFrontPreview(immediate=false){clearTimeout(frontRefreshTimer);$('liveStatus').textContent='Changes pending';frontRefreshTimer=setTimeout(refreshFrontPreview,immediate?0:Number($('refreshDelay').value||350))}
 window.addEventListener('message',e=>{if(e.data?.source==='front-assessment-console')addFrontConsole(e.data.level||'log',e.data.args||[])});
 $('runCustom').onclick=refreshFrontPreview;$('refreshPreview').onclick=refreshFrontPreview;$('clearConsole').onclick=clearFrontConsole;$('clearConsoleSecondary').onclick=clearFrontConsole;$('refreshDelay').onchange=()=>{if($('autoRefresh').checked)scheduleFrontPreview()};$('autoRefresh').onchange=()=>{toast($('autoRefresh').checked?'Auto refresh enabled':'Auto refresh paused');if($('autoRefresh').checked)scheduleFrontPreview(true)};
-$('resultFullscreen').onclick=()=>{document.body.classList.toggle('result-fullscreen');$('resultFullscreen').textContent=document.body.classList.contains('result-fullscreen')?'✕ Restore':'⛶ Maximize'};
-$('codeFullscreen').onclick=()=>{const p=document.querySelector('.editor-card');p.classList.toggle('full');const f=p.classList.contains('full');document.body.classList.toggle('code-fullscreen-active',f);$('codeFullscreen').textContent=f?'✕ Exit Full Screen':'⛶ Full Screen'};
+if ($('resultFullscreen')) $('resultFullscreen').onclick = () => toggleResultFullscreen();
+if ($('codeFullscreen')) $('codeFullscreen').onclick = () => toggleCodeFullscreen();
 function applyEditorFontSize(size) {
   const s = Math.max(11, Math.min(28, size));
   const lh = (s + 7) + 'px';
@@ -988,112 +1228,6 @@ $('allJsonFile').onchange = async e => {
 };
 
 /* Welcome / Desktop mode recommendation dialog & Mock Data Import */
-const SAMPLE_MOCK_DATA = {
-  "format": "frontend-assessment-complete-json",
-  "version": 1,
-  "exportedAt": "2026-09-27T18:29:42.170Z",
-  "assessment": {
-    "format": "frontend-assessment-set",
-    "version": 2,
-    "setId": "SET-MUK5KO3I",
-    "title": "Front-End Assessment",
-    "timerMinutes": 60,
-    "questions": [
-      {
-        "id": "Q-MUK5KO3I-LL17",
-        "title": "Interactive Counter Component",
-        "problemHtml": "<h2>Problem Statement: Interactive Counter</h2><p>Build an interactive counter component in HTML, CSS, and JavaScript with increment, decrement, and reset functionality.</p><h3>Requirements:</h3><ul><li>Display the current count in the element with <code>id=\"count\"</code> (initial value must be <code>0</code>).</li><li>Clicking <code>#incrementBtn</code> should increase the count by <code>1</code>.</li><li>Clicking <code>#decrementBtn</code> should decrease the count by <code>1</code> (do not allow the count to drop below <code>0</code>).</li><li>Clicking <code>#resetBtn</code> should reset the counter back to <code>0</code>.</li><li>Dynamically change the counter text color: <code>#27ae60</code> (green) when count > 0, and <code>#2c3e50</code> when count is 0.</li></ul>",
-        "code": "<!doctype html>\n<html lang=\"en\">\n<head>\n  <meta charset=\"UTF-8\">\n  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n  <title>Interactive Counter</title>\n</head>\n<body>\n  <main class=\"card\">\n    <h1>Counter App</h1>\n    <div class=\"counter-display\" id=\"count\">0</div>\n    <div class=\"button-group\">\n      <button id=\"decrementBtn\" class=\"btn btn-secondary\">- Decrement</button>\n      <button id=\"resetBtn\" class=\"btn btn-outline\">Reset</button>\n      <button id=\"incrementBtn\" class=\"btn btn-primary\">+ Increment</button>\n    </div>\n  </main>\n</body>\n</html>",
-        "tests": [],
-        "customFonts": [],
-        "problemLocked": false,
-        "frontEndHtml": "<!doctype html>\n<html lang=\"en\">\n<head>\n  <meta charset=\"UTF-8\">\n  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n  <title>Interactive Counter</title>\n</head>\n<body>\n  <main class=\"card\">\n    <h1>Counter App</h1>\n    <div class=\"counter-display\" id=\"count\">0</div>\n    <div class=\"button-group\">\n      <button id=\"decrementBtn\" class=\"btn btn-secondary\">- Decrement</button>\n      <button id=\"resetBtn\" class=\"btn btn-outline\">Reset</button>\n      <button id=\"incrementBtn\" class=\"btn btn-primary\">+ Increment</button>\n    </div>\n  </main>\n</body>\n</html>",
-        "frontEndCss": "* { box-sizing: border-box; }\nbody {\n  margin: 0;\n  min-height: 100vh;\n  display: grid;\n  place-items: center;\n  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;\n  background: linear-gradient(135deg, #667eea, #764ba2);\n}\n.card {\n  width: min(440px, 90vw);\n  padding: 32px;\n  border-radius: 16px;\n  background: #ffffff;\n  text-align: center;\n  box-shadow: 0 16px 40px rgba(0,0,0,0.18);\n}\nh1 { margin-top: 0; color: #1e293b; font-size: 1.6rem; }\n.counter-display {\n  font-size: 4rem;\n  font-weight: 700;\n  color: #2c3e50;\n  margin: 24px 0;\n  transition: color 0.2s ease;\n}\n.button-group {\n  display: flex;\n  gap: 12px;\n  justify-content: center;\n  flex-wrap: wrap;\n}\n.btn {\n  padding: 10px 18px;\n  font-size: 0.95rem;\n  font-weight: 600;\n  border-radius: 8px;\n  border: none;\n  cursor: pointer;\n  transition: transform 0.1s, opacity 0.2s;\n}\n.btn:active { transform: scale(0.96); }\n.btn-primary { background: #4f46e5; color: white; }\n.btn-secondary { background: #ef4444; color: white; }\n.btn-outline { background: #e2e8f0; color: #334155; }",
-        "frontEndJs": "// Write your Counter JavaScript logic here\nlet count = 0;\nconst countDisplay = document.getElementById('count');\nconst incrementBtn = document.getElementById('incrementBtn');\nconst decrementBtn = document.getElementById('decrementBtn');\nconst resetBtn = document.getElementById('resetBtn');\n\nfunction updateDisplay() {\n  countDisplay.textContent = count;\n  countDisplay.style.color = count > 0 ? '#27ae60' : '#2c3e50';\n}\n\nincrementBtn?.addEventListener('click', () => {\n  count++;\n  updateDisplay();\n});\n\ndecrementBtn?.addEventListener('click', () => {\n  if (count > 0) {\n    count--;\n    updateDisplay();\n  }\n});\n\nresetBtn?.addEventListener('click', () => {\n  count = 0;\n  updateDisplay();\n});",
-        "language": "html"
-      },
-      {
-        "id": "Q-MUK5KTUA-Q1B2",
-        "title": "Dynamic Todo List Application",
-        "problemHtml": "<h2>Problem Statement: Dynamic Todo List</h2><p>Create a functional Todo List application where users can add tasks, mark tasks as completed, and remove tasks.</p><h3>Requirements:</h3><ul><li>User types a task inside <code>#taskInput</code> and clicks <code>#addTaskBtn</code> (or presses Enter) to add it.</li><li>Ignore empty or whitespace-only task entries.</li><li>Each new task is appended as a <code>&lt;li&gt;</code> to <code>#taskList</code> with a task title span and a delete button (<code>class=\"delete-btn\"</code>).</li><li>Clicking a task's text toggles the <code>completed</code> class on the task item (striking through the text).</li><li>Clicking the delete button removes the corresponding item from the list.</li><li>Clear the input field and keep it focused after adding a task.</li></ul>",
-        "code": "<!doctype html>\n<html lang=\"en\">\n<head>\n  <meta charset=\"UTF-8\">\n  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n  <title>Todo List</title>\n</head>\n<body>\n  <main class=\"card\">\n    <h1>My Tasks</h1>\n    <div class=\"input-row\">\n      <input type=\"text\" id=\"taskInput\" placeholder=\"What needs to be done?\" autocomplete=\"off\">\n      <button id=\"addTaskBtn\">Add</button>\n    </div>\n    <ul id=\"taskList\" class=\"task-list\"></ul>\n  </main>\n</body>\n</html>",
-        "tests": [],
-        "customFonts": [],
-        "problemLocked": false,
-        "frontEndHtml": "<!doctype html>\n<html lang=\"en\">\n<head>\n  <meta charset=\"UTF-8\">\n  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n  <title>Todo List</title>\n</head>\n<body>\n  <main class=\"card\">\n    <h1>My Tasks</h1>\n    <div class=\"input-row\">\n      <input type=\"text\" id=\"taskInput\" placeholder=\"What needs to be done?\" autocomplete=\"off\">\n      <button id=\"addTaskBtn\">Add</button>\n    </div>\n    <ul id=\"taskList\" class=\"task-list\"></ul>\n  </main>\n</body>\n</html>",
-        "frontEndCss": "* { box-sizing: border-box; }\nbody {\n  margin: 0;\n  min-height: 100vh;\n  display: grid;\n  place-items: center;\n  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;\n  background: linear-gradient(135deg, #1e3c72, #2a5298);\n}\n.card {\n  width: min(480px, 92vw);\n  padding: 28px;\n  border-radius: 14px;\n  background: #ffffff;\n  box-shadow: 0 14px 35px rgba(0,0,0,0.2);\n}\nh1 { margin: 0 0 20px; color: #1e293b; font-size: 1.5rem; text-align: center; }\n.input-row {\n  display: flex;\n  gap: 8px;\n  margin-bottom: 20px;\n}\n#taskInput {\n  flex: 1;\n  padding: 10px 14px;\n  border: 1px solid #cbd5e1;\n  border-radius: 8px;\n  font-size: 0.95rem;\n  outline: none;\n}\n#taskInput:focus { border-color: #2563eb; }\n#addTaskBtn {\n  padding: 10px 20px;\n  background: #2563eb;\n  color: white;\n  border: none;\n  border-radius: 8px;\n  font-weight: 600;\n  cursor: pointer;\n}\n.task-list {\n  list-style: none;\n  padding: 0;\n  margin: 0;\n  max-height: 280px;\n  overflow-y: auto;\n}\n.task-item {\n  display: flex;\n  align-items: center;\n  justify-content: space-between;\n  padding: 10px 12px;\n  background: #f8fafc;\n  border-radius: 8px;\n  margin-bottom: 8px;\n}\n.task-text {\n  cursor: pointer;\n  flex: 1;\n  word-break: break-word;\n}\n.task-item.completed .task-text {\n  text-decoration: line-through;\n  color: #94a3b8;\n}\n.delete-btn {\n  background: #fee2e2;\n  color: #dc2626;\n  border: none;\n  padding: 6px 10px;\n  border-radius: 6px;\n  cursor: pointer;\n  font-size: 0.85rem;\n}",
-        "frontEndJs": "// Write your Todo List JavaScript logic here\nconst taskInput = document.getElementById('taskInput');\nconst addTaskBtn = document.getElementById('addTaskBtn');\nconst taskList = document.getElementById('taskList');\n\nfunction addTask() {\n  const text = taskInput.value.trim();\n  if (!text) return;\n\n  const li = document.createElement('li');\n  li.className = 'task-item';\n  li.innerHTML = `\n    <span class=\"task-text\">${text}</span>\n    <button class=\"delete-btn\">Delete</button>\n  `;\n\n  li.querySelector('.task-text').addEventListener('click', () => {\n    li.classList.toggle('completed');\n  });\n\n  li.querySelector('.delete-btn').addEventListener('click', () => {\n    li.remove();\n  });\n\n  taskList.appendChild(li);\n  taskInput.value = '';\n  taskInput.focus();\n}\n\naddTaskBtn?.addEventListener('click', addTask);\ntaskInput?.addEventListener('keydown', (e) => {\n  if (e.key === 'Enter') addTask();\n});",
-        "language": "html"
-      },
-      {
-        "id": "Q-MUK5KUBD-L8LX",
-        "title": "Interactive Accordion FAQ Component",
-        "problemHtml": "<h2>Problem Statement: Interactive Accordion FAQ</h2><p>Build a responsive FAQ accordion component with collapsible question panels.</p><h3>Requirements:</h3><ul><li>Render at least 3 accordion items inside <code>#accordion</code>.</li><li>Each item contains a header button (<code>class=\"accordion-header\"</code>) and a body panel (<code>class=\"accordion-body\"</code>).</li><li>Clicking an item's header toggles its open/closed state by toggling the <code>active</code> class.</li><li>Only one accordion item should remain expanded at any time (opening an item automatically collapses all other items).</li><li>Include an indicator icon (<code>+</code>/<code>-</code> or arrow) that updates according to the active state.</li></ul>",
-        "code": "<!doctype html>\n<html lang=\"en\">\n<head>\n  <meta charset=\"UTF-8\">\n  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n  <title>FAQ Accordion</title>\n</head>\n<body>\n  <main class=\"card\">\n    <h1>Frequently Asked Questions</h1>\n    <div id=\"accordion\" class=\"accordion\">\n      <div class=\"accordion-item active\">\n        <button class=\"accordion-header\">\n          <span>What is this assessment platform?</span>\n          <span class=\"icon\">−</span>\n        </button>\n        <div class=\"accordion-body\">\n          <p>This is a live interactive front-end coding environment supporting HTML, CSS, and JS with instant preview.</p>\n        </div>\n      </div>\n      <div class=\"accordion-item\">\n        <button class=\"accordion-header\">\n          <span>How do I submit my answers?</span>\n          <span class=\"icon\">+</span>\n        </button>\n        <div class=\"accordion-body\">\n          <p>When you complete all tasks, click the Finish Assessment button to generate your submission report.</p>\n        </div>\n      </div>\n      <div class=\"accordion-item\">\n        <button class=\"accordion-header\">\n          <span>Are shortcuts enabled during testing?</span>\n          <span class=\"icon\">+</span>\n        </button>\n        <div class=\"accordion-body\">\n          <p>Pressing Tab indents code by two spaces, and Ctrl+Enter triggers an immediate preview refresh.</p>\n        </div>\n      </div>\n    </div>\n  </main>\n</body>\n</html>",
-        "tests": [],
-        "customFonts": [],
-        "problemLocked": false,
-        "frontEndHtml": "<!doctype html>\n<html lang=\"en\">\n<head>\n  <meta charset=\"UTF-8\">\n  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n  <title>FAQ Accordion</title>\n</head>\n<body>\n  <main class=\"card\">\n    <h1>Frequently Asked Questions</h1>\n    <div id=\"accordion\" class=\"accordion\">\n      <div class=\"accordion-item active\">\n        <button class=\"accordion-header\">\n          <span>What is this assessment platform?</span>\n          <span class=\"icon\">−</span>\n        </button>\n        <div class=\"accordion-body\">\n          <p>This is a live interactive front-end coding environment supporting HTML, CSS, and JS with instant preview.</p>\n        </div>\n      </div>\n      <div class=\"accordion-item\">\n        <button class=\"accordion-header\">\n          <span>How do I submit my answers?</span>\n          <span class=\"icon\">+</span>\n        </button>\n        <div class=\"accordion-body\">\n          <p>When you complete all tasks, click the Finish Assessment button to generate your submission report.</p>\n        </div>\n      </div>\n      <div class=\"accordion-item\">\n        <button class=\"accordion-header\">\n          <span>Are shortcuts enabled during testing?</span>\n          <span class=\"icon\">+</span>\n        </button>\n        <div class=\"accordion-body\">\n          <p>Pressing Tab indents code by two spaces, and Ctrl+Enter triggers an immediate preview refresh.</p>\n        </div>\n      </div>\n    </div>\n  </main>\n</body>\n</html>",
-        "frontEndCss": "* { box-sizing: border-box; }\nbody {\n  margin: 0;\n  min-height: 100vh;\n  display: grid;\n  place-items: center;\n  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;\n  background: linear-gradient(135deg, #0ba360, #3cba92);\n}\n.card {\n  width: min(520px, 92vw);\n  padding: 30px;\n  border-radius: 16px;\n  background: #ffffff;\n  box-shadow: 0 16px 40px rgba(0,0,0,0.15);\n}\nh1 { margin-top: 0; color: #1e293b; font-size: 1.4rem; text-align: center; margin-bottom: 20px; }\n.accordion { display: flex; flex-direction: column; gap: 10px; }\n.accordion-item {\n  border: 1px solid #e2e8f0;\n  border-radius: 8px;\n  overflow: hidden;\n  transition: border-color 0.2s;\n}\n.accordion-item.active { border-color: #0ba360; }\n.accordion-header {\n  width: 100%;\n  padding: 14px 16px;\n  background: #f8fafc;\n  border: none;\n  text-align: left;\n  font-size: 0.95rem;\n  font-weight: 600;\n  color: #334155;\n  display: flex;\n  justify-content: space-between;\n  align-items: center;\n  cursor: pointer;\n}\n.accordion-header:hover { background: #f1f5f9; }\n.accordion-item.active .accordion-header {\n  background: #e6f7ef;\n  color: #0ba360;\n}\n.icon { font-size: 1.2rem; font-weight: bold; }\n.accordion-body {\n  display: none;\n  padding: 14px 16px;\n  background: #ffffff;\n  color: #64748b;\n  font-size: 0.9rem;\n  line-height: 1.5;\n}\n.accordion-item.active .accordion-body {\n  display: block;\n}\n.accordion-body p { margin: 0; }",
-        "frontEndJs": "// Write your Accordion JavaScript logic here\nconst items = document.querySelectorAll('.accordion-item');\n\nitems.forEach((item) => {\n  const header = item.querySelector('.accordion-header');\n  header?.addEventListener('click', () => {\n    const isActive = item.classList.contains('active');\n    \n    // Close all items\n    items.forEach((other) => {\n      other.classList.remove('active');\n      const icon = other.querySelector('.icon');\n      if (icon) icon.textContent = '+';\n    });\n\n    // If it was not active, open it\n    if (!isActive) {\n      item.classList.add('active');\n      const icon = item.querySelector('.icon');\n      if (icon) icon.textContent = '−';\n    }\n  });\n});",
-        "language": "html"
-      },
-      {
-        "id": "Q-MUK5KUJD-SSFA",
-        "title": "Modal Popup Dialog Component",
-        "problemHtml": "<h2>Problem Statement: Modal Dialog Popup</h2><p>Build a customizable Modal Dialog window with open, close, and outside-click dismiss functionality.</p><h3>Requirements:</h3><ul><li>A trigger button <code>#openModalBtn</code> that opens the modal dialog.</li><li>The modal backdrop (<code>#modalOverlay</code>) should start hidden (<code>display: none</code> or <code>opacity: 0</code>).</li><li>Clicking <code>#openModalBtn</code> opens the modal with <code>class=\"active\"</code> on <code>#modalOverlay</code>.</li><li>Clicking <code>#closeModalBtn</code> inside the dialog closes the modal.</li><li>Clicking on the background overlay outside <code>#modalBox</code> closes the modal.</li><li>Pressing the <code>Escape</code> key closes the modal if currently open.</li></ul>",
-        "code": "<!doctype html>\n<html lang=\"en\">\n<head>\n  <meta charset=\"UTF-8\">\n  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n  <title>Modal Popup</title>\n</head>\n<body>\n  <main class=\"card\">\n    <h1>Modal Demo</h1>\n    <p>Click below to test the modal dialog component.</p>\n    <button id=\"openModalBtn\" class=\"btn-primary\">Open Dialog</button>\n  </main>\n\n  <div id=\"modalOverlay\" class=\"modal-overlay\">\n    <div id=\"modalBox\" class=\"modal-box\">\n      <div class=\"modal-header\">\n        <h2>Confirmation</h2>\n        <button id=\"closeModalBtn\" class=\"close-btn\" aria-label=\"Close\">&times;</button>\n      </div>\n      <div class=\"modal-body\">\n        <p>This is an accessible modal popup window. You can close it via the button, clicking outside, or pressing Escape.</p>\n      </div>\n      <div class=\"modal-footer\">\n        <button id=\"confirmModalBtn\" class=\"btn-primary\">Got it!</button>\n      </div>\n    </div>\n  </div>\n</body>\n</html>",
-        "tests": [],
-        "customFonts": [],
-        "problemLocked": false,
-        "frontEndHtml": "<!doctype html>\n<html lang=\"en\">\n<head>\n  <meta charset=\"UTF-8\">\n  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n  <title>Modal Popup</title>\n</head>\n<body>\n  <main class=\"card\">\n    <h1>Modal Demo</h1>\n    <p>Click below to test the modal dialog component.</p>\n    <button id=\"openModalBtn\" class=\"btn-primary\">Open Dialog</button>\n  </main>\n\n  <div id=\"modalOverlay\" class=\"modal-overlay\">\n    <div id=\"modalBox\" class=\"modal-box\">\n      <div class=\"modal-header\">\n        <h2>Confirmation</h2>\n        <button id=\"closeModalBtn\" class=\"close-btn\" aria-label=\"Close\">&times;</button>\n      </div>\n      <div class=\"modal-body\">\n        <p>This is an accessible modal popup window. You can close it via the button, clicking outside, or pressing Escape.</p>\n      </div>\n      <div class=\"modal-footer\">\n        <button id=\"confirmModalBtn\" class=\"btn-primary\">Got it!</button>\n      </div>\n    </div>\n  </div>\n</body>\n</html>",
-        "frontEndCss": "* { box-sizing: border-box; }\nbody {\n  margin: 0;\n  min-height: 100vh;\n  display: grid;\n  place-items: center;\n  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;\n  background: linear-gradient(135deg, #f093fb, #f5576c);\n}\n.card {\n  width: min(420px, 90vw);\n  padding: 32px;\n  border-radius: 14px;\n  background: #ffffff;\n  text-align: center;\n  box-shadow: 0 14px 35px rgba(0,0,0,0.15);\n}\nh1 { margin-top: 0; color: #1e293b; }\np { color: #64748b; margin-bottom: 24px; }\n.btn-primary {\n  padding: 10px 22px;\n  background: #f5576c;\n  color: white;\n  border: none;\n  border-radius: 8px;\n  font-weight: 600;\n  cursor: pointer;\n}\n.modal-overlay {\n  position: fixed;\n  inset: 0;\n  background: rgba(0, 0, 0, 0.5);\n  display: none;\n  place-items: center;\n  padding: 20px;\n  z-index: 100;\n}\n.modal-overlay.active {\n  display: grid;\n}\n.modal-box {\n  background: #ffffff;\n  border-radius: 12px;\n  width: min(440px, 100%);\n  box-shadow: 0 20px 50px rgba(0,0,0,0.3);\n  overflow: hidden;\n  animation: modalFadeIn 0.2s ease-out;\n}\n@keyframes modalFadeIn {\n  from { opacity: 0; transform: translateY(-16px); }\n  to { opacity: 1; transform: translateY(0); }\n}\n.modal-header {\n  display: flex;\n  justify-content: space-between;\n  align-items: center;\n  padding: 16px 20px;\n  border-bottom: 1px solid #e2e8f0;\n}\n.modal-header h2 { margin: 0; font-size: 1.2rem; color: #1e293b; }\n.close-btn {\n  background: none;\n  border: none;\n  font-size: 1.5rem;\n  cursor: pointer;\n  color: #94a3b8;\n}\n.modal-body { padding: 20px; color: #475569; font-size: 0.95rem; line-height: 1.5; }\n.modal-footer { padding: 14px 20px; background: #f8fafc; text-align: right; border-top: 1px solid #e2e8f0; }",
-        "frontEndJs": "// Write your Modal JavaScript logic here\nconst openModalBtn = document.getElementById('openModalBtn');\nconst closeModalBtn = document.getElementById('closeModalBtn');\nconst confirmModalBtn = document.getElementById('confirmModalBtn');\nconst modalOverlay = document.getElementById('modalOverlay');\nconst modalBox = document.getElementById('modalBox');\n\nfunction openModal() {\n  modalOverlay.classList.add('active');\n}\n\nfunction closeModal() {\n  modalOverlay.classList.remove('active');\n}\n\nopenModalBtn?.addEventListener('click', openModal);\ncloseModalBtn?.addEventListener('click', closeModal);\nconfirmModalBtn?.addEventListener('click', closeModal);\n\nmodalOverlay?.addEventListener('click', (e) => {\n  if (e.target === modalOverlay) {\n    closeModal();\n  }\n});\n\ndocument.addEventListener('keydown', (e) => {\n  if (e.key === 'Escape' && modalOverlay?.classList.contains('active')) {\n    closeModal();\n  }\n});",
-        "language": "html"
-      },
-      {
-        "id": "Q-MUK5KUOH-3TFH",
-        "title": "Dark / Light Theme Toggle Switcher",
-        "problemHtml": "<h2>Problem Statement: Dark / Light Theme Toggle</h2><p>Build a responsive Dark / Light theme switcher with persistent styling state and smooth color transitions.</p><h3>Requirements:</h3><ul><li>Add a toggle button <code>#themeToggleBtn</code> that switches between light and dark modes.</li><li>When switched to dark mode, toggle the <code>dark-mode</code> class on <code>document.body</code>.</li><li>Update the button label/icon: show <code>🌙 Dark Mode</code> in light state and <code>☀️ Light Mode</code> in dark state.</li><li>Ensure smooth CSS transitions (<code>0.3s</code>) for background and text colors.</li><li>In Light Mode: page background is <code>#f1f5f9</code>, card background is <code>#ffffff</code>, and text is <code>#0f172a</code>.</li><li>In Dark Mode: page background is <code>#0f172a</code>, card background is <code>#1e293b</code>, and text is <code>#f8fafc</code>.</li></ul>",
-        "code": "<!doctype html>\n<html lang=\"en\">\n<head>\n  <meta charset=\"UTF-8\">\n  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n  <title>Theme Switcher</title>\n</head>\n<body>\n  <main class=\"card\">\n    <div class=\"card-header\">\n      <h1>Theme Switcher</h1>\n      <button id=\"themeToggleBtn\" class=\"toggle-btn\">🌙 Dark Mode</button>\n    </div>\n    <p class=\"description\">Toggle between sleek light and dark themes with smooth transitions.</p>\n    <div class=\"demo-box\">\n      <h3>Live Feature Card</h3>\n      <p>Clean UI that adapts effortlessly to user theme preferences.</p>\n    </div>\n  </main>\n</body>\n</html>",
-        "tests": [],
-        "customFonts": [],
-        "problemLocked": false,
-        "frontEndHtml": "<!doctype html>\n<html lang=\"en\">\n<head>\n  <meta charset=\"UTF-8\">\n  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n  <title>Theme Switcher</title>\n</head>\n<body>\n  <main class=\"card\">\n    <div class=\"card-header\">\n      <h1>Theme Switcher</h1>\n      <button id=\"themeToggleBtn\" class=\"toggle-btn\">🌙 Dark Mode</button>\n    </div>\n    <p class=\"description\">Toggle between sleek light and dark themes with smooth transitions.</p>\n    <div class=\"demo-box\">\n      <h3>Live Feature Card</h3>\n      <p>Clean UI that adapts effortlessly to user theme preferences.</p>\n    </div>\n  </main>\n</body>\n</html>",
-        "frontEndCss": "* { box-sizing: border-box; }\nbody {\n  margin: 0;\n  min-height: 100vh;\n  display: grid;\n  place-items: center;\n  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;\n  background-color: #f1f5f9;\n  color: #0f172a;\n  transition: background-color 0.3s ease, color 0.3s ease;\n}\nbody.dark-mode {\n  background-color: #0f172a;\n  color: #f8fafc;\n}\n.card {\n  width: min(480px, 90vw);\n  padding: 30px;\n  border-radius: 16px;\n  background-color: #ffffff;\n  box-shadow: 0 16px 36px rgba(0,0,0,0.1);\n  transition: background-color 0.3s ease, box-shadow 0.3s ease;\n}\nbody.dark-mode .card {\n  background-color: #1e293b;\n  box-shadow: 0 16px 36px rgba(0,0,0,0.4);\n}\n.card-header {\n  display: flex;\n  justify-content: space-between;\n  align-items: center;\n  margin-bottom: 16px;\n}\nh1 { margin: 0; font-size: 1.4rem; }\n.toggle-btn {\n  padding: 8px 16px;\n  border-radius: 20px;\n  border: 1px solid #cbd5e1;\n  background: #f8fafc;\n  color: #334155;\n  font-weight: 600;\n  cursor: pointer;\n  transition: all 0.2s ease;\n}\nbody.dark-mode .toggle-btn {\n  background: #334155;\n  color: #f8fafc;\n  border-color: #475569;\n}\n.description { color: #64748b; font-size: 0.95rem; margin-bottom: 20px; }\nbody.dark-mode .description { color: #94a3b8; }\n.demo-box {\n  padding: 16px;\n  background: #f8fafc;\n  border-radius: 10px;\n  border: 1px solid #e2e8f0;\n}\nbody.dark-mode .demo-box {\n  background: #0f172a;\n  border-color: #334155;\n}\n.demo-box h3 { margin: 0 0 6px; font-size: 1rem; }\n.demo-box p { margin: 0; font-size: 0.88rem; color: #64748b; }\nbody.dark-mode .demo-box p { color: #94a3b8; }",
-        "frontEndJs": "// Write your Theme Toggle JavaScript logic here\nconst themeToggleBtn = document.getElementById('themeToggleBtn');\n\nthemeToggleBtn?.addEventListener('click', () => {\n  const isDark = document.body.classList.toggle('dark-mode');\n  themeToggleBtn.textContent = isDark ? '☀️ Light Mode' : '🌙 Dark Mode';\n});",
-        "language": "html"
-      },
-      {
-        "id": "Q-MUK5KUTT-D5MB",
-        "title": "Digital Stopwatch with Laps",
-        "problemHtml": "<h2>Problem Statement: Digital Stopwatch with Laps</h2><p>Build a high-precision digital stopwatch with start, pause, reset, and lap recording functionality.</p><h3>Requirements:</h3><ul><li>Display the time in <code>MM:SS:CS</code> (minutes, seconds, centiseconds/hundredths of a second) format in <code>#timeDisplay</code>.</li><li>Clicking <code>#startBtn</code> starts the timer ticking every 10 milliseconds.</li><li>Clicking <code>#pauseBtn</code> pauses the timer at its current value.</li><li>Clicking <code>#resetBtn</code> stops the timer, resets time to <code>00:00:00</code>, and clears the laps list.</li><li>Clicking <code>#lapBtn</code> records the current timestamp as a new <code>&lt;li&gt;</code> item inside <code>#lapsList</code>.</li><li>Two-digit zero-padding should always be applied for minutes, seconds, and centiseconds (e.g. <code>03:07:09</code>).</li></ul>",
-        "code": "<!doctype html>\n<html lang=\"en\">\n<head>\n  <meta charset=\"UTF-8\">\n  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n  <title>Digital Stopwatch</title>\n</head>\n<body>\n  <main class=\"card\">\n    <h1>Digital Stopwatch</h1>\n    <div id=\"timeDisplay\" class=\"time-display\">00:00:00</div>\n    <div class=\"controls\">\n      <button id=\"startBtn\" class=\"btn btn-start\">Start</button>\n      <button id=\"pauseBtn\" class=\"btn btn-pause\">Pause</button>\n      <button id=\"lapBtn\" class=\"btn btn-lap\">Lap</button>\n      <button id=\"resetBtn\" class=\"btn btn-reset\">Reset</button>\n    </div>\n    <div class=\"laps-container\">\n      <h3>Lap Times</h3>\n      <ul id=\"lapsList\" class=\"laps-list\"></ul>\n    </div>\n  </main>\n</body>\n</html>",
-        "tests": [],
-        "customFonts": [],
-        "problemLocked": false,
-        "frontEndHtml": "<!doctype html>\n<html lang=\"en\">\n<head>\n  <meta charset=\"UTF-8\">\n  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n  <title>Digital Stopwatch</title>\n</head>\n<body>\n  <main class=\"card\">\n    <h1>Digital Stopwatch</h1>\n    <div id=\"timeDisplay\" class=\"time-display\">00:00:00</div>\n    <div class=\"controls\">\n      <button id=\"startBtn\" class=\"btn btn-start\">Start</button>\n      <button id=\"pauseBtn\" class=\"btn btn-pause\">Pause</button>\n      <button id=\"lapBtn\" class=\"btn btn-lap\">Lap</button>\n      <button id=\"resetBtn\" class=\"btn btn-reset\">Reset</button>\n    </div>\n    <div class=\"laps-container\">\n      <h3>Lap Times</h3>\n      <ul id=\"lapsList\" class=\"laps-list\"></ul>\n    </div>\n  </main>\n</body>\n</html>",
-        "frontEndCss": "* { box-sizing: border-box; }\nbody {\n  margin: 0;\n  min-height: 100vh;\n  display: grid;\n  place-items: center;\n  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;\n  background: linear-gradient(135deg, #141e30, #243b55);\n}\n.card {\n  width: min(440px, 92vw);\n  padding: 30px;\n  border-radius: 16px;\n  background: #ffffff;\n  text-align: center;\n  box-shadow: 0 16px 40px rgba(0,0,0,0.3);\n}\nh1 { margin-top: 0; color: #1e293b; font-size: 1.4rem; }\n.time-display {\n  font-family: 'Consolas', 'Courier New', monospace;\n  font-size: 3rem;\n  font-weight: 700;\n  color: #0f172a;\n  margin: 20px 0;\n  letter-spacing: 2px;\n}\n.controls {\n  display: flex;\n  gap: 8px;\n  justify-content: center;\n  margin-bottom: 20px;\n}\n.btn {\n  padding: 9px 16px;\n  border: none;\n  border-radius: 8px;\n  font-weight: 600;\n  cursor: pointer;\n  transition: opacity 0.2s;\n}\n.btn:hover { opacity: 0.9; }\n.btn-start { background: #10b981; color: white; }\n.btn-pause { background: #f59e0b; color: white; }\n.btn-lap { background: #3b82f6; color: white; }\n.btn-reset { background: #ef4444; color: white; }\n.laps-container {\n  text-align: left;\n  border-top: 1px solid #e2e8f0;\n  padding-top: 14px;\n}\n.laps-container h3 { margin: 0 0 10px; font-size: 0.95rem; color: #64748b; }\n.laps-list {\n  list-style: none;\n  padding: 0;\n  margin: 0;\n  max-height: 140px;\n  overflow-y: auto;\n}\n.laps-list li {\n  display: flex;\n  justify-content: space-between;\n  padding: 6px 10px;\n  font-family: 'Consolas', monospace;\n  font-size: 0.9rem;\n  background: #f8fafc;\n  border-radius: 6px;\n  margin-bottom: 4px;\n}",
-        "frontEndJs": "// Write your Stopwatch JavaScript logic here\nlet startTime = 0;\nlet elapsedTime = 0;\nlet timerInterval = null;\nlet lapCount = 0;\n\nconst timeDisplay = document.getElementById('timeDisplay');\nconst startBtn = document.getElementById('startBtn');\nconst pauseBtn = document.getElementById('pauseBtn');\nconst lapBtn = document.getElementById('lapBtn');\nconst resetBtn = document.getElementById('resetBtn');\nconst lapsList = document.getElementById('lapsList');\n\nfunction formatTime(ms) {\n  const minutes = Math.floor(ms / 60000);\n  const seconds = Math.floor((ms % 60000) / 1000);\n  const centis = Math.floor((ms % 1000) / 10);\n  return (\n    String(minutes).padStart(2, '0') + ':' +\n    String(seconds).padStart(2, '0') + ':' +\n    String(centis).padStart(2, '0')\n  );\n}\n\nstartBtn?.addEventListener('click', () => {\n  if (timerInterval) return;\n  startTime = Date.now() - elapsedTime;\n  timerInterval = setInterval(() => {\n    elapsedTime = Date.now() - startTime;\n    timeDisplay.textContent = formatTime(elapsedTime);\n  }, 10);\n});\n\npauseBtn?.addEventListener('click', () => {\n  clearInterval(timerInterval);\n  timerInterval = null;\n});\n\nresetBtn?.addEventListener('click', () => {\n  clearInterval(timerInterval);\n  timerInterval = null;\n  elapsedTime = 0;\n  lapCount = 0;\n  timeDisplay.textContent = '00:00:00';\n  lapsList.innerHTML = '';\n});\n\nlapBtn?.addEventListener('click', () => {\n  if (elapsedTime === 0) return;\n  lapCount++;\n  const li = document.createElement('li');\n  li.innerHTML = `<span>Lap ${lapCount}</span><span>${formatTime(elapsedTime)}</span>`;\n  lapsList.prepend(li);\n});",
-        "language": "html"
-      },
-      {
-        "id": "Q-MUK5KVXL-VFVN",
-        "title": "Live Character and Word Counter",
-        "problemHtml": "<h2>Problem Statement: Live Character & Word Counter</h2><p>Build a real-time character, word, and limit tracker with dynamic progress feedback.</p><h3>Requirements:</h3><ul><li>Provide a <code>&lt;textarea id=\"textInput\" maxlength=\"200\"&gt;</code> for text input.</li><li>Update character count inside <code>#charCount</code> live as the user types (format: <code>X / 200</code>).</li><li>Calculate and display word count in <code>#wordCount</code> (correctly handling empty strings and consecutive whitespaces).</li><li>Update the width of <code>#progressBar</code> dynamically from <code>0%</code> to <code>100%</code> based on remaining character capacity.</li><li>When remaining characters are 15 or fewer, add <code>class=\"warning\"</code> to the progress bar and character count to highlight in red/amber.</li></ul>",
-        "code": "<!doctype html>\n<html lang=\"en\">\n<head>\n  <meta charset=\"UTF-8\">\n  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n  <title>Character & Word Counter</title>\n</head>\n<body>\n  <main class=\"card\">\n    <h1>Text Analyzer</h1>\n    <textarea id=\"textInput\" maxlength=\"200\" placeholder=\"Type or paste your text here...\"></textarea>\n    <div class=\"progress-track\">\n      <div id=\"progressBar\" class=\"progress-fill\"></div>\n    </div>\n    <div class=\"stats-row\">\n      <span>Words: <strong id=\"wordCount\">0</strong></span>\n      <span>Characters: <strong id=\"charCount\">0 / 200</strong></span>\n    </div>\n  </main>\n</body>\n</html>",
-        "tests": [],
-        "customFonts": [],
-        "problemLocked": false,
-        "frontEndHtml": "<!doctype html>\n<html lang=\"en\">\n<head>\n  <meta charset=\"UTF-8\">\n  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n  <title>Character & Word Counter</title>\n</head>\n<body>\n  <main class=\"card\">\n    <h1>Text Analyzer</h1>\n    <textarea id=\"textInput\" maxlength=\"200\" placeholder=\"Type or paste your text here...\"></textarea>\n    <div class=\"progress-track\">\n      <div id=\"progressBar\" class=\"progress-fill\"></div>\n    </div>\n    <div class=\"stats-row\">\n      <span>Words: <strong id=\"wordCount\">0</strong></span>\n      <span>Characters: <strong id=\"charCount\">0 / 200</strong></span>\n    </div>\n  </main>\n</body>\n</html>",
-        "frontEndCss": "* { box-sizing: border-box; }\nbody {\n  margin: 0;\n  min-height: 100vh;\n  display: grid;\n  place-items: center;\n  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;\n  background: linear-gradient(135deg, #43e97b, #38f9d7);\n}\n.card {\n  width: min(500px, 92vw);\n  padding: 30px;\n  border-radius: 16px;\n  background: #ffffff;\n  box-shadow: 0 16px 40px rgba(0,0,0,0.15);\n}\nh1 { margin-top: 0; color: #1e293b; font-size: 1.4rem; text-align: center; }\n#textInput {\n  width: 100%;\n  height: 140px;\n  padding: 14px;\n  border: 1px solid #cbd5e1;\n  border-radius: 10px;\n  font-size: 0.95rem;\n  font-family: inherit;\n  resize: vertical;\n  outline: none;\n  transition: border-color 0.2s;\n}\n#textInput:focus { border-color: #38f9d7; }\n.progress-track {\n  height: 6px;\n  background: #e2e8f0;\n  border-radius: 3px;\n  margin: 12px 0;\n  overflow: hidden;\n}\n.progress-fill {\n  height: 100%;\n  width: 0%;\n  background: #10b981;\n  transition: width 0.15s ease, background 0.2s ease;\n}\n.progress-fill.warning {\n  background: #ef4444;\n}\n.stats-row {\n  display: flex;\n  justify-content: space-between;\n  font-size: 0.9rem;\n  color: #64748b;\n}\n.stats-row strong.warning {\n  color: #ef4444;\n}",
-        "frontEndJs": "// Write your Character and Word Counter logic here\nconst textInput = document.getElementById('textInput');\nconst charCount = document.getElementById('charCount');\nconst wordCount = document.getElementById('wordCount');\nconst progressBar = document.getElementById('progressBar');\nconst MAX_CHARS = 200;\n\ntextInput?.addEventListener('input', () => {\n  const text = textInput.value;\n  const chars = text.length;\n  \n  // Count words\n  const trimmed = text.trim();\n  const words = trimmed ? trimmed.split(/\\s+/).length : 0;\n  \n  // Calculate percent\n  const percent = Math.min(100, (chars / MAX_CHARS) * 100);\n  const isNearLimit = MAX_CHARS - chars <= 15;\n  \n  charCount.textContent = `${chars} / ${MAX_CHARS}`;\n  wordCount.textContent = words;\n  progressBar.style.width = `${percent}%`;\n  \n  progressBar.classList.toggle('warning', isNearLimit);\n  charCount.classList.toggle('warning', isNearLimit);\n});",
-        "language": "html"
-      }
-    ]
-  }
-};
-
 async function loadSampleMockData() {
   try {
     const res = await fetch('SET-MUK5KO3I-all-questions.json');
@@ -1422,3 +1556,161 @@ showMediaNoteWithTimer(5000);
 ['insertImage', 'insertVideo', 'insertFont'].forEach(id => {
   if ($(id)) $(id).addEventListener('click', () => showMediaNoteWithTimer(5000));
 });
+
+/* ==========================================================================
+   MOBILE KEYBOARD AUTO-SCROLL & VIEWPORT MANAGEMENT
+   ========================================================================== */
+function initMobileKeyboardAutoScroll() {
+  let scrollTimeout = null;
+
+  function isMobile() {
+    return window.innerWidth <= 1050 || ('ontouchstart' in window && window.innerWidth <= 1200);
+  }
+
+  function isEditableElement(el) {
+    if (!el) return false;
+    const tag = el.tagName;
+    return tag === 'TEXTAREA' || tag === 'INPUT' || el.isContentEditable || (el.classList && el.classList.contains('rich-editor'));
+  }
+
+  function ensureVisibleAboveKeyboard(el, immediate = false) {
+    if (!el || !isMobile() || !isEditableElement(el)) return;
+
+    clearTimeout(scrollTimeout);
+    scrollTimeout = setTimeout(() => {
+      try {
+        const rect = el.getBoundingClientRect();
+        const vHeight = window.visualViewport ? window.visualViewport.height : window.innerHeight;
+        
+        const desiredTopOffset = Math.max(60, vHeight * 0.16);
+        const currentAbsoluteTop = window.pageYOffset || document.documentElement.scrollTop || 0;
+        const targetScrollY = currentAbsoluteTop + rect.top - desiredTopOffset;
+
+        if (rect.bottom > vHeight - 35 || rect.top < 55) {
+          window.scrollTo({
+            top: Math.max(0, targetScrollY),
+            behavior: immediate ? 'auto' : 'smooth'
+          });
+        }
+
+        if (el.tagName === 'TEXTAREA' && typeof el.selectionStart === 'number') {
+          const val = el.value || '';
+          const pos = el.selectionStart;
+          const linesBefore = val.substring(0, pos).split('\n').length;
+          const lineHeight = 21;
+          const cursorTopPx = (linesBefore - 1) * lineHeight;
+          
+          if (cursorTopPx < el.scrollTop || cursorTopPx > el.scrollTop + el.clientHeight - 45) {
+            el.scrollTop = Math.max(0, cursorTopPx - Math.floor(el.clientHeight / 2));
+          }
+          if (typeof updateFrontLines === 'function') updateFrontLines();
+          else if (lines) lines.scrollTop = el.scrollTop;
+        }
+      } catch (err) {
+        try {
+          el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        } catch (e) {}
+      }
+    }, immediate ? 20 : 160);
+  }
+
+  document.addEventListener('focusin', (e) => {
+    if (isEditableElement(e.target) && isMobile()) {
+      document.body.classList.add('keyboard-open');
+      ensureVisibleAboveKeyboard(e.target, false);
+      setTimeout(() => ensureVisibleAboveKeyboard(e.target, false), 350);
+    }
+  });
+
+  document.addEventListener('focusout', () => {
+    setTimeout(() => {
+      const active = document.activeElement;
+      if (!isEditableElement(active)) {
+        document.body.classList.remove('keyboard-open');
+      }
+    }, 200);
+  });
+
+  if (window.visualViewport) {
+    window.visualViewport.addEventListener('resize', () => {
+      if (!isMobile()) return;
+      const isKeyboardUp = window.visualViewport.height < window.innerHeight * 0.85;
+      document.body.classList.toggle('keyboard-open', isKeyboardUp);
+      
+      const active = document.activeElement;
+      if (isKeyboardUp && isEditableElement(active)) {
+        ensureVisibleAboveKeyboard(active, true);
+      }
+    });
+  }
+
+  let typingDebounce = null;
+  document.addEventListener('input', (e) => {
+    if (!isMobile() || !isEditableElement(e.target)) return;
+    clearTimeout(typingDebounce);
+    typingDebounce = setTimeout(() => {
+      ensureVisibleAboveKeyboard(e.target, false);
+    }, 250);
+  });
+
+  document.addEventListener('keyup', (e) => {
+    if (!isMobile() || !isEditableElement(e.target)) return;
+    if (['Enter', 'ArrowUp', 'ArrowDown', 'Backspace'].includes(e.key)) {
+      ensureVisibleAboveKeyboard(e.target, false);
+    }
+  });
+
+  ['code', 'cssCode', 'jsCode', 'problem'].forEach(id => {
+    const el = $(id);
+    if (el) {
+      el.addEventListener('click', () => {
+        if (isMobile()) ensureVisibleAboveKeyboard(el, false);
+      });
+    }
+  });
+}
+
+// Ensure all button aliases and actions are wired up and responsive
+function initAllIDEButtonListeners() {
+  if (typeof initHeaderNavLockListeners === 'function') initHeaderNavLockListeners();
+  if (localStorage.getItem('ide_header_nav_locked') === 'true' || localStorage.getItem('fend_header_nav_locked') === 'true' || state?.headerNavLocked) {
+    if (typeof setHeaderNavLocked === 'function') setHeaderNavLocked(true);
+    if (typeof setExamNavLocked === 'function') setExamNavLocked(true);
+  }
+  if ($('mainFullscreen')) $('mainFullscreen').onclick = () => toggleWorkspaceFullscreen();
+  if ($('workspaceFullscreen')) $('workspaceFullscreen').onclick = () => toggleWorkspaceFullscreen();
+  if ($('exitWorkspaceFullscreen')) $('exitWorkspaceFullscreen').onclick = () => toggleWorkspaceFullscreen(false);
+  if ($('addQuestion')) $('addQuestion').onclick = () => { saveCurrent(); state.questions.push(starter()); openQuestion(state.questions.length - 1); save(); };
+  if ($('importJson')) $('importJson').onclick = () => $('questionFile').click();
+  if ($('importAllJson')) $('importAllJson').onclick = () => $('allJsonFile') ? $('allJsonFile').click() : $('questionFile').click();
+  if ($('exportJson')) $('exportJson').onclick = exportAllQuestionsJson;
+  if ($('exportAllJson')) $('exportAllJson').onclick = exportAllQuestionsJson;
+  if ($('exportQuestion')) $('exportQuestion').onclick = exportSingleQuestionJson;
+  if ($('importQuestion')) $('importQuestion').onclick = () => $('questionFile').click();
+  if ($('importSet')) $('importSet').onclick = () => $('setFile').click();
+  if ($('prev')) $('prev').onclick = () => current && go(current - 1);
+  if ($('next')) $('next').onclick = () => current < state.questions.length - 1 && go(current + 1);
+  if ($('deleteQuestion')) $('deleteQuestion').onclick = () => { if (state.questions.length < 2) return toast('At least one question is required'); if (confirm('Delete this question?')) { state.questions.splice(current, 1); openQuestion(Math.min(current, state.questions.length - 1)); save(); } };
+  if ($('runTests')) $('runTests').onclick = (typeof runAll === 'function') ? runAll : refreshFrontPreview;
+  if ($('runCustom')) $('runCustom').onclick = (typeof refreshFrontPreview === 'function') ? refreshFrontPreview : runCustom;
+  if ($('fontUp')) $('fontUp').onclick = () => font(1);
+  if ($('fontDown')) $('fontDown').onclick = () => font(-1);
+  if ($('setTimer')) $('setTimer').onclick = () => setTimer();
+  if ($('timerLock')) $('timerLock').onclick = lockTimer;
+  if ($('proctorSettings')) $('proctorSettings').onclick = () => { applyOwnerConfig(); $('ownerModal').classList.add('show'); };
+  if ($('ownerCancel')) $('ownerCancel').onclick = () => $('ownerModal').classList.remove('show');
+  if ($('clearExamData')) $('clearExamData').onclick = clearAllAssessmentDataV20;
+  if ($('mobileFloatingNext')) $('mobileFloatingNext').onclick = () => { if ($('next') && !$('next').disabled) $('next').click(); else if (candidateRunning) finishAssessmentV20('manual'); };
+  if ($('mobileNextBtn')) $('mobileNextBtn').onclick = () => { if ($('next') && !$('next').disabled) $('next').click(); };
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', () => {
+    initMobileKeyboardAutoScroll();
+    initAllIDEButtonListeners();
+  });
+} else {
+  initMobileKeyboardAutoScroll();
+  initAllIDEButtonListeners();
+}
+

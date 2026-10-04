@@ -1,10 +1,205 @@
 const $=id=>document.getElementById(id),uid=()=>`Q-${Date.now().toString(36).toUpperCase()}-${Math.random().toString(36).slice(2,6).toUpperCase()}`;
-const starter=()=>({id:uid(),title:'Question',problemHtml:'<h2>Problem Statement</h2><p>Write a program that reads input and prints the required output.</p><p><b>Input Specification:</b><br>Read values from standard input.</p><p><b>Output Specification:</b><br>Print only the required answer.</p>',code:'# Write Python 3 code here\nvalue = input().strip()\nprint(value)',codes:{python:'# Write Python 3 code here\nvalue = input().strip()\nprint(value)',c:'#include <stdio.h>\nint main(void){\n    char value[1024];\n    if(fgets(value,sizeof value,stdin))\n        printf("%s",value);\n    return 0;\n}',cpp:'#include <iostream>\n#include <string>\nusing namespace std;\nint main(){\n    string value;\n    getline(cin,value);\n    cout << value;\n    return 0;\n}'},tests:[{input:'hello',expected:'hello'},{input:'42',expected:'42'}],customFonts:[]});
+const starter=()=>({id:uid(),title:'Question',problemHtml:'',code:'',codes:{python:'',c:'',cpp:''},tests:[],customFonts:[]});
+
+const SAMPLE_MOCK_DATA = {
+  "format": "python-assessment-set",
+  "version": 3,
+  "setId": "SET-MUJDFHP0",
+  "title": "Programming Assessment (C, C++, Python)",
+  "timerMinutes": 60,
+  "timerLocked": false,
+  "timerLockHash": "",
+  "customInputLocked": false,
+  "customInputChecked": false,
+  "customInputLockHash": "",
+  "ownerConfig": {
+    "email": "",
+    "submissionMinutes": 10
+  },
+  "language": "python",
+  "packageSecurity": {
+    "protected": false,
+    "deleteQuestionsAllowed": true
+  },
+  "totalQuestions": 6,
+  "exportedAt": "2026-09-27T18:04:30.673Z",
+  "questions": [
+    {
+      "id": "Q-MUJDFHP1-QPOG",
+      "title": "Question 1: Check Even or Odd",
+      "problemHtml": "<h2>Problem Statement</h2><p>Write a program in C, C++, or Python that reads an integer from standard input and prints <code>Even</code> if the number is even, or <code>Odd</code> if the number is odd.</p><p><b>Input Specification:</b><br>A single integer <code>n</code>.</p><p><b>Output Specification:</b><br>Print <code>Even</code> or <code>Odd</code>.</p>",
+      "code": "# Read input and write your solution here\nn = int(input().strip())\nif n % 2 == 0:\n    print(\"Even\")\nelse:\n    print(\"Odd\")",
+      "codes": {
+        "python": "# Read input and write your solution here\nn = int(input().strip())\nif n % 2 == 0:\n    print(\"Even\")\nelse:\n    print(\"Odd\")",
+        "c": "#include <stdio.h>\n\nint main(void) {\n    int n;\n    if (scanf(\"%d\", &n) == 1) {\n        if (n % 2 == 0) {\n            printf(\"Even\\n\");\n        } else {\n            printf(\"Odd\\n\");\n        }\n    }\n    return 0;\n}",
+        "cpp": "#include <iostream>\n\nusing namespace std;\n\nint main() {\n    int n;\n    if (cin >> n) {\n        if (n % 2 == 0) {\n            cout << \"Even\" << endl;\n        } else {\n            cout << \"Odd\" << endl;\n        }\n    }\n    return 0;\n}"
+      },
+      "language": "python",
+      "problemLocked": false,
+      "problemLockHash": "",
+      "testsLocked": false,
+      "testLockHash": "",
+      "tests": [
+        { "input": "4", "expected": "Even", "studentDefined": false },
+        { "input": "7", "expected": "Odd", "studentDefined": false },
+        { "input": "0", "expected": "Even", "studentDefined": false },
+        { "input": "-3", "expected": "Odd", "studentDefined": false }
+      ],
+      "customFonts": []
+    },
+    {
+      "id": "Q-MUJVUFCF-9QJP",
+      "title": "Question 2: Reverse a String",
+      "problemHtml": "<h2>Problem Statement</h2><p>Write a program in C, C++, or Python that reads a string from standard input and prints the string reversed.</p><p><b>Input Specification:</b><br>A single line string.</p><p><b>Output Specification:</b><br>Print the reversed string.</p>",
+      "code": "# Read input and write your solution here\ns = input().strip()\nprint(s[::-1])",
+      "codes": {
+        "python": "# Read input and write your solution here\ns = input().strip()\nprint(s[::-1])",
+        "c": "#include <stdio.h>\n#include <string.h>\n\nint main(void) {\n    char s[1024];\n    if (fgets(s, sizeof(s), stdin)) {\n        s[strcspn(s, \"\\r\\n\")] = '\\0';\n        int len = strlen(s);\n        for (int i = 0; i < len / 2; i++) {\n            char temp = s[i];\n            s[i] = s[len - 1 - i];\n            s[len - 1 - i] = temp;\n        }\n        printf(\"%s\\n\", s);\n    }\n    return 0;\n}",
+        "cpp": "#include <iostream>\n#include <string>\n#include <algorithm>\n\nusing namespace std;\n\nint main() {\n    string s;\n    if (getline(cin, s)) {\n        if (!s.empty() && s.back() == '\\r') s.pop_back();\n        reverse(s.begin(), s.end());\n        cout << s << endl;\n    }\n    return 0;\n}"
+      },
+      "language": "python",
+      "problemLocked": false,
+      "problemLockHash": "",
+      "testsLocked": false,
+      "testLockHash": "",
+      "tests": [
+        { "input": "hello", "expected": "olleh", "studentDefined": false },
+        { "input": "Python", "expected": "nohtyP", "studentDefined": false },
+        { "input": "12345", "expected": "54321", "studentDefined": false }
+      ],
+      "customFonts": []
+    },
+    {
+      "id": "Q-MUK4OG7D-X5II",
+      "title": "Question 3: Palindrome Check",
+      "problemHtml": "<h2>Problem Statement</h2><p>Write a program in C, C++, or Python that checks whether a given string is a palindrome. A palindrome is a word or sequence that reads the same forwards and backwards.</p><p><b>Input Specification:</b><br>A single line containing a string.</p><p><b>Output Specification:</b><br>Print <code>True</code> if the string is a palindrome, otherwise print <code>False</code>.</p>",
+      "code": "# Read input and write your solution here\ns = input().strip()\nprint(\"True\" if s == s[::-1] else \"False\")",
+      "codes": {
+        "python": "# Read input and write your solution here\ns = input().strip()\nprint(\"True\" if s == s[::-1] else \"False\")",
+        "c": "#include <stdio.h>\n#include <string.h>\n\nint main(void) {\n    char s[1024];\n    if (fgets(s, sizeof(s), stdin)) {\n        s[strcspn(s, \"\\r\\n\")] = '\\0';\n        int len = strlen(s);\n        int isPal = 1;\n        for (int i = 0; i < len / 2; i++) {\n            if (s[i] != s[len - 1 - i]) {\n                isPal = 0;\n                break;\n            }\n        }\n        if (isPal) {\n            printf(\"True\\n\");\n        } else {\n            printf(\"False\\n\");\n        }\n    }\n    return 0;\n}",
+        "cpp": "#include <iostream>\n#include <string>\n#include <algorithm>\n\nusing namespace std;\n\nint main() {\n    string s;\n    if (getline(cin, s)) {\n        if (!s.empty() && s.back() == '\\r') s.pop_back();\n        string rev = s;\n        reverse(rev.begin(), rev.end());\n        if (s == rev) {\n            cout << \"True\" << endl;\n        } else {\n            cout << \"False\" << endl;\n        }\n    }\n    return 0;\n}"
+      },
+      "language": "python",
+      "problemLocked": false,
+      "problemLockHash": "",
+      "testsLocked": false,
+      "testLockHash": "",
+      "tests": [
+        { "input": "radar", "expected": "True", "studentDefined": false },
+        { "input": "python", "expected": "False", "studentDefined": false },
+        { "input": "level", "expected": "True", "studentDefined": false },
+        { "input": "12321", "expected": "True", "studentDefined": false }
+      ],
+      "customFonts": []
+    },
+    {
+      "id": "Q-MUK4OGM9-OU5Z",
+      "title": "Question 4: Factorial of a Number",
+      "problemHtml": "<h2>Problem Statement</h2><p>Write a program in C, C++, or Python that reads a non-negative integer <code>n</code> and computes its factorial (<code>n!</code>).</p><p><b>Input Specification:</b><br>A non-negative integer <code>n</code>.</p><p><b>Output Specification:</b><br>Print the factorial value of <code>n</code>.</p>",
+      "code": "# Read input and write your solution here\nimport math\nn = int(input().strip())\nprint(math.factorial(n))",
+      "codes": {
+        "python": "# Read input and write your solution here\nimport math\nn = int(input().strip())\nprint(math.factorial(n))",
+        "c": "#include <stdio.h>\n\nint main(void) {\n    int n;\n    if (scanf(\"%d\", &n) == 1) {\n        long long fact = 1;\n        for (int i = 1; i <= n; i++) {\n            fact *= i;\n        }\n        printf(\"%lld\\n\", fact);\n    }\n    return 0;\n}",
+        "cpp": "#include <iostream>\n\nusing namespace std;\n\nint main() {\n    int n;\n    if (cin >> n) {\n        long long fact = 1;\n        for (int i = 1; i <= n; i++) {\n            fact *= i;\n        }\n        cout << fact << endl;\n    }\n    return 0;\n}"
+      },
+      "language": "python",
+      "problemLocked": false,
+      "problemLockHash": "",
+      "testsLocked": false,
+      "testLockHash": "",
+      "tests": [
+        { "input": "5", "expected": "120", "studentDefined": false },
+        { "input": "0", "expected": "1", "studentDefined": false },
+        { "input": "3", "expected": "6", "studentDefined": false },
+        { "input": "7", "expected": "5040", "studentDefined": false }
+      ],
+      "customFonts": []
+    },
+    {
+      "id": "Q-MUK4OHA9-QW4L",
+      "title": "Question 5: Sum of Array Elements",
+      "problemHtml": "<h2>Problem Statement</h2><p>Write a program in C, C++, or Python that reads a space-separated sequence of integers on a single line and calculates the total sum of all elements.</p><p><b>Input Specification:</b><br>Space-separated integers.</p><p><b>Output Specification:</b><br>Print the integer sum of the elements.</p>",
+      "code": "# Read input and write your solution here\nnums = list(map(int, input().strip().split()))\nprint(sum(nums))",
+      "codes": {
+        "python": "# Read input and write your solution here\nnums = list(map(int, input().strip().split()))\nprint(sum(nums))",
+        "c": "#include <stdio.h>\n\nint main(void) {\n    int val, sum = 0;\n    while (scanf(\"%d\", &val) == 1) {\n        sum += val;\n    }\n    printf(\"%d\\n\", sum);\n    return 0;\n}",
+        "cpp": "#include <iostream>\n\nusing namespace std;\n\nint main() {\n    int val, sum = 0;\n    while (cin >> val) {\n        sum += val;\n    }\n    cout << sum << endl;\n    return 0;\n}"
+      },
+      "language": "python",
+      "problemLocked": false,
+      "problemLockHash": "",
+      "testsLocked": false,
+      "testLockHash": "",
+      "tests": [
+        { "input": "1 2 3 4 5", "expected": "15", "studentDefined": false },
+        { "input": "10 -2 5", "expected": "13", "studentDefined": false },
+        { "input": "100", "expected": "100", "studentDefined": false },
+        { "input": "0 0 0", "expected": "0", "studentDefined": false }
+      ],
+      "customFonts": []
+    },
+    {
+      "id": "Q-MUK4OHPL-8KOA",
+      "title": "Question 6: Find Maximum in List",
+      "problemHtml": "<h2>Problem Statement</h2><p>Write a program in C, C++, or Python that reads a space-separated sequence of integers on a single line and finds the maximum value.</p><p><b>Input Specification:</b><br>Space-separated integers.</p><p><b>Output Specification:</b><br>Print the maximum integer value.</p>",
+      "code": "# Read input and write your solution here\nnums = list(map(int, input().strip().split()))\nprint(max(nums))",
+      "codes": {
+        "python": "# Read input and write your solution here\nnums = list(map(int, input().strip().split()))\nprint(max(nums))",
+        "c": "#include <stdio.h>\n\nint main(void) {\n    int val, max_val;\n    if (scanf(\"%d\", &max_val) == 1) {\n        while (scanf(\"%d\", &val) == 1) {\n            if (val > max_val) {\n                max_val = val;\n            }\n        }\n        printf(\"%d\\n\", max_val);\n    }\n    return 0;\n}",
+        "cpp": "#include <iostream>\n\nusing namespace std;\n\nint main() {\n    int val, max_val;\n    if (cin >> max_val) {\n        while (cin >> val) {\n            if (val > max_val) {\n                max_val = val;\n            }\n        }\n        cout << max_val << endl;\n    }\n    return 0;\n}"
+      },
+      "language": "python",
+      "problemLocked": false,
+      "problemLockHash": "",
+      "testsLocked": false,
+      "testLockHash": "",
+      "tests": [
+        { "input": "3 7 2 9 5", "expected": "9", "studentDefined": false },
+        { "input": "-10 -5 -20 -1", "expected": "-1", "studentDefined": false },
+        { "input": "42", "expected": "42", "studentDefined": false },
+        { "input": "8 8 8 8", "expected": "8", "studentDefined": false }
+      ],
+      "customFonts": []
+    }
+  ]
+};
+
+function getDefaultAssessmentState() {
+  return {
+    format: "python-assessment-set",
+    version: 3,
+    setId: `SET-${Date.now().toString(36).toUpperCase()}`,
+    title: "Question",
+    timerMinutes: 60,
+    timerLocked: false,
+    timerLockHash: "",
+    customInputLocked: false,
+    customInputChecked: false,
+    customInputLockHash: "",
+    ownerConfig: {
+      email: "",
+      submissionMinutes: 10
+    },
+    language: "python",
+    packageSecurity: {
+      protected: false,
+      deleteQuestionsAllowed: true
+    },
+    totalQuestions: 1,
+    exportedAt: new Date().toISOString(),
+    questions: [
+      starter()
+    ]
+  };
+}
+
 let candidateRunning = false, packageProtected = false, assessmentStarted = false, autoExportStarted = false, importInProgress = false;
-let state={format:'python-assessment-set',version:2,setId:`SET-${Date.now().toString(36).toUpperCase()}`,title:'Python Assessment',timerMinutes:60,questions:[starter()]},current=0,history=[],remaining=3600,timerHandle;
+let state = getDefaultAssessmentState(), current = 0, history = [], remaining = 3600, timerHandle;
 const code=$('code'),problem=$('problem'),lines=$('lines');function q(){return state.questions[current]}function esc(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}function toast(m){let t=$('toast');t.textContent=m;t.classList.add('show');clearTimeout(t.x);t.x=setTimeout(()=>t.classList.remove('show'),1700)}
 function applyFonts(x){(x.customFonts||[]).forEach(f=>{if(!document.getElementById('font-'+f.id)){let s=document.createElement('style');s.id='font-'+f.id;s.textContent=`@font-face{font-family:${JSON.stringify(f.name)};src:url(${JSON.stringify(f.data)})}`;document.head.appendChild(s)}if(![...$('fontName').options].some(o=>o.value===f.name)){$('fontName').add(new Option(f.name,f.name))}})}
+let isClearingData = false;
 function saveCurrent(){
+  if(isClearingData)return;
   let x=q();if(!x)return;
   if(problem)x.problemHtml=problem.innerHTML;
   if(code){
@@ -23,6 +218,7 @@ function saveCurrent(){
   }catch(e){}
 }
 function save(){
+  if(isClearingData)return;
   try{localStorage.setItem('assessment-rich-v3',JSON.stringify(state));}catch(e){}
   if($('saveState'))$('saveState').textContent='Saved just now';
 }
@@ -31,7 +227,10 @@ function load(){
   try{
     let s=JSON.parse(localStorage.getItem('assessment-rich-v3'));
     if(s?.questions?.length)state=s;
-  }catch(e){}
+    else state=getDefaultAssessmentState();
+  }catch(e){
+    state=getDefaultAssessmentState();
+  }
   if($('setIdText'))$('setIdText').textContent=state.setId;
   if($('timerMinutes'))$('timerMinutes').value=state.timerMinutes;
   let targetQ=0;
@@ -51,6 +250,7 @@ function load(){
       if(typeof setHeaderNavLocked==='function')setHeaderNavLocked(true);
     }
   }catch(e){}
+  if(typeof updateQuestionCountV19==='function')updateQuestionCountV19();
 }
 function openQuestion(i){
   current=i;let x=q();if(!x)return;
@@ -551,10 +751,10 @@ $('runCustom').onclick=runCurrentMode;
 applyCandidateMode();
 
 /* v17 retained teacher controls, protected candidate start, and browser compiler */
-const V17_DEFAULTS={python:'# Write Python 3 code here\nvalue = input().strip()\nprint(value)',c:'#include <stdio.h>\nint main(void){ char value[1024]; if(fgets(value,sizeof value,stdin)) printf("%s",value); return 0; }',cpp:'#include <iostream>\n#include <string>\nusing namespace std;\nint main(){ string value; getline(cin,value); cout << value; return 0; }'};
+const V17_DEFAULTS={python:'',c:'',cpp:''};
 function lang(){return q()?.language||state.language||'python'}function rid(){return Math.random().toString(36).slice(2)+Date.now().toString(36)}
 function setLanguageUI(){const l=lang();$('languageSelect').value=l;$('compilerStatus').textContent='Online compiler · '+l.toUpperCase();updateSyntaxHighlight();}
-$('languageSelect').onchange=e=>{saveCurrent();const x=q(),next=e.target.value;if(x){x.language=next;if(!x.codes)x.codes={};if(x.codes[next]!==undefined){x.code=x.codes[next]}else if(V17_DEFAULTS[next]){x.code=V17_DEFAULTS[next];x.codes[next]=x.code}code.value=x.code||'';updateLines()}state.language=next;setLanguageUI();save()};
+$('languageSelect').onchange=e=>{saveCurrent();const x=q(),next=e.target.value;if(x){x.language=next;if(!x.codes)x.codes={};if(x.codes[next]!==undefined){x.code=x.codes[next]}else{x.code=V17_DEFAULTS[next]||'';x.codes[next]=x.code}code.value=x.code||'';updateLines()}state.language=next;setLanguageUI();save()};
 const open17=openQuestion;openQuestion=function(i){open17(i);setLanguageUI();applyTestFreeze();applyCustomFreeze();applyCandidateSecurity()};
 function isDocFullscreen(){return!!(document.fullscreenElement||document.webkitFullscreenElement||document.mozFullScreenElement||document.msFullscreenElement||document.body.classList.contains('app-fullscreen-fallback'))}
 async function toggleMainFullscreen(){
@@ -622,9 +822,25 @@ $('customToggle').onchange=()=>{state.customInputChecked=$('customToggle').check
 $('customInputLock').onclick=async()=>{if(!state.customInputLocked){state.customInputChecked=$('customToggle').checked;const p=prompt(`Freeze Custom Input as ${state.customInputChecked?'checked':'not checked'}. Create password:`,'');if(!p||p.length<4)return toast('Use at least 4 characters');if(prompt('Confirm password:','')!==p)return toast('Passwords do not match');state.customInputLockHash=await pinHash(p);state.customInputLocked=true}else{const p=prompt('Enter Custom Input password:','');if(p===null)return;if(await pinHash(p)!==state.customInputLockHash)return toast('Incorrect password');state.customInputLocked=false}applyCustomFreeze();save()};
 $('addTest').onclick=()=>{q().tests.push({input:'',expected:'',studentDefined:true});renderTests17();save()};
 
-/* Header Navigation Auto-Lock (Help Guide, Home, App store) with password '12345' */
+/* Header Navigation & Data Controls Auto-Lock (Help Guide, Home, App store, Clear Cookies) with password '12345' */
 const HEADER_NAV_PASSWORD = '12345';
 let isHeaderNavLocked = false;
+
+function isExamActiveOrLocked() {
+  return !!(
+    isHeaderNavLocked ||
+    (typeof candidateRunning !== 'undefined' && candidateRunning) ||
+    (typeof assessmentStarted !== 'undefined' && assessmentStarted) ||
+    (typeof packageProtected !== 'undefined' && packageProtected) ||
+    (typeof candidateSequentialMode !== 'undefined' && candidateSequentialMode) ||
+    (typeof isTimerLocked === 'function' && isTimerLocked()) ||
+    (typeof readExamSession === 'function' && readExamSession()?.active) ||
+    document.body.classList.contains('candidate-running') ||
+    document.body.classList.contains('header-nav-locked') ||
+    (typeof $ === 'function' && $('candidateModal') && $('candidateModal').classList.contains('show')) ||
+    (typeof $ === 'function' && $('readyModal') && $('readyModal').classList.contains('show'))
+  );
+}
 
 function setHeaderNavLocked(locked) {
   isHeaderNavLocked = !!locked;
@@ -636,6 +852,7 @@ function setHeaderNavLocked(locked) {
   const homeBtn = $('homeBtn');
   const appStoreBtn = $('appStoreBtn');
   const helpBtn = $('helpBtn');
+  const clearBtn = $('clearExamData');
   
   if (homeBtn) {
     homeBtn.classList.toggle('nav-btn-locked', isHeaderNavLocked);
@@ -652,22 +869,27 @@ function setHeaderNavLocked(locked) {
     helpBtn.innerHTML = isHeaderNavLocked ? '🔒 Help Guide' : '📖 Help Guide';
     helpBtn.title = isHeaderNavLocked ? 'Locked with password (Enter 12345 to unlock)' : 'Help Guide';
   }
+  if (clearBtn) {
+    clearBtn.classList.toggle('nav-btn-locked', isHeaderNavLocked);
+    clearBtn.innerHTML = isHeaderNavLocked ? '🔒 Clear Cookies' : 'Clear Cookies';
+    clearBtn.title = isHeaderNavLocked ? 'Locked with password (Enter 12345 to unlock)' : 'Clear Cookies';
+  }
   document.body.classList.toggle('header-nav-locked', isHeaderNavLocked);
 }
 
 function unlockHeaderNavPrompt(targetUrl) {
-  const entered = prompt('These buttons (Help Guide, Home, App store) are locked for the exam.\nEnter password to unlock:');
+  const entered = prompt('These buttons (Help Guide, Home, App store, Clear Cookies) are locked for the exam.\nEnter password to unlock:');
   if (entered === null) {
     return;
   }
-  if (entered === HEADER_NAV_PASSWORD) {
+  if ((entered || '').trim() === HEADER_NAV_PASSWORD) {
     setHeaderNavLocked(false);
     toast('Buttons unlocked successfully');
     if (targetUrl) {
       window.open(targetUrl, '_blank', 'noopener,noreferrer');
     }
   } else {
-    toast('Incorrect password. Access to Help Guide, Home, and App store is locked.');
+    toast('Incorrect password. Access to Help Guide, Home, App store, and Clear Cookies is locked.');
   }
 }
 
@@ -720,7 +942,7 @@ function initHeaderNavLockListeners() {
   document.addEventListener('auxclick', checkAndIntercept, true);
 }
 
-function applyCandidateSecurity(){document.body.classList.toggle('candidate-running',candidateRunning);$('deleteQuestion').disabled=packageProtected||candidateRunning;$('deleteQuestion').hidden=packageProtected||candidateRunning;if(candidateRunning){['proctorSettings','addQuestion','importQuestion','exportQuestion','importJson','exportJson','importSet','exportSet'].forEach(id=>{const el=$(id);if(el)el.disabled=true})}}
+function applyCandidateSecurity(){document.body.classList.toggle('candidate-running',candidateRunning);$('deleteQuestion').disabled=packageProtected||candidateRunning;$('deleteQuestion').hidden=packageProtected||candidateRunning;if(candidateRunning){['proctorSettings','addQuestion','importQuestion','exportQuestion','importJson','exportJson','importSet','exportSet'].forEach(id=>{const el=$(id);if(el)el.disabled=true});if(typeof setHeaderNavLocked==='function')setHeaderNavLocked(true);}}
 async function hashPack(p,s){return pinHash(s+'|'+p)}
 async function buildAssessmentZip(security,fileName){saveCurrent();const zip=new JSZip();const manifest={...state,questions:undefined,questionIds:state.questions.map(x=>x.id),packageSecurity:security};zip.file('assessment.json',JSON.stringify(manifest,null,2));state.questions.forEach((x,i)=>zip.file(`questions/${String(i+1).padStart(3,'0')}-${x.id}.json`,JSON.stringify(x,null,2)));zip.file('README.txt','Import this assessment ZIP using Browser Assessment IDE.');download(await zip.generateAsync({type:'blob',compression:'DEFLATE'}),fileName||`${state.setId}.zip`)}
 $('exportSet').onclick=async()=>{saveCurrent();const use=confirm('Do you want to save password?\n\nOK = Save password\nCancel = Export without password');let sec={protected:false,deleteQuestionsAllowed:true};if(use){const p=prompt('Teacher: enter ZIP password (minimum 4 characters):','');if(!p||p.length<4)return toast('Use at least 4 characters');if(prompt('Confirm ZIP password:','')!==p)return toast('Passwords do not match');const salt=rid();sec={protected:true,salt,hash:await hashPack(p,salt),deleteQuestionsAllowed:false}}else if(!confirm('Export without password?'))return;await buildAssessmentZip(sec,`${state.setId}.zip`)};
@@ -739,8 +961,18 @@ setLanguageUI();applyTestFreeze();applyCustomFreeze();applyCandidateSecurity();
 /* v18 refresh-safe timer, locked candidate toolbar, Finish Assessment, and session cleanup */
 const EXAM_SESSION_KEY='browser-assessment-active-session-v18';
 const EXAM_STATE_KEY='assessment-rich-v3';
-function examCookieNames(){return document.cookie.split(';').map(x=>decodeURIComponent((x.split('=')[0]||'').trim())).filter(n=>n.startsWith('assessment_')||n.startsWith('browser_assessment_'))}
-function clearExamCookies(){for(const name of examCookieNames()){document.cookie=`${encodeURIComponent(name)}=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/; SameSite=Lax`}}
+function clearExamCookies(){
+  document.cookie.split(';').forEach(c => {
+    const eqPos = c.indexOf('=');
+    const name = eqPos > -1 ? c.substring(0, eqPos).trim() : c.trim();
+    if (name) {
+      document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/; SameSite=Lax`;
+      document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/; domain=${location.hostname}; SameSite=Lax`;
+      document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/;`;
+      document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 GMT;`;
+    }
+  });
+}
 function readExamSession(){try{return JSON.parse(localStorage.getItem(EXAM_SESSION_KEY)||'null')}catch(e){return null}}
 function writeExamSession(extra={}){const previous=readExamSession()||{};const session={...previous,...extra,setId:state.setId,active:true,packageProtected:!!packageProtected,candidateSequentialMode:true,customInputChecked:!!state.customInputChecked,headerNavLocked:!!isHeaderNavLocked,updatedAt:Date.now()};localStorage.setItem(EXAM_SESSION_KEY,JSON.stringify(session));return session}
 function clearExamSession(){clearInterval(timerHandle);localStorage.removeItem(EXAM_SESSION_KEY);localStorage.removeItem(EXAM_STATE_KEY);localStorage.removeItem('ide_header_nav_locked');setHeaderNavLocked(false);clearExamCookies();candidateRunning=false;packageProtected=false;assessmentStarted=false;autoExportStarted=false;}
@@ -750,6 +982,7 @@ function setCandidateToolbarLocked(locked){
   $('finishAssessment').hidden=!locked;
   document.body.classList.toggle('candidate-running',locked);
   $('deleteQuestion').hidden=locked;$('deleteQuestion').disabled=locked;
+  if(locked && typeof setHeaderNavLocked==='function') setHeaderNavLocked(true);
 }
 function startPersistentCountdown(deadline){
   assessmentStarted=true;candidateRunning=true;autoExportStarted=false;setCandidateToolbarLocked(true);applyCandidateSecurity();
@@ -915,7 +1148,61 @@ finishAssessmentV18=finishAssessmentV19;finishLockedAssessment=()=>finishAssessm
 
 /* v20 clear cookies, no forced fullscreen, keyboard-only code entry, and screen recording */
 let screenStream=null,screenRecorder=null,screenChunks=[],screenRecordingBlob=null,screenRecordingStartedAt=null;
-function clearAllAssessmentDataV20(){if(candidateRunning&&!confirm('An assessment is active. Clearing data will end it. Continue?'))return;try{stopEvidenceCapture()}catch(e){}try{stopScreenRecordingV20()}catch(e){}clearInterval(timerHandle);clearExamCookies();localStorage.removeItem(EXAM_SESSION_KEY);localStorage.removeItem(EXAM_STATE_KEY);localStorage.removeItem(EXAM_EVIDENCE_KEY);localStorage.removeItem('ide_header_nav_locked');if(typeof setHeaderNavLocked==='function')setHeaderNavLocked(false);sessionStorage.clear();candidateMeta=null;evidenceFrames=[];state={format:'python-assessment-set',version:2,setId:`SET-${Date.now().toString(36).toUpperCase()}`,title:'Python Assessment',timerMinutes:60,questions:[starter()]};toast('Assessment cookies and local session data cleared');setTimeout(()=>location.reload(),400)}
+function clearAllAssessmentDataV20(){
+  if (isExamActiveOrLocked()) {
+    const entered = prompt('Clear Cookies is locked during the exam.\nEnter password (12345) to unlock:');
+    if (entered === null) {
+      return;
+    }
+    if ((entered || '').trim() !== HEADER_NAV_PASSWORD) {
+      toast('Incorrect password. Clear Cookies is locked during the exam.');
+      return;
+    }
+    if (!confirm('Password verified. Clearing cookies will end your active exam session and reset all data. Continue?')) {
+      return;
+    }
+  } else {
+    if (!confirm('Clear all assessment cookies and local data?')) return;
+  }
+  isClearingData = true;
+  try{stopEvidenceCapture()}catch(e){}
+  try{stopScreenRecordingV20()}catch(e){}
+  clearInterval(timerHandle);
+  clearExamCookies();
+  try{localStorage.clear();}catch(e){}
+  try{sessionStorage.clear();}catch(e){}
+  if(typeof setHeaderNavLocked==='function')setHeaderNavLocked(false);
+  candidateMeta=null;
+  evidenceFrames=[];
+  current=0;
+  history=[];
+  candidateRunning=false;
+  assessmentStarted=false;
+  autoExportStarted=false;
+  packageProtected=false;
+  state=getDefaultAssessmentState();
+  try{localStorage.setItem(EXAM_STATE_KEY,JSON.stringify(state));}catch(e){}
+  if(problem)problem.innerHTML='';
+  if(code)code.value='';
+  if($('codeHighlightContent'))$('codeHighlightContent').innerHTML='';
+  if($('testList'))$('testList').innerHTML='';
+  if($('testCount'))$('testCount').textContent='0';
+  if($('testSummary')){$('testSummary').textContent='Not evaluated';$('testSummary').className='test-summary';}
+  if($('lines'))$('lines').textContent='1';
+  if($('questionTitle'))$('questionTitle').textContent='Question 1';
+  if($('questionId'))$('questionId').textContent=state.questions[0]?.id||'';
+  if($('setIdText'))$('setIdText').textContent=state.setId||'';
+  if($('candidateQuestionCount'))$('candidateQuestionCount').textContent='Current/Total question : 1/1';
+  if($('mobileQuestionCount'))$('mobileQuestionCount').textContent='1/1';
+  if($('steps'))$('steps').innerHTML='<button class="active" onclick="go(0)">1</button>';
+  if($('prev'))$('prev').disabled=true;
+  if($('next'))$('next').disabled=true;
+  if($('console')){$('console').hidden=true;$('console').textContent='';}
+  if($('empty'))$('empty').hidden=false;
+  if($('historyList'))$('historyList').textContent='No executions yet.';
+  toast('Assessment cookies and local session data cleared');
+  setTimeout(()=>location.reload(),350);
+}
 $('clearExamData').onclick=clearAllAssessmentDataV20;
 async function openScreenCaptureV20(){try{if(!navigator.mediaDevices?.getDisplayMedia)throw Error('Screen sharing is not supported by this browser');if(screenStream)screenStream.getTracks().forEach(t=>t.stop());screenStream=await navigator.mediaDevices.getDisplayMedia({video:{frameRate:{ideal:8,max:12}},audio:true});const v=$('screenPreview');v.srcObject=screenStream;await v.play();$('screenStatus').textContent='Screen sharing is ready. Select the exam screen or browser tab and keep sharing until submission.';screenStream.getVideoTracks()[0].addEventListener('ended',()=>{if(candidateRunning&&!finishV20Running){$('screenStatus').textContent='Screen sharing stopped. The assessment will be finished.';finishAssessmentV20('screen-share-stopped')}});updateCandidateStartStateV20()}catch(e){screenStream=null;$('screenStatus').textContent='Screen sharing could not start: '+e.message;$('candidateStart').disabled=true;toast('Screen sharing permission is required for this configured assessment')}}
 $('openScreen').onclick=openScreenCaptureV20;
@@ -1495,169 +1782,6 @@ window.addEventListener('load', () => {
 /* ==========================================================================
    WELCOME / DESKTOP MODE RECOMMENDATION MODAL & MOCK DATA IMPORT
    ========================================================================== */
-const SAMPLE_MOCK_DATA = {
-  "format": "python-assessment-set",
-  "version": 3,
-  "setId": "SET-MUJDFHP0",
-  "title": "Programming Assessment (C, C++, Python)",
-  "timerMinutes": 60,
-  "timerLocked": false,
-  "timerLockHash": "",
-  "customInputLocked": false,
-  "customInputChecked": false,
-  "customInputLockHash": "",
-  "ownerConfig": {
-    "email": "",
-    "submissionMinutes": 10
-  },
-  "language": "python",
-  "packageSecurity": {
-    "protected": false,
-    "deleteQuestionsAllowed": true
-  },
-  "totalQuestions": 6,
-  "exportedAt": "2026-09-27T18:04:30.673Z",
-  "questions": [
-    {
-      "id": "Q-MUJDFHP1-QPOG",
-      "title": "Question 1: Check Even or Odd",
-      "problemHtml": "<h2>Problem Statement</h2><p>Write a program in C, C++, or Python that reads an integer from standard input and prints <code>Even</code> if the number is even, or <code>Odd</code> if the number is odd.</p><p><b>Input Specification:</b><br>A single integer <code>n</code>.</p><p><b>Output Specification:</b><br>Print <code>Even</code> or <code>Odd</code>.</p>",
-      "code": "# Read input and write your solution here\nn = int(input().strip())\nif n % 2 == 0:\n    print(\"Even\")\nelse:\n    print(\"Odd\")",
-      "codes": {
-        "python": "# Read input and write your solution here\nn = int(input().strip())\nif n % 2 == 0:\n    print(\"Even\")\nelse:\n    print(\"Odd\")",
-        "c": "#include <stdio.h>\n\nint main(void) {\n    int n;\n    if (scanf(\"%d\", &n) == 1) {\n        if (n % 2 == 0) {\n            printf(\"Even\\n\");\n        } else {\n            printf(\"Odd\\n\");\n        }\n    }\n    return 0;\n}",
-        "cpp": "#include <iostream>\n\nusing namespace std;\n\nint main() {\n    int n;\n    if (cin >> n) {\n        if (n % 2 == 0) {\n            cout << \"Even\" << endl;\n        } else {\n            cout << \"Odd\" << endl;\n        }\n    }\n    return 0;\n}"
-      },
-      "language": "python",
-      "problemLocked": false,
-      "problemLockHash": "",
-      "testsLocked": false,
-      "testLockHash": "",
-      "tests": [
-        { "input": "4", "expected": "Even", "studentDefined": false },
-        { "input": "7", "expected": "Odd", "studentDefined": false },
-        { "input": "0", "expected": "Even", "studentDefined": false },
-        { "input": "-3", "expected": "Odd", "studentDefined": false }
-      ],
-      "customFonts": []
-    },
-    {
-      "id": "Q-MUJVUFCF-9QJP",
-      "title": "Question 2: Reverse a String",
-      "problemHtml": "<h2>Problem Statement</h2><p>Write a program in C, C++, or Python that reads a string from standard input and prints the string reversed.</p><p><b>Input Specification:</b><br>A single line string.</p><p><b>Output Specification:</b><br>Print the reversed string.</p>",
-      "code": "# Read input and write your solution here\ns = input().strip()\nprint(s[::-1])",
-      "codes": {
-        "python": "# Read input and write your solution here\ns = input().strip()\nprint(s[::-1])",
-        "c": "#include <stdio.h>\n#include <string.h>\n\nint main(void) {\n    char s[1024];\n    if (fgets(s, sizeof(s), stdin)) {\n        s[strcspn(s, \"\\r\\n\")] = '\\0';\n        int len = strlen(s);\n        for (int i = 0; i < len / 2; i++) {\n            char temp = s[i];\n            s[i] = s[len - 1 - i];\n            s[len - 1 - i] = temp;\n        }\n        printf(\"%s\\n\", s);\n    }\n    return 0;\n}",
-        "cpp": "#include <iostream>\n#include <string>\n#include <algorithm>\n\nusing namespace std;\n\nint main() {\n    string s;\n    if (getline(cin, s)) {\n        if (!s.empty() && s.back() == '\\r') s.pop_back();\n        reverse(s.begin(), s.end());\n        cout << s << endl;\n    }\n    return 0;\n}"
-      },
-      "language": "python",
-      "problemLocked": false,
-      "problemLockHash": "",
-      "testsLocked": false,
-      "testLockHash": "",
-      "tests": [
-        { "input": "hello", "expected": "olleh", "studentDefined": false },
-        { "input": "Python", "expected": "nohtyP", "studentDefined": false },
-        { "input": "12345", "expected": "54321", "studentDefined": false }
-      ],
-      "customFonts": []
-    },
-    {
-      "id": "Q-MUK4OG7D-X5II",
-      "title": "Question 3: Palindrome Check",
-      "problemHtml": "<h2>Problem Statement</h2><p>Write a program in C, C++, or Python that checks whether a given string is a palindrome. A palindrome is a word or sequence that reads the same forwards and backwards.</p><p><b>Input Specification:</b><br>A single line containing a string.</p><p><b>Output Specification:</b><br>Print <code>True</code> if the string is a palindrome, otherwise print <code>False</code>.</p>",
-      "code": "# Read input and write your solution here\ns = input().strip()\nprint(\"True\" if s == s[::-1] else \"False\")",
-      "codes": {
-        "python": "# Read input and write your solution here\ns = input().strip()\nprint(\"True\" if s == s[::-1] else \"False\")",
-        "c": "#include <stdio.h>\n#include <string.h>\n\nint main(void) {\n    char s[1024];\n    if (fgets(s, sizeof(s), stdin)) {\n        s[strcspn(s, \"\\r\\n\")] = '\\0';\n        int len = strlen(s);\n        int isPal = 1;\n        for (int i = 0; i < len / 2; i++) {\n            if (s[i] != s[len - 1 - i]) {\n                isPal = 0;\n                break;\n            }\n        }\n        if (isPal) {\n            printf(\"True\\n\");\n        } else {\n            printf(\"False\\n\");\n        }\n    }\n    return 0;\n}",
-        "cpp": "#include <iostream>\n#include <string>\n#include <algorithm>\n\nusing namespace std;\n\nint main() {\n    string s;\n    if (getline(cin, s)) {\n        if (!s.empty() && s.back() == '\\r') s.pop_back();\n        string rev = s;\n        reverse(rev.begin(), rev.end());\n        if (s == rev) {\n            cout << \"True\" << endl;\n        } else {\n            cout << \"False\" << endl;\n        }\n    }\n    return 0;\n}"
-      },
-      "language": "python",
-      "problemLocked": false,
-      "problemLockHash": "",
-      "testsLocked": false,
-      "testLockHash": "",
-      "tests": [
-        { "input": "radar", "expected": "True", "studentDefined": false },
-        { "input": "python", "expected": "False", "studentDefined": false },
-        { "input": "level", "expected": "True", "studentDefined": false },
-        { "input": "12321", "expected": "True", "studentDefined": false }
-      ],
-      "customFonts": []
-    },
-    {
-      "id": "Q-MUK4OGM9-OU5Z",
-      "title": "Question 4: Factorial of a Number",
-      "problemHtml": "<h2>Problem Statement</h2><p>Write a program in C, C++, or Python that reads a non-negative integer <code>n</code> and computes its factorial (<code>n!</code>).</p><p><b>Input Specification:</b><br>A non-negative integer <code>n</code>.</p><p><b>Output Specification:</b><br>Print the factorial value of <code>n</code>.</p>",
-      "code": "# Read input and write your solution here\nimport math\nn = int(input().strip())\nprint(math.factorial(n))",
-      "codes": {
-        "python": "# Read input and write your solution here\nimport math\nn = int(input().strip())\nprint(math.factorial(n))",
-        "c": "#include <stdio.h>\n\nint main(void) {\n    int n;\n    if (scanf(\"%d\", &n) == 1) {\n        long long fact = 1;\n        for (int i = 1; i <= n; i++) {\n            fact *= i;\n        }\n        printf(\"%lld\\n\", fact);\n    }\n    return 0;\n}",
-        "cpp": "#include <iostream>\n\nusing namespace std;\n\nint main() {\n    int n;\n    if (cin >> n) {\n        long long fact = 1;\n        for (int i = 1; i <= n; i++) {\n            fact *= i;\n        }\n        cout << fact << endl;\n    }\n    return 0;\n}"
-      },
-      "language": "python",
-      "problemLocked": false,
-      "problemLockHash": "",
-      "testsLocked": false,
-      "testLockHash": "",
-      "tests": [
-        { "input": "5", "expected": "120", "studentDefined": false },
-        { "input": "0", "expected": "1", "studentDefined": false },
-        { "input": "3", "expected": "6", "studentDefined": false },
-        { "input": "7", "expected": "5040", "studentDefined": false }
-      ],
-      "customFonts": []
-    },
-    {
-      "id": "Q-MUK4OHA9-QW4L",
-      "title": "Question 5: Sum of Array Elements",
-      "problemHtml": "<h2>Problem Statement</h2><p>Write a program in C, C++, or Python that reads a space-separated sequence of integers on a single line and calculates the total sum of all elements.</p><p><b>Input Specification:</b><br>Space-separated integers.</p><p><b>Output Specification:</b><br>Print the integer sum of the elements.</p>",
-      "code": "# Read input and write your solution here\nnums = list(map(int, input().strip().split()))\nprint(sum(nums))",
-      "codes": {
-        "python": "# Read input and write your solution here\nnums = list(map(int, input().strip().split()))\nprint(sum(nums))",
-        "c": "#include <stdio.h>\n\nint main(void) {\n    int val, sum = 0;\n    while (scanf(\"%d\", &val) == 1) {\n        sum += val;\n    }\n    printf(\"%d\\n\", sum);\n    return 0;\n}",
-        "cpp": "#include <iostream>\n\nusing namespace std;\n\nint main() {\n    int val, sum = 0;\n    while (cin >> val) {\n        sum += val;\n    }\n    cout << sum << endl;\n    return 0;\n}"
-      },
-      "language": "python",
-      "problemLocked": false,
-      "problemLockHash": "",
-      "testsLocked": false,
-      "testLockHash": "",
-      "tests": [
-        { "input": "1 2 3 4 5", "expected": "15", "studentDefined": false },
-        { "input": "10 -2 5", "expected": "13", "studentDefined": false },
-        { "input": "100", "expected": "100", "studentDefined": false },
-        { "input": "0 0 0", "expected": "0", "studentDefined": false }
-      ],
-      "customFonts": []
-    },
-    {
-      "id": "Q-MUK4OHPL-8KOA",
-      "title": "Question 6: Find Maximum in List",
-      "problemHtml": "<h2>Problem Statement</h2><p>Write a program in C, C++, or Python that reads a space-separated sequence of integers on a single line and finds the maximum value.</p><p><b>Input Specification:</b><br>Space-separated integers.</p><p><b>Output Specification:</b><br>Print the maximum integer value.</p>",
-      "code": "# Read input and write your solution here\nnums = list(map(int, input().strip().split()))\nprint(max(nums))",
-      "codes": {
-        "python": "# Read input and write your solution here\nnums = list(map(int, input().strip().split()))\nprint(max(nums))",
-        "c": "#include <stdio.h>\n\nint main(void) {\n    int val, max_val;\n    if (scanf(\"%d\", &max_val) == 1) {\n        while (scanf(\"%d\", &val) == 1) {\n            if (val > max_val) {\n                max_val = val;\n            }\n        }\n        printf(\"%d\\n\", max_val);\n    }\n    return 0;\n}",
-        "cpp": "#include <iostream>\n\nusing namespace std;\n\nint main() {\n    int val, max_val;\n    if (cin >> max_val) {\n        while (cin >> val) {\n            if (val > max_val) {\n                max_val = val;\n            }\n        }\n        cout << max_val << endl;\n    }\n    return 0;\n}"
-      },
-      "language": "python",
-      "problemLocked": false,
-      "problemLockHash": "",
-      "testsLocked": false,
-      "testLockHash": "",
-      "tests": [
-        { "input": "3 7 2 9 5", "expected": "9", "studentDefined": false },
-        { "input": "-10 -5 -20 -1", "expected": "-1", "studentDefined": false },
-        { "input": "42", "expected": "42", "studentDefined": false },
-        { "input": "8 8 8 8", "expected": "8", "studentDefined": false }
-      ],
-      "customFonts": []
-    }
-  ]
-};
-
 const welcomeModal = $('welcomeModal');
 
 function closeWelcomeDialog() {

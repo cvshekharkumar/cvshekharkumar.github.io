@@ -1897,9 +1897,11 @@ body.dark .welcome-dismiss-btn:hover {
 }
 
 /* ==========================================================================
-   HEADER NAVIGATION BUTTONS AUTO-LOCK (Help Guide, Home, App Store)
+   HEADER NAVIGATION & UTILITY BUTTONS AUTO-LOCK (Help Guide, Home, App Store, Clear Cookies)
    ========================================================================== */
-.head-actions a.nav-btn-locked {
+.head-actions a.nav-btn-locked,
+.head-actions button.nav-btn-locked,
+#clearExamData.nav-btn-locked {
   background: rgba(239, 68, 68, 0.22) !important;
   border: 1px solid #ef4444 !important;
   color: #ffffff !important;
@@ -1910,21 +1912,27 @@ body.dark .welcome-dismiss-btn:hover {
   transition: all 0.2s ease !important;
 }
 
-body.dark .head-actions a.nav-btn-locked {
+body.dark .head-actions a.nav-btn-locked,
+body.dark .head-actions button.nav-btn-locked,
+body.dark #clearExamData.nav-btn-locked {
   background: rgba(239, 68, 68, 0.22) !important;
   border-color: #f87171 !important;
   color: #ffffff !important;
   box-shadow: 0 0 10px rgba(239, 68, 68, 0.35) !important;
 }
 
-.head-actions a.nav-btn-locked:hover {
+.head-actions a.nav-btn-locked:hover,
+.head-actions button.nav-btn-locked:hover,
+#clearExamData.nav-btn-locked:hover {
   background: rgba(239, 68, 68, 0.35) !important;
   border-color: #f87171 !important;
   color: #ffffff !important;
   box-shadow: 0 0 12px rgba(239, 68, 68, 0.5) !important;
 }
 
-body.dark .head-actions a.nav-btn-locked:hover {
+body.dark .head-actions a.nav-btn-locked:hover,
+body.dark .head-actions button.nav-btn-locked:hover,
+body.dark #clearExamData.nav-btn-locked:hover {
   background: rgba(239, 68, 68, 0.38) !important;
   border-color: #ef4444 !important;
   color: #ffffff !important;
@@ -1936,6 +1944,30 @@ body.dark .head-actions a.nav-btn-locked:hover {
   50% { opacity: 0.75; transform: scale(0.95); }
 }
 
+/* ==========================================================================
+   MODAL OVERLAYS STACKING - Ensure Popups (Candidate Verification, etc.) Show Above Next Button
+   ========================================================================== */
+.modal {
+  position: fixed !important;
+  inset: 0 !important;
+  background: rgba(3, 11, 28, 0.82) !important;
+  z-index: 2147483640 !important;
+}
 
+.modal.show,
+#candidateModal.show,
+#readyModal.show,
+#ownerModal.show,
+#timeoutModal.show,
+.welcome-modal.show {
+  display: grid !important;
+  z-index: 2147483640 !important;
+}
 
-
+body:has(.modal.show) #mobileNextBtn,
+body:has(#candidateModal.show) #mobileNextBtn,
+body:has(#readyModal.show) #mobileNextBtn,
+body.modal-open #mobileNextBtn {
+  z-index: 10 !important;
+  pointer-events: none !important;
+}
