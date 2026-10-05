@@ -1,0 +1,3094 @@
+﻿<!DOCTYPE html>
+
+<html data-theme="dark" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Lumenboard Visual Studio — The Ultimate User Guide &amp; Master Reference</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&amp;family=JetBrains+Mono:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<style>
+    :root {
+      --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+      
+      /* Dark Theme (Default) */
+      --bg-main: #0B0F19;
+      --bg-surface: #111827;
+      --bg-surface-elevated: #1F2937;
+      --bg-surface-hover: #283548;
+      --border-subtle: #1F2937;
+      --border-medium: #374151;
+      --border-accent: rgba(99, 102, 241, 0.4);
+      
+      --text-primary: #F9FAFB;
+      --text-secondary: #9CA3AF;
+      --text-muted: #6B7280;
+      --text-inverse: #030712;
+      
+      --primary: #6366F1;
+      --primary-hover: #4F46E5;
+      --primary-light: rgba(99, 102, 241, 0.15);
+      --primary-glow: rgba(99, 102, 241, 0.35);
+      
+      --accent-cyan: #06B6D4;
+      --accent-mint: #10B981;
+      --accent-coral: #F43F5E;
+      --accent-sun: #F59E0B;
+      --accent-purple: #8B5CF6;
+      
+      --card-gradient: linear-gradient(135deg, rgba(31, 41, 55, 0.7) 0%, rgba(17, 24, 39, 0.9) 100%);
+      --hero-gradient: radial-gradient(circle at 50% -20%, rgba(99, 102, 241, 0.25) 0%, rgba(6, 182, 212, 0.15) 35%, rgba(11, 15, 25, 0) 70%);
+      --shadow-sm: 0 2px 4px rgba(0,0,0,0.3);
+      --shadow-md: 0 4px 12px rgba(0,0,0,0.4);
+      --shadow-lg: 0 10px 30px -5px rgba(0,0,0,0.6);
+      --shadow-glow: 0 0 25px var(--primary-glow);
+    }
+
+    [data-theme="light"] {
+      --bg-main: #F8FAFC;
+      --bg-surface: #FFFFFF;
+      --bg-surface-elevated: #F1F5F9;
+      --bg-surface-hover: #E2E8F0;
+      --border-subtle: #E2E8F0;
+      --border-medium: #CBD5E1;
+      --border-accent: rgba(99, 102, 241, 0.3);
+      
+      --text-primary: #0F172A;
+      --text-secondary: #475569;
+      --text-muted: #94A3B8;
+      --text-inverse: #FFFFFF;
+      
+      --primary: #4F46E5;
+      --primary-hover: #4338CA;
+      --primary-light: rgba(79, 70, 229, 0.08);
+      --primary-glow: rgba(79, 70, 229, 0.2);
+      
+      --card-gradient: linear-gradient(135deg, #FFFFFF 0%, #F8FAFC 100%);
+      --hero-gradient: radial-gradient(circle at 50% -20%, rgba(99, 102, 241, 0.12) 0%, rgba(6, 182, 212, 0.08) 35%, rgba(248, 250, 252, 0) 70%);
+      --shadow-sm: 0 1px 3px rgba(0,0,0,0.06);
+      --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.08);
+      --shadow-lg: 0 10px 25px -5px rgba(0,0,0,0.1);
+      --shadow-glow: 0 0 20px rgba(79, 70, 229, 0.15);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: var(--font-sans);
+      background-color: var(--bg-main);
+      color: var(--text-primary);
+      line-height: 1.65;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    /* Top Reading Progress Bar */
+    #reading-progress {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--primary), var(--accent-cyan), var(--accent-mint));
+      z-index: 1000;
+      width: 0%;
+      transition: width 0.1s linear;
+    }
+
+    /* Header Nav */
+    header.guide-header {
+      position: sticky;
+      top: 0;
+      z-index: 900;
+      background: rgba(17, 24, 39, 0.85);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border-subtle);
+      padding: 0.75rem 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+
+    [data-theme="light"] header.guide-header {
+      background: rgba(255, 255, 255, 0.88);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      text-decoration: none;
+      color: var(--text-primary);
+      font-weight: 800;
+      font-size: 1.2rem;
+      letter-spacing: -0.02em;
+    }
+
+    .brand-icon {
+      width: 34px;
+      height: 34px;
+      background: linear-gradient(135deg, var(--primary), var(--accent-cyan));
+      border-radius: 9px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #FFF;
+      box-shadow: 0 2px 10px var(--primary-glow);
+    }
+
+    .brand-badge {
+      font-size: 0.65rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      padding: 0.2rem 0.5rem;
+      border-radius: 12px;
+      background: var(--primary-light);
+      color: var(--primary);
+      border: 1px solid var(--border-accent);
+      letter-spacing: 0.05em;
+    }
+
+    /* Global Search in Header */
+    .header-search {
+      position: relative;
+      flex: 1;
+      max-width: 480px;
+      margin: 0 1rem;
+    }
+
+    .header-search input {
+      width: 100%;
+      background: var(--bg-surface-elevated);
+      border: 1px solid var(--border-medium);
+      color: var(--text-primary);
+      padding: 0.55rem 1rem 0.55rem 2.4rem;
+      border-radius: 9999px;
+      font-size: 0.875rem;
+      outline: none;
+      transition: all 0.2s ease;
+    }
+
+    .header-search input:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px var(--primary-light);
+      background: var(--bg-surface);
+    }
+
+    .header-search svg {
+      position: absolute;
+      left: 0.85rem;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 16px;
+      height: 16px;
+      color: var(--text-muted);
+      pointer-events: none;
+    }
+
+    .header-search .search-clear {
+      position: absolute;
+      right: 0.75rem;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      font-size: 1rem;
+      display: none;
+      padding: 0.2rem;
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .btn-action {
+      background: var(--bg-surface-elevated);
+      border: 1px solid var(--border-medium);
+      color: var(--text-primary);
+      padding: 0.45rem 0.9rem;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      transition: all 0.2s ease;
+      text-decoration: none;
+    }
+
+    .btn-action:hover {
+      background: var(--bg-surface-hover);
+      border-color: var(--primary);
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--primary), var(--primary-hover));
+      color: #FFF;
+      border: none;
+      box-shadow: 0 2px 8px var(--primary-glow);
+    }
+
+    .btn-primary:hover {
+      background: linear-gradient(135deg, var(--primary-hover), #3730A3);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px var(--primary-glow);
+    }
+
+    /* Main Container with Sidebar & Content */
+    .app-container {
+      display: flex;
+      flex: 1;
+      width: 100%;
+      max-width: 1600px;
+      margin: 0 auto;
+      position: relative;
+    }
+
+    /* Left Sticky Navigation */
+    aside.guide-sidebar {
+      width: 290px;
+      flex-shrink: 0;
+      position: sticky;
+      top: 61px;
+      height: calc(100vh - 61px);
+      overflow-y: auto;
+      padding: 1.5rem 1rem 2rem 1.25rem;
+      border-right: 1px solid var(--border-subtle);
+      background: var(--bg-main);
+    }
+
+    aside.guide-sidebar::-webkit-scrollbar {
+      width: 5px;
+    }
+    aside.guide-sidebar::-webkit-scrollbar-thumb {
+      background: var(--border-medium);
+      border-radius: 4px;
+    }
+
+    .sidebar-section-title {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+      font-weight: 700;
+      margin: 1.25rem 0 0.5rem 0.5rem;
+    }
+
+    .sidebar-nav {
+      list-style: none;
+    }
+
+    .sidebar-nav li {
+      margin-bottom: 2px;
+    }
+
+    .sidebar-link {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      padding: 0.45rem 0.75rem;
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 0.85rem;
+      font-weight: 500;
+      border-radius: 6px;
+      transition: all 0.15s ease;
+    }
+
+    .sidebar-link:hover {
+      color: var(--text-primary);
+      background: var(--bg-surface-elevated);
+    }
+
+    .sidebar-link.active {
+      color: var(--primary);
+      background: var(--primary-light);
+      font-weight: 600;
+      border-left: 3px solid var(--primary);
+      padding-left: calc(0.75rem - 3px);
+    }
+
+    .sidebar-link .nav-icon {
+      font-size: 1rem;
+      width: 18px;
+      text-align: center;
+      opacity: 0.85;
+    }
+
+    /* Main Content Area */
+    main.guide-main {
+      flex: 1;
+      min-width: 0;
+      padding: 2.5rem 3.5rem 5rem 3.5rem;
+    }
+
+    /* Hero Section */
+    .hero {
+      position: relative;
+      background: var(--hero-gradient);
+      padding: 3rem 2.5rem;
+      border-radius: 20px;
+      border: 1px solid var(--border-subtle);
+      margin-bottom: 3.5rem;
+      overflow: hidden;
+      box-shadow: var(--shadow-md);
+    }
+
+    .hero-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.8rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--accent-cyan);
+      background: rgba(6, 182, 212, 0.12);
+      padding: 0.25rem 0.75rem;
+      border-radius: 20px;
+      border: 1px solid rgba(6, 182, 212, 0.25);
+      margin-bottom: 1rem;
+    }
+
+    .hero h1 {
+      font-size: 2.75rem;
+      font-weight: 800;
+      line-height: 1.15;
+      letter-spacing: -0.03em;
+      margin-bottom: 1rem;
+      background: linear-gradient(135deg, #FFFFFF 30%, var(--accent-cyan) 70%, var(--primary) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    [data-theme="light"] .hero h1 {
+      background: linear-gradient(135deg, #0F172A 30%, var(--primary) 80%, var(--accent-cyan) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero p {
+      font-size: 1.15rem;
+      color: var(--text-secondary);
+      max-width: 780px;
+      margin-bottom: 1.75rem;
+      line-height: 1.6;
+    }
+
+    .hero-features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
+
+    .hero-feature-chip {
+      background: rgba(17, 24, 39, 0.6);
+      backdrop-filter: blur(8px);
+      border: 1px solid var(--border-medium);
+      padding: 0.75rem 1rem;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-size: 0.875rem;
+      font-weight: 600;
+    }
+
+    [data-theme="light"] .hero-feature-chip {
+      background: rgba(255, 255, 255, 0.75);
+    }
+
+    .chip-icon {
+      font-size: 1.25rem;
+      background: var(--primary-light);
+      color: var(--primary);
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Content Headings */
+    .section-block {
+      margin-bottom: 4rem;
+      scroll-margin-top: 80px;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-bottom: 1.25rem;
+      padding-bottom: 0.75rem;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .section-badge {
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--primary);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 0.25rem;
+      display: block;
+    }
+
+    h2.section-title {
+      font-size: 1.85rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      color: var(--text-primary);
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+
+    h3.sub-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin: 1.75rem 0 0.75rem 0;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    /* Interactive Filter Tabs */
+    .tab-nav {
+      display: flex;
+      gap: 0.5rem;
+      border-bottom: 1px solid var(--border-medium);
+      margin-bottom: 1.5rem;
+      overflow-x: auto;
+      padding-bottom: 2px;
+    }
+
+    .tab-btn {
+      background: none;
+      border: none;
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+      font-weight: 600;
+      padding: 0.6rem 1.2rem;
+      cursor: pointer;
+      position: relative;
+      border-radius: 8px 8px 0 0;
+      transition: all 0.2s ease;
+      white-space: nowrap;
+    }
+
+    .tab-btn:hover {
+      color: var(--text-primary);
+      background: var(--bg-surface-elevated);
+    }
+
+    .tab-btn.active {
+      color: var(--primary);
+      background: var(--primary-light);
+    }
+
+    .tab-btn.active::after {
+      content: '';
+      position: absolute;
+      bottom: -2px;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: var(--primary);
+    }
+
+    .tab-pane {
+      display: none;
+    }
+
+    .tab-pane.active {
+      display: block;
+      animation: fadeIn 0.25s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Cards Grid */
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+      gap: 1.5rem;
+      margin: 1.25rem 0;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.25rem;
+      margin: 1.25rem 0;
+    }
+
+    .grid-4 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1rem;
+      margin: 1.25rem 0;
+    }
+
+    .feature-card {
+      background: var(--card-gradient);
+      border: 1px solid var(--border-medium);
+      border-radius: 14px;
+      padding: 1.5rem;
+      box-shadow: var(--shadow-sm);
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .feature-card:hover {
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-md);
+      border-color: var(--border-accent);
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .card-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    .card-icon.indigo { background: rgba(99, 102, 241, 0.15); color: #818CF8; border: 1px solid rgba(99, 102, 241, 0.3); }
+    .card-icon.mint { background: rgba(16, 185, 129, 0.15); color: #34D399; border: 1px solid rgba(16, 185, 129, 0.3); }
+    .card-icon.coral { background: rgba(244, 63, 94, 0.15); color: #FB7185; border: 1px solid rgba(244, 63, 94, 0.3); }
+    .card-icon.sun { background: rgba(245, 158, 11, 0.15); color: #FBBF24; border: 1px solid rgba(245, 158, 11, 0.3); }
+    .card-icon.cyan { background: rgba(6, 182, 212, 0.15); color: #22D3EE; border: 1px solid rgba(6, 182, 212, 0.3); }
+    .card-icon.purple { background: rgba(139, 92, 246, 0.15); color: #A78BFA; border: 1px solid rgba(139, 92, 246, 0.3); }
+
+    .card-title {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    .card-desc {
+      font-size: 0.88rem;
+      color: var(--text-secondary);
+      line-height: 1.55;
+      flex: 1;
+    }
+
+    .card-footer {
+      margin-top: 1rem;
+      padding-top: 0.75rem;
+      border-top: 1px solid var(--border-subtle);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 0.78rem;
+      color: var(--text-muted);
+    }
+
+    .card-tag {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      background: var(--bg-surface-elevated);
+      padding: 0.2rem 0.5rem;
+      border-radius: 4px;
+      color: var(--text-secondary);
+      border: 1px solid var(--border-subtle);
+    }
+
+    /* Workflow Steps */
+    .step-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+      margin: 1.5rem 0;
+    }
+
+    .step-item {
+      display: flex;
+      gap: 1.25rem;
+      background: var(--card-gradient);
+      border: 1px solid var(--border-medium);
+      border-radius: 14px;
+      padding: 1.25rem 1.5rem;
+      position: relative;
+    }
+
+    .step-number {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--primary), var(--accent-cyan));
+      color: #FFF;
+      font-weight: 800;
+      font-size: 1.1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      box-shadow: 0 2px 8px var(--primary-glow);
+    }
+
+    .step-content {
+      flex: 1;
+    }
+
+    .step-content h4 {
+      font-size: 1.1rem;
+      font-weight: 700;
+      margin-bottom: 0.35rem;
+      color: var(--text-primary);
+    }
+
+    .step-content p {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      line-height: 1.55;
+    }
+
+    /* Callout Boxes */
+    .callout {
+      padding: 1.25rem 1.5rem;
+      border-radius: 12px;
+      margin: 1.5rem 0;
+      display: flex;
+      gap: 1rem;
+      align-items: flex-start;
+      font-size: 0.9rem;
+      line-height: 1.6;
+    }
+
+    .callout-icon {
+      font-size: 1.35rem;
+      flex-shrink: 0;
+      margin-top: 0.1rem;
+    }
+
+    .callout.tip {
+      background: rgba(16, 185, 129, 0.08);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      color: var(--text-primary);
+    }
+    .callout.tip .callout-icon { color: var(--accent-mint); }
+
+    .callout.info {
+      background: rgba(99, 102, 241, 0.08);
+      border: 1px solid rgba(99, 102, 241, 0.3);
+      color: var(--text-primary);
+    }
+    .callout.info .callout-icon { color: var(--primary); }
+
+    .callout.warning {
+      background: rgba(245, 158, 11, 0.08);
+      border: 1px solid rgba(245, 158, 11, 0.3);
+      color: var(--text-primary);
+    }
+    .callout.warning .callout-icon { color: var(--accent-sun); }
+
+    .callout.pro-tip {
+      background: linear-gradient(135deg, rgba(139, 92, 246, 0.1) 0%, rgba(6, 182, 212, 0.1) 100%);
+      border: 1px solid rgba(139, 92, 246, 0.35);
+      color: var(--text-primary);
+    }
+    .callout.pro-tip .callout-icon { color: var(--accent-purple); }
+
+    /* Interactive Live Simulator Widget */
+    .simulator-container {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-medium);
+      border-radius: 16px;
+      overflow: hidden;
+      margin: 2rem 0;
+      box-shadow: var(--shadow-lg);
+    }
+
+    .simulator-header {
+      background: var(--bg-surface-elevated);
+      padding: 0.85rem 1.25rem;
+      border-bottom: 1px solid var(--border-medium);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+
+    .simulator-title {
+      font-size: 0.85rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-secondary);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .simulator-controls {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .sim-btn {
+      background: var(--bg-main);
+      border: 1px solid var(--border-medium);
+      color: var(--text-primary);
+      padding: 0.35rem 0.75rem;
+      border-radius: 6px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      transition: all 0.2s ease;
+    }
+
+    .sim-btn:hover {
+      background: var(--primary-light);
+      border-color: var(--primary);
+      color: var(--primary);
+    }
+
+    .sim-canvas {
+      position: relative;
+      height: 380px;
+      background: 
+        radial-gradient(var(--border-medium) 1px, transparent 1px);
+      background-size: 20px 20px;
+      background-color: var(--bg-main);
+      overflow: hidden;
+      cursor: crosshair;
+    }
+
+    .sim-node {
+      position: absolute;
+      border-radius: 10px;
+      padding: 0.75rem 1rem;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: #FFF;
+      box-shadow: var(--shadow-md);
+      cursor: move;
+      user-select: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+      transition: transform 0.1s ease, box-shadow 0.2s ease;
+    }
+
+    .sim-node:hover {
+      box-shadow: 0 0 15px var(--primary-glow);
+    }
+
+    .sim-node.sun { background: linear-gradient(135deg, #F59E0B, #D97706); }
+    .sim-node.mint { background: linear-gradient(135deg, #10B981, #059669); }
+    .sim-node.indigo { background: linear-gradient(135deg, #6366F1, #4F46E5); }
+    .sim-node.coral { background: linear-gradient(135deg, #F43F5E, #E11D48); }
+
+    .sim-node-detail {
+      font-size: 0.7rem;
+      opacity: 0.85;
+      font-weight: 400;
+    }
+
+    /* Keyboard Shortcuts Table */
+    .shortcut-table-container {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-medium);
+      border-radius: 14px;
+      overflow: hidden;
+      margin: 1.5rem 0;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .shortcut-search-bar {
+      padding: 0.85rem 1.25rem;
+      background: var(--bg-surface-elevated);
+      border-bottom: 1px solid var(--border-medium);
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .shortcut-search-bar input {
+      flex: 1;
+      background: var(--bg-main);
+      border: 1px solid var(--border-medium);
+      color: var(--text-primary);
+      padding: 0.45rem 0.85rem;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      outline: none;
+    }
+
+    .shortcut-table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+    }
+
+    .shortcut-table th {
+      background: var(--bg-surface-elevated);
+      padding: 0.75rem 1.25rem;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--text-muted);
+      border-bottom: 1px solid var(--border-medium);
+    }
+
+    .shortcut-table td {
+      padding: 0.85rem 1.25rem;
+      border-bottom: 1px solid var(--border-subtle);
+      font-size: 0.875rem;
+    }
+
+    .shortcut-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .shortcut-table tr:hover td {
+      background: var(--bg-surface-hover);
+    }
+
+    kbd {
+      font-family: var(--font-mono);
+      background: var(--bg-surface-elevated);
+      border: 1px solid var(--border-medium);
+      border-bottom-width: 2px;
+      color: var(--text-primary);
+      padding: 0.2rem 0.45rem;
+      border-radius: 5px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+      display: inline-block;
+      margin: 0 2px;
+    }
+
+    /* FAQ Accordion */
+    .faq-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      margin: 1.5rem 0;
+    }
+
+    .faq-item {
+      background: var(--card-gradient);
+      border: 1px solid var(--border-medium);
+      border-radius: 12px;
+      overflow: hidden;
+      transition: all 0.2s ease;
+    }
+
+    .faq-item:hover {
+      border-color: var(--border-accent);
+    }
+
+    .faq-question {
+      width: 100%;
+      text-align: left;
+      padding: 1.1rem 1.35rem;
+      background: none;
+      border: none;
+      color: var(--text-primary);
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+
+    .faq-toggle-icon {
+      font-size: 1.1rem;
+      color: var(--text-muted);
+      transition: transform 0.2s ease;
+    }
+
+    .faq-item.open .faq-toggle-icon {
+      transform: rotate(180deg);
+      color: var(--primary);
+    }
+
+    .faq-answer {
+      display: none;
+      padding: 0 1.35rem 1.25rem 1.35rem;
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      line-height: 1.6;
+      border-top: 1px solid transparent;
+    }
+
+    .faq-item.open .faq-answer {
+      display: block;
+      border-top-color: var(--border-subtle);
+    }
+
+    /* Interactive Code / Copy Box */
+    .code-box {
+      position: relative;
+      background: #030712;
+      border: 1px solid var(--border-medium);
+      border-radius: 10px;
+      padding: 1.25rem;
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      color: #E2E8F0;
+      overflow-x: auto;
+      margin: 1rem 0;
+    }
+
+    .copy-btn {
+      position: absolute;
+      top: 0.75rem;
+      right: 0.75rem;
+      background: var(--bg-surface-elevated);
+      border: 1px solid var(--border-medium);
+      color: var(--text-secondary);
+      padding: 0.3rem 0.6rem;
+      border-radius: 6px;
+      font-size: 0.75rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+      transition: all 0.2s ease;
+    }
+
+    .copy-btn:hover {
+      color: var(--text-primary);
+      background: var(--primary);
+      border-color: var(--primary);
+    }
+
+    /* Footer */
+    footer.guide-footer {
+      background: var(--bg-surface);
+      border-top: 1px solid var(--border-subtle);
+      padding: 3rem 2rem;
+      margin-top: 4rem;
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.875rem;
+    }
+
+    .footer-links {
+      display: flex;
+      justify-content: center;
+      gap: 1.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .footer-links a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-weight: 500;
+      transition: color 0.2s ease;
+    }
+
+    .footer-links a:hover {
+      color: var(--primary);
+    }
+
+    /* Responsive */
+    @media (max-width: 1024px) {
+      aside.guide-sidebar {
+        display: none;
+      }
+      main.guide-main {
+        padding: 1.5rem 1.5rem 4rem 1.5rem;
+      }
+      .hero {
+        padding: 2rem 1.5rem;
+      }
+      .hero h1 {
+        font-size: 2.1rem;
+      }
+    }
+
+    /* Print Stylesheet */
+    @media print {
+      header.guide-header, aside.guide-sidebar, .simulator-container, .btn-action, .theme-toggle {
+        display: none !important;
+      }
+      main.guide-main {
+        padding: 0 !important;
+      }
+      body {
+        background: #FFF !important;
+        color: #000 !important;
+      }
+      .feature-card, .step-item {
+        border: 1px solid #CCC !important;
+        background: #FFF !important;
+        break-inside: avoid;
+      }
+    }
+  </style>
+<!-- WhatsApp Integration for Lumenboard Documentation -->
+<!-- Lumenboard Documentation Navigation & WhatsApp Styles -->
+
+
+                <!-- Lumenboard Documentation External Navigation & WhatsApp Styles -->
+    <style id="wa-doc-style">
+      /* Base Navigation Button Styles */
+      .doc-nav-bar-actions {
+        display: flex !important;
+        align-items: center !important;
+        gap: 8px !important;
+        flex-wrap: wrap !important;
+      }
+      .doc-btn-nav {
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        gap: 6px !important;
+        padding: 7px 14px !important;
+        font-size: 0.85rem !important;
+        font-weight: 700 !important;
+        border-radius: 20px !important;
+        text-decoration: none !important;
+        transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
+        cursor: pointer !important;
+        border: 1px solid transparent !important;
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+        white-space: nowrap !important;
+        user-select: none !important;
+        -webkit-tap-highlight-color: transparent !important;
+      }
+      .doc-btn-main {
+        background: linear-gradient(135deg, #02c9de, #0072ff) !important;
+        color: #ffffff !important;
+        border-color: rgba(2, 201, 222, 0.4) !important;
+        box-shadow: 0 2px 8px rgba(2, 201, 222, 0.35) !important;
+      }
+      .doc-btn-main:hover {
+        background: linear-gradient(135deg, #00b4c7, #005fdb) !important;
+        color: #ffffff !important;
+        transform: translateY(-1px) !important;
+        box-shadow: 0 4px 12px rgba(2, 201, 222, 0.5) !important;
+      }
+      .doc-btn-store {
+        background: linear-gradient(135deg, #8b5cf6, #ec4899) !important;
+        color: #ffffff !important;
+        border-color: rgba(139, 92, 246, 0.4) !important;
+        box-shadow: 0 2px 8px rgba(139, 92, 246, 0.35) !important;
+      }
+      .doc-btn-store:hover {
+        background: linear-gradient(135deg, #7c3aed, #db2777) !important;
+        color: #ffffff !important;
+        transform: translateY(-1px) !important;
+        box-shadow: 0 4px 12px rgba(139, 92, 246, 0.5) !important;
+      }
+      .doc-btn-matrix {
+        background: #f1f5f9 !important;
+        color: #1e293b !important;
+        border-color: #cbd5e1 !important;
+      }
+      .doc-btn-matrix:hover {
+        background: #e2e8f0 !important;
+        color: #0f172a !important;
+        transform: translateY(-1px) !important;
+      }
+      [data-theme="dark"] .doc-btn-matrix {
+        background: #1e293b !important;
+        color: #e2e8f0 !important;
+        border-color: #334155 !important;
+      }
+      .doc-btn-buy-nav {
+        background: linear-gradient(135deg, #25d366, #128c7e) !important;
+        color: #ffffff !important;
+        border-color: #25d366 !important;
+        box-shadow: 0 2px 8px rgba(37,211,102,0.3) !important;
+      }
+      .doc-btn-buy-nav:hover {
+        background: linear-gradient(135deg, #1ebc57, #0e7064) !important;
+        color: #ffffff !important;
+        box-shadow: 0 4px 12px rgba(37,211,102,0.5) !important;
+        transform: translateY(-1px) !important;
+      }
+      .wa-doc-hero-cta {
+        margin-top: 20px;
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+        align-items: center;
+      }
+      .wa-doc-hero-btn-main {
+        background: linear-gradient(135deg, #02c9de, #0072ff);
+        color: #ffffff !important;
+        text-decoration: none !important;
+        padding: 9px 20px;
+        border-radius: 25px;
+        font-weight: 800;
+        font-size: 13.5px;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        box-shadow: 0 3px 12px rgba(2, 201, 222, 0.4);
+        transition: all 0.2s ease;
+      }
+      .wa-doc-hero-btn-main:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 5px 16px rgba(2, 201, 222, 0.6);
+      }
+      .wa-doc-hero-btn-store {
+        background: linear-gradient(135deg, #8b5cf6, #6d28d9);
+        color: #ffffff !important;
+        text-decoration: none !important;
+        padding: 9px 20px;
+        border-radius: 25px;
+        font-weight: 800;
+        font-size: 13.5px;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        box-shadow: 0 3px 12px rgba(139, 92, 246, 0.4);
+        transition: all 0.2s ease;
+      }
+      .wa-doc-hero-btn-store:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 5px 16px rgba(139, 92, 246, 0.6);
+      }
+      .wa-doc-hero-btn-matrix {
+        background: rgba(255,255,255,0.15);
+        color: #ffffff !important;
+        text-decoration: none !important;
+        padding: 9px 18px;
+        border-radius: 25px;
+        font-weight: 700;
+        font-size: 13.5px;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        border: 1px solid rgba(255,255,255,0.3);
+        transition: all 0.2s ease;
+      }
+      .wa-doc-hero-btn-matrix:hover {
+        background: rgba(255,255,255,0.3);
+      }
+      .wa-doc-hero-btn-wa {
+        background: #25d366;
+        color: #ffffff !important;
+        text-decoration: none !important;
+        padding: 9px 20px;
+        border-radius: 25px;
+        font-weight: 800;
+        font-size: 13.5px;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        box-shadow: 0 3px 12px rgba(37,211,102,0.4);
+        transition: all 0.2s ease;
+      }
+      .wa-doc-hero-btn-wa:hover {
+        background: #1ebc57;
+        transform: translateY(-1px);
+        box-shadow: 0 5px 16px rgba(37,211,102,0.6);
+      }
+      .wa-doc-float-btn {
+        position: fixed;
+        bottom: 25px;
+        right: 25px;
+        background: linear-gradient(135deg, #25d366, #128c7e);
+        color: #ffffff !important;
+        text-decoration: none !important;
+        padding: 12px 22px;
+        border-radius: 50px;
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        font-weight: 800;
+        font-size: 14px;
+        box-shadow: 0 6px 22px rgba(37,211,102,0.5);
+        z-index: 99999;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        animation: waPulse 2s infinite;
+        transition: all 0.2s;
+        user-select: none;
+        -webkit-tap-highlight-color: transparent;
+      }
+      .wa-doc-float-btn:hover {
+        transform: scale(1.05);
+        box-shadow: 0 8px 28px rgba(37,211,102,0.7);
+        color: #fff !important;
+      }
+      @keyframes waPulse {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.04); }
+        100% { transform: scale(1); }
+      }
+
+      /* =========================================================
+         MOBILE RESPONSIVE NAVIGATION & TOUCH ICONS
+         ========================================================= */
+      .doc-mobile-menu-btn {
+        display: none !important;
+        width: 38px;
+        height: 38px;
+        border-radius: 10px;
+        background: rgba(2, 201, 222, 0.12);
+        border: 1.5px solid rgba(2, 201, 222, 0.4);
+        color: #02c9de;
+        cursor: pointer;
+        align-items: center;
+        justify-content: center;
+        font-size: 18px;
+        font-weight: 800;
+        transition: all 0.2s ease;
+        -webkit-tap-highlight-color: transparent;
+        outline: none;
+        flex-shrink: 0;
+      }
+      .doc-mobile-menu-btn:hover, .doc-mobile-menu-btn:active {
+        background: rgba(2, 201, 222, 0.25);
+        border-color: #02c9de;
+        transform: scale(1.05);
+      }
+      .doc-mobile-menu-btn.active {
+        background: rgba(239, 68, 68, 0.15);
+        border-color: #ef4444;
+        color: #f87171;
+      }
+
+      /* Mobile Drawer Backdrop */
+      .doc-mobile-backdrop {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.65);
+        backdrop-filter: blur(6px);
+        -webkit-backdrop-filter: blur(6px);
+        z-index: 100000;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+      }
+      .doc-mobile-backdrop.open {
+        display: block;
+        opacity: 1;
+      }
+
+      /* Mobile Navigation Drawer */
+      .doc-mobile-drawer {
+        position: fixed;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        width: min(85vw, 360px);
+        background: #0f172a;
+        color: #f8fafc;
+        z-index: 100001;
+        box-shadow: -8px 0 32px rgba(0, 0, 0, 0.6);
+        border-left: 1px solid rgba(2, 201, 222, 0.25);
+        display: flex;
+        flex-direction: column;
+        transform: translateX(100%);
+        transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+      }
+      [data-theme="light"] .doc-mobile-drawer {
+        background: #ffffff;
+        color: #1e293b;
+        border-left-color: #e2e8f0;
+      }
+      .doc-mobile-drawer.open {
+        transform: translateX(0);
+      }
+
+      /* Drawer Header */
+      .doc-drawer-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 16px 20px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        background: rgba(255, 255, 255, 0.03);
+      }
+      [data-theme="light"] .doc-drawer-header {
+        border-bottom-color: #e2e8f0;
+        background: #f8fafc;
+      }
+      .doc-drawer-title {
+        font-size: 15px;
+        font-weight: 800;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        background: linear-gradient(135deg, #02c9de, #0072ff);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+      .doc-drawer-close-btn {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.1);
+        border: none;
+        color: inherit;
+        font-size: 16px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.2s;
+      }
+      .doc-drawer-close-btn:hover {
+        background: #ef4444;
+        color: #fff;
+      }
+
+      /* Drawer Body */
+      .doc-drawer-body {
+        padding: 16px 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        flex: 1;
+      }
+      .doc-drawer-section-title {
+        font-size: 11px;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: #94a3b8;
+        margin-bottom: 10px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+      .doc-drawer-portal-links {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+      .doc-drawer-portal-link {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 10px 14px;
+        border-radius: 12px;
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        text-decoration: none;
+        color: inherit;
+        font-size: 13.5px;
+        font-weight: 700;
+        transition: all 0.2s;
+      }
+      [data-theme="light"] .doc-drawer-portal-link {
+        background: #f8fafc;
+        border-color: #e2e8f0;
+      }
+      .doc-drawer-portal-link:hover, .doc-drawer-portal-link:active {
+        background: rgba(2, 201, 222, 0.12);
+        border-color: #02c9de;
+        transform: translateX(3px);
+      }
+      .doc-drawer-portal-link .icon-badge {
+        width: 32px;
+        height: 32px;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 15px;
+        flex-shrink: 0;
+      }
+      .doc-drawer-toc-list {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        list-style: none;
+      }
+      .doc-drawer-toc-item a {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 9px 12px;
+        border-radius: 8px;
+        color: #94a3b8;
+        text-decoration: none;
+        font-size: 13px;
+        font-weight: 600;
+        transition: all 0.2s;
+      }
+      [data-theme="light"] .doc-drawer-toc-item a {
+        color: #64748b;
+      }
+      .doc-drawer-toc-item a:hover, .doc-drawer-toc-item a.active {
+        color: #02c9de;
+        background: rgba(2, 201, 222, 0.1);
+        font-weight: 700;
+        transform: translateX(4px);
+      }
+      .doc-drawer-toc-item .num-badge {
+        font-size: 10px;
+        font-weight: 800;
+        padding: 2px 6px;
+        border-radius: 4px;
+        background: rgba(255, 255, 255, 0.08);
+        color: #02c9de;
+      }
+
+      /* =========================================================
+         AUTOMATIC MOBILE KEYBOARD POP-UP ADAPTATION STYLES
+         ========================================================= */
+      body.keyboard-visible {
+        padding-bottom: 20px !important;
+      }
+      body.keyboard-visible .wa-doc-float-btn,
+      body.keyboard-visible #waFloatingWidget,
+      body.keyboard-visible .back-to-top-btn,
+      body.keyboard-visible #backToTop,
+      body.keyboard-visible .scroll-top-btn {
+        opacity: 0 !important;
+        pointer-events: none !important;
+        transform: translateY(20px) !important;
+        transition: opacity 0.2s ease, transform 0.2s ease !important;
+      }
+
+      /* Body lock when drawer is open */
+      body.doc-drawer-open {
+        overflow: hidden !important;
+      }
+
+            /* Drawer theme button specific styles */
+      button.doc-drawer-portal-link, .doc-drawer-theme-btn {
+        font-family: inherit;
+        width: 100%;
+        text-align: left;
+        cursor: pointer;
+        outline: none;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        background: rgba(255, 255, 255, 0.04);
+        color: inherit;
+      }
+      [data-theme="light"] button.doc-drawer-portal-link, [data-theme="light"] .doc-drawer-theme-btn {
+        background: #f8fafc;
+        border-color: #e2e8f0;
+        color: #1e293b;
+      }
+
+      /* =========================================================
+         TABLET & MOBILE BREAKPOINTS (<= 900px, <= 640px, <= 480px)
+         ========================================================= */
+      @media (max-width: 900px) {
+        .doc-mobile-menu-btn {
+          display: inline-flex !important;
+        }
+        
+        .navbar, header.guide-header, header.top-nav, header.site-header, header.top-navbar, header.header-bar, header.header, .top-nav, .header-nav, .main-header, .top-header, header, nav {
+          padding: 10px 16px !important;
+          gap: 12px !important;
+          height: auto !important;
+          min-height: 54px !important;
+          display: flex !important;
+          flex-direction: row !important;
+          align-items: center !important;
+          justify-content: space-between !important;
+        }
+
+        .header-inner {
+          padding: 0 !important;
+          width: 100% !important;
+          display: flex !important;
+          flex-direction: row !important;
+          align-items: center !important;
+          justify-content: space-between !important;
+        }
+
+        /* Hide desktop action buttons in header on mobile; they are neatly accessible under 3 horizontal lines (☰) */
+        .doc-nav-bar-actions, [class*="doc-nav-bar-actions"], .nav-actions, header.guide-header .nav-actions, .header-actions, .header-controls, .top-nav-actions {
+          display: none !important;
+        }
+        
+        /* Container and Content adjustments */
+        .container, .app-container, .app-layout, .main-layout {
+          grid-template-columns: 1fr !important;
+          padding: 1rem 0.85rem !important;
+          gap: 1.5rem !important;
+        }
+        .sidebar, .guide-sidebar, .sidebar-nav, .sidebar-toc, nav.sidebar {
+          display: none !important;
+        }
+      }
+
+      @media (max-width: 640px) {
+        .brand-container, .brand-group, .nav-brand, .brand, .brand-logo-group {
+          gap: 8px !important;
+        }
+        .brand-title, .brand-text h1, .brand span:not(.brand-badge) {
+          font-size: 1.05rem !important;
+        }
+        .brand-title span.badge, .brand-badge, .brand-text p {
+          display: none !important;
+        }
+        .nav-search, .search-wrapper, .header-search {
+          display: none !important;
+        }
+        .header-controls {
+          gap: 6px !important;
+        }
+
+        .doc-nav-bar-actions, [class*="doc-nav-bar-actions"], .nav-actions, header.guide-header .nav-actions, .header-actions, .header-controls, .top-nav-actions {
+          display: none !important;
+        }
+
+        /* Floating buttons mobile adjustments */
+        .wa-doc-float-btn {
+          bottom: max(14px, env(safe-area-inset-bottom, 14px)) !important;
+          right: 14px !important;
+          padding: 9px 15px !important;
+          font-size: 12.5px !important;
+          border-radius: 25px !important;
+        }
+        .back-to-top-btn, #backToTop, .scroll-top-btn {
+          bottom: max(68px, calc(68px + env(safe-area-inset-bottom, 0px))) !important;
+          right: 14px !important;
+          width: 38px !important;
+          height: 38px !important;
+          font-size: 1rem !important;
+        }
+
+        /* Table touch scrolling */
+        .shortcut-table, .feature-table, table {
+          display: block !important;
+          width: 100% !important;
+          overflow-x: auto !important;
+          -webkit-overflow-scrolling: touch !important;
+        }
+        .hero, .hero-banner {
+          padding: 1.5rem 1rem !important;
+          border-radius: 14px !important;
+        }
+        .hero h1, .hero h2, .hero-title {
+          font-size: 1.6rem !important;
+        }
+        .guide-section, section {
+          scroll-margin-top: 65px !important;
+        }
+      }
+    </style>
+    
+</head>
+<body>
+<!-- Reading Progress Bar -->
+<div id="reading-progress"></div>
+<!-- Header Navigation -->
+<header class="guide-header">
+<a class="brand" href="#">
+<div class="brand-icon">
+<svg fill="none" height="20" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" viewbox="0 0 24 24" width="20">
+<path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path>
+</svg>
+</div>
+<span>Lumenboard</span>
+<span class="brand-badge">Master Guide</span>
+</a>
+
+<button class="doc-mobile-menu-btn" id="docMobileMenuBtn" aria-label="Toggle Navigation and Table of Contents (3 horizontal lines)" title="Menu &amp; Table of Contents">☰</button>
+
+<div class="nav-actions">
+    <a href="https://supportsourcecode.lovable.app/home" class="doc-btn-nav doc-btn-main" title="Open Main Page (https://supportsourcecode.lovable.app/home)">🏠 Main Page</a>
+    <a href="https://interactive-media-display.lovable.app/" target="_blank" class="doc-btn-nav doc-btn-store" title="Open App Store (https://interactive-media-display.lovable.app/)">🛒 App Store</a>
+    <a href="../../compare.html" class="doc-btn-nav doc-btn-matrix" title="View 25-Version Matrix">📊 Compare Matrix</a>
+    <a href="https://api.whatsapp.com/send?phone=917903933705&text=Hello%2C%20I%20am%20reading%20the%20guide%20for%20software%20version%3A%20For_learning_Not_For_Ad_Source_code_large_pdf_V_2.3%20%28Ad-Free%20Pro%20V2.3%29.%20I%20would%20like%20to%20purchase%20/%20inquire%20about%20this%20package." target="_blank" class="doc-btn-nav doc-btn-buy-nav" title="Purchase For_learning_Not_For_Ad_Source_code_large_pdf_V_2.3 on WhatsApp">💬 Buy (Ad-Free Pro V2.3)</a>
+    
+<button class="btn-action theme-toggle" id="theme-toggle" title="Toggle Light/Dark Theme">
+<span id="theme-icon">◐</span>
+<span id="theme-text">Theme</span>
+</button>
+</div>
+</header>
+<!-- Application Shell -->
+<div class="app-container">
+<!-- Left Sticky Sidebar Table of Contents -->
+<aside class="guide-sidebar">
+<div class="sidebar-section-title">Getting Started</div>
+<ul class="sidebar-nav">
+<li><a class="sidebar-link active" href="#quick-start"><span class="nav-icon">⚡</span> 0 to 60s Quick Start</a></li>
+<li><a class="sidebar-link" href="#architecture"><span class="nav-icon">⌗</span> Core Architecture</a></li>
+</ul>
+<div class="sidebar-section-title">Canvas &amp; Tools</div>
+<ul class="sidebar-nav">
+<li><a class="sidebar-link" href="#left-rail"><span class="nav-icon">🛠</span> Creation Tools &amp; Rail</a></li>
+<li><a class="sidebar-link" href="#drawing-tools"><span class="nav-icon">✎</span> Freehand Pencil &amp; Pen</a></li>
+<li><a class="sidebar-link" href="#shapes-frames"><span class="nav-icon">□</span> Shapes, Cards &amp; Frames</a></li>
+<li><a class="sidebar-link" href="#smart-connectors"><span class="nav-icon">↗</span> Smart Connectors &amp; Routing</a></li>
+<li><a class="sidebar-link" href="#rich-text-tables"><span class="nav-icon">T</span> Rich Text &amp; Tables</a></li>
+</ul>
+<div class="sidebar-section-title">Media &amp; AI Power</div>
+<ul class="sidebar-nav">
+<li><a class="sidebar-link" href="#media-studio"><span class="nav-icon">🎥</span> Videos, GIFs &amp; Images</a></li>
+<li><a class="sidebar-link" href="#ai-visualizer"><span class="nav-icon">🤖</span> AI Code &amp; Text to Diagram</a></li>
+<li><a class="sidebar-link" href="#lessons-manager"><span class="nav-icon">📑</span> Multi-Page Lesson Notebook</a></li>
+</ul>
+<div class="sidebar-section-title">Import &amp; Export</div>
+<ul class="sidebar-nav">
+<li><a class="sidebar-link" href="#import-workflows"><span class="nav-icon">📥</span> PDF, DOCX, ZIP Ingestion</a></li>
+<li><a class="sidebar-link" href="#export-center"><span class="nav-icon">📤</span> Export Center (HTML, ZIP, PPTX)</a></li>
+</ul>
+<div class="sidebar-section-title">Reference</div>
+<ul class="sidebar-nav">
+<li><a class="sidebar-link" href="#shortcuts-matrix"><span class="nav-icon">⌨</span> Keyboard Shortcuts</a></li>
+<li><a class="sidebar-link" href="#interactive-simulator"><span class="nav-icon">🎮</span> Live Canvas Playground</a></li>
+<li><a class="sidebar-link" href="#faq"><span class="nav-icon">❓</span> FAQ &amp; Troubleshooting</a></li>
+</ul>
+</aside>
+<!-- Main Content Stream -->
+<main class="guide-main">
+<!-- Hero Banner -->
+<section class="hero">
+<span class="hero-eyebrow">
+<svg fill="currentColor" height="14" viewbox="0 0 24 24" width="14"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path></svg>
+          Lumenboard Visual Studio v2.3
+        </span>
+<h1>The Definitive Guide to Lumenboard Visual Studio</h1>
+<p>
+          Master visual storytelling, curriculum design, automated diagram generation, and multi-format publishing. Transform PDFs, DOCX templates, codebases, and rich videos into interactive diagram experiences.
+        </p>
+<div class="hero-features-grid">
+<div class="hero-feature-chip">
+<div class="chip-icon">📄</div>
+<div>
+<div>PDF &amp; DOCX Ingestion</div>
+<small style="color:var(--text-muted);">One page to one lesson</small>
+</div>
+</div>
+<div class="hero-feature-chip">
+<div class="chip-icon">⚡</div>
+<div>
+<div>In-Browser FFmpeg</div>
+<small style="color:var(--text-muted);">AVI/MP4 to WebM cards</small>
+</div>
+</div>
+<div class="hero-feature-chip">
+<div class="chip-icon">🌐</div>
+<div>
+<div>Interactive Web Export</div>
+<small style="color:var(--text-muted);">Self-contained HTML &amp; ZIP</small>
+</div>
+</div>
+<div class="hero-feature-chip">
+<div class="chip-icon">🤖</div>
+<div>
+<div>AI Code &amp; Text Visualizer</div>
+<small style="color:var(--text-muted);">3 granular detail levels</small>
+</div>
+</div>
+</div>
+</section>
+<!-- CHAPTER 1: Quick Start -->
+<section class="section-block" id="quick-start">
+<div class="section-header">
+<div>
+<span class="section-badge">Chapter 01</span>
+<h2 class="section-title">0 to 60s Quick Start</h2>
+</div>
+</div>
+<p>Get productive in seconds with the three core steps of the Lumenboard creation workflow:</p>
+<div class="step-list">
+<div class="step-item">
+<div class="step-number">1</div>
+<div class="step-content">
+<h4>Select a Starting Point or Template</h4>
+<p>Click <strong>Templates</strong> in the top menu or choose a quick start from the left library: <em>Process flow</em>, <em>DOM tree</em>, <em>System map</em>, or <em>Lesson canvas</em>. Alternatively, drop a PDF or DOCX file directly onto the canvas to instantly create full lesson pages.</p>
+</div>
+</div>
+<div class="step-item">
+<div class="step-number">2</div>
+<div class="step-content">
+<h4>Build &amp; Connect Concept Nodes</h4>
+<p>Click <kbd>□</kbd> for Concepts, <kbd>◇</kbd> for Decisions, or <kbd>T</kbd> for Rich Text. Hold <kbd>Shift</kbd> or hover over edge connection points to draw magnetic arrows with automatic jump-over bumps and orthogonal routing.</p>
+</div>
+</div>
+<div class="step-item">
+<div class="step-number">3</div>
+<div class="step-content">
+<h4>Export &amp; Share Anywhere</h4>
+<p>Click the <strong>Export ↗</strong> button in the top right to download standalone interactive HTML, a complete multi-page Website ZIP, editable PowerPoint (.pptx) slides, high-resolution PNG, or scalable vector SVG.</p>
+</div>
+</div>
+</div>
+<div class="callout tip">
+<div class="callout-icon">💡</div>
+<div>
+<strong>Instant Save &amp; Offline Storage:</strong> Press <kbd>Ctrl</kbd> + <kbd>S</kbd> anytime to persist your entire workspace to browser IndexedDB storage. Your diagram and uploaded media remain completely private and available offline!
+          </div>
+</div>
+</section>
+<!-- CHAPTER 2: Core Architecture -->
+<section class="section-block" id="architecture">
+<div class="section-header">
+<div>
+<span class="section-badge">Chapter 02</span>
+<h2 class="section-title">Core Architecture &amp; Workspace Layout</h2>
+</div>
+</div>
+<p>Lumenboard is built around a non-blocking multi-lesson architecture designed for educators, architects, developers, and visual thinkers.</p>
+<div class="grid-3">
+<div class="feature-card">
+<div class="card-header">
+<div class="card-icon indigo">🗂</div>
+<div class="card-title">Multi-Lesson Notebook</div>
+</div>
+<div class="card-desc">
+              Organize multiple pages or slides in one project file. Each lesson has an independent viewport, drawing strokes, cards, frames, and custom tab colors.
+            </div>
+<div class="card-footer">
+<span>Bottom tabs</span>
+<span class="card-tag">Unlimited Pages</span>
+</div>
+</div>
+<div class="feature-card">
+<div class="card-header">
+<div class="card-icon mint">🎨</div>
+<div class="card-title">Infinite Vector Stage</div>
+</div>
+<div class="card-desc">
+              High-performance SVG canvas supporting up to 8000x6000 canvas expansion, smooth pinch/wheel zoom, spacebar panning, and sub-pixel snapping.
+            </div>
+<div class="card-footer">
+<span>Zoom 20%–400%</span>
+<span class="card-tag">Hardware Accelerated</span>
+</div>
+</div>
+<div class="feature-card">
+<div class="card-header">
+<div class="card-icon coral">🛡</div>
+<div class="card-title">250-Level Undo History</div>
+</div>
+<div class="card-desc">
+              Comprehensive state-machine recording shape additions, coordinate translations, stroke drawings, color modifications, and grouping adjustments.
+            </div>
+<div class="card-footer">
+<span><kbd>Ctrl+Z</kbd> / <kbd>Ctrl+Y</kbd></span>
+<span class="card-tag">Lossless Rollback</span>
+</div>
+</div>
+</div>
+</section>
+<!-- CHAPTER 3: Creation Tools & Rail -->
+<section class="section-block" id="left-rail">
+<div class="section-header">
+<div>
+<span class="section-badge">Chapter 03</span>
+<h2 class="section-title">Left Tool Rail &amp; Canvas Toolbar</h2>
+</div>
+</div>
+<p>The sleek left-side vertical rail provides one-click access to all primary creation tools and visualizers:</p>
+<div class="grid-2">
+<div class="feature-card">
+<div class="card-header">
+<div class="card-icon sun">↖</div>
+<div class="card-title">Select &amp; Marquee (<kbd>V</kbd>)</div>
+</div>
+<div class="card-desc">
+              Click individual items to open the live Inspector panel. Drag an enclosing marquee box to multi-select multiple shapes, strokes, and frames simultaneously.
+            </div>
+</div>
+<div class="feature-card">
+<div class="card-header">
+<div class="card-icon mint">✥</div>
+<div class="card-title">Pan Hand Tool (<kbd>H</kbd> / Space)</div>
+</div>
+<div class="card-desc">
+              Glide smoothly across the infinite canvas without accidentally moving nodes. You can also hold <kbd>Spacebar</kbd> or click the middle mouse button anytime.
+            </div>
+</div>
+<div class="feature-card">
+<div class="card-header">
+<div class="card-icon indigo">□ / ◇</div>
+<div class="card-title">Concept &amp; Decision Nodes</div>
+</div>
+<div class="card-desc">
+              Add rectangular process cards or diamond decision nodes with title, detail description, tone presets, code snippets, and optional vector icons.
+            </div>
+</div>
+<div class="feature-card">
+<div class="card-header">
+<div class="card-icon purple">⌗</div>
+<div class="card-title">Framing Containers</div>
+</div>
+<div class="card-desc">
+              Group related diagram elements inside boundary frames. Moving a frame automatically transports all nested elements seamlessly!
+            </div>
+</div>
+</div>
+</section>
+<!-- CHAPTER 4: Freehand Drawing Suite -->
+<section class="section-block" id="drawing-tools">
+<div class="section-header">
+<div>
+<span class="section-badge">Chapter 04</span>
+<h2 class="section-title">Freehand Drawing &amp; Annotation Suite</h2>
+</div>
+</div>
+<p>Express ideas naturally with realistic pen dynamics, opacity layering, and vector smoothing:</p>
+<div class="grid-4">
+<div class="feature-card">
+<div class="card-header">
+<div class="card-icon sun">✎</div>
+<div class="card-title">Pencil</div>
+</div>
+<div class="card-desc">
+              Fine-grained sketching and wireframing tool with subtle texture and responsive stroke width.
+            </div>
+</div>
+<div class="feature-card">
+<div class="card-header">
+<div class="card-icon indigo">✒</div>
+<div class="card-title">Pen</div>
+</div>
+<div class="card-desc">
+              Smooth, solid ink strokes with automatic curve smoothing for diagrams, handwriting, and notes.
+            </div>
+</div>
+<div class="feature-card">
+<div class="card-header">
+<div class="card-icon mint">▰</div>
+<div class="card-title">Marker / Highlighter</div>
+</div>
+<div class="card-desc">
+              Semi-transparent wide highlighter stroke designed to emphasize cards, text, and critical flows.
+            </div>
+</div>
+<div class="feature-card">
+<div class="card-header">
+<div class="card-icon coral">◇</div>
+<div class="card-title">Eraser</div>
+</div>
+<div class="card-desc">
+              Precision stroke removal tool that erases freehand strokes upon contact while leaving shapes intact.
+            </div>
+</div>
+</div>
+<div class="callout pro-tip">
+<div class="callout-icon">✨</div>
+<div>
+<strong>Stroke Color &amp; Thickness Customization:</strong> Select any drawn stroke (or multi-select several strokes) to change their color palette, line thickness (from 1px up to 16px), or opacity directly in the Inspector!
+          </div>
+</div>
+</section>
+<!-- CHAPTER 5: Smart Connectors -->
+<section class="section-block" id="smart-connectors">
+<div class="section-header">
+<div>
+<span class="section-badge">Chapter 05</span>
+<h2 class="section-title">Smart Connectors &amp; Routing</h2>
+</div>
+</div>
+<p>Lumenboard provides algorithmic line routing and intersection arc jumps to ensure clean architecture diagrams.</p>
+<div class="grid-2">
+<div class="feature-card">
+<div class="card-header">
+<div class="card-icon cyan">↗</div>
+<div class="card-title">4 Connector Path Styles</div>
+</div>
+<div class="card-desc">
+<ul style="margin-left: 1.25rem; margin-top: 0.5rem;">
+<li><strong>Straight:</strong> Direct point-to-point geometric vector.</li>
+<li><strong>Elbow (Orthogonal):</strong> 90-degree step routes ideal for circuit maps and software flowcharts.</li>
+<li><strong>Curved:</strong> Organic cubic bezier curves for mind maps.</li>
+<li><strong>Dashed:</strong> Broken stroke styling for asynchronous dependencies.</li>
+</ul>
+</div>
+</div>
+<div class="feature-card">
+<div class="card-header">
+<div class="card-icon mint">⌒</div>
+<div class="card-title">Automatic Jump-Over Bumps</div>
+</div>
+<div class="card-desc">
+              When two connector lines intersect, Lumenboard automatically creates an elegant half-circle bridge (bump) on the intersecting segment. This prevents ambiguous 4-way crossings!
+            </div>
+</div>
+</div>
+<div class="step-list" style="margin-top: 1.5rem;">
+<div class="step-item">
+<div class="step-number">⚡</div>
+<div class="step-content">
+<h4>Quick Connect Feature</h4>
+<p>Hold the <kbd>Shift</kbd> key and hover over any shape perimeter to reveal 8 magnetic snap handles (top, bottom, left, right, and corners). Click and drag from any handle to immediately connect to a target node.</p>
+</div>
+</div>
+</div>
+</section>
+<!-- CHAPTER 6: Rich Text & Tables -->
+<section class="section-block" id="rich-text-tables">
+<div class="section-header">
+<div>
+<span class="section-badge">Chapter 06</span>
+<h2 class="section-title">Rich Text, Typography &amp; Grid Tables</h2>
+</div>
+</div>
+<p>Transform raw notes into formatted documentation with built-in WYSIWYG capabilities.</p>
+<div class="grid-3">
+<div class="feature-card">
+<div class="card-header">
+<div class="card-icon indigo">T</div>
+<div class="card-title">Typography &amp; Headings</div>
+</div>
+<div class="card-desc">
+              Format text with H1/H2/H3 styles, bold (<kbd>Ctrl+B</kbd>), italics (<kbd>Ctrl+I</kbd>), underline (<kbd>Ctrl+U</kbd>), strikethrough, text colors, and background highlighters.
+            </div>
+</div>
+<div class="feature-card">
+<div class="card-header">
+<div class="card-icon sun">▤</div>
+<div class="card-title">Interactive Grid Tables</div>
+</div>
+<div class="card-desc">
+              Insert structured grid tables inside cards. Customize row/column dimensions, cell borders, and header row formatting.
+            </div>
+</div>
+<div class="feature-card">
+<div class="card-header">
+<div class="card-icon coral">• =</div>
+<div class="card-title">Lists &amp; Code Blocks</div>
+</div>
+<div class="card-desc">
+              Render ordered numbered lists, unordered bulleted lists, inline code chips, and multi-line syntax-highlighted code snippets.
+            </div>
+</div>
+</div>
+</section>
+<!-- CHAPTER 7: Media Studio (Video, GIFs, Images) -->
+<section class="section-block" id="media-studio">
+<div class="section-header">
+<div>
+<span class="section-badge">Chapter 07</span>
+<h2 class="section-title">Media Studio: In-Browser Video, GIF &amp; Image Engine</h2>
+</div>
+</div>
+<p>Lumenboard features a client-side media pipeline powered by WebAssembly.</p>
+<div class="grid-3">
+<div class="feature-card">
+<div class="card-header">
+<div class="card-icon coral">🎬</div>
+<div class="card-title">In-Browser Video Conversion</div>
+</div>
+<div class="card-desc">
+              Import legacy <strong>AVI, 3GP, or MP4</strong> files. An embedded FFmpeg WebAssembly engine automatically converts them locally into lightweight, ultra-smooth WebM video playback cards without sending bytes to external servers!
+            </div>
+<div class="card-footer">
+<span>Zero server upload</span>
+<span class="card-tag">FFmpeg WASM</span>
+</div>
+</div>
+<div class="feature-card">
+<div class="card-header">
+<div class="card-icon mint">🎞</div>
+<div class="card-title">Animated GIF Optimization</div>
+</div>
+<div class="card-desc">
+              Import animated GIFs for UI demos and animations. The integrated compression engine optimizes GIF frame size and maintains smooth 60fps playback on the canvas.
+            </div>
+<div class="card-footer">
+<span>Auto-compression</span>
+<span class="card-tag">Live Playback</span>
+</div>
+</div>
+<div class="feature-card">
+<div class="card-header">
+<div class="card-icon cyan">✂</div>
+<div class="card-title">Visual Crop Modal</div>
+</div>
+<div class="card-desc">
+              Right-click any image or click <em>Crop image</em> in the Inspector to open the interactive crop editor. Adjust boundaries with 8-point handles to focus on essential UI details.
+            </div>
+<div class="card-footer">
+<span>Non-destructive</span>
+<span class="card-tag">Aspect Aware</span>
+</div>
+</div>
+</div>
+<div class="callout warning">
+<div class="callout-icon">⚡</div>
+<div>
+<strong>Hyperlink Attachment:</strong> You can attach an active web hyperlink to any image, icon, or diagram card. Right-click the element and select <strong>Add hyperlink</strong>. When exported to HTML or viewed in presentation mode, clicking the item navigates directly to the URL!
+          </div>
+</div>
+</section>
+<!-- CHAPTER 8: AI & Automation Visualizer -->
+<section class="section-block" id="ai-visualizer">
+<div class="section-header">
+<div>
+<span class="section-badge">Chapter 08</span>
+<h2 class="section-title">AI &amp; Automation: Code &amp; Text to Diagram</h2>
+</div>
+</div>
+<p>Instantly generate structured visual flowcharts from raw source code or unstructured text.</p>
+<div class="tab-nav">
+<button class="tab-btn active" onclick="switchTab(event, 'tab-code-diagram')">Visualize Code (&lt;/&gt;)</button>
+<button class="tab-btn" onclick="switchTab(event, 'tab-text-diagram')">Visualize Text (TXT)</button>
+</div>
+<div class="tab-pane active" id="tab-code-diagram">
+<p>Click <strong>Visualize code</strong> in the top menu or the <kbd>&lt;/&gt;</kbd> button on the rail. Paste code in JavaScript, TypeScript, Python, C++, or Go, and select one of 3 detail levels:</p>
+<div class="grid-3" style="margin-top: 1rem;">
+<div class="feature-card">
+<div class="card-title">1. Basic (High-level)</div>
+<div class="card-desc">Extracts primary function entry points, major conditional branches, and core output return values.</div>
+</div>
+<div class="card-title">2. Intermediate</div>
+<div class="card-desc">Includes intermediate variable state mutations, helper function calls, and error handling paths.</div>
+<div class="feature-card">
+<div class="card-title">3. Advanced (Deep Architecture)</div>
+<div class="card-desc">Maps out complete asynchronous loops, internal promise chains, try/catch blocks, and edge cases.</div>
+</div>
+</div>
+</div>
+<div class="tab-pane" id="tab-text-diagram">
+<p>Click <strong>Visualize text</strong> to convert meeting notes, standard operating procedures (SOPs), or lesson notes into a connected diagram.</p>
+<div class="code-box">
+<button class="copy-btn" onclick="copySnippet(this)">Copy Prompt</button>
+User logs into the portal with email and 2FA token.
+If authentication succeeds, load user dashboard and active subscriptions.
+If authentication fails, show error alert and increment failed attempt counter.
+If counter reaches 3, lock account and send recovery email.
+          </div>
+</div>
+</section>
+<!-- CHAPTER 9: Multi-Page Lessons & Management -->
+<section class="section-block" id="lessons-manager">
+<div class="section-header">
+<div>
+<span class="section-badge">Chapter 09</span>
+<h2 class="section-title">Multi-Page Lesson Notebook &amp; Search</h2>
+</div>
+</div>
+<p>Manage entire curriculums, slide decks, and multi-step tutorials with lesson navigation tools:</p>
+<div class="grid-3">
+<div class="feature-card">
+<div class="card-header">
+<div class="card-icon indigo">🎨</div>
+<div class="card-title">Lesson Tab Colors</div>
+</div>
+<div class="card-desc">
+              Right-click any lesson tab at the bottom to assign custom color tags (Mint, Indigo, Sun, Coral, Purple) for rapid visual categorization.
+            </div>
+</div>
+<div class="feature-card">
+<div class="card-header">
+<div class="card-icon sun">⌕</div>
+<div class="card-title">Token-Order Search</div>
+</div>
+<div class="card-desc">
+              The bottom page search uses token-order word matching. Searching for "css grid" matches pages named "Lesson 4: CSS Grid Layout" with zero false positives!
+            </div>
+</div>
+<div class="feature-card">
+<div class="card-header">
+<div class="card-icon coral">{"{ }"}</div>
+<div class="card-title">Direct JSON Code Edit</div>
+</div>
+<div class="card-desc">
+              Developers can right-click any lesson tab and select <strong>Update JSON code</strong> to directly view, edit, or paste raw diagram item schemas with automated syntax validation.
+            </div>
+</div>
+</div>
+</section>
+<!-- CHAPTER 10: Import Ingestion -->
+<section class="section-block" id="import-workflows">
+<div class="section-header">
+<div>
+<span class="section-badge">Chapter 10</span>
+<h2 class="section-title">Import &amp; Ingestion: PDF, DOCX &amp; ZIP</h2>
+</div>
+</div>
+<p>Import external documents directly into Lumenboard via the <strong>File</strong> menu or simple drag-and-drop:</p>
+<div class="grid-3">
+<div class="feature-card">
+<div class="card-header">
+<div class="card-icon coral">📄</div>
+<div class="card-title">PDF to Lessons</div>
+</div>
+<div class="card-desc">
+              Drop any PDF onto the canvas. Lumenboard renders every PDF page at retina 2x resolution and converts each page into a dedicated lesson slide!
+            </div>
+</div>
+<div class="feature-card">
+<div class="card-header">
+<div class="card-icon indigo">📝</div>
+<div class="card-title">DOCX Lesson Packs</div>
+</div>
+<div class="card-desc">
+              Import structured Word documents (<code>Doc_to_diagram.docx</code>). The parser extracts Headings, bullet points, and steps into interactive concept nodes automatically.
+            </div>
+</div>
+<div class="feature-card">
+<div class="card-header">
+<div class="card-icon mint">📦</div>
+<div class="card-title">ZIP &amp; Project JSON</div>
+</div>
+<div class="card-desc">
+              Open complete <code>.json</code> or <code>.zip</code> project bundles, or choose <strong>Append ZIP</strong> to merge new lesson pages into your current working project without losing existing work.
+            </div>
+</div>
+</div>
+</section>
+<!-- CHAPTER 11: Export Center -->
+<section class="section-block" id="export-center">
+<div class="section-header">
+<div>
+<span class="section-badge">Chapter 11</span>
+<h2 class="section-title">Export Center: Take Your Thinking Anywhere</h2>
+</div>
+</div>
+<p>Lumenboard exports to industry-standard presentation, vector, web, and document formats:</p>
+<div class="grid-3">
+<div class="feature-card">
+<div class="card-header">
+<div class="card-icon indigo">🌐</div>
+<div class="card-title">Lesson HTML (Standalone)</div>
+</div>
+<div class="card-desc">
+              Self-contained single HTML file with touch gestures and mobile swipe support. Zero server dependencies.
+            </div>
+<div class="card-footer">
+<span>Mobile responsive</span>
+<span class="card-tag">.html</span>
+</div>
+</div>
+<div class="feature-card">
+<div class="card-header">
+<div class="card-icon cyan">🚀</div>
+<div class="card-title">Full Website ZIP</div>
+</div>
+<div class="card-desc">
+              Generates a complete multi-page interactive web application bundle with side navigation, search, and presentation viewer ready to deploy on GitHub Pages or Vercel.
+            </div>
+<div class="card-footer">
+<span>Production ready</span>
+<span class="card-tag">.zip</span>
+</div>
+</div>
+<div class="feature-card">
+<div class="card-header">
+<div class="card-icon coral">📊</div>
+<div class="card-title">PowerPoint (.pptx)</div>
+</div>
+<div class="card-desc">
+              Transforms all lessons into clean Microsoft PowerPoint presentation slides with 16:9 widescreen layout.
+            </div>
+<div class="card-footer">
+<span>Editable deck</span>
+<span class="card-tag">.pptx</span>
+</div>
+</div>
+<div class="feature-card">
+<div class="card-header">
+<div class="card-icon sun">🖼</div>
+<div class="card-title">High-Res PNG &amp; SVG</div>
+</div>
+<div class="card-desc">
+              Vector SVG for infinite scalability in documentation, or crystal-clear PNG rasters for blog posts and social media.
+            </div>
+<div class="card-footer">
+<span>Lossless</span>
+<span class="card-tag">.svg / .png</span>
+</div>
+</div>
+<div class="feature-card">
+<div class="card-header">
+<div class="card-icon mint">{"{ }"}</div>
+<div class="card-title">Project JSON &amp; ZIP</div>
+</div>
+<div class="card-desc">
+              Timestamped JSON archive preserving all nodes, strokes, video media blobs, connection coordinates, and metadata for future editing.
+            </div>
+<div class="card-footer">
+<span>Full project backup</span>
+<span class="card-tag">.json / .zip</span>
+</div>
+</div>
+<div class="feature-card">
+<div class="card-header">
+<div class="card-icon purple">📑</div>
+<div class="card-title">Print / PDF</div>
+</div>
+<div class="card-desc">
+              One-click lesson-by-lesson print layout where Lesson 1 becomes Page 1 and Lesson 2 becomes Page 2.
+            </div>
+<div class="card-footer">
+<span>Print ready</span>
+<span class="card-tag">.pdf</span>
+</div>
+</div>
+</div>
+</section>
+<!-- CHAPTER 12: Keyboard Shortcuts Matrix -->
+<section class="section-block" id="shortcuts-matrix">
+<div class="section-header">
+<div>
+<span class="section-badge">Reference</span>
+<h2 class="section-title">Master Keyboard Shortcuts Matrix</h2>
+</div>
+</div>
+<p>Boost your productivity with these built-in hotkeys:</p>
+<div class="shortcut-table-container">
+<div class="shortcut-search-bar">
+<input id="shortcut-search" placeholder="Filter shortcuts (e.g. undo, save, copy, zoom)..." type="text"/>
+</div>
+<table class="shortcut-table" id="shortcut-table">
+<thead>
+<tr>
+<th>Action</th>
+<th>Shortcut</th>
+<th>Category</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Save Project</strong></td>
+<td><kbd>Ctrl</kbd> + <kbd>S</kbd></td>
+<td>Workspace</td>
+<td>Save all lessons and media to local browser IndexedDB</td>
+</tr>
+<tr>
+<td><strong>Toggle Fullscreen</strong></td>
+<td><kbd>Ctrl</kbd> + <kbd>F</kbd> / <kbd>F11</kbd></td>
+<td>View</td>
+<td>Enter or exit distraction-free fullscreen presentation mode</td>
+</tr>
+<tr>
+<td><strong>Exit / Close Modal</strong></td>
+<td><kbd>Esc</kbd></td>
+<td>Navigation</td>
+<td>Close open menus, modal dialogs, crop editors, or fullscreen</td>
+</tr>
+<tr>
+<td><strong>Undo Action</strong></td>
+<td><kbd>Ctrl</kbd> + <kbd>Z</kbd></td>
+<td>History</td>
+<td>Step backward up to 250 history actions</td>
+</tr>
+<tr>
+<td><strong>Redo Action</strong></td>
+<td><kbd>Ctrl</kbd> + <kbd>Y</kbd> or <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>Z</kbd></td>
+<td>History</td>
+<td>Step forward through undone history stack</td>
+</tr>
+<tr>
+<td><strong>Copy Selected</strong></td>
+<td><kbd>Ctrl</kbd> + <kbd>C</kbd></td>
+<td>Clipboard</td>
+<td>Copy selected cards, frames, strokes, or images to diagram clipboard</td>
+</tr>
+<tr>
+<td><strong>Cut Selected</strong></td>
+<td><kbd>Ctrl</kbd> + <kbd>X</kbd></td>
+<td>Clipboard</td>
+<td>Cut items and place them on clipboard</td>
+</tr>
+<tr>
+<td><strong>Paste at Cursor</strong></td>
+<td><kbd>Ctrl</kbd> + <kbd>V</kbd></td>
+<td>Clipboard</td>
+<td>Paste copied diagram nodes at the exact position of mouse cursor</td>
+</tr>
+<tr>
+<td><strong>Delete Item</strong></td>
+<td><kbd>Delete</kbd> / <kbd>Backspace</kbd></td>
+<td>Edit</td>
+<td>Remove selected objects from the canvas</td>
+</tr>
+<tr>
+<td><strong>Quick Connector Snap</strong></td>
+<td><kbd>Shift</kbd> (Hold)</td>
+<td>Connectors</td>
+<td>Reveal magnetic snap points on node perimeters</td>
+</tr>
+<tr>
+<td><strong>Pan Canvas</strong></td>
+<td><kbd>Spacebar</kbd> + Drag</td>
+<td>Navigation</td>
+<td>Pan smoothly across infinite canvas</td>
+</tr>
+<tr>
+<td><strong>Zoom In / Out</strong></td>
+<td><kbd>Ctrl</kbd> + Mouse Wheel</td>
+<td>Navigation</td>
+<td>Smooth zoom centered on mouse cursor</td>
+</tr>
+<tr>
+<td><strong>Bold Text</strong></td>
+<td><kbd>Ctrl</kbd> + <kbd>B</kbd></td>
+<td>Rich Text</td>
+<td>Toggle bold formatting in text editor</td>
+</tr>
+<tr>
+<td><strong>Italic Text</strong></td>
+<td><kbd>Ctrl</kbd> + <kbd>I</kbd></td>
+<td>Rich Text</td>
+<td>Toggle italic formatting in text editor</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<!-- CHAPTER 13: Live Interactive Simulator -->
+<section class="section-block" id="interactive-simulator">
+<div class="section-header">
+<div>
+<span class="section-badge">Interactive</span>
+<h2 class="section-title">Interactive Canvas Playground</h2>
+</div>
+</div>
+<p>Test Lumenboard's node dragging and connection styling in this live interactive mini-canvas simulator:</p>
+<div class="simulator-container">
+<div class="simulator-header">
+<div class="simulator-title">
+<span>●</span> Live Lumenboard Playground
+            </div>
+<div class="simulator-controls">
+<button class="sim-btn" onclick="addSimNode('indigo')">+ Concept</button>
+<button class="sim-btn" onclick="addSimNode('sun')">+ Decision</button>
+<button class="sim-btn" onclick="addSimNode('mint')">+ Process</button>
+<button class="sim-btn" onclick="resetSimCanvas()">↺ Reset</button>
+</div>
+</div>
+<div class="sim-canvas" id="sim-canvas">
+<svg id="sim-svg-layer" style="position:absolute; width:100%; height:100%; pointer-events:none;">
+<path d="" fill="none" id="sim-connector-1" marker-end="url(#sim-arrow)" stroke="#6366F1" stroke-dasharray="none" stroke-width="2.5"></path>
+<defs>
+<marker id="sim-arrow" markerheight="6" markerwidth="6" orient="auto-start-reverse" refx="6" refy="5" viewbox="0 0 10 10">
+<path d="M 0 1.5 L 8 5 L 0 8.5 z" fill="#6366F1"></path>
+</marker>
+</defs>
+</svg>
+<div class="sim-node indigo" id="node-1" onmousedown="dragSimNode(event, 'node-1')" style="left: 60px; top: 80px; width: 160px;">
+<strong>User Request</strong>
+<span class="sim-node-detail">Input prompt or query</span>
+</div>
+<div class="sim-node sun" id="node-2" onmousedown="dragSimNode(event, 'node-2')" style="left: 320px; top: 120px; width: 170px;">
+<strong>Evaluation Engine</strong>
+<span class="sim-node-detail">Decision logic check</span>
+</div>
+<div class="sim-node mint" id="node-3" onmousedown="dragSimNode(event, 'node-3')" style="left: 580px; top: 80px; width: 160px;">
+<strong>Generated Output</strong>
+<span class="sim-node-detail">Interactive Visuals</span>
+</div>
+</div>
+</div>
+</section>
+<!-- CHAPTER 14: FAQ & Troubleshooting -->
+<section class="section-block" id="faq">
+<div class="section-header">
+<div>
+<span class="section-badge">Troubleshooting</span>
+<h2 class="section-title">Frequently Asked Questions &amp; Support</h2>
+</div>
+</div>
+<div class="faq-list">
+<div class="faq-item">
+<button class="faq-question" onclick="toggleFaq(this)">
+<span>Where is my diagram data stored? Is it safe and private?</span>
+<span class="faq-toggle-icon">▼</span>
+</button>
+<div class="faq-answer">
+              Your entire workspace, including all diagram nodes, freehand strokes, uploaded videos, and images, is stored 100% locally in your browser's IndexedDB and LocalStorage. Nothing is ever transmitted to external servers without your explicit action. Press <kbd>Ctrl+S</kbd> to ensure local persistence.
+            </div>
+</div>
+<div class="faq-item">
+<button class="faq-question" onclick="toggleFaq(this)">
+<span>How does video import work without uploading to a cloud server?</span>
+<span class="faq-toggle-icon">▼</span>
+</button>
+<div class="faq-answer">
+              Lumenboard bundles an in-browser WebAssembly port of FFmpeg. When you import an AVI, 3GP, or MP4 video, the browser runs the conversion algorithm locally using your device's CPU/GPU and creates an ultra-efficient WebM video blob that renders directly inside diagram cards.
+            </div>
+</div>
+<div class="faq-item">
+<button class="faq-question" onclick="toggleFaq(this)">
+<span>How do I clear browser saved data and start fresh?</span>
+<span class="faq-toggle-icon">▼</span>
+</button>
+<div class="faq-answer">
+              Open the <strong>File</strong> menu in the top left and select <strong>Remove browser saved data</strong>. This safely clears all cached diagram states and resets the workspace to the default clean starter state.
+            </div>
+</div>
+<div class="faq-item">
+<button class="faq-question" onclick="toggleFaq(this)">
+<span>Can I import large multi-page PDF documents?</span>
+<span class="faq-toggle-icon">▼</span>
+</button>
+<div class="faq-answer">
+              Yes! Click <strong>File &gt; Import PDF as lessons</strong> or drag-and-drop any PDF file onto the canvas. The engine renders each page individually as a high-resolution slide card in sequential lesson tabs with live progress indicators.
+            </div>
+</div>
+<div class="faq-item">
+<button class="faq-question" onclick="toggleFaq(this)">
+<span>How do I deploy the exported Website ZIP?</span>
+<span class="faq-toggle-icon">▼</span>
+</button>
+<div class="faq-answer">
+              Click <strong>Export &gt; Website ZIP</strong>. Extract the downloaded ZIP file on your computer and upload the contents to any static web hosting provider (GitHub Pages, Cloudflare Pages, Netlify, Vercel, or AWS S3). It works out-of-the-box with zero configuration!
+            </div>
+</div>
+</div>
+</section>
+</main>
+</div>
+<!-- Footer -->
+<footer class="guide-footer">
+<div class="footer-links">
+<a href="#quick-start">Quick Start</a>
+<a href="#shortcuts-matrix">Shortcuts</a>
+<a href="#export-center">Export Formats</a>
+<a href="#faq">FAQ</a>
+</div>
+<p>© 2026 Lumenboard Visual Studio. Empowering visual creators everywhere.</p>
+</footer>
+<!-- Interactive JavaScript Engine -->
+<script>
+    // Theme Management
+    const themeToggle = document.getElementById('theme-toggle');
+    const themeIcon = document.getElementById('theme-icon');
+    const themeText = document.getElementById('theme-text');
+    const htmlElement = document.documentElement;
+
+    function updateDrawerThemeUI(theme) {
+      const isLight = theme === 'light';
+      const drawerIcon = document.getElementById('drawerThemeIcon');
+      const drawerTitle = document.getElementById('drawerThemeTitle');
+      const drawerDesc = document.getElementById('drawerThemeDesc');
+      if (drawerIcon && drawerTitle && drawerDesc) {
+        if (isLight) {
+          drawerIcon.textContent = '◐';
+          drawerIcon.style.background = 'linear-gradient(135deg, #6366f1, #4f46e5)';
+          drawerTitle.textContent = '• ◐ Dark Theme Toggle (#theme-toggle)';
+          drawerDesc.textContent = 'Switch to Dark Theme';
+        } else {
+          drawerIcon.textContent = '☀';
+          drawerIcon.style.background = 'linear-gradient(135deg, #f59e0b, #eab308)';
+          drawerTitle.textContent = '• ☀ Light Theme Toggle (#theme-toggle)';
+          drawerDesc.textContent = 'Switch to Light Theme';
+        }
+      }
+    }
+    window.updateDrawerThemeUI = updateDrawerThemeUI;
+
+    function setTheme(theme) {
+      htmlElement.setAttribute('data-theme', theme);
+      localStorage.setItem('lumenboard_guide_theme', theme);
+      if (theme === 'light') {
+        if (themeIcon) themeIcon.textContent = '☀';
+        if (themeText) themeText.textContent = 'Light';
+      } else {
+        if (themeIcon) themeIcon.textContent = '◐';
+        if (themeText) themeText.textContent = 'Dark';
+      }
+      updateDrawerThemeUI(theme);
+    }
+    window.setTheme = setTheme;
+
+    if (themeToggle) {
+      themeToggle.addEventListener('click', () => {
+        const currentTheme = htmlElement.getAttribute('data-theme');
+        setTheme(currentTheme === 'dark' ? 'light' : 'dark');
+      });
+    }
+
+    const savedTheme = localStorage.getItem('lumenboard_guide_theme') || 'dark';
+    setTheme(savedTheme);
+
+    // Reading Progress Indicator
+    window.addEventListener('scroll', () => {
+      const winScroll = document.documentElement.scrollTop;
+      const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+      const scrolled = (winScroll / height) * 100;
+      document.getElementById('reading-progress').style.width = scrolled + '%';
+      
+      // Update Active Sidebar Link
+      const sections = document.querySelectorAll('section.section-block, section.hero');
+      let currentSection = '';
+      sections.forEach(sec => {
+        const top = sec.offsetTop - 120;
+        if (winScroll >= top) {
+          currentSection = sec.getAttribute('id') || 'quick-start';
+        }
+      });
+      document.querySelectorAll('.sidebar-link').forEach(link => {
+        link.classList.remove('active');
+        if (link.getAttribute('href') === '#' + currentSection) {
+          link.classList.add('active');
+        }
+      });
+    });
+
+    // Global Search & Highlighting
+    const searchInput = document.getElementById('global-search');
+    const searchClear = document.getElementById('search-clear');
+    if (typeof searchInput !== "undefined" && searchInput) searchInput.addEventListener('input', (e) => {
+      const query = e.target.value.toLowerCase().trim();
+      searchClear.style.display = query ? 'block' : 'none';
+      
+      const cards = document.querySelectorAll('.feature-card, .step-item, .hero-feature-chip, .faq-item');
+      cards.forEach(card => {
+        const text = card.textContent.toLowerCase();
+        if (!query || text.includes(query)) {
+          card.style.display = '';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+    });
+
+    searchClear.addEventListener('click', () => {
+      if (typeof searchInput !== "undefined" && searchInput) searchInput.value = '';
+      searchClear.style.display = 'none';
+      document.querySelectorAll('.feature-card, .step-item, .hero-feature-chip, .faq-item').forEach(el => el.style.display = '');
+    });
+
+    // Tab Switcher
+    function switchTab(evt, tabId) {
+      const parent = evt.target.closest('.section-block');
+      parent.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+      parent.querySelectorAll('.tab-pane').forEach(pane => pane.classList.remove('active'));
+      evt.target.classList.add('active');
+      document.getElementById(tabId).classList.add('active');
+    }
+
+    // FAQ Accordion Toggle
+    function toggleFaq(button) {
+      const item = button.parentElement;
+      item.classList.toggle('open');
+    }
+
+    // Shortcut Table Filter
+    const shortcutInput = document.getElementById('shortcut-search');
+    shortcutInput.addEventListener('input', (e) => {
+      const q = e.target.value.toLowerCase().trim();
+      const rows = document.querySelectorAll('#shortcut-table tbody tr');
+      rows.forEach(row => {
+        const text = row.textContent.toLowerCase();
+        row.style.display = (!q || text.includes(q)) ? '' : 'none';
+      });
+    });
+
+    // Copy Snippet Utility
+    function copySnippet(btn) {
+      const codeBox = btn.closest('.code-box');
+      const text = codeBox.innerText.replace('Copy Prompt', '').trim();
+      navigator.clipboard.writeText(text).then(() => {
+        btn.textContent = 'Copied! ✓';
+        setTimeout(() => btn.textContent = 'Copy Prompt', 2000);
+      });
+    }
+
+    // Interactive Mini-Canvas Simulator Logic
+    function updateSimConnectors() {
+      const n1 = document.getElementById('node-1');
+      const n2 = document.getElementById('node-2');
+      const n3 = document.getElementById('node-3');
+      if (!n1 || !n2 || !n3) return;
+
+      const p1 = { x: n1.offsetLeft + n1.offsetWidth, y: n1.offsetTop + n1.offsetHeight / 2 };
+      const p2 = { x: n2.offsetLeft, y: n2.offsetTop + n2.offsetHeight / 2 };
+      const p2_end = { x: n2.offsetLeft + n2.offsetWidth, y: n2.offsetTop + n2.offsetHeight / 2 };
+      const p3 = { x: n3.offsetLeft, y: n3.offsetTop + n3.offsetHeight / 2 };
+
+      const path1 = `M ${p1.x} ${p1.y} C ${(p1.x + p2.x)/2} ${p1.y}, ${(p1.x + p2.x)/2} ${p2.y}, ${p2.x} ${p2.y}`;
+      const path2 = `M ${p2_end.x} ${p2_end.y} C ${(p2_end.x + p3.x)/2} ${p2_end.y}, ${(p2_end.x + p3.x)/2} ${p3.y}, ${p3.x} ${p3.y}`;
+
+      const svgPath = document.getElementById('sim-connector-1');
+      if (svgPath) svgPath.setAttribute('d', `${path1} ${path2}`);
+    }
+
+    let activeDragNode = null;
+    let dragOffset = { x: 0, y: 0 };
+
+    function dragSimNode(e, nodeId) {
+      activeDragNode = document.getElementById(nodeId);
+      const rect = activeDragNode.getBoundingClientRect();
+      dragOffset = { x: e.clientX - rect.left, y: e.clientY - rect.top };
+      window.addEventListener('mousemove', onSimMouseMove);
+      window.addEventListener('mouseup', onSimMouseUp);
+    }
+
+    function onSimMouseMove(e) {
+      if (!activeDragNode) return;
+      const canvas = document.getElementById('sim-canvas');
+      const canvasRect = canvas.getBoundingClientRect();
+      let newX = e.clientX - canvasRect.left - dragOffset.x;
+      let newY = e.clientY - canvasRect.top - dragOffset.y;
+      newX = Math.max(10, Math.min(canvas.offsetWidth - activeDragNode.offsetWidth - 10, newX));
+      newY = Math.max(10, Math.min(canvas.offsetHeight - activeDragNode.offsetHeight - 10, newY));
+      activeDragNode.style.left = newX + 'px';
+      activeDragNode.style.top = newY + 'px';
+      updateSimConnectors();
+    }
+
+    function onSimMouseUp() {
+      activeDragNode = null;
+      window.removeEventListener('mousemove', onSimMouseMove);
+      window.removeEventListener('mouseup', onSimMouseUp);
+    }
+
+    function addSimNode(tone) {
+      const canvas = document.getElementById('sim-canvas');
+      const count = canvas.querySelectorAll('.sim-node').length + 1;
+      const div = document.createElement('div');
+      div.className = `sim-node ${tone}`;
+      div.id = `sim-node-${Date.now()}`;
+      div.style.left = `${Math.floor(Math.random() * (canvas.offsetWidth - 200) + 20)}px`;
+      div.style.top = `${Math.floor(Math.random() * (canvas.offsetHeight - 100) + 20)}px`;
+      div.style.width = '160px';
+      div.innerHTML = `<strong>Concept #${count}</strong><span class="sim-node-detail">Interactive Node</span>`;
+      div.onmousedown = (e) => dragSimNode(e, div.id);
+      canvas.appendChild(div);
+      updateSimConnectors();
+    }
+
+    function resetSimCanvas() {
+      const canvas = document.getElementById('sim-canvas');
+      const n1 = document.getElementById('node-1');
+      const n2 = document.getElementById('node-2');
+      const n3 = document.getElementById('node-3');
+      if (n1) { n1.style.left = '60px'; n1.style.top = '80px'; }
+      if (n2) { n2.style.left = '320px'; n2.style.top = '120px'; }
+      if (n3) { n3.style.left = '580px'; n3.style.top = '80px'; }
+      const customNodes = canvas.querySelectorAll('.sim-node:not(#node-1):not(#node-2):not(#node-3)');
+      customNodes.forEach(n => n.remove());
+      updateSimConnectors();
+    }
+
+    window.addEventListener('load', updateSimConnectors);
+    window.addEventListener('resize', updateSimConnectors);
+  </script>
+
+
+    <a href="https://api.whatsapp.com/send?phone=917903933705&text=Hello%2C%20I%20am%20reading%20the%20guide%20for%20software%20version%3A%20For_learning_Not_For_Ad_Source_code_large_pdf_V_2.3%20%28Ad-Free%20Pro%20V2.3%29.%20I%20would%20like%20to%20purchase%20/%20inquire%20about%20this%20package." target="_blank" class="wa-doc-float-btn" title="Purchase For_learning_Not_For_Ad_Source_code_large_pdf_V_2.3 on WhatsApp">
+      <span>💬 Buy This Version (+91-7903933705)</span>
+    </a>
+    
+        <!-- Mobile Responsive Navigation & TOC Drawer Script with Auto-Scroll Keyboard Viewport Adaptation -->
+    <script id="wa-doc-mobile-nav-js">
+      (function initDocMobileNav() {
+        // 1. Locate navigation actions container
+        const navContainer = document.querySelector('.doc-nav-bar-actions') || 
+                             document.querySelector('.nav-actions') || 
+                             document.querySelector('.header-controls') || 
+                             document.querySelector('.header-actions') || 
+                             document.querySelector('.top-nav-actions') || 
+                             document.querySelector('header') || 
+                             document.querySelector('nav');
+        if (!navContainer) return;
+
+        // 2. Create or find Mobile Menu Toggle Button (☰)
+        let menuBtn = document.getElementById('docMobileMenuBtn');
+        if (!menuBtn) {
+          menuBtn = document.createElement('button');
+          menuBtn.id = 'docMobileMenuBtn';
+          menuBtn.className = 'doc-mobile-menu-btn';
+          menuBtn.setAttribute('aria-label', 'Toggle Navigation and Table of Contents');
+          menuBtn.setAttribute('title', 'Table of Contents & Navigation');
+          menuBtn.innerHTML = '☰';
+          
+          const headerControls = document.querySelector('.header-actions') || 
+                                 document.querySelector('.header-controls') || 
+                                 document.querySelector('.nav-controls') || 
+                                 document.querySelector('.top-nav-actions') ||
+                                 document.querySelector('.header-inner') || 
+                                 document.querySelector('header') || 
+                                 document.querySelector('nav');
+          if (headerControls && headerControls !== navContainer) {
+            headerControls.appendChild(menuBtn);
+          } else {
+            navContainer.appendChild(menuBtn);
+          }
+        }
+
+        // 3. Ensure .doc-btn-nav have text wrapped in .nav-text for clean icon-only mobile mode
+        document.querySelectorAll('.doc-btn-nav').forEach(btn => {
+          if (!btn.querySelector('.nav-text')) {
+            const raw = btn.textContent.trim();
+            const parts = raw.split(/\s+/);
+            if (parts.length > 1) {
+              btn.innerHTML = parts[0] + ' <span class="nav-text">' + parts.slice(1).join(' ') + '</span>';
+            }
+          }
+        });
+
+        // 4. Universal Theme Management Helper for Drawer
+        function getCurrentTheme() {
+          return document.documentElement.getAttribute('data-theme') || 
+                 document.body.getAttribute('data-theme') || 
+                 (document.body.classList.contains('dark') ? 'dark' : 
+                 (localStorage.getItem('lumenboard_guide_theme') || 
+                  localStorage.getItem('lumenboard-theme') || 
+                  localStorage.getItem('lumenboard_theme') || 
+                  localStorage.getItem('lumenboard-help-theme') || 
+                  localStorage.getItem('lumenboard-docs-theme') || 
+                  localStorage.getItem('lumenboard_help_theme') || 
+                  (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')));
+        }
+
+        function updateDrawerThemeUI(theme) {
+          const isLight = theme === 'light';
+          const drawerIcon = document.getElementById('drawerThemeIcon');
+          const drawerTitle = document.getElementById('drawerThemeTitle');
+          const drawerDesc = document.getElementById('drawerThemeDesc');
+          if (drawerIcon && drawerTitle && drawerDesc) {
+            if (isLight) {
+              drawerIcon.textContent = '◐';
+              drawerIcon.style.background = 'linear-gradient(135deg, #6366f1, #4f46e5)';
+              drawerTitle.textContent = '• ◐ Dark Theme Toggle (#theme-toggle)';
+              drawerDesc.textContent = 'Switch to Dark Theme';
+            } else {
+              drawerIcon.textContent = '☀';
+              drawerIcon.style.background = 'linear-gradient(135deg, #f59e0b, #eab308)';
+              drawerTitle.textContent = '• ☀ Light Theme Toggle (#theme-toggle)';
+              drawerDesc.textContent = 'Switch to Light Theme';
+            }
+          }
+        }
+        window.updateDrawerThemeUI = updateDrawerThemeUI;
+
+        function setUniversalTheme(theme) {
+          document.documentElement.setAttribute('data-theme', theme);
+          document.body.setAttribute('data-theme', theme);
+          if (theme === 'dark') {
+            document.body.classList.add('dark');
+            document.documentElement.classList.add('dark');
+          } else {
+            document.body.classList.remove('dark');
+            document.documentElement.classList.remove('dark');
+          }
+          ['lumenboard_guide_theme', 'lumenboard-theme', 'lumenboard_theme', 'lumenboard-help-theme', 'lumenboard-docs-theme', 'lumenboard_help_theme'].forEach(key => {
+            try { localStorage.setItem(key, theme); } catch(e) {}
+          });
+
+          // Sync with page theme icons/text if present
+          const pageIcon = document.getElementById('theme-icon') || document.getElementById('themeIcon');
+          const pageText = document.getElementById('theme-text') || document.getElementById('themeText') || document.getElementById('themeLabel');
+          if (pageIcon) {
+            pageIcon.textContent = theme === 'light' ? '☀' : '🌙';
+          }
+          if (pageText) {
+            pageText.textContent = theme === 'light' ? 'Light' : 'Dark';
+          }
+
+          updateDrawerThemeUI(theme);
+        }
+        window.setUniversalTheme = setUniversalTheme;
+
+        // 5. Create Mobile Backdrop & Drawer
+        let backdrop = document.getElementById('docMobileBackdrop');
+        if (!backdrop) {
+          backdrop = document.createElement('div');
+          backdrop.id = 'docMobileBackdrop';
+          backdrop.className = 'doc-mobile-backdrop';
+          document.body.appendChild(backdrop);
+        }
+
+        let drawer = document.getElementById('docMobileDrawer');
+        if (!drawer) {
+          drawer = document.createElement('div');
+          drawer.id = 'docMobileDrawer';
+          drawer.className = 'doc-mobile-drawer';
+
+          const buyBtn = document.querySelector('.doc-btn-buy-nav') || document.querySelector('.wa-doc-float-btn');
+          const buyUrl = buyBtn ? buyBtn.getAttribute('href') : 'https://api.whatsapp.com/send?phone=917903933705';
+          const buyTitle = buyBtn ? buyBtn.textContent.trim().replace(/^💬\s*/, '') : 'Buy Package';
+          const docTitle = document.title.split('—')[0].trim() || 'Lumenboard Guide';
+          const initialTheme = getCurrentTheme();
+          const isLight = initialTheme === 'light';
+
+          drawer.innerHTML = `
+            <div class="doc-drawer-header">
+              <div class="doc-drawer-title">
+                <span>📑</span> ${docTitle}
+              </div>
+              <button class="doc-drawer-close-btn" id="docDrawerCloseBtn" aria-label="Close menu">✕</button>
+            </div>
+            <div class="doc-drawer-body">
+              <div>
+                <div class="doc-drawer-section-title">🚀 Portals & Quick Actions</div>
+                <div class="doc-drawer-portal-links">
+                  <a href="../../compare.html" class="doc-drawer-portal-link" title="Compare Matrix">
+                    <span class="icon-badge" style="background:linear-gradient(135deg,#f59e0b,#ef4444);color:#fff;">📊</span>
+                    <div>
+                      <div>• 📊 Compare Matrix</div>
+                      <small style="font-size:10.5px;color:#94a3b8;font-weight:500;">25-Version Feature Matrix</small>
+                    </div>
+                  </a>
+                  <a href="${buyUrl}" target="_blank" class="doc-drawer-portal-link" title="${buyTitle}">
+                    <span class="icon-badge" style="background:linear-gradient(135deg,#25d366,#128c7e);color:#fff;">💬</span>
+                    <div>
+                      <div>• 💬 ${buyTitle}</div>
+                      <small style="font-size:10.5px;color:#94a3b8;font-weight:500;">WhatsApp Instant License &amp; Support</small>
+                    </div>
+                  </a>
+                  <button type="button" class="doc-drawer-portal-link doc-drawer-theme-btn" id="drawerThemeToggle" aria-label="Toggle Light/Dark Theme" title="Toggle Light/Dark Theme">
+                    <span class="icon-badge" id="drawerThemeIcon" style="background:${isLight ? 'linear-gradient(135deg, #6366f1, #4f46e5)' : 'linear-gradient(135deg, #f59e0b, #eab308)'};color:#fff;">${isLight ? '◐' : '☀'}</span>
+                    <div>
+                      <div id="drawerThemeTitle">• ${isLight ? '◐ Dark Theme Toggle (#theme-toggle)' : '☀ Light Theme Toggle (#theme-toggle)'}</div>
+                      <small id="drawerThemeDesc" style="font-size:10.5px;color:#94a3b8;font-weight:500;">${isLight ? 'Switch to Dark Theme' : 'Switch to Light Theme'}</small>
+                    </div>
+                  </button>
+                  <a href="https://supportsourcecode.lovable.app/home" class="doc-drawer-portal-link" title="Main Page">
+                    <span class="icon-badge" style="background:linear-gradient(135deg,#02c9de,#0072ff);color:#fff;">🏠</span>
+                    <div>
+                      <div>• 🏠 Main Page Portal</div>
+                      <small style="font-size:10.5px;color:#94a3b8;font-weight:500;">Live Demos &amp; Documentation</small>
+                    </div>
+                  </a>
+                  <a href="https://interactive-media-display.lovable.app/" target="_blank" class="doc-drawer-portal-link" title="App Store">
+                    <span class="icon-badge" style="background:linear-gradient(135deg,#8b5cf6,#ec4899);color:#fff;">🛒</span>
+                    <div>
+                      <div>• 🛒 App Store Portal</div>
+                      <small style="font-size:10.5px;color:#94a3b8;font-weight:500;">Explore 25+ Software Releases</small>
+                    </div>
+                  </a>
+                </div>
+              </div>
+
+              <div>
+                <div class="doc-drawer-section-title">📖 Table of Contents</div>
+                <ul class="doc-drawer-toc-list" id="docDrawerTocList"></ul>
+              </div>
+            </div>
+          `;
+          document.body.appendChild(drawer);
+
+          // Populate Table of Contents from Sidebar or headings
+          const tocList = document.getElementById('docDrawerTocList');
+          const sidebarLinks = document.querySelectorAll('.sidebar a, .guide-sidebar a, .sidebar-nav a, .sidebar-toc a, nav.sidebar a');
+
+          if (sidebarLinks && sidebarLinks.length > 0) {
+            sidebarLinks.forEach((link) => {
+              const href = link.getAttribute('href');
+              if (href && href.startsWith('#')) {
+                const li = document.createElement('li');
+                li.className = 'doc-drawer-toc-item';
+                const a = document.createElement('a');
+                a.href = href;
+                a.innerHTML = link.innerHTML;
+                li.appendChild(a);
+                tocList.appendChild(li);
+              }
+            });
+          } else {
+            const sections = document.querySelectorAll('section[id], .guide-section[id], h2[id]');
+            sections.forEach((sec, idx) => {
+              const id = sec.getAttribute('id');
+              const title = sec.querySelector('h2, h3')?.textContent?.trim() || sec.textContent?.trim()?.substring(0, 30) || id;
+              if (id) {
+                const li = document.createElement('li');
+                li.className = 'doc-drawer-toc-item';
+                li.innerHTML = `<a href="#${id}"><span class="num-badge">${String(idx + 1).padStart(2, '0')}</span> ${title}</a>`;
+                tocList.appendChild(li);
+              }
+            });
+          }
+        }
+
+        // Toggle Drawer Function
+        function toggleDrawer(open) {
+          const isOpen = typeof open === 'boolean' ? open : !drawer.classList.contains('open');
+          drawer.classList.toggle('open', isOpen);
+          backdrop.classList.toggle('open', isOpen);
+          menuBtn.classList.toggle('active', isOpen);
+          menuBtn.innerHTML = isOpen ? '✕' : '☰';
+          document.body.classList.toggle('doc-drawer-open', isOpen);
+          if (isOpen && window.updateDrawerThemeUI) {
+            window.updateDrawerThemeUI(getCurrentTheme());
+          }
+        }
+
+        menuBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          toggleDrawer();
+        });
+
+        backdrop.addEventListener('click', () => toggleDrawer(false));
+        document.getElementById('docDrawerCloseBtn')?.addEventListener('click', () => toggleDrawer(false));
+
+        // Drawer Theme Toggle Click Handler
+        const drawerThemeToggleBtn = document.getElementById('drawerThemeToggle');
+        if (drawerThemeToggleBtn) {
+          drawerThemeToggleBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            const currentTheme = getCurrentTheme();
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            
+            // Try page-specific theme toggler if available
+            const pageThemeBtn = document.querySelector('.navbar #themeToggle, .navbar #theme-toggle, .navbar #themeToggleBtn, .top-nav #themeToggle, .top-nav #theme-toggle, .top-nav #themeToggleBtn, .header-actions #themeToggle, .header-actions #theme-toggle, .header-actions #themeToggleBtn, .header-controls #themeToggle, .header-controls #theme-toggle, .nav-actions #themeToggle, .nav-actions #theme-toggle, .top-nav-actions #themeToggle, .header-actions .btn-icon, .header-actions .btn-icon-toggle, .header-actions .btn-toggle-theme, .header-actions .btn-icon-only');
+
+            if (typeof window.setTheme === 'function') {
+              window.setTheme(newTheme);
+            } else if (typeof window.applyTheme === 'function') {
+              window.applyTheme(newTheme);
+            } else if (pageThemeBtn && pageThemeBtn !== drawerThemeToggleBtn) {
+              pageThemeBtn.click();
+            } else {
+              setUniversalTheme(newTheme);
+            }
+            updateDrawerThemeUI(newTheme);
+          });
+        }
+
+        // Observe external theme changes
+        if (window.MutationObserver) {
+          const observer = new MutationObserver(() => {
+            updateDrawerThemeUI(getCurrentTheme());
+          });
+          observer.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme', 'class'] });
+          observer.observe(document.body, { attributes: true, attributeFilter: ['data-theme', 'class'] });
+        }
+
+        // Smooth TOC scroll on mobile
+        drawer.querySelectorAll('a').forEach(link => {
+          link.addEventListener('click', (e) => {
+            const href = link.getAttribute('href');
+            if (href && href.startsWith('#')) {
+              const target = document.querySelector(href);
+              if (target) {
+                e.preventDefault();
+                toggleDrawer(false);
+                setTimeout(() => {
+                  target.scrollIntoView({ behavior: 'smooth' });
+                }, 120);
+              }
+            } else {
+              toggleDrawer(false);
+            }
+          });
+        });
+
+        // Close on Esc
+        document.addEventListener('keydown', (e) => {
+          if (e.key === 'Escape' && drawer.classList.contains('open')) {
+            toggleDrawer(false);
+          }
+        });
+
+        // =============================================================
+        // 6. Automatic Screen Scroll Up on Mobile Keyboard Pop-up
+        // =============================================================
+        let isKeyboardOpen = false;
+
+        function scrollToFocusedElement(element) {
+          if (!element) element = document.activeElement;
+          if (!element) return;
+
+          const isInput = element.tagName === 'INPUT' || 
+                          element.tagName === 'TEXTAREA' || 
+                          element.isContentEditable || 
+                          element.getAttribute('role') === 'textbox';
+
+          if (!isInput) return;
+
+          // Multi-stage smooth scroll to account for virtual keyboard slide-up animation timing
+          const doScroll = () => {
+            const rect = element.getBoundingClientRect();
+            const header = document.querySelector('.suite-header, header.navbar, header.guide-header, header.top-nav, header.site-header, header.top-navbar, header.header-bar, header.header, .navbar');
+            const headerHeight = header ? header.offsetHeight : 60;
+
+            // Target offset ensuring input is positioned clearly in view with header offset
+            const targetY = window.pageYOffset + rect.top - headerHeight - 20;
+
+            window.scrollTo({
+              top: Math.max(0, targetY),
+              behavior: 'smooth'
+            });
+          };
+
+          doScroll();
+          setTimeout(doScroll, 100);
+          setTimeout(doScroll, 250);
+          setTimeout(doScroll, 450);
+        }
+
+        // Visual Viewport API for accurate virtual keyboard detection
+        if (window.visualViewport) {
+          window.visualViewport.addEventListener('resize', function() {
+            const windowHeight = window.innerHeight;
+            const viewportHeight = window.visualViewport.height;
+            const diff = windowHeight - viewportHeight;
+
+            // Keyboard is considered open if viewport shrinks by > 150px
+            if (diff > 150) {
+              if (!isKeyboardOpen) {
+                isKeyboardOpen = true;
+                document.body.classList.add('keyboard-visible');
+                scrollToFocusedElement();
+              }
+            } else {
+              if (isKeyboardOpen) {
+                isKeyboardOpen = false;
+                document.body.classList.remove('keyboard-visible');
+              }
+            }
+          });
+        }
+
+        // Input Focus Listeners (for all mobile and desktop browsers)
+        document.addEventListener('focusin', function(e) {
+          const target = e.target;
+          if (target && (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.isContentEditable)) {
+            document.body.classList.add('keyboard-visible');
+            scrollToFocusedElement(target);
+          }
+        });
+
+        document.addEventListener('focusout', function(e) {
+          setTimeout(function() {
+            const active = document.activeElement;
+            const stillInput = active && (active.tagName === 'INPUT' || active.tagName === 'TEXTAREA' || active.isContentEditable);
+            
+            if (!stillInput) {
+              if (!window.visualViewport || (window.innerHeight - window.visualViewport.height) <= 150) {
+                isKeyboardOpen = false;
+                document.body.classList.remove('keyboard-visible');
+              }
+            }
+          }, 200);
+        });
+      })();
+    </script>
+
+</body>
+</html>
