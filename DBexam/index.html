@@ -1,0 +1,280 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>SQL Assessment Studio</title>
+  <script>
+    (function(){
+      try {
+        var s = localStorage.getItem('sql_studio_theme');
+        var d = s ? s === 'dark' : (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches);
+        if (d) document.documentElement.classList.add('dark');
+      } catch(_) {}
+    })();
+    window.__pendingLoadMock = false;
+    window.closeWelcomeDialog = function() {
+      var m = document.getElementById('welcomeModal');
+      if (m) {
+        m.classList.remove('show');
+        m.style.display = 'none';
+      }
+    };
+    window.loadMockTestData = function() {
+      window.__pendingLoadMock = true;
+      window.closeWelcomeDialog();
+    };
+  </script>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header>
+    <div class="brand"><span>SQL</span><div><b>SQL Assessment Studio</b><small id="setIdText">Database query assessment workspace</small></div></div>
+    <div class="head-actions">
+      <a href="https://supportsourcecode.lovable.app/home" id="homeBtn" target="_blank" rel="noopener noreferrer">Home</a>
+      <a href="https://interactive-media-display.lovable.app/" id="appStoreBtn" target="_blank" rel="noopener noreferrer">App store</a>
+      <a href="help.html" id="helpBtn" target="_blank" rel="noopener noreferrer" style="font-weight:700;background:rgba(37,99,235,0.25);border-color:#3b82f6;">📖 Help Guide</a>
+      <label id="timerMinutesLabel">Time <input id="timerMinutes" type="number" min="1" max="1440" value="60"></label>
+      <button id="setTimer" type="button">Set</button>
+      <button id="timerLock" type="button" title="Teacher timer lock">🔓 Lock Timer</button>
+      <div class="exam-timer-finish-hud" id="examTimerFinishHud">
+        <span class="timer-icon-badge" title="Assessment Timer">⏱</span>
+        <b id="timer" title="Assessment Timer">01:00:00</b>
+        <button id="finishAssessment" class="danger" hidden title="Finish Assessment" type="button">Finish Assessment</button>
+      </div>
+      <button id="appFullscreen" class="top-fullscreen-btn" type="button" title="Full Screen">
+        <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:4px"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path></svg>Full Screen
+      </button>
+      <button id="appExitFullscreen" class="top-exit-btn" type="button" title="Exit Full Screen" hidden>
+        <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:4px"><path d="M8 3v3a2 2 0 0 1-2 2H3m18 0h-3a2 2 0 0 1-2-2V3m0 18v-3a2 2 0 0 1 2-2h3M3 16h3a2 2 0 0 1 2 2v3"></path></svg>Exit Full Screen
+      </button>
+      <span class="candidate-count" id="candidateQuestionCount">Current/Total question : 1/1</span>
+      <button id="clearCookies" type="button" title="Clear browser cookies and locally stored assessment data">Clear Cookies</button>
+      <button id="themeToggle" class="theme-toggle" type="button" aria-label="Toggle theme" title="Switch theme">
+        <span class="theme-icon-box">
+          <svg class="sun-icon" viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+          <svg class="moon-icon" viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+        </span>
+        <span id="themeLabel">Dark Mode</span>
+      </button>
+      <em id="engineStatus">Loading local SQLite...</em>
+    </div>
+  </header>
+  <nav class="nav-stack">
+    <div class="action-row">
+      <button id="proctorSettings" type="button">Exam Setup</button>
+      <button id="addQuestion" type="button">+ Question</button>
+      <button id="importHtml" class="primary" type="button" disabled>Import HTML</button>
+      <button id="importJson" type="button" disabled title="Import assessment data from a JSON file">Import JSON</button>
+      <button id="exportJson" type="button" disabled title="Export all assessment questions, answers, and data as a JSON file">Export JSON</button>
+      <button id="importSet" type="button" title="Import Assessment ZIP">Import ZIP</button>
+      <button id="exportSet" type="button" title="Export Assessment ZIP">Export Set ZIP</button>
+      <div class="export-menu">
+        <button id="exportHtml" type="button">Export HTML</button>
+        <button id="exportPdf" type="button">Export PDF</button>
+        <button id="exportWord" type="button">Export Word</button>
+      </div>
+      <button id="deleteQuestion" class="danger" type="button" disabled>Delete Question</button>
+      <span id="questionCount">No questions loaded</span>
+      <input id="htmlFile" type="file" accept=".html,.htm,text/html" hidden>
+      <input id="jsonFile" type="file" accept=".json,application/json" hidden>
+      <input id="setFile" type="file" accept=".zip,application/zip" hidden>
+    </div>
+    <div class="question-row">
+      <button id="previous" title="Previous question" type="button">Previous</button>
+      <button id="questionTitle" class="question-picker" disabled title="Click to choose question number" type="button">
+        <span id="questionPickerText">No question loaded</span>
+      </button>
+      <button id="next" title="Next question" type="button">Next</button>
+
+      <div id="questionPalette" class="question-palette">
+        <div class="palette-head">
+          <b>Choose Question Number</b>
+          <span id="paletteCount">0 questions</span>
+          <button id="closePalette" type="button" style="height:22px;padding:0 7px;font-size:11px" title="Close">✕ Close</button>
+        </div>
+        <div id="questionNumbers" class="question-numbers"></div>
+      </div>
+    </div>
+  </nav>
+
+  <section id="empty" class="empty-state">import html file here exported from the SQL question creator website</section>
+
+  <main id="workspace" hidden>
+    <aside class="problem-panel" id="problemPanel">
+      <div class="panel-title"><b id="questionHeading">Question</b><span>SQL challenge</span></div>
+      <div class="problem-body">
+        <div id="prompt" class="problem-text" hidden></div>
+        <img id="questionImage" class="question-image" alt="Question reference image">
+        <div id="expected"></div>
+      </div>
+    </aside>
+
+    <div id="mainResizer" class="main-resizer" role="separator" aria-orientation="vertical" aria-label="Resize question and SQL workspace area" title="Drag left/right to shift vertical line, double-click for 50/50 split">
+      <div class="v-resizer-hint"><span class="v-resizer-grip"><span></span><span></span><span></span></span></div>
+      <div class="v-resizer-actions">
+        <button type="button" id="splitLeftBtn" title="Shift Left: Maximize Query & Workflow" class="v-split-btn">◀ Left</button>
+        <button type="button" id="splitMainMidBtn" title="Balanced View: 50:50 Question & Code" class="v-split-btn active">⬌ 50:50</button>
+        <button type="button" id="splitRightBtn" title="Shift Right: Maximize Question Statement" class="v-split-btn">▶ Right</button>
+      </div>
+    </div>
+
+    <article class="work" id="workSection">
+      <div id="editorCard" class="editor-card">
+        <div class="editor-top">
+          <div><b>SQL Query Editor</b><small id="attempts">Checks: 0</small></div>
+          <div class="editor-tools">
+            <span class="live-status">SQLite database</span>
+            <button id="queryFullscreen" type="button" title="Full Screen">Full Screen</button>
+            <button id="queryExit" type="button" hidden title="Exit Full Screen">Exit Full Screen</button>
+          </div>
+        </div>
+        <div class="code-wrap"><div class="line-numbers">1</div><textarea id="query" aria-label="SQL query" spellcheck="false"></textarea></div>
+      </div>
+
+      <div id="workResizer" class="work-resizer" role="separator" aria-orientation="horizontal" aria-label="Resize SQL query area and workflow / test cases" title="Drag up/down to shift horizontal line, double-click for 50/50 split">
+        <div class="resizer-hint"><span class="resizer-grip"><span></span><span></span><span></span></span><span class="resizer-label">↕ Shift / Resize Bar</span></div>
+        <div class="resizer-actions">
+          <button type="button" id="splitTopBtn" title="Shift to Top: Maximize Workflow / Results / Test Cases" class="split-btn">▲ Top (Workflow/Tests)</button>
+          <button type="button" id="splitMidBtn" title="Balanced View: See both Query and Workflow at the same time" class="split-btn active">⬍ 50:50 (Both)</button>
+          <button type="button" id="splitDownBtn" title="Shift Down: Maximize SQL Query Editor" class="split-btn">▼ Down (Query)</button>
+        </div>
+      </div>
+
+      <div class="runbar"><div><button id="runQuery" type="button">Run Query</button><button id="checkQuery" class="primary" type="button">Check Query</button></div></div>
+      <div class="bottom">
+        <div class="tabs"><button class="active" data-pane="schemaPane" type="button">View Schema</button><button data-pane="outputPane" type="button">Output</button><button data-pane="testsPane" type="button">Test Cases</button></div>
+        <section id="schemaPane" class="pane on"><div class="ph"><b>Workflow</b><div class="schema-actions"><div id="schemaZoomControls" class="schema-zoom-controls"><button id="schemaZoomOut" type="button" title="Zoom Out (-)" aria-label="Zoom Out"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"></line></svg></button><span id="schemaZoomLevel" class="zoom-level" title="Current Zoom">100%</span><button id="schemaZoomIn" type="button" title="Zoom In (+)" aria-label="Zoom In"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg></button><button id="schemaZoom1to1" type="button" title="Original Quality 100% (1)">1:1</button><button id="schemaZoomFit" type="button" title="Fit to Screen (F)">Fit</button><button id="schemaZoomReset" type="button" title="Reset (0)">Reset</button><span class="schema-hint">Scroll to zoom • Drag to shift</span></div><span class="schema-note">Second image from question</span><button id="schemaFullscreen" type="button">Full Screen</button><button id="schemaExit" type="button" hidden>Exit Full Screen</button></div></div><div id="sa"><div id="schemaCanvas" class="schema-canvas"><img id="schemaImage" alt="Workflow reference image"></div></div></section>
+        <section id="outputPane" class="pane"><div class="ph"><b>Output</b><div class="schema-actions"><button id="outputFullscreen" type="button">Full Screen</button><button id="outputExit" type="button" hidden>Exit Full Screen</button></div></div><div id="output" class="result">Run a query to preview the result.</div></section>
+        <section id="testsPane" class="pane"><div class="ph"><b>Test Cases</b><div class="schema-actions"><button id="testsFullscreen" type="button">Full Screen</button><button id="testsExit" type="button" hidden>Exit Full Screen</button></div></div><div id="tests" class="result">Check Query compares the imported solution result.</div></section>
+      </div>
+    </article>
+  </main>
+
+  <button id="mobileNextBtn" class="mobile-next-btn" type="button" title="Go to Next Question">
+    <span class="mobile-next-count-badge" id="mobileQuestionCount">1/1</span>
+    <span class="mobile-next-label">Next</span>
+    <span class="mobile-next-arrow">›</span>
+  </button>
+
+  <div id="welcomeModal" class="modal welcome-modal show" onclick="if(event.target===this){if(window.closeWelcomeDialog)window.closeWelcomeDialog();else{this.classList.remove('show');this.style.display='none';}}">
+    <div class="welcome-card" onclick="event.stopPropagation()">
+      <button id="closeWelcomeModal" class="welcome-close-btn" type="button" title="Close" aria-label="Close dialog" onclick="if(window.closeWelcomeDialog)window.closeWelcomeDialog();else{var m=document.getElementById('welcomeModal');if(m){m.classList.remove('show');m.style.display='none';}}">✕</button>
+      <div class="welcome-icon">🖥️</div>
+      <h2 class="welcome-title">Welcome to IDE</h2>
+      <div class="welcome-banner">
+        <span class="welcome-banner-icon">💡</span>
+        <p class="welcome-highlight">For better experience , Try it in desktop mode</p>
+      </div>
+      <div class="welcome-subtext"><span>👇</span> Click to know more</div>
+      <div class="welcome-btn-group">
+        <a href="help.html" target="_blank" rel="noopener noreferrer" class="welcome-action-btn btn-wow-purple">
+          <span class="btn-icon-wrapper">📖</span>
+          <span class="btn-label">How to use this app</span>
+          <span class="btn-arrow">↗</span>
+        </a>
+        <button id="tryMockData" type="button" class="welcome-action-btn btn-wow-teal" onclick="if(window.loadMockTestData)window.loadMockTestData();else if(window.closeWelcomeDialog)window.closeWelcomeDialog();">
+          <span class="btn-icon-wrapper">🧪</span>
+          <span class="btn-label">Try with mock test data</span>
+          <span class="btn-arrow">›</span>
+        </button>
+      </div>
+      <div class="welcome-footer">
+        <button id="dismissWelcomeModal" class="welcome-dismiss-btn" type="button" onclick="if(window.closeWelcomeDialog)window.closeWelcomeDialog();else{var m=document.getElementById('welcomeModal');if(m){m.classList.remove('show');m.style.display='none';}}">Continue to App ›</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="ownerModal" class="modal">
+    <div class="setup-card">
+      <h2>Exam Owner Setup</h2>
+      <label>Owner email<input id="ownerEmail" type="email" placeholder="owner@company.com"></label>
+      <label>Submission window after exam (minutes)<input id="submissionMinutes" type="number" min="1" max="1440" value="10"></label>
+      <p class="privacy-note">Camera evidence is collected only after the candidate reads the notice and gives consent. This app does not perform face, eye, emotion, or cheating detection.</p>
+      <div class="ready-actions">
+        <button id="ownerCancel" type="button">Cancel</button>
+        <button id="ownerSave" class="primary" type="button">Save Setup</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="candidateModal" class="modal">
+    <div class="setup-card">
+      <h2>Candidate verification</h2>
+      <label>Full Name<input id="candidateName" autocomplete="name" required></label>
+      <label>Roll Number<input id="candidateRoll" required></label>
+      <div class="time-grid">
+        <label>Current date<input id="candidateDate" readonly></label>
+        <label>Hour<input id="candidateHour" readonly></label>
+        <label>Minute<input id="candidateMinute" readonly></label>
+      </div>
+      <div class="exam-warning">
+        <b>Important exam rules</b>
+        <p>Keep your face visible, stay at the computer, do not use a phone or receive help, and do not copy or paste assessment content. Camera screenshots will be captured during the exam and included in the submission evidence shared with the examiner. Any concern should be reviewed by an authorized examiner. The app does not automatically decide cheating from appearance or eye direction.</p>
+        <p>Do not close the tab or end the exam early. Doing so ends the attempt and prepares the submission package.</p>
+      </div>
+      <label class="consent"><input id="cameraConsent" type="checkbox"> I understand and consent to camera evidence capture for this assessment.</label>
+      <video id="cameraPreview" autoplay muted playsinline></video>
+      <div id="cameraStatus" class="privacy-note">Camera not opened.</div>
+      <label class="consent"><input id="screenConsent" type="checkbox"> I understand and consent to recording the shared exam screen for this assessment.</label>
+      <video id="screenPreview" autoplay muted playsinline></video>
+      <div id="screenStatus" class="privacy-note">Screen recording not opened.</div>
+      <div class="ready-actions">
+        <button id="openCamera" type="button">Open Camera</button>
+        <button id="openScreen" type="button">Share Screen</button>
+        <button id="candidateStart" class="primary" type="button" disabled>Ready to Exam</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="readyModal" class="modal ready-modal">
+    <div>
+      <h2>Ready to start?</h2>
+      <p id="readyText">The locked assessment timer will begin when Start Assessment is selected.</p>
+      <div class="ready-actions">
+        <button id="readyNo" type="button">Not Yet</button>
+        <button id="readyYes" class="primary" type="button">Yes, Start Assessment</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="timeoutModal" class="modal">
+    <div>
+      <h2>Time is out</h2>
+      <p>The configured assessment time has ended.</p>
+      <button class="primary" type="button" onclick="this.closest('.modal').classList.remove('show')">OK</button>
+    </div>
+  </div>
+
+  <div id="toast" role="status"></div>
+
+  <!-- Floating WhatsApp Support & Personal License Widget -->
+  <div id="waFloatingWidget" style="position:fixed;bottom:20px;right:20px;z-index:99999;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;">
+    <div style="position:relative;background:#ffffff;color:#0f172a;border-radius:16px;box-shadow:0 12px 36px rgba(0,0,0,0.25),0 0 0 1px rgba(37,211,102,0.35);padding:14px 16px;max-width:315px;display:flex;flex-direction:column;gap:8px;">
+      <button onclick="document.getElementById('waFloatingWidget').style.display='none'" title="Close" aria-label="Close" style="position:absolute;top:8px;right:8px;background:#f1f5f9;border:1px solid #cbd5e1;color:#64748b;width:24px;height:24px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;line-height:1;transition:all 0.2s;" onmouseover="this.style.background='#ef4444';this.style.color='#fff';this.style.borderColor='#ef4444'" onmouseout="this.style.background='#f1f5f9';this.style.color='#64748b';this.style.borderColor='#cbd5e1'">✕</button>
+      <div style="display:flex;align-items:center;gap:10px;padding-right:20px;">
+        <div style="width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,#25D366,#128C7E);display:flex;align-items:center;justify-content:center;color:#fff;font-size:22px;flex-shrink:0;box-shadow:0 4px 10px rgba(37,211,102,0.4);">
+          <svg style="width:22px;height:22px;fill:#ffffff;" viewBox="0 0 24 24"><path d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21 5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.816 9.816 0 0 0 12.04 2zm5.77 14.18c-.24.68-1.4 1.26-1.95 1.34-.52.08-1.2.12-3.48-.83-2.68-1.12-4.4-3.84-4.54-4.02-.13-.19-1.08-1.44-1.08-2.75 0-1.31.69-1.96.93-2.22.25-.26.54-.33.72-.33.18 0 .36 0 .52.01.17.01.4.06.61.56.22.53.75 1.83.82 1.96.07.14.11.3.02.48-.09.19-.14.3-.27.46-.14.16-.3.35-.42.47-.14.14-.29.3-.12.59.16.29.73 1.21 1.57 1.96 1.08.96 1.99 1.26 2.27 1.4.29.14.45.12.62-.07.17-.19.72-.84.92-1.13.19-.29.39-.24.66-.14.27.1 1.71.81 2.01.96.29.15.49.22.56.34.07.13.07.74-.17 1.42z"/></svg>
+        </div>
+        <div>
+          <div style="font-weight:800;font-size:13px;color:#0f172a;line-height:1.2;">WhatsApp Personal Link</div>
+          <div style="font-size:11px;font-weight:700;color:#16a34a;">+91-7903933705</div>
+        </div>
+      </div>
+      <p style="font-size:11.5px;line-height:1.45;color:#475569;margin:0;">
+        If you want to use your personal link to access this app and feel free to slowness of app. Please WhatsApp us here and wait for response and when we will provide link then you can pay and purchase this app for personal use and take exam.
+      </p>
+      <a href="https://wa.me/917903933705?text=Hello!%20I%20want%20to%20use%20my%20personal%20link%20to%20access%20this%20app%20and%20feel%20free%20to%20slowness%20of%20app.%20Please%20provide%20the%20link." target="_blank" rel="noopener noreferrer" style="display:flex;align-items:center;justify-content:center;gap:6px;background:linear-gradient(135deg,#25D366,#128C7E);color:#ffffff;text-decoration:none;font-size:12px;font-weight:700;padding:8px 12px;border-radius:10px;box-shadow:0 3px 10px rgba(37,211,102,0.3);transition:filter 0.2s;" onmouseover="this.style.filter='brightness(1.1)'" onmouseout="this.style.filter='brightness(1)'">
+        <svg style="width:15px;height:15px;fill:#ffffff;" viewBox="0 0 24 24"><path d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21 5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.816 9.816 0 0 0 12.04 2zm5.77 14.18c-.24.68-1.4 1.26-1.95 1.34-.52.08-1.2.12-3.48-.83-2.68-1.12-4.4-3.84-4.54-4.02-.13-.19-1.08-1.44-1.08-2.75 0-1.31.69-1.96.93-2.22.25-.26.54-.33.72-.33.18 0 .36 0 .52.01.17.01.4.06.61.56.22.53.75 1.83.82 1.96.07.14.11.3.02.48-.09.19-.14.3-.27.46-.14.16-.3.35-.42.47-.14.14-.29.3-.12.59.16.29.73 1.21 1.57 1.96 1.08.96 1.99 1.26 2.27 1.4.29.14.45.12.62-.07.17-.19.72-.84.92-1.13.19-.29.39-.24.66-.14.27.1 1.71.81 2.01.96.29.15.49.22.56.34.07.13.07.74-.17 1.42z"/></svg>
+        <span>Chat on WhatsApp (+91 7903933705)</span>
+      </a>
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+  <script src="https://sql.js.org/dist/sql-wasm.js"></script>
+  <script src="SET-MVC1H43H-data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
