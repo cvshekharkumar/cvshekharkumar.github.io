@@ -271,6 +271,15 @@ function setTestsFullscreen(enabled) {
   setPaneFullscreen('testsPane', enabled);
   if (enabled) showPane('testsPane');
 }
+function setQuestionFullscreen(enabled) {
+  const panel = $('problemPanel');
+  if (!panel) return;
+  panel.classList.toggle('fullscreen', enabled);
+  const fsBtn = $('questionFullscreen');
+  const exitBtn = $('questionExit');
+  if (fsBtn) fsBtn.hidden = enabled;
+  if (exitBtn) exitBtn.hidden = !enabled;
+}
 function setQueryFullscreen(enabled) {
   const card = $('editorCard');
   if (!card) return;
@@ -288,6 +297,8 @@ $('outputFullscreen')?.addEventListener('click', () => setOutputFullscreen(true)
 $('outputExit')?.addEventListener('click', () => setOutputFullscreen(false));
 $('testsFullscreen')?.addEventListener('click', () => setTestsFullscreen(true));
 $('testsExit')?.addEventListener('click', () => setTestsFullscreen(false));
+$('questionFullscreen')?.addEventListener('click', () => setQuestionFullscreen(true));
+$('questionExit')?.addEventListener('click', () => setQuestionFullscreen(false));
 $('queryFullscreen')?.addEventListener('click', () => setQueryFullscreen(true));
 $('queryExit')?.addEventListener('click', () => setQueryFullscreen(false));
 
@@ -361,6 +372,7 @@ window.addEventListener('keydown', event => {
     if ($('schemaPane')?.classList.contains('fullscreen')) { setWorkflowFullscreen(false); return; }
     if ($('outputPane')?.classList.contains('fullscreen')) { setOutputFullscreen(false); return; }
     if ($('testsPane')?.classList.contains('fullscreen')) { setTestsFullscreen(false); return; }
+    if ($('problemPanel')?.classList.contains('fullscreen')) { setQuestionFullscreen(false); return; }
     if ($('editorCard')?.classList.contains('fullscreen')) { setQueryFullscreen(false); return; }
     if (isAppFullscreen()) { setAppFullscreen(false); return; }
   }
@@ -804,6 +816,7 @@ async function initializeEngine() {
 
 function showEmpty(message) {
   setQueryFullscreen(false);
+  setQuestionFullscreen(false);
   $('workspace').hidden = true;
   $('empty').hidden = false;
   $('empty').textContent = message;
@@ -1149,6 +1162,7 @@ function render() {
   }
   resetSchemaView();
   setQueryFullscreen(false);
+  setQuestionFullscreen(false);
   setPaneFullscreen('schemaPane', false);
   setPaneFullscreen('outputPane', false);
   setPaneFullscreen('testsPane', false);
@@ -2143,15 +2157,13 @@ async function finishAssessment(reason) {
   assessmentStarted = false;
   evidenceFrames = [];
 
-  toast('Exam over: Assessment cookies and local session data cleared automatically.');
-
   if (document.fullscreenElement) document.exitFullscreen().catch(() => {});
   document.body.classList.add('submission-complete');
 
   const m = $('timeoutModal');
   if (m) {
     m.querySelector('h2').textContent = reason === 'timeout' ? 'Time is out' : 'Assessment finished';
-    m.querySelector('p').innerHTML = `Share the exported HTML report and ZIP within ${subMinutes} minute(s) to <b>${escapeHtml(ownerMail)}</b>.<br><br><span style="color:#10b981;font-weight:600;">✓ Assessment cookies and session data have been cleared automatically.</span>`;
+    m.querySelector('p').innerHTML = `Share the exported HTML report and ZIP within ${subMinutes} minute(s) to <b>${escapeHtml(ownerMail)}</b>.`;
     const b = m.querySelector('button');
     if (b) {
       b.textContent = 'Return to Import Screen';
@@ -3133,11 +3145,7 @@ async function loadMockTestData() {
       } catch (e) {}
     }
     if (!packet) {
-      // Fallback: prompt user to pick the file directly if browser blocked local file access
-      toast('Please select SET-MVC1H43H-data.json to import mock data');
-      const jsonFileInput = $('jsonFile');
-      if (jsonFileInput) jsonFileInput.click();
-      return;
+      throw Error('Mock test data could not be loaded. Please reload the app.');
     }
 
     // Deep clone to ensure memory data is not mutated across sessions

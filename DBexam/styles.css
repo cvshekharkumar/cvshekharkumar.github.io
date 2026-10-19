@@ -1198,3 +1198,48 @@ body.dark #waFloatingWidget div > div > div:first-child {
 body.dark #waFloatingWidget p {
   color: #cbd5e1 !important;
 }
+
+/* Question statement fullscreen controls match the workflow viewer. */
+.question-actions { display: flex; align-items: center; gap: 7px; }
+.question-actions button { height: 25px; font-size: 10px; }
+#problemPanel.fullscreen {
+  display: flex !important;
+  flex-direction: column !important;
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: 10000 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  max-width: none !important;
+  background: var(--panel) !important;
+  border: 0 !important;
+  overflow: hidden !important;
+}
+#problemPanel.fullscreen .panel-title {
+  height: 48px !important;
+  min-height: 48px !important;
+  flex-shrink: 0 !important;
+  padding: 0 16px !important;
+}
+#problemPanel.fullscreen .problem-body {
+  flex: 1 !important;
+  min-height: 0 !important;
+  padding: 24px !important;
+  overflow: auto !important;
+}
+#problemPanel.fullscreen #questionFullscreen { display: none !important; }
+#problemPanel.fullscreen #questionExit {
+  display: inline-flex !important;
+  background: linear-gradient(135deg, #ef4444, #dc2626) !important;
+  color: #fff !important;
+  border: 1px solid #f87171 !important;
+  font-weight: 700 !important;
+  border-radius: 16px !important;
+  padding: 0 12px !important;
+  box-shadow: 0 2px 8px rgba(220,38,38,.4) !important;
+}
+#problemPanel.fullscreen #questionExit:hover {
+  background: linear-gradient(135deg, #f87171, #ef4444) !important;
+  border-color: #fca5a5 !important;
+  box-shadow: 0 0 14px rgba(239,68,68,.6) !important;
+}

@@ -1127,6 +1127,18 @@ body.dark .rich-editor li {
   margin: 10px 0;
 }
 
+/* The preview may be scaled for fitting the dialog; the saved crop uses native image pixels. */
+.crop-card { max-width: min(760px, 94vw) !important; }
+.crop-card h2 { margin-top: 0; }
+.crop-card > p { margin: 0 0 14px; color: var(--text-dim); }
+.crop-stage { position: relative; display: inline-block; max-width: 100%; background: #0f172a; line-height: 0; user-select: none; touch-action: none; }
+.crop-stage img { display: block; max-width: min(100%, 680px); max-height: min(56vh, 500px); width: auto; height: auto; margin: 0; border-radius: 0; box-shadow: none; }
+.crop-selection { position: absolute; border: 2px solid #38bdf8; box-shadow: 0 0 0 9999px rgba(2, 6, 23, .55); cursor: move; box-sizing: border-box; }
+.crop-handle { position: absolute; width: 13px; height: 13px; background: #f8fafc; border: 2px solid #0284c7; border-radius: 50%; z-index: 1; }
+.crop-handle.nw { left: -8px; top: -8px; cursor: nwse-resize; }.crop-handle.ne { right: -8px; top: -8px; cursor: nesw-resize; }.crop-handle.sw { left: -8px; bottom: -8px; cursor: nesw-resize; }.crop-handle.se { right: -8px; bottom: -8px; cursor: nwse-resize; }
+.crop-dimensions { min-height: 1.4em; font-variant-numeric: tabular-nums; }
+body.dark .crop-card > p { color: #cbd5e1; }
+
 .rich-editor table {
   border-collapse: collapse;
   width: 100%;
@@ -3043,8 +3055,11 @@ body:has(#candidateModal.show) #waFloatingWidget {
 }
 
 .candidate-running #deleteQuestion,
+.candidate-running #deleteQuestionTop,
 .candidate-sequential #deleteQuestion,
-body:has(#candidateModal.show) #deleteQuestion {
+.candidate-sequential #deleteQuestionTop,
+body:has(#candidateModal.show) #deleteQuestion,
+body:has(#candidateModal.show) #deleteQuestionTop {
   display: none !important;
 }
 

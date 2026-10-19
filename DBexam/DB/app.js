@@ -586,6 +586,93 @@ problem.addEventListener('contextmenu',e=>{const m=e.target.closest('video,img')
 document.addEventListener('click',e=>{if(!e.target.closest('#mediaContext')&&!e.target.closest('#problem'))$('mediaContext').classList.remove('show')});
 function removeSelectedMedia(){if(!selectedMedia)return;let target=selectedMedia.closest('figure')||selectedMedia;target.remove();selectedMedia=null;$('mediaContext').classList.remove('show');if(typeof problemHistory!=='undefined')problemHistory.pushState(problem.innerHTML);saveCurrent();toast('Media deleted')}
 $('deleteMedia').onclick=removeSelectedMedia;
+function openQuestionImageCropper(image){
+  if(document.getElementById('imageCropOverlay'))return;
+  const cropper=document.createElement('section');
+  cropper.id='imageCropOverlay';
+  cropper.className='image-crop-overlay';
+  cropper.setAttribute('role','dialog');
+  cropper.setAttribute('aria-modal','true');
+  cropper.setAttribute('aria-label','Crop question image');
+  cropper.innerHTML=`<div class="image-crop-dialog"><header class="image-crop-toolbar"><div><b>Crop Question Image</b><small>Drag over the part of the image to keep. The result keeps the original pixel resolution.</small></div><div class="image-crop-actions"><button type="button" data-crop-cancel>Cancel</button><button type="button" data-crop-apply class="primary" disabled>Apply Crop</button></div></header><div class="image-crop-stage"><div class="image-crop-canvas-wrap"><canvas aria-label="Image crop area"></canvas><div class="image-crop-selection" hidden></div></div></div></div>`;
+  document.body.appendChild(cropper);
+  const canvas=cropper.querySelector('canvas');
+  const selectionBox=cropper.querySelector('.image-crop-selection');
+  const applyButton=cropper.querySelector('[data-crop-apply]');
+  const close=()=>cropper.remove();
+  cropper.querySelector('[data-crop-cancel]').onclick=close;
+  cropper.addEventListener('pointerdown',e=>{if(e.target===cropper)close()});
+  const maxWidth=Math.min(Math.max(320,window.innerWidth-80),1100);
+  const maxHeight=Math.max(240,window.innerHeight-190);
+  const displayScale=Math.min(1,maxWidth/image.naturalWidth,maxHeight/image.naturalHeight);
+  canvas.width=Math.max(1,Math.round(image.naturalWidth*displayScale));
+  canvas.height=Math.max(1,Math.round(image.naturalHeight*displayScale));
+  canvas.getContext('2d').drawImage(image,0,0,canvas.width,canvas.height);
+  let start=null,crop=null;
+  const point=e=>{
+    const rect=canvas.getBoundingClientRect();
+    return {x:Math.max(0,Math.min(canvas.width,(e.clientX-rect.left)*canvas.width/rect.width)),y:Math.max(0,Math.min(canvas.height,(e.clientY-rect.top)*canvas.height/rect.height))};
+  };
+  const showSelection=()=>{
+    if(!crop)return;
+    selectionBox.hidden=false;
+    selectionBox.style.left=(crop.x/canvas.width*100)+'%';
+    selectionBox.style.top=(crop.y/canvas.height*100)+'%';
+    selectionBox.style.width=(crop.width/canvas.width*100)+'%';
+    selectionBox.style.height=(crop.height/canvas.height*100)+'%';
+    applyButton.disabled=crop.width<5||crop.height<5;
+  };
+  canvas.addEventListener('pointerdown',e=>{
+    if(e.button!==undefined&&e.button!==0)return;
+    start=point(e);crop={x:start.x,y:start.y,width:0,height:0};
+    canvas.setPointerCapture(e.pointerId);showSelection();
+  });
+  canvas.addEventListener('pointermove',e=>{
+    if(!start)return;
+    const end=point(e);crop={x:Math.min(start.x,end.x),y:Math.min(start.y,end.y),width:Math.abs(end.x-start.x),height:Math.abs(end.y-start.y)};showSelection();
+  });
+  const finishSelection=e=>{
+    if(!start)return;
+    start=null;
+    if(canvas.hasPointerCapture(e.pointerId))canvas.releasePointerCapture(e.pointerId);
+  };
+  canvas.addEventListener('pointerup',finishSelection);
+  canvas.addEventListener('pointercancel',finishSelection);
+  applyButton.onclick=()=>{
+    if(!crop||crop.width<5||crop.height<5)return;
+    if(typeof isStatementLocked==='function'&&isStatementLocked()){toast('Unlock the problem statement before cropping an image');close();return;}
+    try{
+      const scaleX=image.naturalWidth/canvas.width,scaleY=image.naturalHeight/canvas.height;
+      const sourceX=Math.max(0,Math.floor(crop.x*scaleX));
+      const sourceY=Math.max(0,Math.floor(crop.y*scaleY));
+      const sourceRight=Math.min(image.naturalWidth,Math.ceil((crop.x+crop.width)*scaleX));
+      const sourceBottom=Math.min(image.naturalHeight,Math.ceil((crop.y+crop.height)*scaleY));
+      const sourceWidth=Math.max(1,sourceRight-sourceX);
+      const sourceHeight=Math.max(1,sourceBottom-sourceY);
+      const output=document.createElement('canvas');
+      output.width=sourceWidth;
+      output.height=sourceHeight;
+      const outputContext=output.getContext('2d');
+      outputContext.imageSmoothingEnabled=false;
+      outputContext.drawImage(image,sourceX,sourceY,sourceWidth,sourceHeight,0,0,sourceWidth,sourceHeight);
+      image.src=output.toDataURL('image/png');
+      image.removeAttribute('width');
+      image.removeAttribute('height');
+      if(typeof problemHistory!=='undefined')problemHistory.pushState(problem.innerHTML);
+      saveCurrent();
+      toast('Image cropped');
+      close();
+    }catch(err){toast('This image cannot be cropped. Use an uploaded or pasted image instead.');}
+  };
+  cropper.querySelector('[data-crop-cancel]').focus();
+}
+$('cropImage').onclick=()=>{
+  if(typeof isStatementLocked==='function'&&isStatementLocked())return toast('Unlock the problem statement before cropping an image');
+  const image=selectedMedia&&selectedMedia.tagName==='IMG'?selectedMedia:null;
+  if(!image)return toast('Select an image in the question first, then choose Crop Image');
+  if(!image.complete||!image.naturalWidth)return toast('Wait for the image to finish loading, then crop it');
+  openQuestionImageCropper(image);
+};
 const mediaFullscreenButton=document.createElement('button');
 mediaFullscreenButton.id='fullscreenMedia';
 mediaFullscreenButton.type='button';
@@ -2794,7 +2881,7 @@ $('jsonFile').onchange=async e=>{
     <div id="mcqOptions" class="mcq-options"></div>`;
 
   const runbar=document.querySelector('.runbar');
-  runbar.innerHTML=`<div class="mcq-type-control"><label>Question type <select id="mcqType"><option value="single">Single choice</option><option value="multiple">Multiple choice</option></select></label><button id="typeLock" title="Lock or unlock question type">🔓 Lock Editing</button></div><div><button id="finishAssessment" class="danger" hidden>Finish Assessment</button><button id="deleteLock" title="Lock or unlock question deletion">🔓 Lock Editing</button><button id="deleteQuestion" class="danger">Delete</button></div>`;
+  runbar.innerHTML=`<div class="mcq-type-control"><label>Question type <select id="mcqType"><option value="single">Single choice</option><option value="multiple">Multiple choice</option></select></label><button id="typeLock" title="Lock or unlock question type">🔓 Lock Editing</button></div><div><button id="finishAssessment" class="danger" hidden>Finish Assessment</button><button id="deleteLock" title="Lock or unlock question deletion">🔓 Lock Editing</button></div>`;
 
   document.querySelector('.tabs').innerHTML=`<button data-tab="tests" class="active">Correct Answer</button><button data-tab="history">History</button>`;
   document.body.insertAdjacentHTML('beforeend',`<div id="mcqLegacy" hidden><select id="languageSelect"><option value="python">Python 3</option><option value="c">C</option><option value="cpp">C++</option></select><span id="compilerStatus"></span><button id="codeFullscreen"></button><div id="lines"></div><textarea id="code"></textarea><input id="customToggle" type="checkbox"><button id="customInputLock"></button><button id="runCustom"></button><button id="runTests"></button><button id="testLock"></button><button id="addTest"></button><span id="testCount"></span><span id="testSummary"></span><div id="testList"></div></div>`);

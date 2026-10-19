@@ -6,7 +6,7 @@ const FRONT_DEFAULTS = {
   javascript: "document.getElementById('actionBtn')?.addEventListener('click', () => {\n  console.log('Button clicked');\n});"
 };
 
-const SAMPLE_MOCK_DATA = {
+const SAMPLE_MOCK_DATA = (typeof window !== 'undefined' && window.SET_MUK5KO3I_ALL_QUESTIONS) ? window.SET_MUK5KO3I_ALL_QUESTIONS : {
   "format": "frontend-assessment-complete-json",
   "version": 1,
   "exportedAt": "2026-09-27T18:29:42.170Z",
@@ -680,7 +680,7 @@ $('customToggle').onchange=()=>{state.customInputChecked=$('customToggle').check
 $('customInputLock').onclick=async()=>{if(!state.customInputLocked){state.customInputChecked=$('customToggle').checked;const p=prompt(`Freeze Custom Input as ${state.customInputChecked?'checked':'not checked'}. Create password:`,'');if(!p||p.length<4)return toast('Use at least 4 characters');if(prompt('Confirm password:','')!==p)return toast('Passwords do not match');state.customInputLockHash=await pinHash(p);state.customInputLocked=true}else{const p=prompt('Enter Custom Input password:','');if(p===null)return;if(await pinHash(p)!==state.customInputLockHash)return toast('Incorrect password');state.customInputLocked=false}applyCustomFreeze();save()};
 $('addTest').onclick=()=>{q().tests.push({input:'',expected:'',studentDefined:true});renderTests17();save()};
 
-function applyCandidateSecurity(){document.body.classList.toggle('candidate-running',candidateRunning);$('deleteQuestion').disabled=packageProtected||candidateRunning;$('deleteQuestion').hidden=packageProtected||candidateRunning;if(candidateRunning){$('addQuestion').disabled=true;$('importQuestion').disabled=true;$('exportQuestion').disabled=true;if($('importHtml'))$('importHtml').disabled=true}}
+function applyCandidateSecurity(){document.body.classList.toggle('candidate-running',candidateRunning);['deleteQuestion','deleteQuestionTop'].forEach(id=>{const button=$(id);if(button){button.disabled=packageProtected||candidateRunning;button.hidden=packageProtected||candidateRunning}});if(candidateRunning){$('addQuestion').disabled=true;$('importQuestion').disabled=true;$('exportQuestion').disabled=true;if($('importHtml'))$('importHtml').disabled=true}}
 async function hashPack(p,s){return pinHash(s+'|'+p)}
 async function buildAssessmentZip(security,fileName){saveCurrent();const zip=new JSZip();const manifest={...state,questions:undefined,questionIds:state.questions.map(x=>x.id),packageSecurity:security};zip.file('assessment.json',JSON.stringify(manifest,null,2));state.questions.forEach((x,i)=>zip.file(`questions/${String(i+1).padStart(3,'0')}-${x.id}.json`,JSON.stringify(x,null,2)));zip.file('README.txt','Import this assessment ZIP using Browser Assessment IDE.');download(await zip.generateAsync({type:'blob',compression:'DEFLATE'}),fileName||`${state.setId}.zip`)}
 $('exportSet').onclick=async()=>{saveCurrent();const use=confirm('Do you want to save password?\n\nOK = Save password\nCancel = Export without password');let sec={protected:false,deleteQuestionsAllowed:true};if(use){const p=prompt('Teacher: enter ZIP password (minimum 4 characters):','');if(!p||p.length<4)return toast('Use at least 4 characters');if(prompt('Confirm ZIP password:','')!==p)return toast('Passwords do not match');const salt=rid();sec={protected:true,salt,hash:await hashPack(p,salt),deleteQuestionsAllowed:false}}else if(!confirm('Export without password?'))return;await buildAssessmentZip(sec,`${state.setId}.zip`)};
@@ -899,7 +899,7 @@ function setCandidateToolbarLocked(locked){
   controls.forEach(id=>{const el=$(id);if(el){el.disabled=locked;el.setAttribute('aria-disabled',String(locked))}});
   $('finishAssessment').hidden=!locked;
   document.body.classList.toggle('candidate-running',locked);
-  $('deleteQuestion').hidden=locked;$('deleteQuestion').disabled=locked;
+  ['deleteQuestion','deleteQuestionTop'].forEach(id=>{const button=$(id);if(button){button.hidden=locked;button.disabled=locked}});
   setExamNavLocked(locked);
 }
 function startPersistentCountdown(deadline){
@@ -2010,13 +2010,30 @@ if ($('htmlImportFile')) {
 
 /* Welcome / Desktop mode recommendation dialog & Mock Data Import */
 async function loadSampleMockData() {
-  try {
-    const res = await fetch('SET-MUK5KO3I-all-questions.json');
-    if (res.ok) return await res.json();
-  } catch (err) {
-    console.warn('Fetch local mock data failed, using embedded mock data:', err);
+  // 1. Prefer preloaded SET-MUK5KO3I-all-questions.js (works instantly without CORS on file:// and offline)
+  if (typeof window !== 'undefined' && window.SET_MUK5KO3I_ALL_QUESTIONS) {
+    return JSON.parse(JSON.stringify(window.SET_MUK5KO3I_ALL_QUESTIONS));
   }
-  return JSON.parse(JSON.stringify(SAMPLE_MOCK_DATA));
+
+  // 2. Fetch local or server SET-MUK5KO3I-all-questions.json (for http/https/localhost)
+  try {
+    const res = await fetch('SET-MUK5KO3I-all-questions.json', { cache: 'no-store' });
+    if (res.ok) {
+      const data = await res.json();
+      if (data && (data.assessment || data.questions)) {
+        return data;
+      }
+    }
+  } catch (err) {
+    console.warn('Fetch local SET-MUK5KO3I-all-questions.json failed:', err);
+  }
+
+  // 3. Fallback to embedded SAMPLE_MOCK_DATA if available
+  if (typeof SAMPLE_MOCK_DATA !== 'undefined' && SAMPLE_MOCK_DATA) {
+    return JSON.parse(JSON.stringify(SAMPLE_MOCK_DATA));
+  }
+
+  throw new Error('Unable to locate or read SET-MUK5KO3I-all-questions.json');
 }
 
 function closeWelcomeDialog() {
@@ -2033,10 +2050,15 @@ async function handleTryMockData(e) {
   if (candidateRunning) return;
   try {
     const packet = await loadSampleMockData();
-    applyCompleteJsonPacket(packet, true);
+    applyCompleteJsonPacket(packet, false);
+    toast(`Successfully imported ${state.questions.length} questions from SET-MUK5KO3I-all-questions.json`);
   } catch (err) {
     console.error('Failed to load mock data:', err);
     toast('Error loading mock data: ' + (err.message || err));
+    if ($('allJsonFile')) {
+      toast('Please select SET-MUK5KO3I-all-questions.json to import');
+      $('allJsonFile').click();
+    }
   } finally {
     closeWelcomeDialog();
   }
@@ -2530,5 +2552,146 @@ if (document.readyState === 'loading') {
   initMobileKeyboardAutoScroll();
   initAllIDEButtonListeners();
 }
+
+/* Native-resolution question-image cropper. The canvas uses a 1:1 source-to-output
+   draw, then saves as lossless PNG so the crop never reduces image detail. */
+(() => {
+  const modal = $('cropModal'), stage = $('cropStage'), preview = $('cropPreview');
+  const selection = $('cropSelection'), dimensions = $('cropDimensions');
+  const cropButton = $('cropImage');
+  if (!modal || !stage || !preview || !selection || !cropButton) return;
+
+  const minimum = 0.04;
+  let target = null, rect = { x: 0.1, y: 0.1, w: 0.8, h: 0.8 }, gesture = null;
+  const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
+
+  function renderSelection() {
+    selection.style.left = `${rect.x * 100}%`;
+    selection.style.top = `${rect.y * 100}%`;
+    selection.style.width = `${rect.w * 100}%`;
+    selection.style.height = `${rect.h * 100}%`;
+    if (preview.naturalWidth && preview.naturalHeight) {
+      const width = Math.max(1, Math.round(preview.naturalWidth * rect.w));
+      const height = Math.max(1, Math.round(preview.naturalHeight * rect.h));
+      dimensions.textContent = `Crop output: ${width} × ${height} px (native-resolution, lossless PNG)`;
+    }
+  }
+
+  function closeCrop() {
+    modal.classList.remove('show');
+    gesture = null;
+    target = null;
+  }
+
+  function selectedImage() {
+    if (selectedMedia?.tagName === 'IMG') return selectedMedia;
+    return selectedMedia?.querySelector?.('img') || null;
+  }
+
+  function openCrop() {
+    if (typeof isStatementLocked === 'function' && isStatementLocked()) {
+      toast('Unlock the problem statement before cropping an image');
+      return;
+    }
+    target = selectedImage();
+    if (!target) {
+      toast('Select an image in the question, then choose Crop Image');
+      return;
+    }
+    if (!target.complete || !target.naturalWidth) {
+      toast('Please wait for the image to finish loading');
+      return;
+    }
+    rect = { x: 0.1, y: 0.1, w: 0.8, h: 0.8 };
+    preview.onload = renderSelection;
+    preview.src = target.currentSrc || target.src;
+    modal.classList.add('show');
+    requestAnimationFrame(renderSelection);
+  }
+
+  function startGesture(event) {
+    if (event.button !== undefined && event.button !== 0) return;
+    event.preventDefault();
+    const handle = event.target.closest('[data-crop-handle]')?.dataset.cropHandle || 'move';
+    gesture = { handle, startX: event.clientX, startY: event.clientY, rect: { ...rect } };
+    stage.setPointerCapture?.(event.pointerId);
+  }
+
+  function updateGesture(event) {
+    if (!gesture) return;
+    const bounds = stage.getBoundingClientRect();
+    if (!bounds.width || !bounds.height) return;
+    const dx = (event.clientX - gesture.startX) / bounds.width;
+    const dy = (event.clientY - gesture.startY) / bounds.height;
+    const start = gesture.rect;
+    let { x, y, w, h } = start;
+    if (gesture.handle === 'move') {
+      x = clamp(start.x + dx, 0, 1 - start.w);
+      y = clamp(start.y + dy, 0, 1 - start.h);
+    } else {
+      if (gesture.handle.includes('w')) {
+        x = clamp(start.x + dx, 0, start.x + start.w - minimum);
+        w = start.x + start.w - x;
+      }
+      if (gesture.handle.includes('e')) w = clamp(start.w + dx, minimum, 1 - start.x);
+      if (gesture.handle.includes('n')) {
+        y = clamp(start.y + dy, 0, start.y + start.h - minimum);
+        h = start.y + start.h - y;
+      }
+      if (gesture.handle.includes('s')) h = clamp(start.h + dy, minimum, 1 - start.y);
+    }
+    rect = { x, y, w, h };
+    renderSelection();
+  }
+
+  async function applyCrop() {
+    if (!target || !preview.naturalWidth || !preview.naturalHeight) return;
+    const sourceWidth = preview.naturalWidth, sourceHeight = preview.naturalHeight;
+    const sx = clamp(Math.round(sourceWidth * rect.x), 0, sourceWidth - 1);
+    const sy = clamp(Math.round(sourceHeight * rect.y), 0, sourceHeight - 1);
+    const ex = clamp(Math.round(sourceWidth * (rect.x + rect.w)), sx + 1, sourceWidth);
+    const ey = clamp(Math.round(sourceHeight * (rect.y + rect.h)), sy + 1, sourceHeight);
+    const canvas = document.createElement('canvas');
+    canvas.width = ex - sx;
+    canvas.height = ey - sy;
+    const context = canvas.getContext('2d', { alpha: true });
+    context.imageSmoothingEnabled = false;
+    context.drawImage(preview, sx, sy, canvas.width, canvas.height, 0, 0, canvas.width, canvas.height);
+    const apply = async blob => {
+      if (!blob) { toast('Unable to crop this image'); return; }
+      target.src = await readData(blob);
+      target.removeAttribute('srcset');
+      target.classList.remove('selected-media');
+      selectedMedia = target;
+      target.classList.add('selected-media');
+      saveCurrent();
+      closeCrop();
+      toast(`Image cropped at ${canvas.width} × ${canvas.height} px`);
+    };
+    canvas.toBlob(apply, 'image/png');
+  }
+
+  cropButton.addEventListener('click', openCrop);
+  $('cropCancel').addEventListener('click', closeCrop);
+  $('cropReset').addEventListener('click', () => { rect = { x: 0.1, y: 0.1, w: 0.8, h: 0.8 }; renderSelection(); });
+  $('cropApply').addEventListener('click', applyCrop);
+  stage.addEventListener('pointerdown', startGesture);
+  stage.addEventListener('pointermove', updateGesture);
+  stage.addEventListener('pointerup', () => { gesture = null; });
+  stage.addEventListener('pointercancel', () => { gesture = null; });
+  modal.addEventListener('pointerdown', event => { if (event.target === modal) closeCrop(); });
+  document.addEventListener('keydown', event => { if (event.key === 'Escape' && modal.classList.contains('show')) closeCrop(); });
+})();
+
+// The action-row control deletes exactly the question currently open in the editor.
+if ($('deleteQuestionTop')) $('deleteQuestionTop').onclick = () => {
+  if (packageProtected || candidateRunning) return toast('Question deletion is unavailable during an assessment');
+  if (state.questions.length < 2) return toast('At least one question is required');
+  if (confirm('Delete this question?')) {
+    state.questions.splice(current, 1);
+    openQuestion(Math.min(current, state.questions.length - 1));
+    save();
+  }
+};
 
 
