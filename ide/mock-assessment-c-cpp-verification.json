@@ -1,0 +1,15 @@
+{
+  "assessmentFile": "C:\\Users\\hp\\Desktop\\Ai work\\AI work\\cvshekharkumar.github.io-main\\ide\\SET-MUJDFHP0-all-questions.json",
+  "setId": "SET-MUJDFHP0",
+  "questions": 30,
+  "testCases": 120,
+  "languages": [
+    "c",
+    "cpp"
+  ],
+  "executions": 240,
+  "passed": 240,
+  "failed": 0,
+  "verifiedAt": "2026-10-20T11:10:23.203Z",
+  "failures": []
+}

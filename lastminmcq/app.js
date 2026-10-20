@@ -419,6 +419,112 @@ function setupAppFullscreen(){const btn=$('appFullscreen');if(btn)btn.onclick=to
 initThemeHandler();load();setupHeaderLinksLock();setupAppFullscreen();
 /* v4: rich media selection/deletion, undo/redo, and sequential reports */
 let selectedMedia=null;
+// Question-image cropper. The preview may be scaled to fit the dialog, but the
+// canvas is always sized from the image's natural pixels before saving.
+const cropButton=document.createElement('button');
+cropButton.id='cropImage';
+cropButton.type='button';
+cropButton.title='Crop the selected question image';
+cropButton.textContent='Crop Image';
+$('insertImage').insertAdjacentElement('afterend',cropButton);
+const cropModal=document.createElement('div');
+cropModal.id='imageCropModal';
+cropModal.className='modal crop-modal';
+cropModal.setAttribute('aria-hidden','true');
+cropModal.innerHTML='<div class="crop-card" role="dialog" aria-modal="true" aria-labelledby="cropTitle"><h2 id="cropTitle">Crop question image</h2><p>Drag over the part of the image to keep. The crop is saved at the original image resolution.</p><div id="cropStage" class="crop-stage"><img id="cropPreview" alt="Image crop preview"><div id="cropSelection" class="crop-selection" hidden></div></div><div id="cropSize" class="crop-size"></div><div class="crop-actions"><button id="cropReset" type="button">Reset</button><button id="cropCancel" type="button">Cancel</button><button id="cropApply" class="primary" type="button">Apply crop</button></div></div>';
+document.body.appendChild(cropModal);
+let cropTarget=null,cropBox=null,cropDrag=null;
+const cropStage=$('cropStage'),cropPreview=$('cropPreview'),cropSelection=$('cropSelection'),cropSize=$('cropSize');
+function cropImageFromSelection(){
+  const direct=selectedMedia?.matches?.('img')?selectedMedia:selectedMedia?.querySelector?.('img');
+  if(direct)return direct;
+  const images=[...problem.querySelectorAll('img')];
+  if(images.length===1){selectedMedia=images[0];images[0].classList.add('selected-media');return images[0];}
+  return null;
+}
+function updateCropSelection(){
+  if(!cropBox||!cropTarget)return;
+  cropSelection.hidden=false;
+  cropSelection.style.left=cropBox.x+'px';
+  cropSelection.style.top=cropBox.y+'px';
+  cropSelection.style.width=cropBox.w+'px';
+  cropSelection.style.height=cropBox.h+'px';
+  const width=Math.max(1,Math.round(cropBox.w*cropTarget.naturalWidth/cropStage.clientWidth));
+  const height=Math.max(1,Math.round(cropBox.h*cropTarget.naturalHeight/cropStage.clientHeight));
+  cropSize.textContent='Crop size: '+width+' × '+height+' px (original resolution)';
+}
+function resetCropSelection(){
+  if(!cropTarget)return;
+  const inset=Math.min(18,Math.max(0,Math.floor(Math.min(cropStage.clientWidth,cropStage.clientHeight)*.04)));
+  cropBox={x:inset,y:inset,w:Math.max(1,cropStage.clientWidth-inset*2),h:Math.max(1,cropStage.clientHeight-inset*2)};
+  updateCropSelection();
+}
+function closeCropModal(){
+  cropModal.classList.remove('show');
+  cropModal.setAttribute('aria-hidden','true');
+  cropTarget=null;cropBox=null;cropDrag=null;cropSelection.hidden=true;
+}
+function openCropModal(){
+  if(isStatementLocked()){toast('Unlock the problem statement before cropping an image');return;}
+  const image=cropImageFromSelection();
+  if(!image){toast('Click an image in the question, then choose Crop Image');return;}
+  cropTarget=image;
+  cropPreview.onload=()=>requestAnimationFrame(resetCropSelection);
+  cropPreview.src=image.currentSrc||image.src;
+  if(cropPreview.complete&&cropPreview.naturalWidth)requestAnimationFrame(resetCropSelection);
+  cropModal.classList.add('show');
+  cropModal.setAttribute('aria-hidden','false');
+}
+function cropPointerPosition(event){
+  const rect=cropStage.getBoundingClientRect();
+  return {x:Math.max(0,Math.min(rect.width,event.clientX-rect.left)),y:Math.max(0,Math.min(rect.height,event.clientY-rect.top))};
+}
+cropStage.addEventListener('pointerdown',event=>{
+  if(!cropTarget)return;
+  event.preventDefault();
+  const start=cropPointerPosition(event);
+  cropDrag={pointerId:event.pointerId,start};
+  cropBox={x:start.x,y:start.y,w:1,h:1};
+  cropStage.setPointerCapture?.(event.pointerId);
+  updateCropSelection();
+});
+cropStage.addEventListener('pointermove',event=>{
+  if(!cropDrag||event.pointerId!==cropDrag.pointerId)return;
+  const point=cropPointerPosition(event),start=cropDrag.start;
+  cropBox={x:Math.min(start.x,point.x),y:Math.min(start.y,point.y),w:Math.abs(point.x-start.x),h:Math.abs(point.y-start.y)};
+  updateCropSelection();
+});
+function endCropDrag(event){
+  if(!cropDrag||event.pointerId!==cropDrag.pointerId)return;
+  cropStage.releasePointerCapture?.(event.pointerId);
+  cropDrag=null;
+}
+cropStage.addEventListener('pointerup',endCropDrag);
+cropStage.addEventListener('pointercancel',endCropDrag);
+cropButton.onclick=openCropModal;
+$('cropReset').onclick=resetCropSelection;
+$('cropCancel').onclick=closeCropModal;
+cropModal.addEventListener('click',event=>{if(event.target===cropModal)closeCropModal()});
+$('cropApply').onclick=async()=>{
+  if(!cropTarget||!cropBox||cropBox.w<2||cropBox.h<2){toast('Drag over an area of the image to crop');return;}
+  const sourceWidth=cropTarget.naturalWidth,sourceHeight=cropTarget.naturalHeight;
+  const sx=Math.max(0,Math.round(cropBox.x*sourceWidth/cropStage.clientWidth));
+  const sy=Math.max(0,Math.round(cropBox.y*sourceHeight/cropStage.clientHeight));
+  const sw=Math.min(sourceWidth-sx,Math.max(1,Math.round(cropBox.w*sourceWidth/cropStage.clientWidth)));
+  const sh=Math.min(sourceHeight-sy,Math.max(1,Math.round(cropBox.h*sourceHeight/cropStage.clientHeight)));
+  const canvas=document.createElement('canvas');
+  canvas.width=sw;canvas.height=sh;
+  let blob;
+  try{
+    const context=canvas.getContext('2d');
+    context.drawImage(cropTarget,sx,sy,sw,sh,0,0,sw,sh);
+    blob=await new Promise(resolve=>canvas.toBlob(resolve,'image/png'));
+  }catch(error){toast('This image cannot be cropped. Insert a local image instead.');return;}
+  if(!blob){toast('The image could not be cropped');return;}
+  const reader=new FileReader();
+  reader.onload=()=>{cropTarget.src=reader.result;cropTarget.removeAttribute('srcset');saveCurrent();closeCropModal();toast('Image cropped at original resolution');};
+  reader.readAsDataURL(blob);
+};
 problem.addEventListener('click',e=>{const m=e.target.closest('video,img,figure');if(selectedMedia)selectedMedia.classList.remove('selected-media');selectedMedia=m;if(m)m.classList.add('selected-media')});
 problem.addEventListener('contextmenu',e=>{const m=e.target.closest('video,img,figure');if(!m)return;e.preventDefault();if(selectedMedia)selectedMedia.classList.remove('selected-media');selectedMedia=m;m.classList.add('selected-media');const menu=$('mediaContext');menu.style.left=Math.min(e.clientX,innerWidth-170)+'px';menu.style.top=Math.min(e.clientY,innerHeight-70)+'px';menu.classList.add('show')});
 document.addEventListener('click',e=>{if(!e.target.closest('#mediaContext')&&!e.target.closest('#problem'))$('mediaContext').classList.remove('show')});

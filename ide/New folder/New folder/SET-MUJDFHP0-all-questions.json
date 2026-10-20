@@ -1,0 +1,254 @@
+{
+  "format": "python-assessment-set",
+  "version": 3,
+  "setId": "SET-MUJDFHP0",
+  "title": "Programming Assessment (C, C++, Python)",
+  "timerMinutes": 60,
+  "timerLocked": false,
+  "timerLockHash": "",
+  "customInputLocked": false,
+  "customInputChecked": false,
+  "customInputLockHash": "",
+  "ownerConfig": {
+    "email": "",
+    "submissionMinutes": 10
+  },
+  "language": "python",
+  "packageSecurity": {
+    "protected": false,
+    "deleteQuestionsAllowed": true
+  },
+  "totalQuestions": 6,
+  "exportedAt": "2026-09-27T18:04:30.673Z",
+  "questions": [
+    {
+      "id": "Q-MUJDFHP1-QPOG",
+      "title": "Question 1: Check Even or Odd",
+      "problemHtml": "<h2>Problem Statement</h2><p>Write a program in C, C++, or Python that reads an integer from standard input and prints <code>Even</code> if the number is even, or <code>Odd</code> if the number is odd.</p><p><b>Input Specification:</b><br>A single integer <code>n</code>.</p><p><b>Output Specification:</b><br>Print <code>Even</code> or <code>Odd</code>.</p>",
+      "code": "# Read input and write your solution here\nn = int(input().strip())\nif n % 2 == 0:\n    print(\"Even\")\nelse:\n    print(\"Odd\")",
+      "codes": {
+        "python": "# Read input and write your solution here\nn = int(input().strip())\nif n % 2 == 0:\n    print(\"Even\")\nelse:\n    print(\"Odd\")",
+        "c": "#include <stdio.h>\n\nint main(void) {\n    int n;\n    if (scanf(\"%d\", &n) == 1) {\n        if (n % 2 == 0) {\n            printf(\"Even\\n\");\n        } else {\n            printf(\"Odd\\n\");\n        }\n    }\n    return 0;\n}",
+        "cpp": "#include <iostream>\n\nusing namespace std;\n\nint main() {\n    int n;\n    if (cin >> n) {\n        if (n % 2 == 0) {\n            cout << \"Even\" << endl;\n        } else {\n            cout << \"Odd\" << endl;\n        }\n    }\n    return 0;\n}"
+      },
+      "language": "python",
+      "problemLocked": false,
+      "problemLockHash": "",
+      "testsLocked": false,
+      "testLockHash": "",
+      "tests": [
+        {
+          "input": "4",
+          "expected": "Even",
+          "studentDefined": false
+        },
+        {
+          "input": "7",
+          "expected": "Odd",
+          "studentDefined": false
+        },
+        {
+          "input": "0",
+          "expected": "Even",
+          "studentDefined": false
+        },
+        {
+          "input": "-3",
+          "expected": "Odd",
+          "studentDefined": false
+        }
+      ],
+      "customFonts": []
+    },
+    {
+      "id": "Q-MUJVUFCF-9QJP",
+      "title": "Question 2: Reverse a String",
+      "problemHtml": "<h2>Problem Statement</h2><p>Write a program in C, C++, or Python that reads a string from standard input and prints the string reversed.</p><p><b>Input Specification:</b><br>A single line string.</p><p><b>Output Specification:</b><br>Print the reversed string.</p>",
+      "code": "# Read input and write your solution here\ns = input().strip()\nprint(s[::-1])",
+      "codes": {
+        "python": "# Read input and write your solution here\ns = input().strip()\nprint(s[::-1])",
+        "c": "#include <stdio.h>\n#include <string.h>\n\nint main(void) {\n    char s[1024];\n    if (fgets(s, sizeof(s), stdin)) {\n        s[strcspn(s, \"\\r\\n\")] = '\\0';\n        int len = strlen(s);\n        for (int i = 0; i < len / 2; i++) {\n            char temp = s[i];\n            s[i] = s[len - 1 - i];\n            s[len - 1 - i] = temp;\n        }\n        printf(\"%s\\n\", s);\n    }\n    return 0;\n}",
+        "cpp": "#include <iostream>\n#include <string>\n#include <algorithm>\n\nusing namespace std;\n\nint main() {\n    string s;\n    if (getline(cin, s)) {\n        if (!s.empty() && s.back() == '\\r') s.pop_back();\n        reverse(s.begin(), s.end());\n        cout << s << endl;\n    }\n    return 0;\n}"
+      },
+      "language": "python",
+      "problemLocked": false,
+      "problemLockHash": "",
+      "testsLocked": false,
+      "testLockHash": "",
+      "tests": [
+        {
+          "input": "hello",
+          "expected": "olleh",
+          "studentDefined": false
+        },
+        {
+          "input": "Python",
+          "expected": "nohtyP",
+          "studentDefined": false
+        },
+        {
+          "input": "12345",
+          "expected": "54321",
+          "studentDefined": false
+        }
+      ],
+      "customFonts": []
+    },
+    {
+      "id": "Q-MUK4OG7D-X5II",
+      "title": "Question 3: Palindrome Check",
+      "problemHtml": "<h2>Problem Statement</h2><p>Write a program in C, C++, or Python that checks whether a given string is a palindrome. A palindrome is a word or sequence that reads the same forwards and backwards.</p><p><b>Input Specification:</b><br>A single line containing a string.</p><p><b>Output Specification:</b><br>Print <code>True</code> if the string is a palindrome, otherwise print <code>False</code>.</p>",
+      "code": "# Read input and write your solution here\ns = input().strip()\nprint(\"True\" if s == s[::-1] else \"False\")",
+      "codes": {
+        "python": "# Read input and write your solution here\ns = input().strip()\nprint(\"True\" if s == s[::-1] else \"False\")",
+        "c": "#include <stdio.h>\n#include <string.h>\n\nint main(void) {\n    char s[1024];\n    if (fgets(s, sizeof(s), stdin)) {\n        s[strcspn(s, \"\\r\\n\")] = '\\0';\n        int len = strlen(s);\n        int isPal = 1;\n        for (int i = 0; i < len / 2; i++) {\n            if (s[i] != s[len - 1 - i]) {\n                isPal = 0;\n                break;\n            }\n        }\n        if (isPal) {\n            printf(\"True\\n\");\n        } else {\n            printf(\"False\\n\");\n        }\n    }\n    return 0;\n}",
+        "cpp": "#include <iostream>\n#include <string>\n#include <algorithm>\n\nusing namespace std;\n\nint main() {\n    string s;\n    if (getline(cin, s)) {\n        if (!s.empty() && s.back() == '\\r') s.pop_back();\n        string rev = s;\n        reverse(rev.begin(), rev.end());\n        if (s == rev) {\n            cout << \"True\" << endl;\n        } else {\n            cout << \"False\" << endl;\n        }\n    }\n    return 0;\n}"
+      },
+      "language": "python",
+      "problemLocked": false,
+      "problemLockHash": "",
+      "testsLocked": false,
+      "testLockHash": "",
+      "tests": [
+        {
+          "input": "radar",
+          "expected": "True",
+          "studentDefined": false
+        },
+        {
+          "input": "python",
+          "expected": "False",
+          "studentDefined": false
+        },
+        {
+          "input": "level",
+          "expected": "True",
+          "studentDefined": false
+        },
+        {
+          "input": "12321",
+          "expected": "True",
+          "studentDefined": false
+        }
+      ],
+      "customFonts": []
+    },
+    {
+      "id": "Q-MUK4OGM9-OU5Z",
+      "title": "Question 4: Factorial of a Number",
+      "problemHtml": "<h2>Problem Statement</h2><p>Write a program in C, C++, or Python that reads a non-negative integer <code>n</code> and computes its factorial (<code>n!</code>).</p><p><b>Input Specification:</b><br>A non-negative integer <code>n</code>.</p><p><b>Output Specification:</b><br>Print the factorial value of <code>n</code>.</p>",
+      "code": "# Read input and write your solution here\nimport math\nn = int(input().strip())\nprint(math.factorial(n))",
+      "codes": {
+        "python": "# Read input and write your solution here\nimport math\nn = int(input().strip())\nprint(math.factorial(n))",
+        "c": "#include <stdio.h>\n\nint main(void) {\n    int n;\n    if (scanf(\"%d\", &n) == 1) {\n        long long fact = 1;\n        for (int i = 1; i <= n; i++) {\n            fact *= i;\n        }\n        printf(\"%lld\\n\", fact);\n    }\n    return 0;\n}",
+        "cpp": "#include <iostream>\n\nusing namespace std;\n\nint main() {\n    int n;\n    if (cin >> n) {\n        long long fact = 1;\n        for (int i = 1; i <= n; i++) {\n            fact *= i;\n        }\n        cout << fact << endl;\n    }\n    return 0;\n}"
+      },
+      "language": "python",
+      "problemLocked": false,
+      "problemLockHash": "",
+      "testsLocked": false,
+      "testLockHash": "",
+      "tests": [
+        {
+          "input": "5",
+          "expected": "120",
+          "studentDefined": false
+        },
+        {
+          "input": "0",
+          "expected": "1",
+          "studentDefined": false
+        },
+        {
+          "input": "3",
+          "expected": "6",
+          "studentDefined": false
+        },
+        {
+          "input": "7",
+          "expected": "5040",
+          "studentDefined": false
+        }
+      ],
+      "customFonts": []
+    },
+    {
+      "id": "Q-MUK4OHA9-QW4L",
+      "title": "Question 5: Sum of Array Elements",
+      "problemHtml": "<h2>Problem Statement</h2><p>Write a program in C, C++, or Python that reads a space-separated sequence of integers on a single line and calculates the total sum of all elements.</p><p><b>Input Specification:</b><br>Space-separated integers.</p><p><b>Output Specification:</b><br>Print the integer sum of the elements.</p>",
+      "code": "# Read input and write your solution here\nnums = list(map(int, input().strip().split()))\nprint(sum(nums))",
+      "codes": {
+        "python": "# Read input and write your solution here\nnums = list(map(int, input().strip().split()))\nprint(sum(nums))",
+        "c": "#include <stdio.h>\n\nint main(void) {\n    int val, sum = 0;\n    while (scanf(\"%d\", &val) == 1) {\n        sum += val;\n    }\n    printf(\"%d\\n\", sum);\n    return 0;\n}",
+        "cpp": "#include <iostream>\n\nusing namespace std;\n\nint main() {\n    int val, sum = 0;\n    while (cin >> val) {\n        sum += val;\n    }\n    cout << sum << endl;\n    return 0;\n}"
+      },
+      "language": "python",
+      "problemLocked": false,
+      "problemLockHash": "",
+      "testsLocked": false,
+      "testLockHash": "",
+      "tests": [
+        {
+          "input": "1 2 3 4 5",
+          "expected": "15",
+          "studentDefined": false
+        },
+        {
+          "input": "10 -2 5",
+          "expected": "13",
+          "studentDefined": false
+        },
+        {
+          "input": "100",
+          "expected": "100",
+          "studentDefined": false
+        },
+        {
+          "input": "0 0 0",
+          "expected": "0",
+          "studentDefined": false
+        }
+      ],
+      "customFonts": []
+    },
+    {
+      "id": "Q-MUK4OHPL-8KOA",
+      "title": "Question 6: Find Maximum in List",
+      "problemHtml": "<h2>Problem Statement</h2><p>Write a program in C, C++, or Python that reads a space-separated sequence of integers on a single line and finds the maximum value.</p><p><b>Input Specification:</b><br>Space-separated integers.</p><p><b>Output Specification:</b><br>Print the maximum integer value.</p>",
+      "code": "# Read input and write your solution here\nnums = list(map(int, input().strip().split()))\nprint(max(nums))",
+      "codes": {
+        "python": "# Read input and write your solution here\nnums = list(map(int, input().strip().split()))\nprint(max(nums))",
+        "c": "#include <stdio.h>\n\nint main(void) {\n    int val, max_val;\n    if (scanf(\"%d\", &max_val) == 1) {\n        while (scanf(\"%d\", &val) == 1) {\n            if (val > max_val) {\n                max_val = val;\n            }\n        }\n        printf(\"%d\\n\", max_val);\n    }\n    return 0;\n}",
+        "cpp": "#include <iostream>\n\nusing namespace std;\n\nint main() {\n    int val, max_val;\n    if (cin >> max_val) {\n        while (cin >> val) {\n            if (val > max_val) {\n                max_val = val;\n            }\n        }\n        cout << max_val << endl;\n    }\n    return 0;\n}"
+      },
+      "language": "python",
+      "problemLocked": false,
+      "problemLockHash": "",
+      "testsLocked": false,
+      "testLockHash": "",
+      "tests": [
+        {
+          "input": "3 7 2 9 5",
+          "expected": "9",
+          "studentDefined": false
+        },
+        {
+          "input": "-10 -5 -20 -1",
+          "expected": "-1",
+          "studentDefined": false
+        },
+        {
+          "input": "42",
+          "expected": "42",
+          "studentDefined": false
+        },
+        {
+          "input": "8 8 8 8",
+          "expected": "8",
+          "studentDefined": false
+        }
+      ],
+      "customFonts": []
+    }
+  ]
+}

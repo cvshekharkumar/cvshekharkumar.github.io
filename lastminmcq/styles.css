@@ -29,6 +29,9 @@ body.dark #exportJson,body.dark #importJson{color:#c4b5fd}
 @media(max-width:900px){.mcq-candidate main{grid-template-columns:1fr;height:auto;min-height:auto}.mcq-candidate .problem-panel{min-height:280px}.mcq-candidate .work{min-height:420px}.mcq-candidate .mcq-options,.mcq-candidate .mcq-editor-top{padding-left:18px;padding-right:18px}}
 
 /* v22.1 candidate answer-key protection */
+
+/* Native-resolution question image cropper */
+.crop-modal{z-index:2147483646!important}.crop-card{width:min(1040px,96vw);max-height:94vh;overflow:auto;text-align:left!important;padding:22px!important}.crop-card h2{margin:0 0 7px}.crop-card p{margin:0 0 14px;color:var(--muted);font-size:13px}.crop-stage{position:relative;width:fit-content;max-width:100%;margin:0 auto;background:#111;line-height:0;touch-action:none;cursor:crosshair}.crop-stage img{display:block;max-width:min(900px,88vw);max-height:60vh;width:auto;height:auto;user-select:none;-webkit-user-drag:none}.crop-selection{position:absolute;border:2px solid #fff;box-shadow:0 0 0 9999px rgba(0,0,0,.52),0 0 0 1px #075eea;pointer-events:none}.crop-size{min-height:20px;margin:10px 0;color:var(--muted);font-size:12px;font-weight:600}.crop-actions{display:flex;justify-content:flex-end;gap:8px}.crop-actions button{height:34px;padding:0 13px;border:1px solid var(--line);border-radius:5px;background:var(--panel);color:var(--text);cursor:pointer}.crop-actions .primary{border-color:var(--blue)}body.dark .crop-stage{background:#020617}
 body.mcq-candidate .bottom,body.mcq-candidate #tests,body.mcq-candidate [data-tab="tests"],body.mcq-candidate #answerKey,body.mcq-candidate .answer-help{display:none!important;visibility:hidden!important}
 
 /* Welcome Dialog - Wow Edition */

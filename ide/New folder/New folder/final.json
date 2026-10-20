@@ -1,0 +1,1195 @@
+{
+  "format": "python-assessment-set",
+  "version": 3,
+  "setId": "SET-MV29WLF3",
+  "title": "Programming Assessment (C, C++, Python)",
+  "timerMinutes": 60,
+  "timerLocked": false,
+  "timerLockHash": "",
+  "customInputLocked": false,
+  "customInputChecked": false,
+  "customInputLockHash": "",
+  "ownerConfig": {
+    "email": "",
+    "submissionMinutes": 10
+  },
+  "language": "python",
+  "packageSecurity": {
+    "protected": false,
+    "deleteQuestionsAllowed": true
+  },
+  "totalQuestions": 30,
+  "exportedAt": "2026-10-20T10:30:00.000Z",
+  "questions": [
+    {
+      "id": "Q-MV29WLF3-K20K",
+      "title": "Question 1: Membership Spend Reward",
+      "problemHtml": "<h2>Problem Statement</h2>\n<p>A store rewards purchases that meet a spend threshold, weighting each qualifying purchase by its 1-based position. A purchase at 1-based position <code>p</code> qualifies if its amount is at least <code>K</code>, and then earns <code>p</code> multiplied by its amount. Your task is to find and return an integer value representing the total reward over all qualifying purchases.</p>\n<p><b>Note:</b> Purchases strictly below the threshold earn nothing.</p>\n<p><b>Input Specification:</b><br>\nLine 1: Space-separated integers representing the array <code>A</code> (purchase amounts).<br>\nLine 2: An integer <code>K</code>, representing the spend threshold.\n</p>\n<p><b>Output Specification:</b><br>\nPrint an integer value representing the total reward over all qualifying purchases.\n</p>\n<h3>Example 1:</h3>\n<p>\n<b>Input:</b><br>\n<pre>8 3 12 7\n6</pre>\n<b>Output:</b><br>\n<pre>72</pre>\n<b>Explanation:</b><br>\nPosition 1, amount 8 >= 6: add 1 * 8 = 8.<br>\nPosition 2, amount 3 < 6: skipped.<br>\nPosition 3, amount 12 >= 6: add 3 * 12 = 36.<br>\nPosition 4, amount 7 >= 6: add 4 * 7 = 28.<br>\nTotal reward = 8 + 36 + 28 = 72.\n</p>\n<h3>Example 2:</h3>\n<p>\n<b>Input:</b><br>\n<pre>5 11 4 9 2 14\n8</pre>\n<b>Output:</b><br>\n<pre>142</pre>\n<b>Explanation:</b><br>\nFor K = 8: Position 2 (11 >= 8) -> 2 * 11 = 22; Position 4 (9 >= 8) -> 4 * 9 = 36; Position 6 (14 >= 8) -> 6 * 14 = 84.<br>\nTotal reward = 22 + 36 + 84 = 142.\n</p>",
+      "code": "import sys\n\ndef main():\n    tokens = sys.stdin.read().split()\n    if not tokens:\n        print(0)\n        return\n    k = int(tokens[-1])\n    a = list(map(int, tokens[:-1]))\n    total = 0\n    for p, val in enumerate(a, start=1):\n        if val >= k:\n            total += p * val\n    print(total)\n\nif __name__ == '__main__':\n    main()",
+      "codes": {
+        "python": "import sys\n\ndef main():\n    tokens = sys.stdin.read().split()\n    if not tokens:\n        print(0)\n        return\n    k = int(tokens[-1])\n    a = list(map(int, tokens[:-1]))\n    total = 0\n    for p, val in enumerate(a, start=1):\n        if val >= k:\n            total += p * val\n    print(total)\n\nif __name__ == '__main__':\n    main()",
+        "c": "#include <stdio.h>\n\nint main(void) {\n    int a[10000];\n    int n = 0, val;\n    while (scanf(\"%d\", &val) == 1) {\n        a[n++] = val;\n    }\n    if (n < 2) {\n        printf(\"0\\n\");\n        return 0;\n    }\n    int k = a[--n];\n    long long total = 0;\n    for (int i = 0; i < n; i++) {\n        if (a[i] >= k) {\n            total += (long long)(i + 1) * a[i];\n        }\n    }\n    printf(\"%lld\\n\", total);\n    return 0;\n}",
+        "cpp": "#include <iostream>\n#include <vector>\n\nusing namespace std;\n\nint main() {\n    vector<int> all;\n    int val;\n    while (cin >> val) {\n        all.push_back(val);\n    }\n    if (all.size() < 2) {\n        cout << 0 << endl;\n        return 0;\n    }\n    int k = all.back();\n    all.pop_back();\n    long long total = 0;\n    for (size_t i = 0; i < all.size(); ++i) {\n        if (all[i] >= k) {\n            total += (long long)(i + 1) * all[i];\n        }\n    }\n    cout << total << endl;\n    return 0;\n}"
+      },
+      "language": "python",
+      "problemLocked": false,
+      "problemLockHash": "",
+      "testsLocked": false,
+      "testLockHash": "",
+      "tests": [
+        {
+          "input": "8 3 12 7\n6",
+          "expected": "72",
+          "studentDefined": false
+        },
+        {
+          "input": "5 11 4 9 2 14\n8",
+          "expected": "142",
+          "studentDefined": false
+        },
+        {
+          "input": "2 3 4\n10",
+          "expected": "0",
+          "studentDefined": false
+        },
+        {
+          "input": "10 20 30\n5",
+          "expected": "140",
+          "studentDefined": false
+        }
+      ],
+      "customFonts": []
+    },
+    {
+      "id": "Q-MV2A1Z7Z-5BVV",
+      "title": "Question 2: Cab Fare Prime Loyalty Bonus",
+      "problemHtml": "<h2>Problem Statement</h2>\n<p>A rideshare app rewards the first few trips whose fare happens to be a prime number with a loyalty bonus. You are given an integer <code>K</code>, an integer <code>N</code>, and an integer array <code>A</code> of trip fares in order. The total is the sum of all fares plus, scanning in order, a bonus equal to the fare for each of the first <code>K</code> fares that are prime.</p>\n<p><b>Note:</b> At most <code>K</code> bonuses are awarded, granted to the earliest qualifying prime fares. Fares 0 and 1 are not prime numbers.</p>\n<p><b>Input Specification:</b><br>\nLine 1: An integer value <code>K</code>, representing the bonus cap.<br>\nLine 2: An integer value <code>N</code>, representing the number of trips.<br>\nLine 3: <code>N</code> space-separated integers representing array <code>A</code> (the trip fares).\n</p>\n<p><b>Output Specification:</b><br>\nPrint an integer value representing the total amount (all fares plus up to <code>K</code> prime-fare bonuses).\n</p>\n<h3>Example 1:</h3>\n<p>\n<b>Input:</b><br>\n<pre>2\n3\n4 7 13</pre>\n<b>Output:</b><br>\n<pre>44</pre>\n<b>Explanation:</b><br>\nBase total = 4 + 7 + 13 = 24.<br>\nScan fares in order with bonus cap K = 2:<br>\n- 4 is not prime -> no bonus<br>\n- 7 is prime and bonus slot 1/2 is free -> add bonus 7<br>\n- 13 is prime and bonus slot 2/2 is free -> add bonus 13<br>\nTotal = 24 + 7 + 13 = 44.\n</p>\n<h3>Example 2:</h3>\n<p>\n<b>Input:</b><br>\n<pre>2\n4\n3 5 8 7</pre>\n<b>Output:</b><br>\n<pre>31</pre>\n<b>Explanation:</b><br>\nBase total = 3 + 5 + 8 + 7 = 23.<br>\n- 3 is prime (slot 1/2) -> add bonus 3<br>\n- 5 is prime (slot 2/2) -> add bonus 5<br>\n- 8 is not prime -> no bonus<br>\n- 7 is prime, but cap K = 2 is reached -> no bonus<br>\nTotal = 23 + 3 + 5 = 31.\n</p>",
+      "code": "import sys\n\ndef is_prime(x):\n    if x < 2:\n        return False\n    d = 2\n    while d * d <= x:\n        if x % d == 0:\n            return False\n        d += 1\n    return True\n\ndef main():\n    tokens = sys.stdin.read().split()\n    if not tokens:\n        print(0)\n        return\n    k = int(tokens[0])\n    n = int(tokens[1])\n    a = list(map(int, tokens[2:2+n]))\n    total = sum(a)\n    primes_found = 0\n    for fare in a:\n        if primes_found < k and is_prime(fare):\n            total += fare\n            primes_found += 1\n    print(total)\n\nif __name__ == '__main__':\n    main()",
+      "codes": {
+        "python": "import sys\n\ndef is_prime(x):\n    if x < 2:\n        return False\n    d = 2\n    while d * d <= x:\n        if x % d == 0:\n            return False\n        d += 1\n    return True\n\ndef main():\n    tokens = sys.stdin.read().split()\n    if not tokens:\n        print(0)\n        return\n    k = int(tokens[0])\n    n = int(tokens[1])\n    a = list(map(int, tokens[2:2+n]))\n    total = sum(a)\n    primes_found = 0\n    for fare in a:\n        if primes_found < k and is_prime(fare):\n            total += fare\n            primes_found += 1\n    print(total)\n\nif __name__ == '__main__':\n    main()",
+        "c": "#include <stdio.h>\n#include <stdbool.h>\n\nbool is_prime(int x) {\n    if (x < 2) return false;\n    for (int d = 2; (long long)d * d <= x; d++) {\n        if (x % d == 0) return false;\n    }\n    return true;\n}\n\nint main(void) {\n    int k, n;\n    if (scanf(\"%d %d\", &k, &n) != 2) return 0;\n    long long total = 0;\n    int primes_found = 0;\n    for (int i = 0; i < n; i++) {\n        int fare;\n        scanf(\"%d\", &fare);\n        total += fare;\n        if (primes_found < k && is_prime(fare)) {\n            total += fare;\n            primes_found++;\n        }\n    }\n    printf(\"%lld\\n\", total);\n    return 0;\n}",
+        "cpp": "#include <iostream>\n#include <vector>\n\nusing namespace std;\n\nbool isPrime(int x) {\n    if (x < 2) return false;\n    for (long long d = 2; d * d <= x; ++d) {\n        if (x % d == 0) return false;\n    }\n    return true;\n}\n\nint main() {\n    int k, n;\n    if (!(cin >> k >> n)) return 0;\n    long long total = 0;\n    int primes_found = 0;\n    for (int i = 0; i < n; ++i) {\n        int fare;\n        cin >> fare;\n        total += fare;\n        if (primes_found < k && isPrime(fare)) {\n            total += fare;\n            primes_found++;\n        }\n    }\n    cout << total << endl;\n    return 0;\n}"
+      },
+      "language": "python",
+      "problemLocked": false,
+      "problemLockHash": "",
+      "testsLocked": false,
+      "testLockHash": "",
+      "tests": [
+        {
+          "input": "2\n3\n4 7 13",
+          "expected": "44",
+          "studentDefined": false
+        },
+        {
+          "input": "2\n4\n3 5 8 7",
+          "expected": "31",
+          "studentDefined": false
+        },
+        {
+          "input": "0\n3\n2 3 5",
+          "expected": "10",
+          "studentDefined": false
+        },
+        {
+          "input": "5\n4\n1 4 6 8",
+          "expected": "19",
+          "studentDefined": false
+        }
+      ],
+      "customFonts": []
+    },
+    {
+      "id": "Q-MV2A4G6A-LLTL",
+      "title": "Question 3: Shipping-Label Shift",
+      "problemHtml": "<h2>Problem Statement</h2>\n<p>A depot relabels shipping labels by shifting each lowercase letter forward in the alphabet according to its 0-based position in the string. You are given a string <code>S</code> of lowercase letters. Replace each character at position <code>i</code> (0-based) by shifting it forward by <code>i + 1</code> positions in the alphabet, wrapping around from 'z' back to 'a'. Your task is to find and return a string representing the relabeled string.</p>\n<p><b>Note:</b> The character at 0-based position <code>i</code> is shifted forward by <code>i + 1</code> positions.</p>\n<p><b>Input Specification:</b><br>\nA single line containing the string <code>S</code> of lowercase label characters.\n</p>\n<p><b>Output Specification:</b><br>\nPrint a string representing the relabeled string.\n</p>\n<h3>Example 1:</h3>\n<p>\n<b>Input:</b><br>\n<pre>cab</pre>\n<b>Output:</b><br>\n<pre>dce</pre>\n<b>Explanation:</b><br>\nPosition 0: 'c' shifted by 1 -> 'd'.<br>\nPosition 1: 'a' shifted by 2 -> 'c'.<br>\nPosition 2: 'b' shifted by 3 -> 'e'.<br>\nResult = \"dce\".\n</p>\n<h3>Example 2:</h3>\n<p>\n<b>Input:</b><br>\n<pre>tide</pre>\n<b>Output:</b><br>\n<pre>ukgi</pre>\n<b>Explanation:</b><br>\nPosition 0: 't' shifted by 1 -> 'u'.<br>\nPosition 1: 'i' shifted by 2 -> 'k'.<br>\nPosition 2: 'd' shifted by 3 -> 'g'.<br>\nPosition 3: 'e' shifted by 4 -> 'i'.<br>\nResult = \"ukgi\".\n</p>",
+      "code": "import sys\n\ndef main():\n    s = sys.stdin.read().strip()\n    if not s:\n        print(\"\")\n        return\n    res = []\n    for i, ch in enumerate(s):\n        base = ord(ch) - ord('a')\n        shifted = (base + (i + 1)) % 26\n        res.append(chr(ord('a') + shifted))\n    print(\"\".join(res))\n\nif __name__ == '__main__':\n    main()",
+      "codes": {
+        "python": "import sys\n\ndef main():\n    s = sys.stdin.read().strip()\n    if not s:\n        print(\"\")\n        return\n    res = []\n    for i, ch in enumerate(s):\n        base = ord(ch) - ord('a')\n        shifted = (base + (i + 1)) % 26\n        res.append(chr(ord('a') + shifted))\n    print(\"\".join(res))\n\nif __name__ == '__main__':\n    main()",
+        "c": "#include <stdio.h>\n#include <string.h>\n\nint main(void) {\n    char s[10000];\n    if (scanf(\"%s\", s) == 1) {\n        int len = strlen(s);\n        for (int i = 0; i < len; i++) {\n            int base = s[i] - 'a';\n            int shifted = (base + (i + 1)) % 26;\n            s[i] = (char)('a' + shifted);\n        }\n        printf(\"%s\\n\", s);\n    }\n    return 0;\n}",
+        "cpp": "#include <iostream>\n#include <string>\n\nusing namespace std;\n\nint main() {\n    string s;\n    if (cin >> s) {\n        for (size_t i = 0; i < s.length(); ++i) {\n            int base = s[i] - 'a';\n            int shifted = (base + (int)(i + 1)) % 26;\n            s[i] = (char)('a' + shifted);\n        }\n        cout << s << endl;\n    }\n    return 0;\n}"
+      },
+      "language": "python",
+      "problemLocked": false,
+      "problemLockHash": "",
+      "testsLocked": false,
+      "testLockHash": "",
+      "tests": [
+        {
+          "input": "cab",
+          "expected": "dce",
+          "studentDefined": false
+        },
+        {
+          "input": "tide",
+          "expected": "ukgi",
+          "studentDefined": false
+        },
+        {
+          "input": "z",
+          "expected": "a",
+          "studentDefined": false
+        },
+        {
+          "input": "xyz",
+          "expected": "yac",
+          "studentDefined": false
+        }
+      ],
+      "customFonts": []
+    },
+    {
+      "id": "Q-MV2A65RR-NJTR",
+      "title": "Question 4: SpectrumExpansionCipher",
+      "problemHtml": "<h2>Problem Statement</h2>\n<p>A radio encoder shifts each character further along the alphabet as the set of distinct characters seen increases. You are given a string <code>S</code> of lowercase letters. Reading from left to right, each character is shifted forward by the number of distinct letters seen so far (including the current one), wrapping from 'z' back to 'a'. Your task is to find and return a string representing the encoded string.</p>\n<p><b>Note:</b> The shift grows by one each time a brand-new letter first appears.</p>\n<p><b>Input Specification:</b><br>\nA single line containing the string <code>S</code> to encode.\n</p>\n<p><b>Output Specification:</b><br>\nPrint a string representing the encoded string.\n</p>\n<h3>Example 1:</h3>\n<p>\n<b>Input:</b><br>\n<pre>gvmug</pre>\n<b>Output:</b><br>\n<pre>hxpyk</pre>\n<b>Explanation:</b><br>\nPosition 1 ('g'): distinct seen so far = 1 -> 'g' + 1 = 'h'.<br>\nPosition 2 ('v'): distinct seen so far = 2 -> 'v' + 2 = 'x'.<br>\nPosition 3 ('m'): distinct seen so far = 3 -> 'm' + 3 = 'p'.<br>\nPosition 4 ('u'): distinct seen so far = 4 -> 'u' + 4 = 'y'.<br>\nPosition 5 ('g'): distinct seen so far = 4 -> 'g' + 4 = 'k'.<br>\nEncoded string = \"hxpyk\".\n</p>\n<h3>Example 2:</h3>\n<p>\n<b>Input:</b><br>\n<pre>haytjmv</pre>\n<b>Output:</b><br>\n<pre>icbxosc</pre>\n<b>Explanation:</b><br>\nS = \"haytjmv\":<br>\nPosition 1 ('h'): distinct = 1 -> 'i'.<br>\nPosition 2 ('a'): distinct = 2 -> 'c'.<br>\nPosition 3 ('y'): distinct = 3 -> 'b'.<br>\nPosition 4 ('t'): distinct = 4 -> 'x'.<br>\nPosition 5 ('j'): distinct = 5 -> 'o'.<br>\nPosition 6 ('m'): distinct = 6 -> 's'.<br>\nPosition 7 ('v'): distinct = 7 -> 'c'.<br>\nResult = \"icbxosc\".\n</p>",
+      "code": "import sys\n\ndef main():\n    s = sys.stdin.read().strip()\n    if not s:\n        print(\"\")\n        return\n    seen = set()\n    res = []\n    for ch in s:\n        seen.add(ch)\n        shift = len(seen)\n        base = ord(ch) - ord('a')\n        res.append(chr(ord('a') + (base + shift) % 26))\n    print(\"\".join(res))\n\nif __name__ == '__main__':\n    main()",
+      "codes": {
+        "python": "import sys\n\ndef main():\n    s = sys.stdin.read().strip()\n    if not s:\n        print(\"\")\n        return\n    seen = set()\n    res = []\n    for ch in s:\n        seen.add(ch)\n        shift = len(seen)\n        base = ord(ch) - ord('a')\n        res.append(chr(ord('a') + (base + shift) % 26))\n    print(\"\".join(res))\n\nif __name__ == '__main__':\n    main()",
+        "c": "#include <stdio.h>\n#include <string.h>\n\nint main(void) {\n    char s[10000];\n    if (scanf(\"%s\", s) == 1) {\n        int seen[26] = {0};\n        int distinct = 0;\n        int len = strlen(s);\n        for (int i = 0; i < len; i++) {\n            int idx = s[i] - 'a';\n            if (!seen[idx]) {\n                seen[idx] = 1;\n                distinct++;\n            }\n            int shifted = (idx + distinct) % 26;\n            s[i] = (char)('a' + shifted);\n        }\n        printf(\"%s\\n\", s);\n    }\n    return 0;\n}",
+        "cpp": "#include <iostream>\n#include <string>\n#include <vector>\n\nusing namespace std;\n\nint main() {\n    string s;\n    if (cin >> s) {\n        vector<bool> seen(26, false);\n        int distinct = 0;\n        for (char &c : s) {\n            int idx = c - 'a';\n            if (!seen[idx]) {\n                seen[idx] = true;\n                distinct++;\n            }\n            c = (char)('a' + (idx + distinct) % 26);\n        }\n        cout << s << endl;\n    }\n    return 0;\n}"
+      },
+      "language": "python",
+      "problemLocked": false,
+      "problemLockHash": "",
+      "testsLocked": false,
+      "testLockHash": "",
+      "tests": [
+        {
+          "input": "gvmug",
+          "expected": "hxpyk",
+          "studentDefined": false
+        },
+        {
+          "input": "haytjmv",
+          "expected": "icbxosc",
+          "studentDefined": false
+        },
+        {
+          "input": "aaaa",
+          "expected": "bbbb",
+          "studentDefined": false
+        },
+        {
+          "input": "abc",
+          "expected": "bdf",
+          "studentDefined": false
+        }
+      ],
+      "customFonts": []
+    },
+    {
+      "id": "Q-MV2A9HVX-9TV5",
+      "title": "Question 5: Conveyor Surge Settling Score",
+      "problemHtml": "<h2>Problem Statement</h2>\n<p>A conveyor belt of weighing stations suffers settling stress whenever a heavier station is immediately followed by a lighter one. You are given an integer <code>N</code> and an integer array <code>A</code> of station weights. For every adjacent pair where <code>A[i-1] > A[i]</code> (called a step-down), add <code>A[i-1] + A[i]</code> to the total. Adjacent pairs that rise or remain equal contribute 0. Your task is to find and return an integer value representing the total settling stress over every step-down.</p>\n<p><b>Note:</b> Only strictly descending adjacent pairs contribute.</p>\n<p><b>Input Specification:</b><br>\nLine 1: An integer value <code>N</code>, representing the number of stations.<br>\nLine 2: <code>N</code> space-separated integers representing the station weights <code>A</code>.\n</p>\n<p><b>Output Specification:</b><br>\nPrint an integer value representing the total settling stress over every step-down.\n</p>\n<h3>Example 1:</h3>\n<p>\n<b>Input:</b><br>\n<pre>3\n20 6 14</pre>\n<b>Output:</b><br>\n<pre>26</pre>\n<b>Explanation:</b><br>\n20 -> 6 is a step-down: add 20 + 6 = 26.<br>\n6 -> 14 is not a step-down: skip.<br>\nTotal = 26.\n</p>\n<h3>Example 2:</h3>\n<p>\n<b>Input:</b><br>\n<pre>4\n18 3 14 6</pre>\n<b>Output:</b><br>\n<pre>41</pre>\n<b>Explanation:</b><br>\n18 -> 3 is a step-down: add 18 + 3 = 21.<br>\n3 -> 14 is not a step-down: skip.<br>\n14 -> 6 is a step-down: add 14 + 6 = 20.<br>\nTotal = 21 + 20 = 41.\n</p>",
+      "code": "import sys\n\ndef main():\n    tokens = sys.stdin.read().split()\n    if not tokens:\n        print(0)\n        return\n    n = int(tokens[0])\n    a = list(map(int, tokens[1:1+n]))\n    total = 0\n    for i in range(1, len(a)):\n        if a[i-1] > a[i]:\n            total += a[i-1] + a[i]\n    print(total)\n\nif __name__ == '__main__':\n    main()",
+      "codes": {
+        "python": "import sys\n\ndef main():\n    tokens = sys.stdin.read().split()\n    if not tokens:\n        print(0)\n        return\n    n = int(tokens[0])\n    a = list(map(int, tokens[1:1+n]))\n    total = 0\n    for i in range(1, len(a)):\n        if a[i-1] > a[i]:\n            total += a[i-1] + a[i]\n    print(total)\n\nif __name__ == '__main__':\n    main()",
+        "c": "#include <stdio.h>\n\nint main(void) {\n    int n;\n    if (scanf(\"%d\", &n) != 1 || n <= 1) {\n        printf(\"0\\n\");\n        return 0;\n    }\n    int prev;\n    scanf(\"%d\", &prev);\n    long long total = 0;\n    for (int i = 1; i < n; i++) {\n        int curr;\n        scanf(\"%d\", &curr);\n        if (prev > curr) {\n            total += prev + curr;\n        }\n        prev = curr;\n    }\n    printf(\"%lld\\n\", total);\n    return 0;\n}",
+        "cpp": "#include <iostream>\n#include <vector>\n\nusing namespace std;\n\nint main() {\n    int n;\n    if (!(cin >> n) || n <= 1) {\n        cout << 0 << endl;\n        return 0;\n    }\n    int prev;\n    cin >> prev;\n    long long total = 0;\n    for (int i = 1; i < n; ++i) {\n        int curr;\n        cin >> curr;\n        if (prev > curr) {\n            total += prev + curr;\n        }\n        prev = curr;\n    }\n    cout << total << endl;\n    return 0;\n}"
+      },
+      "language": "python",
+      "problemLocked": false,
+      "problemLockHash": "",
+      "testsLocked": false,
+      "testLockHash": "",
+      "tests": [
+        {
+          "input": "3\n20 6 14",
+          "expected": "26",
+          "studentDefined": false
+        },
+        {
+          "input": "4\n18 3 14 6",
+          "expected": "41",
+          "studentDefined": false
+        },
+        {
+          "input": "3\n1 2 3",
+          "expected": "0",
+          "studentDefined": false
+        },
+        {
+          "input": "3\n5 5 5",
+          "expected": "0",
+          "studentDefined": false
+        }
+      ],
+      "customFonts": []
+    },
+    {
+      "id": "Q-MV2AC6AD-745X",
+      "title": "Question 6: Signal Tower Fortification",
+      "problemHtml": "<h2>Problem Statement</h2>\n<p>A communication grid strengthens each tower reading with the maximum signal seen up to that point. You are given an integer <code>N</code> and an integer array <code>A</code> representing tower readings. The fortified value at position <code>i</code> is calculated as <code>B[i] = A[i] + max(A[0..i])</code>. Your task is to find and return an integer array representing the fortified array <code>B</code>.</p>\n<p><b>Note:</b> The running maximum never decreases as <code>i</code> grows.</p>\n<p><b>Input Specification:</b><br>\nLine 1: An integer value <code>N</code>, representing the number of towers.<br>\nLine 2: <code>N</code> space-separated integers representing the readings <code>A</code>.\n</p>\n<p><b>Output Specification:</b><br>\nPrint space-separated integers representing the fortified array <code>B</code>.\n</p>\n<h3>Example 1:</h3>\n<p>\n<b>Input:</b><br>\n<pre>5\n7 3 5 9 2</pre>\n<b>Output:</b><br>\n<pre>14 10 12 18 11</pre>\n<b>Explanation:</b><br>\nStation 1 (7): peak = 7 -> 7 + 7 = 14.<br>\nStation 2 (3): peak = 7 -> 3 + 7 = 10.<br>\nStation 3 (5): peak = 7 -> 5 + 7 = 12.<br>\nStation 4 (9): peak = 9 -> 9 + 9 = 18.<br>\nStation 5 (2): peak = 9 -> 2 + 9 = 11.<br>\nFortified array = 14 10 12 18 11.\n</p>\n<h3>Example 2:</h3>\n<p>\n<b>Input:</b><br>\n<pre>7\n12 4 18 6 11 30 9</pre>\n<b>Output:</b><br>\n<pre>24 16 36 24 29 60 39</pre>\n<b>Explanation:</b><br>\nResulting array = 24 16 36 24 29 60 39.\n</p>",
+      "code": "import sys\n\ndef main():\n    tokens = sys.stdin.read().split()\n    if not tokens:\n        return\n    n = int(tokens[0])\n    a = list(map(int, tokens[1:1+n]))\n    if not a:\n        return\n    peak = a[0]\n    b = []\n    for x in a:\n        if x > peak:\n            peak = x\n        b.append(str(x + peak))\n    print(\" \".join(b))\n\nif __name__ == '__main__':\n    main()",
+      "codes": {
+        "python": "import sys\n\ndef main():\n    tokens = sys.stdin.read().split()\n    if not tokens:\n        return\n    n = int(tokens[0])\n    a = list(map(int, tokens[1:1+n]))\n    if not a:\n        return\n    peak = a[0]\n    b = []\n    for x in a:\n        if x > peak:\n            peak = x\n        b.append(str(x + peak))\n    print(\" \".join(b))\n\nif __name__ == '__main__':\n    main()",
+        "c": "#include <stdio.h>\n\nint main(void) {\n    int n;\n    if (scanf(\"%d\", &n) != 1 || n <= 0) return 0;\n    int peak;\n    scanf(\"%d\", &peak);\n    printf(\"%d\", peak + peak);\n    for (int i = 1; i < n; i++) {\n        int x;\n        scanf(\"%d\", &x);\n        if (x > peak) peak = x;\n        printf(\" %d\", x + peak);\n    }\n    printf(\"\\n\");\n    return 0;\n}",
+        "cpp": "#include <iostream>\n#include <vector>\n#include <algorithm>\n\nusing namespace std;\n\nint main() {\n    int n;\n    if (!(cin >> n) || n <= 0) return 0;\n    int peak;\n    cin >> peak;\n    cout << peak + peak;\n    for (int i = 1; i < n; ++i) {\n        int x;\n        cin >> x;\n        if (x > peak) peak = x;\n        cout << \" \" << x + peak;\n    }\n    cout << endl;\n    return 0;\n}"
+      },
+      "language": "python",
+      "problemLocked": false,
+      "problemLockHash": "",
+      "testsLocked": false,
+      "testLockHash": "",
+      "tests": [
+        {
+          "input": "5\n7 3 5 9 2",
+          "expected": "14 10 12 18 11",
+          "studentDefined": false
+        },
+        {
+          "input": "7\n12 4 18 6 11 30 9",
+          "expected": "24 16 36 24 29 60 39",
+          "studentDefined": false
+        },
+        {
+          "input": "1\n5",
+          "expected": "10",
+          "studentDefined": false
+        },
+        {
+          "input": "3\n10 5 20",
+          "expected": "20 15 40",
+          "studentDefined": false
+        }
+      ],
+      "customFonts": []
+    },
+    {
+      "id": "Q-MV2AF099-E160",
+      "title": "Question 7: Clockwork Gear Mesh Load",
+      "problemHtml": "<h2>Problem Statement</h2>\n<p>A clockwork train consists of <code>N</code> gears. Each gear contributes to the total mesh load based on its 1-based position. For the <code>i</code>-th gear (1 &le; i &le; N), its contribution is <code>min(i, K)</code>, where <code>K</code> is the maximum number of teeth that can engage per gear. Your task is to find and return an integer value representing the total mesh load summed over all gears.</p>\n<p><b>Note:</b> Each gear contribution is capped at <code>K</code>.</p>\n<p><b>Input Specification:</b><br>\nLine 1: An integer value <code>N</code>, representing the number of gears.<br>\nLine 2: An integer value <code>K</code>, representing the per-gear tooth cap.\n</p>\n<p><b>Output Specification:</b><br>\nPrint an integer value representing the total mesh load summed over all gears.\n</p>\n<h3>Example 1:</h3>\n<p>\n<b>Input:</b><br>\n<pre>8\n5</pre>\n<b>Output:</b><br>\n<pre>30</pre>\n<b>Explanation:</b><br>\nGears 1 to 5 contribute 1 + 2 + 3 + 4 + 5 = 15.<br>\nGears 6 to 8 contribute 5 + 5 + 5 = 15.<br>\nTotal = 15 + 15 = 30.\n</p>\n<h3>Example 2:</h3>\n<p>\n<b>Input:</b><br>\n<pre>9\n3</pre>\n<b>Output:</b><br>\n<pre>24</pre>\n<b>Explanation:</b><br>\nGears 1 to 3 contribute 1 + 2 + 3 = 6.<br>\nGears 4 to 9 (6 gears) contribute 6 * 3 = 18.<br>\nTotal = 6 + 18 = 24.\n</p>",
+      "code": "import sys\n\ndef main():\n    tokens = sys.stdin.read().split()\n    if not tokens:\n        print(0)\n        return\n    n = int(tokens[0])\n    k = int(tokens[1])\n    if n <= k:\n        total = n * (n + 1) // 2\n    else:\n        total = k * (k + 1) // 2 + (n - k) * k\n    print(total)\n\nif __name__ == '__main__':\n    main()",
+      "codes": {
+        "python": "import sys\n\ndef main():\n    tokens = sys.stdin.read().split()\n    if not tokens:\n        print(0)\n        return\n    n = int(tokens[0])\n    k = int(tokens[1])\n    if n <= k:\n        total = n * (n + 1) // 2\n    else:\n        total = k * (k + 1) // 2 + (n - k) * k\n    print(total)\n\nif __name__ == '__main__':\n    main()",
+        "c": "#include <stdio.h>\n\nint main(void) {\n    long long n, k;\n    if (scanf(\"%lld %lld\", &n, &k) == 2) {\n        long long total = 0;\n        if (n <= k) {\n            total = n * (n + 1) / 2;\n        } else {\n            total = k * (k + 1) / 2 + (n - k) * k;\n        }\n        printf(\"%lld\\n\", total);\n    }\n    return 0;\n}",
+        "cpp": "#include <iostream>\n\nusing namespace std;\n\nint main() {\n    long long n, k;\n    if (cin >> n >> k) {\n        long long total = 0;\n        if (n <= k) {\n            total = n * (n + 1) / 2;\n        } else {\n            total = k * (k + 1) / 2 + (n - k) * k;\n        }\n        cout << total << endl;\n    }\n    return 0;\n}"
+      },
+      "language": "python",
+      "problemLocked": false,
+      "problemLockHash": "",
+      "testsLocked": false,
+      "testLockHash": "",
+      "tests": [
+        {
+          "input": "8\n5",
+          "expected": "30",
+          "studentDefined": false
+        },
+        {
+          "input": "9\n3",
+          "expected": "24",
+          "studentDefined": false
+        },
+        {
+          "input": "3\n5",
+          "expected": "6",
+          "studentDefined": false
+        },
+        {
+          "input": "1\n1",
+          "expected": "1",
+          "studentDefined": false
+        }
+      ],
+      "customFonts": []
+    },
+    {
+      "id": "Q-MV2AHD2H-S0M2",
+      "title": "Question 8: Microbe Colony Diversity Load",
+      "problemHtml": "<h2>Problem Statement</h2>\n<p>A microbiology lab assigns each colony with a diversity load equal to its cell count multiplied by the number of distinct prime factors of that count. You are given an integer <code>N</code> and an integer array <code>A</code> of colony cell counts. Your task is to find and return an integer value representing the total diversity load over all colonies.</p>\n<p><b>Note:</b> A prime number has exactly one distinct prime factor. The number 1 has 0 prime factors.</p>\n<p><b>Input Specification:</b><br>\nLine 1: An integer value <code>N</code>, representing the number of colonies.<br>\nLine 2: <code>N</code> space-separated integers representing the cell counts <code>A</code>.\n</p>\n<p><b>Output Specification:</b><br>\nPrint an integer value representing the total diversity load over all colonies.\n</p>\n<h3>Example 1:</h3>\n<p>\n<b>Input:</b><br>\n<pre>3\n6 10 15</pre>\n<b>Output:</b><br>\n<pre>62</pre>\n<b>Explanation:</b><br>\n6 = 2 * 3 (2 distinct prime factors) -> contribution = 6 * 2 = 12.<br>\n10 = 2 * 5 (2 distinct prime factors) -> contribution = 10 * 2 = 20.<br>\n15 = 3 * 5 (2 distinct prime factors) -> contribution = 15 * 2 = 30.<br>\nTotal = 12 + 20 + 30 = 62.\n</p>\n<h3>Example 2:</h3>\n<p>\n<b>Input:</b><br>\n<pre>4\n12 30 7 20</pre>\n<b>Output:</b><br>\n<pre>161</pre>\n<b>Explanation:</b><br>\n12 = 2^2 * 3 (2 factors) -> 12 * 2 = 24.<br>\n30 = 2 * 3 * 5 (3 factors) -> 30 * 3 = 90.<br>\n7 = 7 (1 factor) -> 7 * 1 = 7.<br>\n20 = 2^2 * 5 (2 factors) -> 20 * 2 = 40.<br>\nTotal = 24 + 90 + 7 + 40 = 161.\n</p>",
+      "code": "import sys\n\ndef count_distinct_prime_factors(n):\n    if n <= 1:\n        return 0\n    cnt = 0\n    d = 2\n    temp = n\n    while d * d <= temp:\n        if temp % d == 0:\n            cnt += 1\n            while temp % d == 0:\n                temp //= d\n        d += 1\n    if temp > 1:\n        cnt += 1\n    return cnt\n\ndef main():\n    tokens = sys.stdin.read().split()\n    if not tokens:\n        print(0)\n        return\n    n = int(tokens[0])\n    a = list(map(int, tokens[1:1+n]))\n    total = sum(x * count_distinct_prime_factors(x) for x in a)\n    print(total)\n\nif __name__ == '__main__':\n    main()",
+      "codes": {
+        "python": "import sys\n\ndef count_distinct_prime_factors(n):\n    if n <= 1:\n        return 0\n    cnt = 0\n    d = 2\n    temp = n\n    while d * d <= temp:\n        if temp % d == 0:\n            cnt += 1\n            while temp % d == 0:\n                temp //= d\n        d += 1\n    if temp > 1:\n        cnt += 1\n    return cnt\n\ndef main():\n    tokens = sys.stdin.read().split()\n    if not tokens:\n        print(0)\n        return\n    n = int(tokens[0])\n    a = list(map(int, tokens[1:1+n]))\n    total = sum(x * count_distinct_prime_factors(x) for x in a)\n    print(total)\n\nif __name__ == '__main__':\n    main()",
+        "c": "#include <stdio.h>\n\nint count_distinct_prime_factors(int n) {\n    if (n <= 1) return 0;\n    int cnt = 0;\n    int temp = n;\n    for (int d = 2; (long long)d * d <= temp; d++) {\n        if (temp % d == 0) {\n            cnt++;\n            while (temp % d == 0) {\n                temp /= d;\n            }\n        }\n    }\n    if (temp > 1) cnt++;\n    return cnt;\n}\n\nint main(void) {\n    int n;\n    if (scanf(\"%d\", &n) != 1) return 0;\n    long long total = 0;\n    for (int i = 0; i < n; i++) {\n        int x;\n        scanf(\"%d\", &x);\n        total += (long long)x * count_distinct_prime_factors(x);\n    }\n    printf(\"%lld\\n\", total);\n    return 0;\n}",
+        "cpp": "#include <iostream>\n\nusing namespace std;\n\nint countDistinctPrimeFactors(int n) {\n    if (n <= 1) return 0;\n    int cnt = 0;\n    int temp = n;\n    for (int d = 2; (long long)d * d <= temp; ++d) {\n        if (temp % d == 0) {\n            cnt++;\n            while (temp % d == 0) {\n                temp /= d;\n            }\n        }\n    }\n    if (temp > 1) cnt++;\n    return cnt;\n}\n\nint main() {\n    int n;\n    if (!(cin >> n)) return 0;\n    long long total = 0;\n    for (int i = 0; i < n; ++i) {\n        int x;\n        cin >> x;\n        total += (long long)x * countDistinctPrimeFactors(x);\n    }\n    cout << total << endl;\n    return 0;\n}"
+      },
+      "language": "python",
+      "problemLocked": false,
+      "problemLockHash": "",
+      "testsLocked": false,
+      "testLockHash": "",
+      "tests": [
+        {
+          "input": "3\n6 10 15",
+          "expected": "62",
+          "studentDefined": false
+        },
+        {
+          "input": "4\n12 30 7 20",
+          "expected": "161",
+          "studentDefined": false
+        },
+        {
+          "input": "1\n2",
+          "expected": "2",
+          "studentDefined": false
+        },
+        {
+          "input": "2\n1 8",
+          "expected": "8",
+          "studentDefined": false
+        }
+      ],
+      "customFonts": []
+    },
+    {
+      "id": "Q-MV2AIY7C-LAXZ",
+      "title": "Question 9: Carousel SensorPairing",
+      "problemHtml": "<h2>Problem Statement</h2>\n<p>Sensors arranged around a circular carousel are each summed with the sensor located a fixed number of positions ahead <code>K</code>. Each position <code>i</code> (0-based) is paired with position <code>(i + K) mod N</code>, and the output stores the pairwise sum <code>B[i] = A[i] + A[(i + K) mod N]</code>. Your task is to find and return an integer array representing array <code>B</code>.</p>\n<p><b>Note:</b> The ring wraps around, so indices taken are modulo <code>N</code>.</p>\n<p><b>Input Specification:</b><br>\nLine 1: Space-separated integers representing array <code>A</code> (sensor readings).<br>\nLine 2: An integer <code>K</code>, representing the forward offset.\n</p>\n<p><b>Output Specification:</b><br>\nPrint space-separated integers representing the array <code>B</code>.\n</p>\n<h3>Example 1:</h3>\n<p>\n<b>Input:</b><br>\n<pre>6 2 9 4\n2</pre>\n<b>Output:</b><br>\n<pre>15 6 15 6</pre>\n<b>Explanation:</b><br>\nN = 4, K = 2:<br>\nSensor 0 (6) pairs with (0+2)%4 = 2 (9) -> 6 + 9 = 15.<br>\nSensor 1 (2) pairs with (1+2)%4 = 3 (4) -> 2 + 4 = 6.<br>\nSensor 2 (9) pairs with (2+2)%4 = 0 (6) -> 9 + 6 = 15.<br>\nSensor 3 (4) pairs with (3+2)%4 = 1 (2) -> 4 + 2 = 6.<br>\nResult = 15 6 15 6.\n</p>\n<h3>Example 2:</h3>\n<p>\n<b>Input:</b><br>\n<pre>5 3 8 1 7 2\n3</pre>\n<b>Output:</b><br>\n<pre>6 10 10 6 10 10</pre>\n<b>Explanation:</b><br>\nOffset K = 3 on 6 sensors gives 6 10 10 6 10 10.\n</p>",
+      "code": "import sys\n\ndef main():\n    tokens = sys.stdin.read().split()\n    if not tokens:\n        return\n    k = int(tokens[-1])\n    a = list(map(int, tokens[:-1]))\n    n = len(a)\n    if n == 0:\n        return\n    b = [str(a[i] + a[(i + k) % n]) for i in range(n)]\n    print(\" \".join(b))\n\nif __name__ == '__main__':\n    main()",
+      "codes": {
+        "python": "import sys\n\ndef main():\n    tokens = sys.stdin.read().split()\n    if not tokens:\n        return\n    k = int(tokens[-1])\n    a = list(map(int, tokens[:-1]))\n    n = len(a)\n    if n == 0:\n        return\n    b = [str(a[i] + a[(i + k) % n]) for i in range(n)]\n    print(\" \".join(b))\n\nif __name__ == '__main__':\n    main()",
+        "c": "#include <stdio.h>\n\nint main(void) {\n    int a[10000];\n    int n = 0, val;\n    while (scanf(\"%d\", &val) == 1) {\n        a[n++] = val;\n    }\n    if (n < 2) return 0;\n    int k = a[--n];\n    for (int i = 0; i < n; i++) {\n        int pair_idx = (i + (k % n) + n) % n;\n        printf(\"%d%c\", a[i] + a[pair_idx], (i == n - 1) ? '\\n' : ' ');\n    }\n    return 0;\n}",
+        "cpp": "#include <iostream>\n#include <vector>\n\nusing namespace std;\n\nint main() {\n    vector<int> all;\n    int val;\n    while (cin >> val) {\n        all.push_back(val);\n    }\n    if (all.size() < 2) return 0;\n    int k = all.back();\n    all.pop_back();\n    int n = all.size();\n    for (int i = 0; i < n; ++i) {\n        int pair_idx = (i + (k % n) + n) % n;\n        cout << all[i] + all[pair_idx] << (i == n - 1 ? \"\" : \" \");\n    }\n    cout << endl;\n    return 0;\n}"
+      },
+      "language": "python",
+      "problemLocked": false,
+      "problemLockHash": "",
+      "testsLocked": false,
+      "testLockHash": "",
+      "tests": [
+        {
+          "input": "6 2 9 4\n2",
+          "expected": "15 6 15 6",
+          "studentDefined": false
+        },
+        {
+          "input": "5 3 8 1 7 2\n3",
+          "expected": "6 10 10 6 10 10",
+          "studentDefined": false
+        },
+        {
+          "input": "10 20\n1",
+          "expected": "30 30",
+          "studentDefined": false
+        },
+        {
+          "input": "1 2 3\n0",
+          "expected": "2 4 6",
+          "studentDefined": false
+        }
+      ],
+      "customFonts": []
+    },
+    {
+      "id": "Q-MV2ALQWK-4IZ1",
+      "title": "Question 10: Cross-Dock Pallet Match Load",
+      "problemHtml": "<h2>Problem Statement</h2>\n<p>Two barcode scanners at a cross-dock log letters, and matching letters reinforce each other based on how often they appear on each side. You are given a string <code>A</code> and a string <code>B</code>. For every letter that appears in both strings, add the product of its count in <code>A</code>, its count in <code>B</code>, and its letter value (where a = 1, ..., z = 26). Your task is to find and return an integer value representing the total match load over all shared letters.</p>\n<p><b>Note:</b> A letter contributes only if it appears in both strings.</p>\n<p><b>Input Specification:</b><br>\nLine 1: A string <code>A</code> from the first scanner.<br>\nLine 2: A string <code>B</code> from the second scanner.\n</p>\n<p><b>Output Specification:</b><br>\nPrint an integer value representing the total match load over all shared letters.\n</p>\n<h3>Example 1:</h3>\n<p>\n<b>Input:</b><br>\n<pre>cat\nact</pre>\n<b>Output:</b><br>\n<pre>24</pre>\n<b>Explanation:</b><br>\n'a': countA = 1, countB = 1, val = 1 -> 1 * 1 * 1 = 1.<br>\n'c': countA = 1, countB = 1, val = 3 -> 1 * 1 * 3 = 3.<br>\n't': countA = 1, countB = 1, val = 20 -> 1 * 1 * 20 = 20.<br>\nTotal = 1 + 3 + 20 = 24.\n</p>\n<h3>Example 2:</h3>\n<p>\n<b>Input:</b><br>\n<pre>moon\nmood</pre>\n<b>Output:</b><br>\n<pre>73</pre>\n<b>Explanation:</b><br>\n'm': countA = 1, countB = 1, val = 13 -> 13.<br>\n'o': countA = 2, countB = 2, val = 15 -> 2 * 2 * 15 = 60.<br>\n'n' and 'd' are not shared.<br>\nTotal = 13 + 60 = 73.\n</p>",
+      "code": "import sys\nfrom collections import Counter\n\ndef main():\n    tokens = sys.stdin.read().split()\n    if len(tokens) < 2:\n        print(0)\n        return\n    a, b = tokens[0], tokens[1]\n    cA = Counter(a)\n    cB = Counter(b)\n    total = 0\n    for ch in cA:\n        if ch in cB and 'a' <= ch <= 'z':\n            val = ord(ch) - ord('a') + 1\n            total += cA[ch] * cB[ch] * val\n    print(total)\n\nif __name__ == '__main__':\n    main()",
+      "codes": {
+        "python": "import sys\nfrom collections import Counter\n\ndef main():\n    tokens = sys.stdin.read().split()\n    if len(tokens) < 2:\n        print(0)\n        return\n    a, b = tokens[0], tokens[1]\n    cA = Counter(a)\n    cB = Counter(b)\n    total = 0\n    for ch in cA:\n        if ch in cB and 'a' <= ch <= 'z':\n            val = ord(ch) - ord('a') + 1\n            total += cA[ch] * cB[ch] * val\n    print(total)\n\nif __name__ == '__main__':\n    main()",
+        "c": "#include <stdio.h>\n#include <string.h>\n\nint main(void) {\n    char a[10000], b[10000];\n    if (scanf(\"%s %s\", a, b) == 2) {\n        int cntA[26] = {0}, cntB[26] = {0};\n        int lenA = strlen(a), lenB = strlen(b);\n        for (int i = 0; i < lenA; i++) if (a[i] >= 'a' && a[i] <= 'z') cntA[a[i] - 'a']++;\n        for (int i = 0; i < lenB; i++) if (b[i] >= 'a' && b[i] <= 'z') cntB[b[i] - 'a']++;\n        long long total = 0;\n        for (int i = 0; i < 26; i++) {\n            if (cntA[i] > 0 && cntB[i] > 0) {\n                total += (long long)cntA[i] * cntB[i] * (i + 1);\n            }\n        }\n        printf(\"%lld\\n\", total);\n    }\n    return 0;\n}",
+        "cpp": "#include <iostream>\n#include <string>\n#include <vector>\n\nusing namespace std;\n\nint main() {\n    string a, b;\n    if (cin >> a >> b) {\n        vector<int> cntA(26, 0), cntB(26, 0);\n        for (char c : a) if (c >= 'a' && c <= 'z') cntA[c - 'a']++;\n        for (char c : b) if (c >= 'a' && c <= 'z') cntB[c - 'a']++;\n        long long total = 0;\n        for (int i = 0; i < 26; ++i) {\n            if (cntA[i] > 0 && cntB[i] > 0) {\n                total += (long long)cntA[i] * cntB[i] * (i + 1);\n            }\n        }\n        cout << total << endl;\n    }\n    return 0;\n}"
+      },
+      "language": "python",
+      "problemLocked": false,
+      "problemLockHash": "",
+      "testsLocked": false,
+      "testLockHash": "",
+      "tests": [
+        {
+          "input": "cat\nact",
+          "expected": "24",
+          "studentDefined": false
+        },
+        {
+          "input": "moon\nmood",
+          "expected": "73",
+          "studentDefined": false
+        },
+        {
+          "input": "abc\ndef",
+          "expected": "0",
+          "studentDefined": false
+        },
+        {
+          "input": "xyz\nxyz",
+          "expected": "75",
+          "studentDefined": false
+        }
+      ],
+      "customFonts": []
+    },
+    {
+      "id": "Q-MV2ANLQ1-9QP2",
+      "title": "Question 11: Gearbox Resonance Score",
+      "problemHtml": "<h2>Problem Statement</h2>\n<p>A test rig spins a gearbox for <code>N</code> cycles. Each cycle's resonance is determined by the binary representation of its cycle number. For each cycle number <code>K</code> (1 &le; K &le; N), the resonance equals:\n<ul>\n  <li>the number of trailing zero bits in <code>K</code>, plus</li>\n  <li>the number of set bits (1-bits) in <code>K</code>.</li>\n</ul>\nYour task is to find and return an integer value representing the total resonance summed over all <code>N</code> cycles.</p>\n<p><b>Note:</b> The trailing zero bits and set bits are computed using the binary representation of <code>K</code>.</p>\n<p><b>Input Specification:</b><br>\nA single integer <code>N</code>, representing the number of cycles.\n</p>\n<p><b>Output Specification:</b><br>\nPrint an integer value representing the total resonance summed over all <code>N</code> cycles.\n</p>\n<h3>Example 1:</h3>\n<p>\n<b>Input:</b><br>\n<pre>9</pre>\n<b>Output:</b><br>\n<pre>22</pre>\n<b>Explanation:</b><br>\nK=1 (1): trailing 0, set 1 -> 1.<br>\nK=2 (10): trailing 1, set 1 -> 2.<br>\nK=3 (11): trailing 0, set 2 -> 2.<br>\nK=4 (100): trailing 2, set 1 -> 3.<br>\nK=5 (101): trailing 0, set 2 -> 2.<br>\nK=6 (110): trailing 1, set 2 -> 3.<br>\nK=7 (111): trailing 0, set 3 -> 3.<br>\nK=8 (1000): trailing 3, set 1 -> 4.<br>\nK=9 (1001): trailing 0, set 2 -> 2.<br>\nTotal = 1 + 2 + 2 + 3 + 2 + 3 + 3 + 4 + 2 = 22.\n</p>\n<h3>Example 2:</h3>\n<p>\n<b>Input:</b><br>\n<pre>12</pre>\n<b>Output:</b><br>\n<pre>32</pre>\n<b>Explanation:</b><br>\nSumming resonance for K = 1 to 12 gives 32.\n</p>",
+      "code": "import sys\n\ndef main():\n    tokens = sys.stdin.read().split()\n    if not tokens:\n        print(0)\n        return\n    n = int(tokens[0])\n    total = 0\n    for k in range(1, n + 1):\n        tz = (k & -k).bit_length() - 1\n        sb = bin(k).count('1')\n        total += tz + sb\n    print(total)\n\nif __name__ == '__main__':\n    main()",
+      "codes": {
+        "python": "import sys\n\ndef main():\n    tokens = sys.stdin.read().split()\n    if not tokens:\n        print(0)\n        return\n    n = int(tokens[0])\n    total = 0\n    for k in range(1, n + 1):\n        tz = (k & -k).bit_length() - 1\n        sb = bin(k).count('1')\n        total += tz + sb\n    print(total)\n\nif __name__ == '__main__':\n    main()",
+        "c": "#include <stdio.h>\n\nint main(void) {\n    int n;\n    if (scanf(\"%d\", &n) == 1) {\n        long long total = 0;\n        for (int k = 1; k <= n; k++) {\n            int tz = __builtin_ctz(k);\n            int sb = __builtin_popcount(k);\n            total += tz + sb;\n        }\n        printf(\"%lld\\n\", total);\n    }\n    return 0;\n}",
+        "cpp": "#include <iostream>\n\nusing namespace std;\n\nint main() {\n    int n;\n    if (cin >> n) {\n        long long total = 0;\n        for (int k = 1; k <= n; ++k) {\n            int tz = 0;\n            int temp = k;\n            while ((temp & 1) == 0) {\n                tz++;\n                temp >>= 1;\n            }\n            int sb = 0;\n            temp = k;\n            while (temp > 0) {\n                if (temp & 1) sb++;\n                temp >>= 1;\n            }\n            total += tz + sb;\n        }\n        cout << total << endl;\n    }\n    return 0;\n}"
+      },
+      "language": "python",
+      "problemLocked": false,
+      "problemLockHash": "",
+      "testsLocked": false,
+      "testLockHash": "",
+      "tests": [
+        {
+          "input": "9",
+          "expected": "22",
+          "studentDefined": false
+        },
+        {
+          "input": "12",
+          "expected": "32",
+          "studentDefined": false
+        },
+        {
+          "input": "1",
+          "expected": "1",
+          "studentDefined": false
+        },
+        {
+          "input": "4",
+          "expected": "8",
+          "studentDefined": false
+        }
+      ],
+      "customFonts": []
+    },
+    {
+      "id": "Q-MV2AQX74-GQKW",
+      "title": "Question 12: Beacon Brightest-Digit Tally",
+      "problemHtml": "<h2>Problem Statement</h2>\n<p>A network powers beacons with sequential IDs from 1 to <code>N</code>. Each beacon shines as bright as the largest decimal digit of its ID. Beacon <code>i</code> (for <code>i</code> from 1 to <code>N</code>) shines with a brightness equal to the largest decimal digit of <code>i</code>. Your task is to find and return an integer value representing the total brightness summed over all beacon IDs.</p>\n<p><b>Note:</b> Brightness of an ID is its maximum decimal digit.</p>\n<p><b>Input Specification:</b><br>\nA single integer value <code>N</code>, representing the number of beacons.\n</p>\n<p><b>Output Specification:</b><br>\nPrint an integer value representing the total brightness summed over all beacon IDs.\n</p>\n<h3>Example 1:</h3>\n<p>\n<b>Input:</b><br>\n<pre>6</pre>\n<b>Output:</b><br>\n<pre>21</pre>\n<b>Explanation:</b><br>\nBeacons 1 to 6 have brightest digits 1, 2, 3, 4, 5, 6.<br>\nTotal = 1 + 2 + 3 + 4 + 5 + 6 = 21.\n</p>\n<h3>Example 2:</h3>\n<p>\n<b>Input:</b><br>\n<pre>11</pre>\n<b>Output:</b><br>\n<pre>47</pre>\n<b>Explanation:</b><br>\nBeacons 1..9 sum to 45. Beacon 10 has max digit 1, Beacon 11 has max digit 1.<br>\nTotal = 45 + 1 + 1 = 47.\n</p>",
+      "code": "import sys\n\ndef main():\n    tokens = sys.stdin.read().split()\n    if not tokens:\n        print(0)\n        return\n    n = int(tokens[0])\n    total = sum(max(int(d) for d in str(i)) for i in range(1, n + 1))\n    print(total)\n\nif __name__ == '__main__':\n    main()",
+      "codes": {
+        "python": "import sys\n\ndef main():\n    tokens = sys.stdin.read().split()\n    if not tokens:\n        print(0)\n        return\n    n = int(tokens[0])\n    total = sum(max(int(d) for d in str(i)) for i in range(1, n + 1))\n    print(total)\n\nif __name__ == '__main__':\n    main()",
+        "c": "#include <stdio.h>\n\nint max_digit(int x) {\n    int m = 0;\n    while (x > 0) {\n        int d = x % 10;\n        if (d > m) m = d;\n        x /= 10;\n    }\n    return m;\n}\n\nint main(void) {\n    int n;\n    if (scanf(\"%d\", &n) == 1) {\n        long long total = 0;\n        for (int i = 1; i <= n; i++) {\n            total += max_digit(i);\n        }\n        printf(\"%lld\\n\", total);\n    }\n    return 0;\n}",
+        "cpp": "#include <iostream>\n\nusing namespace std;\n\nint maxDigit(int x) {\n    int m = 0;\n    while (x > 0) {\n        int d = x % 10;\n        if (d > m) m = d;\n        x /= 10;\n    }\n    return m;\n}\n\nint main() {\n    int n;\n    if (cin >> n) {\n        long long total = 0;\n        for (int i = 1; i <= n; ++i) {\n            total += maxDigit(i);\n        }\n        cout << total << endl;\n    }\n    return 0;\n}"
+      },
+      "language": "python",
+      "problemLocked": false,
+      "problemLockHash": "",
+      "testsLocked": false,
+      "testLockHash": "",
+      "tests": [
+        {
+          "input": "6",
+          "expected": "21",
+          "studentDefined": false
+        },
+        {
+          "input": "11",
+          "expected": "47",
+          "studentDefined": false
+        },
+        {
+          "input": "1",
+          "expected": "1",
+          "studentDefined": false
+        },
+        {
+          "input": "15",
+          "expected": "61",
+          "studentDefined": false
+        }
+      ],
+      "customFonts": []
+    },
+    {
+      "id": "Q-MV2AT84Q-SWQR",
+      "title": "Question 13: Drum Roll Intensity",
+      "problemHtml": "<h2>Problem Statement</h2>\n<p>A drummer strikes pads, and repeated hits on the same pad form a roll whose loudness grows with each consecutive strike. You are given an integer <code>N</code> and a string <code>S</code> of pad letters (loudness: a = 1, b = 2, ..., z = 26). Within a run of the same pad, the multiplier grows:\n<ul>\n  <li>The 1st consecutive hit counts at 1x</li>\n  <li>The 2nd consecutive hit counts at 2x</li>\n  <li>The 3rd consecutive hit counts at 3x, and so on.</li>\n</ul>\nChanging pads resets the multiplier back to 1. Your task is to find and return an integer value representing the total intensity of the whole performance.</p>\n<p><b>Note:</b> The run multiplier starts at 1 for the first hit and resets to 1 whenever the pad changes.</p>\n<p><b>Input Specification:</b><br>\nLine 1: An integer value <code>N</code>, representing the number of hits.<br>\nLine 2: A string <code>S</code> representing the pad letters.\n</p>\n<p><b>Output Specification:</b><br>\nPrint an integer value representing the total intensity of the whole performance.\n</p>\n<h3>Example 1:</h3>\n<p>\n<b>Input:</b><br>\n<pre>3\ncat</pre>\n<b>Output:</b><br>\n<pre>24</pre>\n<b>Explanation:</b><br>\nPad 'c' (3) * 1 = 3.<br>\nPad 'a' (1) * 1 = 1.<br>\nPad 't' (20) * 1 = 20.<br>\nTotal = 3 + 1 + 20 = 24.\n</p>\n<h3>Example 2:</h3>\n<p>\n<b>Input:</b><br>\n<pre>4\nbell</pre>\n<b>Output:</b><br>\n<pre>43</pre>\n<b>Explanation:</b><br>\n'b' (2) * 1 = 2.<br>\n'e' (5) * 1 = 5.<br>\n'l' (12) * 1 = 12.<br>\n'l' (12) * 2 = 24.<br>\nTotal = 2 + 5 + 12 + 24 = 43.\n</p>",
+      "code": "import sys\n\ndef main():\n    tokens = sys.stdin.read().split()\n    if not tokens:\n        print(0)\n        return\n    n = int(tokens[0])\n    s = tokens[1] if len(tokens) > 1 else \"\"\n    total = 0\n    cur_run = 0\n    prev_ch = None\n    for ch in s[:n]:\n        val = ord(ch) - ord('a') + 1\n        if ch == prev_ch:\n            cur_run += 1\n        else:\n            cur_run = 1\n            prev_ch = ch\n        total += val * cur_run\n    print(total)\n\nif __name__ == '__main__':\n    main()",
+      "codes": {
+        "python": "import sys\n\ndef main():\n    tokens = sys.stdin.read().split()\n    if not tokens:\n        print(0)\n        return\n    n = int(tokens[0])\n    s = tokens[1] if len(tokens) > 1 else \"\"\n    total = 0\n    cur_run = 0\n    prev_ch = None\n    for ch in s[:n]:\n        val = ord(ch) - ord('a') + 1\n        if ch == prev_ch:\n            cur_run += 1\n        else:\n            cur_run = 1\n            prev_ch = ch\n        total += val * cur_run\n    print(total)\n\nif __name__ == '__main__':\n    main()",
+        "c": "#include <stdio.h>\n#include <string.h>\n\nint main(void) {\n    int n;\n    char s[10000];\n    if (scanf(\"%d %s\", &n, s) == 2) {\n        long long total = 0;\n        int cur_run = 0;\n        char prev = '\\0';\n        for (int i = 0; i < n && s[i] != '\\0'; i++) {\n            int val = s[i] - 'a' + 1;\n            if (s[i] == prev) {\n                cur_run++;\n            } else {\n                cur_run = 1;\n                prev = s[i];\n            }\n            total += (long long)val * cur_run;\n        }\n        printf(\"%lld\\n\", total);\n    }\n    return 0;\n}",
+        "cpp": "#include <iostream>\n#include <string>\n\nusing namespace std;\n\nint main() {\n    int n;\n    string s;\n    if (cin >> n >> s) {\n        long long total = 0;\n        int cur_run = 0;\n        char prev = '\\0';\n        for (int i = 0; i < n && i < (int)s.length(); ++i) {\n            int val = s[i] - 'a' + 1;\n            if (s[i] == prev) {\n                cur_run++;\n            } else {\n                cur_run = 1;\n                prev = s[i];\n            }\n            total += (long long)val * cur_run;\n        }\n        cout << total << endl;\n    }\n    return 0;\n}"
+      },
+      "language": "python",
+      "problemLocked": false,
+      "problemLockHash": "",
+      "testsLocked": false,
+      "testLockHash": "",
+      "tests": [
+        {
+          "input": "3\ncat",
+          "expected": "24",
+          "studentDefined": false
+        },
+        {
+          "input": "4\nbell",
+          "expected": "43",
+          "studentDefined": false
+        },
+        {
+          "input": "3\naaa",
+          "expected": "6",
+          "studentDefined": false
+        },
+        {
+          "input": "1\nz",
+          "expected": "26",
+          "studentDefined": false
+        }
+      ],
+      "customFonts": []
+    },
+    {
+      "id": "Q-MV2AW6TB-O2D0",
+      "title": "Question 14: Cafe Menu Score",
+      "problemHtml": "<h2>Problem Statement</h2>\n<p>A cafe menu string <code>S</code> contains lowercase letters where a = 1, b = 2, ..., z = 26. Each vowel (a, e, i, o, u) scores 3 times its alphabet value, while each consonant scores 1 time its alphabet value. For each character in <code>S</code>, calculate its score and return an integer value representing the total menu score.</p>\n<p><b>Note:</b> Only 'a', 'e', 'i', 'o', 'u' are treated as vowels.</p>\n<p><b>Input Specification:</b><br>\nLine 1: An integer <code>N</code>, representing the length of the menu string.<br>\nLine 2: A string <code>S</code> of lowercase menu characters.\n</p>\n<p><b>Output Specification:</b><br>\nPrint an integer value representing the total menu score.\n</p>\n<h3>Example 1:</h3>\n<p>\n<b>Input:</b><br>\n<pre>4\ncafe</pre>\n<b>Output:</b><br>\n<pre>27</pre>\n<b>Explanation:</b><br>\n'c' is consonant: 3 * 1 = 3.<br>\n'a' is vowel: 1 * 3 = 3.<br>\n'f' is consonant: 6 * 1 = 6.<br>\n'e' is vowel: 5 * 3 = 15.<br>\nTotal = 3 + 3 + 6 + 15 = 27.\n</p>\n<h3>Example 2:</h3>\n<p>\n<b>Input:</b><br>\n<pre>3\nbee</pre>\n<b>Output:</b><br>\n<pre>32</pre>\n<b>Explanation:</b><br>\n'b' (2) + 'e' (15) + 'e' (15) = 32.\n</p>",
+      "code": "import sys\n\ndef main():\n    tokens = sys.stdin.read().split()\n    if not tokens:\n        print(0)\n        return\n    n = int(tokens[0])\n    s = tokens[1] if len(tokens) > 1 else \"\"\n    vowels = set(\"aeiou\")\n    total = 0\n    for ch in s[:n]:\n        val = ord(ch) - ord('a') + 1\n        if ch in vowels:\n            total += val * 3\n        else:\n            total += val * 1\n    print(total)\n\nif __name__ == '__main__':\n    main()",
+      "codes": {
+        "python": "import sys\n\ndef main():\n    tokens = sys.stdin.read().split()\n    if not tokens:\n        print(0)\n        return\n    n = int(tokens[0])\n    s = tokens[1] if len(tokens) > 1 else \"\"\n    vowels = set(\"aeiou\")\n    total = 0\n    for ch in s[:n]:\n        val = ord(ch) - ord('a') + 1\n        if ch in vowels:\n            total += val * 3\n        else:\n            total += val * 1\n    print(total)\n\nif __name__ == '__main__':\n    main()",
+        "c": "#include <stdio.h>\n#include <string.h>\n\nint is_vowel(char c) {\n    return c == 'a' || c == 'e' || c == 'i' || c == 'o' || c == 'u';\n}\n\nint main(void) {\n    int n;\n    char s[10000];\n    if (scanf(\"%d %s\", &n, s) == 2) {\n        long long total = 0;\n        for (int i = 0; i < n && s[i] != '\\0'; i++) {\n            int val = s[i] - 'a' + 1;\n            if (is_vowel(s[i])) {\n                total += val * 3;\n            } else {\n                total += val;\n            }\n        }\n        printf(\"%lld\\n\", total);\n    }\n    return 0;\n}",
+        "cpp": "#include <iostream>\n#include <string>\n\nusing namespace std;\n\nbool isVowel(char c) {\n    return c == 'a' || c == 'e' || c == 'i' || c == 'o' || c == 'u';\n}\n\nint main() {\n    int n;\n    string s;\n    if (cin >> n >> s) {\n        long long total = 0;\n        for (int i = 0; i < n && i < (int)s.length(); ++i) {\n            int val = s[i] - 'a' + 1;\n            if (isVowel(s[i])) {\n                total += val * 3;\n            } else {\n                total += val;\n            }\n        }\n        cout << total << endl;\n    }\n    return 0;\n}"
+      },
+      "language": "python",
+      "problemLocked": false,
+      "problemLockHash": "",
+      "testsLocked": false,
+      "testLockHash": "",
+      "tests": [
+        {
+          "input": "4\ncafe",
+          "expected": "27",
+          "studentDefined": false
+        },
+        {
+          "input": "3\nbee",
+          "expected": "32",
+          "studentDefined": false
+        },
+        {
+          "input": "1\na",
+          "expected": "3",
+          "studentDefined": false
+        },
+        {
+          "input": "2\nhi",
+          "expected": "35",
+          "studentDefined": false
+        }
+      ],
+      "customFonts": []
+    },
+    {
+      "id": "Q-MV2AXJTV-PJC2",
+      "title": "Question 15: Marathon Bib Prime Sum",
+      "problemHtml": "<h2>Problem Statement</h2>\n<p>A marathon organizer lists <code>N</code> bib numbers in the order runners cross the finish line. Calculate the sum of bib numbers at prime 0-based indices (2, 3, 5, 7, 11, ...) in the array. Your task is to find and return an integer value representing the prime-index sum.</p>\n<p><b>Note:</b> 0 and 1 are not prime numbers. Primes considered are 2, 3, 5, 7, 11, 13, and so on.</p>\n<p><b>Input Specification:</b><br>\nLine 1: An integer <code>N</code>, representing the number of finishers.<br>\nLine 2: <code>N</code> space-separated integers representing the bib numbers <code>B</code>.\n</p>\n<p><b>Output Specification:</b><br>\nPrint an integer value representing the prime-index sum.\n</p>\n<h3>Example 1:</h3>\n<p>\n<b>Input:</b><br>\n<pre>6\n10 20 30 40 50 60</pre>\n<b>Output:</b><br>\n<pre>130</pre>\n<b>Explanation:</b><br>\nPrime indices in range 0..5 are 2, 3, 5.<br>\nB[2] = 30, B[3] = 40, B[5] = 60.<br>\nSum = 30 + 40 + 60 = 130.\n</p>\n<h3>Example 2:</h3>\n<p>\n<b>Input:</b><br>\n<pre>4\n7 7 7 7</pre>\n<b>Output:</b><br>\n<pre>14</pre>\n<b>Explanation:</b><br>\nPrime indices in range 0..3 are 2 and 3.<br>\nB[2] = 7, B[3] = 7 -> Sum = 7 + 7 = 14.\n</p>",
+      "code": "import sys\n\ndef is_prime(x):\n    if x < 2:\n        return False\n    d = 2\n    while d * d <= x:\n        if x % d == 0:\n            return False\n        d += 1\n    return True\n\ndef main():\n    tokens = sys.stdin.read().split()\n    if not tokens:\n        print(0)\n        return\n    n = int(tokens[0])\n    b = list(map(int, tokens[1:1+n]))\n    total = sum(b[i] for i in range(len(b)) if is_prime(i))\n    print(total)\n\nif __name__ == '__main__':\n    main()",
+      "codes": {
+        "python": "import sys\n\ndef is_prime(x):\n    if x < 2:\n        return False\n    d = 2\n    while d * d <= x:\n        if x % d == 0:\n            return False\n        d += 1\n    return True\n\ndef main():\n    tokens = sys.stdin.read().split()\n    if not tokens:\n        print(0)\n        return\n    n = int(tokens[0])\n    b = list(map(int, tokens[1:1+n]))\n    total = sum(b[i] for i in range(len(b)) if is_prime(i))\n    print(total)\n\nif __name__ == '__main__':\n    main()",
+        "c": "#include <stdio.h>\n#include <stdbool.h>\n\nbool is_prime(int x) {\n    if (x < 2) return false;\n    for (int d = 2; (long long)d * d <= x; d++) {\n        if (x % d == 0) return false;\n    }\n    return true;\n}\n\nint main(void) {\n    int n;\n    if (scanf(\"%d\", &n) == 1) {\n        long long total = 0;\n        for (int i = 0; i < n; i++) {\n            int bib;\n            scanf(\"%d\", &bib);\n            if (is_prime(i)) {\n                total += bib;\n            }\n        }\n        printf(\"%lld\\n\", total);\n    }\n    return 0;\n}",
+        "cpp": "#include <iostream>\n\nusing namespace std;\n\nbool isPrime(int x) {\n    if (x < 2) return false;\n    for (long long d = 2; d * d <= x; ++d) {\n        if (x % d == 0) return false;\n    }\n    return true;\n}\n\nint main() {\n    int n;\n    if (cin >> n) {\n        long long total = 0;\n        for (int i = 0; i < n; ++i) {\n            int bib;\n            cin >> bib;\n            if (isPrime(i)) {\n                total += bib;\n            }\n        }\n        cout << total << endl;\n    }\n    return 0;\n}"
+      },
+      "language": "python",
+      "problemLocked": false,
+      "problemLockHash": "",
+      "testsLocked": false,
+      "testLockHash": "",
+      "tests": [
+        {
+          "input": "6\n10 20 30 40 50 60",
+          "expected": "130",
+          "studentDefined": false
+        },
+        {
+          "input": "4\n7 7 7 7",
+          "expected": "14",
+          "studentDefined": false
+        },
+        {
+          "input": "2\n100 200",
+          "expected": "0",
+          "studentDefined": false
+        },
+        {
+          "input": "3\n5 10 15",
+          "expected": "15",
+          "studentDefined": false
+        }
+      ],
+      "customFonts": []
+    },
+    {
+      "id": "Q-MV2AZ7FP-A5ZH",
+      "title": "Question 16: Diver Oxygen Check",
+      "problemHtml": "<h2>Problem Statement</h2>\n<p>A diver takes <code>N</code> depth readings during descent. Given a target safe depth <code>D</code>, each reading <code>r</code> contributes <code>D - |r - D|</code> to the total reward. Readings equal to <code>D</code> give the maximum reward <code>D</code>, and readings that deviate more than <code>D</code> contribute a negative amount. Your task is to find and return an integer value representing the total reward across all readings.</p>\n<p><b>Note:</b> The contribution for a reading <code>r</code> is <code>D - |r - D|</code>. It can be negative when <code>|r - D| > D</code>.</p>\n<p><b>Input Specification:</b><br>\nLine 1: An integer <code>N</code>, representing the number of readings.<br>\nLine 2: <code>N</code> space-separated integers representing depth readings <code>R</code>.<br>\nLine 3: An integer <code>D</code>, representing the target depth.\n</p>\n<p><b>Output Specification:</b><br>\nPrint an integer value representing the total reward across all readings.\n</p>\n<h3>Example 1:</h3>\n<p>\n<b>Input:</b><br>\n<pre>3\n10 12 14\n12</pre>\n<b>Output:</b><br>\n<pre>32</pre>\n<b>Explanation:</b><br>\nReading 10: 12 - |10 - 12| = 10.<br>\nReading 12: 12 - |12 - 12| = 12.<br>\nReading 14: 12 - |14 - 12| = 10.<br>\nTotal reward = 10 + 12 + 10 = 32.\n</p>\n<h3>Example 2:</h3>\n<p>\n<b>Input:</b><br>\n<pre>2\n5 20\n10</pre>\n<b>Output:</b><br>\n<pre>5</pre>\n<b>Explanation:</b><br>\nReading 5: 10 - |5 - 10| = 5.<br>\nReading 20: 10 - |20 - 10| = 0.<br>\nTotal reward = 5 + 0 = 5.\n</p>",
+      "code": "import sys\n\ndef main():\n    tokens = sys.stdin.read().split()\n    if not tokens:\n        print(0)\n        return\n    n = int(tokens[0])\n    r = list(map(int, tokens[1:1+n]))\n    d = int(tokens[1+n])\n    total = sum(d - abs(x - d) for x in r)\n    print(total)\n\nif __name__ == '__main__':\n    main()",
+      "codes": {
+        "python": "import sys\n\ndef main():\n    tokens = sys.stdin.read().split()\n    if not tokens:\n        print(0)\n        return\n    n = int(tokens[0])\n    r = list(map(int, tokens[1:1+n]))\n    d = int(tokens[1+n])\n    total = sum(d - abs(x - d) for x in r)\n    print(total)\n\nif __name__ == '__main__':\n    main()",
+        "c": "#include <stdio.h>\n#include <stdlib.h>\n\nint main(void) {\n    int n;\n    if (scanf(\"%d\", &n) != 1) return 0;\n    int r[10000];\n    for (int i = 0; i < n; i++) scanf(\"%d\", &r[i]);\n    int d;\n    scanf(\"%d\", &d);\n    long long total = 0;\n    for (int i = 0; i < n; i++) {\n        total += d - abs(r[i] - d);\n    }\n    printf(\"%lld\\n\", total);\n    return 0;\n}",
+        "cpp": "#include <iostream>\n#include <vector>\n#include <cmath>\n\nusing namespace std;\n\nint main() {\n    int n;\n    if (cin >> n) {\n        vector<int> r(n);\n        for (int i = 0; i < n; ++i) cin >> r[i];\n        int d;\n        cin >> d;\n        long long total = 0;\n        for (int x : r) {\n            total += d - abs(x - d);\n        }\n        cout << total << endl;\n    }\n    return 0;\n}"
+      },
+      "language": "python",
+      "problemLocked": false,
+      "problemLockHash": "",
+      "testsLocked": false,
+      "testLockHash": "",
+      "tests": [
+        {
+          "input": "3\n10 12 14\n12",
+          "expected": "32",
+          "studentDefined": false
+        },
+        {
+          "input": "2\n5 20\n10",
+          "expected": "5",
+          "studentDefined": false
+        },
+        {
+          "input": "1\n50\n10",
+          "expected": "-30",
+          "studentDefined": false
+        },
+        {
+          "input": "2\n15 15\n15",
+          "expected": "30",
+          "studentDefined": false
+        }
+      ],
+      "customFonts": []
+    },
+    {
+      "id": "Q-MV2B1DAA-KI88",
+      "title": "Question 17: Email Spam Flag",
+      "problemHtml": "<h2>Problem Statement</h2>\n<p>Given a message string <code>S</code> and a forbidden single-character letter <code>L</code>, scan the first <code>N</code> characters of <code>S</code>. For every 0-based index <code>i</code> where <code>S[i]</code> equals <code>L</code>, add <code>(i + 1)</code> to the running spam score. Your task is to find and return an integer value representing the total spam score.</p>\n<p><b>Note:</b> Only the first <code>N</code> characters of <code>S</code> are inspected.</p>\n<p><b>Input Specification:</b><br>\nLine 1: An integer <code>N</code>, representing the prefix length to inspect.<br>\nLine 2: A string <code>S</code> representing the message.<br>\nLine 3: A single-character string <code>L</code> representing the forbidden letter.\n</p>\n<p><b>Output Specification:</b><br>\nPrint an integer value representing the total spam score.\n</p>\n<h3>Example 1:</h3>\n<p>\n<b>Input:</b><br>\n<pre>5\nabacada\na</pre>\n<b>Output:</b><br>\n<pre>9</pre>\n<b>Explanation:</b><br>\nPrefix of length 5 is \"abaca\".<br>\nIndex 0 ('a'): +1.<br>\nIndex 2 ('a'): +3.<br>\nIndex 4 ('a'): +5.<br>\nTotal = 1 + 3 + 5 = 9.\n</p>\n<h3>Example 2:</h3>\n<p>\n<b>Input:</b><br>\n<pre>4\nbanana\nn</pre>\n<b>Output:</b><br>\n<pre>3</pre>\n<b>Explanation:</b><br>\nPrefix of length 4 is \"bana\".<br>\nIndex 2 ('n'): +3.<br>\nTotal = 3.\n</p>",
+      "code": "import sys\n\ndef main():\n    tokens = sys.stdin.read().split()\n    if len(tokens) < 3:\n        print(0)\n        return\n    n = int(tokens[0])\n    s = tokens[1]\n    l = tokens[2]\n    total = 0\n    target = l[0]\n    for i in range(min(n, len(s))):\n        if s[i] == target:\n            total += i + 1\n    print(total)\n\nif __name__ == '__main__':\n    main()",
+      "codes": {
+        "python": "import sys\n\ndef main():\n    tokens = sys.stdin.read().split()\n    if len(tokens) < 3:\n        print(0)\n        return\n    n = int(tokens[0])\n    s = tokens[1]\n    l = tokens[2]\n    total = 0\n    target = l[0]\n    for i in range(min(n, len(s))):\n        if s[i] == target:\n            total += i + 1\n    print(total)\n\nif __name__ == '__main__':\n    main()",
+        "c": "#include <stdio.h>\n#include <string.h>\n\nint main(void) {\n    int n;\n    char s[10000], l[100];\n    if (scanf(\"%d %s %s\", &n, s, l) == 3) {\n        long long total = 0;\n        char target = l[0];\n        int len = strlen(s);\n        for (int i = 0; i < n && i < len; i++) {\n            if (s[i] == target) {\n                total += i + 1;\n            }\n        }\n        printf(\"%lld\\n\", total);\n    }\n    return 0;\n}",
+        "cpp": "#include <iostream>\n#include <string>\n\nusing namespace std;\n\nint main() {\n    int n;\n    string s, l;\n    if (cin >> n >> s >> l) {\n        long long total = 0;\n        char target = l[0];\n        for (int i = 0; i < n && i < (int)s.length(); ++i) {\n            if (s[i] == target) {\n                total += i + 1;\n            }\n        }\n        cout << total << endl;\n    }\n    return 0;\n}"
+      },
+      "language": "python",
+      "problemLocked": false,
+      "problemLockHash": "",
+      "testsLocked": false,
+      "testLockHash": "",
+      "tests": [
+        {
+          "input": "5\nabacada\na",
+          "expected": "9",
+          "studentDefined": false
+        },
+        {
+          "input": "4\nbanana\nn",
+          "expected": "3",
+          "studentDefined": false
+        },
+        {
+          "input": "3\nxyz\na",
+          "expected": "0",
+          "studentDefined": false
+        },
+        {
+          "input": "3\naaa\na",
+          "expected": "6",
+          "studentDefined": false
+        }
+      ],
+      "customFonts": []
+    },
+    {
+      "id": "Q-MV2B30ZG-SF1Q",
+      "title": "Question 18: Robot Charge Deltas",
+      "problemHtml": "<h2>Problem Statement</h2>\n<p>A robot records its battery level across multiple steps in an integer array <code>B</code>, where <code>B[i]</code> represents the battery level recorded at step <code>i</code>. A boost is registered at index <code>i</code> (<code>i &ge; 1</code>) if the difference <code>B[i] - B[i - 1]</code> is strictly greater than the threshold <code>D</code>. Your task is to find and return an integer value representing the total number of boosts registered.</p>\n<p><b>Note:</b> Only differences strictly greater than <code>D</code> are considered boosts. Index 0 cannot be a boost since it has no previous battery level for comparison.</p>\n<p><b>Input Specification:</b><br>\nLine 1: An integer <code>D</code>, representing the boost delta threshold.<br>\nLine 2: Space-separated integers representing the battery readings <code>B</code>.\n</p>\n<p><b>Output Specification:</b><br>\nPrint an integer value representing the total number of boosts registered.\n</p>\n<h3>Example 1:</h3>\n<p>\n<b>Input:</b><br>\n<pre>3\n10 15 14 25</pre>\n<b>Output:</b><br>\n<pre>2</pre>\n<b>Explanation:</b><br>\nB[1] - B[0] = 15 - 10 = 5 > 3 -> Boost registered.<br>\nB[2] - B[1] = 14 - 15 = -1 <= 3 -> No boost.<br>\nB[3] - B[2] = 25 - 14 = 11 > 3 -> Boost registered.<br>\nTotal boosts = 2.\n</p>\n<h3>Example 2:</h3>\n<p>\n<b>Input:</b><br>\n<pre>5\n20 22 28 29</pre>\n<b>Output:</b><br>\n<pre>1</pre>\n<b>Explanation:</b><br>\n22 - 20 = 2 <= 5.<br>\n28 - 22 = 6 > 5 -> Boost registered.<br>\n29 - 28 = 1 <= 5.<br>\nTotal boosts = 1.\n</p>",
+      "code": "import sys\n\ndef main():\n    tokens = sys.stdin.read().split()\n    if len(tokens) < 2:\n        print(0)\n        return\n    d = int(tokens[0])\n    b = list(map(int, tokens[1:]))\n    boosts = 0\n    for i in range(1, len(b)):\n        if b[i] - b[i-1] > d:\n            boosts += 1\n    print(boosts)\n\nif __name__ == '__main__':\n    main()",
+      "codes": {
+        "python": "import sys\n\ndef main():\n    tokens = sys.stdin.read().split()\n    if len(tokens) < 2:\n        print(0)\n        return\n    d = int(tokens[0])\n    b = list(map(int, tokens[1:]))\n    boosts = 0\n    for i in range(1, len(b)):\n        if b[i] - b[i-1] > d:\n            boosts += 1\n    print(boosts)\n\nif __name__ == '__main__':\n    main()",
+        "c": "#include <stdio.h>\n\nint main(void) {\n    int d;\n    if (scanf(\"%d\", &d) != 1) return 0;\n    int prev;\n    if (scanf(\"%d\", &prev) != 1) {\n        printf(\"0\\n\");\n        return 0;\n    }\n    int curr, boosts = 0;\n    while (scanf(\"%d\", &curr) == 1) {\n        if (curr - prev > d) {\n            boosts++;\n        }\n        prev = curr;\n    }\n    printf(\"%d\\n\", boosts);\n    return 0;\n}",
+        "cpp": "#include <iostream>\n\nusing namespace std;\n\nint main() {\n    int d;\n    if (!(cin >> d)) return 0;\n    int prev;\n    if (!(cin >> prev)) {\n        cout << 0 << endl;\n        return 0;\n    }\n    int curr, boosts = 0;\n    while (cin >> curr) {\n        if (curr - prev > d) {\n            boosts++;\n        }\n        prev = curr;\n    }\n    cout << boosts << endl;\n    return 0;\n}"
+      },
+      "language": "python",
+      "problemLocked": false,
+      "problemLockHash": "",
+      "testsLocked": false,
+      "testLockHash": "",
+      "tests": [
+        {
+          "input": "3\n10 15 14 25",
+          "expected": "2",
+          "studentDefined": false
+        },
+        {
+          "input": "5\n20 22 28 29",
+          "expected": "1",
+          "studentDefined": false
+        },
+        {
+          "input": "10\n1 2 3",
+          "expected": "0",
+          "studentDefined": false
+        },
+        {
+          "input": "2\n10 20 30",
+          "expected": "2",
+          "studentDefined": false
+        }
+      ],
+      "customFonts": []
+    },
+    {
+      "id": "Q-MV2B4HT3-DUBS",
+      "title": "Question 19: Ferry Load Balance",
+      "problemHtml": "<h2>Problem Statement</h2>\n<p>A ferry loads <code>N</code> cars in the order they arrive. The first <code>N / 2</code> cars (using integer division) are placed on the left side, and the remaining cars are placed on the right side. Your task is to find and return an integer value representing the absolute difference between the left and right total weights.</p>\n<p><b>Note:</b> <code>N / 2</code> uses integer division, so the right side will have one more car when <code>N</code> is odd.</p>\n<p><b>Input Specification:</b><br>\nLine 1: An integer <code>N</code>, representing the number of cars.<br>\nLine 2: <code>N</code> space-separated integers representing the car weights <code>W</code> in arrival order.\n</p>\n<p><b>Output Specification:</b><br>\nPrint an integer value representing the absolute difference between the left and right total weights.\n</p>\n<h3>Example 1:</h3>\n<p>\n<b>Input:</b><br>\n<pre>4\n10 20 30 40</pre>\n<b>Output:</b><br>\n<pre>40</pre>\n<b>Explanation:</b><br>\nSplit point = 4 // 2 = 2.<br>\nLeft side = [10, 20], sum = 30.<br>\nRight side = [30, 40], sum = 70.<br>\nAbsolute difference = |30 - 70| = 40.\n</p>\n<h3>Example 2:</h3>\n<p>\n<b>Input:</b><br>\n<pre>5\n5 5 5 5 5</pre>\n<b>Output:</b><br>\n<pre>5</pre>\n<b>Explanation:</b><br>\nSplit point = 5 // 2 = 2.<br>\nLeft side = [5, 5], sum = 10.<br>\nRight side = [5, 5, 5], sum = 15.<br>\nAbsolute difference = |10 - 15| = 5.\n</p>",
+      "code": "import sys\n\ndef main():\n    tokens = sys.stdin.read().split()\n    if not tokens:\n        print(0)\n        return\n    n = int(tokens[0])\n    w = list(map(int, tokens[1:1+n]))\n    mid = n // 2\n    left = sum(w[:mid])\n    right = sum(w[mid:])\n    print(abs(left - right))\n\nif __name__ == '__main__':\n    main()",
+      "codes": {
+        "python": "import sys\n\ndef main():\n    tokens = sys.stdin.read().split()\n    if not tokens:\n        print(0)\n        return\n    n = int(tokens[0])\n    w = list(map(int, tokens[1:1+n]))\n    mid = n // 2\n    left = sum(w[:mid])\n    right = sum(w[mid:])\n    print(abs(left - right))\n\nif __name__ == '__main__':\n    main()",
+        "c": "#include <stdio.h>\n#include <stdlib.h>\n\nint main(void) {\n    int n;\n    if (scanf(\"%d\", &n) != 1) return 0;\n    int mid = n / 2;\n    long long left = 0, right = 0;\n    for (int i = 0; i < n; i++) {\n        int weight;\n        scanf(\"%d\", &weight);\n        if (i < mid) {\n            left += weight;\n        } else {\n            right += weight;\n        }\n    }\n    long long diff = left - right;\n    if (diff < 0) diff = -diff;\n    printf(\"%lld\\n\", diff);\n    return 0;\n}",
+        "cpp": "#include <iostream>\n#include <cmath>\n\nusing namespace std;\n\nint main() {\n    int n;\n    if (cin >> n) {\n        int mid = n / 2;\n        long long left = 0, right = 0;\n        for (int i = 0; i < n; ++i) {\n            int weight;\n            cin >> weight;\n            if (i < mid) {\n                left += weight;\n            } else {\n                right += weight;\n            }\n        }\n        cout << abs(left - right) << endl;\n    }\n    return 0;\n}"
+      },
+      "language": "python",
+      "problemLocked": false,
+      "problemLockHash": "",
+      "testsLocked": false,
+      "testLockHash": "",
+      "tests": [
+        {
+          "input": "4\n10 20 30 40",
+          "expected": "40",
+          "studentDefined": false
+        },
+        {
+          "input": "5\n5 5 5 5 5",
+          "expected": "5",
+          "studentDefined": false
+        },
+        {
+          "input": "2\n10 10",
+          "expected": "0",
+          "studentDefined": false
+        },
+        {
+          "input": "1\n50",
+          "expected": "50",
+          "studentDefined": false
+        }
+      ],
+      "customFonts": []
+    },
+    {
+      "id": "Q-MV2B6HWY-AGMO",
+      "title": "Question 20: Fire Drill Last Group Size",
+      "problemHtml": "<h2>Problem Statement</h2>\n<p>A fire drill divides <code>N</code> people into groups of size <code>G</code>. If <code>N</code> is not a multiple of <code>G</code>, the last group contains the leftover people. If <code>N</code> is a multiple of <code>G</code>, the last group contains <code>G</code> people. Your task is to find and return an integer value representing the size of the last group.</p>\n<p><b>Note:</b> If <code>N</code> is a perfect multiple of <code>G</code>, the last group contains exactly <code>G</code> people.</p>\n<p><b>Input Specification:</b><br>\nLine 1: An integer <code>N</code>, representing the total number of people.<br>\nLine 2: An integer <code>G</code>, representing the group size.\n</p>\n<p><b>Output Specification:</b><br>\nPrint an integer value representing the size of the last group.\n</p>\n<h3>Example 1:</h3>\n<p>\n<b>Input:</b><br>\n<pre>10\n3</pre>\n<b>Output:</b><br>\n<pre>1</pre>\n<b>Explanation:</b><br>\nDividing 10 people into groups of 3 gives [3][3][3][1]: three complete groups and 1 leftover person.<br>\n10 % 3 = 1 -> Last group has 1 person.\n</p>\n<h3>Example 2:</h3>\n<p>\n<b>Input:</b><br>\n<pre>12\n4</pre>\n<b>Output:</b><br>\n<pre>4</pre>\n<b>Explanation:</b><br>\n12 is a perfect multiple of 4: groups are [4][4][4] with no leftover.<br>\nLast group has G = 4 people.\n</p>",
+      "code": "import sys\n\ndef main():\n    tokens = sys.stdin.read().split()\n    if not tokens:\n        print(0)\n        return\n    n = int(tokens[0])\n    g = int(tokens[1])\n    rem = n % g\n    print(g if rem == 0 else rem)\n\nif __name__ == '__main__':\n    main()",
+      "codes": {
+        "python": "import sys\n\ndef main():\n    tokens = sys.stdin.read().split()\n    if not tokens:\n        print(0)\n        return\n    n = int(tokens[0])\n    g = int(tokens[1])\n    rem = n % g\n    print(g if rem == 0 else rem)\n\nif __name__ == '__main__':\n    main()",
+        "c": "#include <stdio.h>\n\nint main(void) {\n    long long n, g;\n    if (scanf(\"%lld %lld\", &n, &g) == 2) {\n        long long rem = n % g;\n        printf(\"%lld\\n\", (rem == 0) ? g : rem);\n    }\n    return 0;\n}",
+        "cpp": "#include <iostream>\n\nusing namespace std;\n\nint main() {\n    long long n, g;\n    if (cin >> n >> g) {\n        long long rem = n % g;\n        cout << ((rem == 0) ? g : rem) << endl;\n    }\n    return 0;\n}"
+      },
+      "language": "python",
+      "problemLocked": false,
+      "problemLockHash": "",
+      "testsLocked": false,
+      "testLockHash": "",
+      "tests": [
+        {
+          "input": "10\n3",
+          "expected": "1",
+          "studentDefined": false
+        },
+        {
+          "input": "12\n4",
+          "expected": "4",
+          "studentDefined": false
+        },
+        {
+          "input": "5\n5",
+          "expected": "5",
+          "studentDefined": false
+        },
+        {
+          "input": "7\n4",
+          "expected": "3",
+          "studentDefined": false
+        }
+      ],
+      "customFonts": []
+    },
+    {
+      "id": "Q-MV2B7Z0S-PA3K",
+      "title": "Question 21: Concert Row Filling",
+      "problemHtml": "<h2>Problem Statement</h2>\n<p>A concert hall has <code>N</code> rows with given seat capacities. <code>K</code> attendees enter the hall and fill the rows in order, starting from row 1, then row 2, and so on, until all <code>K</code> attendees are seated, or all rows are filled. Calculate the 1-based index of the last row that received at least one attendee. Your task is to find and return an integer value representing the row number.</p>\n<p><b>Note:</b> If <code>K = 0</code>, return <code>0</code>. If <code>K</code> exceeds the total available capacity of all rows, return the index of the final row (<code>N</code>).</p>\n<p><b>Input Specification:</b><br>\nLine 1: An integer <code>K</code>, representing the number of attendees.<br>\nLine 2: <code>N</code> space-separated integers representing the seat capacity of each row <code>S</code>.<br>\nLine 3: An integer <code>N</code>, representing the number of rows.\n</p>\n<p><b>Output Specification:</b><br>\nPrint an integer value representing the 1-based row number of the last row that received at least one attendee.\n</p>\n<h3>Example 1:</h3>\n<p>\n<b>Input:</b><br>\n<pre>7\n3 3 3 3\n4</pre>\n<b>Output:</b><br>\n<pre>3</pre>\n<b>Explanation:</b><br>\nRow 1 (capacity 3) seats 3 attendees; remaining = 4.<br>\nRow 2 (capacity 3) seats 3 attendees; remaining = 1.<br>\nRow 3 (capacity 3) seats the final 1 attendee; remaining = 0.<br>\nThe last row that received an attendee is Row 3.\n</p>\n<h3>Example 2:</h3>\n<p>\n<b>Input:</b><br>\n<pre>10\n2 2 2\n3</pre>\n<b>Output:</b><br>\n<pre>3</pre>\n<b>Explanation:</b><br>\nRows 1, 2, and 3 each seat 2 attendees (total capacity 6). All rows are full, so the last row is 3.\n</p>",
+      "code": "import sys\n\ndef main():\n    tokens = sys.stdin.read().split()\n    if not tokens:\n        print(0)\n        return\n    k = int(tokens[0])\n    n = int(tokens[-1])\n    s = list(map(int, tokens[1:-1]))\n    if k <= 0 or n == 0:\n        print(0)\n        return\n    rem = k\n    last_row = 0\n    for i in range(min(n, len(s))):\n        if rem > 0:\n            last_row = i + 1\n            rem -= s[i]\n        else:\n            break\n    print(last_row)\n\nif __name__ == '__main__':\n    main()",
+      "codes": {
+        "python": "import sys\n\ndef main():\n    tokens = sys.stdin.read().split()\n    if not tokens:\n        print(0)\n        return\n    k = int(tokens[0])\n    n = int(tokens[-1])\n    s = list(map(int, tokens[1:-1]))\n    if k <= 0 or n == 0:\n        print(0)\n        return\n    rem = k\n    last_row = 0\n    for i in range(min(n, len(s))):\n        if rem > 0:\n            last_row = i + 1\n            rem -= s[i]\n        else:\n            break\n    print(last_row)\n\nif __name__ == '__main__':\n    main()",
+        "c": "#include <stdio.h>\n\nint main(void) {\n    int k;\n    if (scanf(\"%d\", &k) != 1) return 0;\n    int s[10000], count = 0, val;\n    while (scanf(\"%d\", &val) == 1) {\n        s[count++] = val;\n    }\n    if (count == 0) {\n        printf(\"0\\n\");\n        return 0;\n    }\n    int n = s[--count];\n    if (k <= 0 || n == 0) {\n        printf(\"0\\n\");\n        return 0;\n    }\n    int rem = k, last_row = 0;\n    for (int i = 0; i < count && i < n; i++) {\n        if (rem > 0) {\n            last_row = i + 1;\n            rem -= s[i];\n        } else {\n            break;\n        }\n    }\n    printf(\"%d\\n\", last_row);\n    return 0;\n}",
+        "cpp": "#include <iostream>\n#include <vector>\n\nusing namespace std;\n\nint main() {\n    int k;\n    if (!(cin >> k)) return 0;\n    vector<int> all;\n    int val;\n    while (cin >> val) {\n        all.push_back(val);\n    }\n    if (all.empty()) {\n        cout << 0 << endl;\n        return 0;\n    }\n    int n = all.back();\n    all.pop_back();\n    if (k <= 0 || n == 0) {\n        cout << 0 << endl;\n        return 0;\n    }\n    int rem = k, last_row = 0;\n    for (int i = 0; i < (int)all.size() && i < n; ++i) {\n        if (rem > 0) {\n            last_row = i + 1;\n            rem -= all[i];\n        } else {\n            break;\n        }\n    }\n    cout << last_row << endl;\n    return 0;\n}"
+      },
+      "language": "python",
+      "problemLocked": false,
+      "problemLockHash": "",
+      "testsLocked": false,
+      "testLockHash": "",
+      "tests": [
+        {
+          "input": "7\n3 3 3 3\n4",
+          "expected": "3",
+          "studentDefined": false
+        },
+        {
+          "input": "10\n2 2 2\n3",
+          "expected": "3",
+          "studentDefined": false
+        },
+        {
+          "input": "0\n5 5\n2",
+          "expected": "0",
+          "studentDefined": false
+        },
+        {
+          "input": "2\n10 10\n2",
+          "expected": "1",
+          "studentDefined": false
+        }
+      ],
+      "customFonts": []
+    },
+    {
+      "id": "Q-MV2BAQII-QING",
+      "title": "Question 22: Music Playlist Boost",
+      "problemHtml": "<h2>Problem Statement</h2>\n<p>A music streaming service boosts the play count of songs in a playlist. The boosted score for the <code>i</code>-th song (0-indexed) is <code>plays[i] * (i + 1)</code>. Calculate the sum of the boosted scores for the first <code>K</code> songs. Your task is to find and return an integer value representing the total boosted score.</p>\n<p><b>Note:</b> If <code>K</code> exceeds <code>N</code>, use <code>N</code> instead.</p>\n<p><b>Input Specification:</b><br>\nLine 1: An integer <code>N</code>, representing the total number of songs.<br>\nLine 2: <code>N</code> space-separated integers representing the play counts <code>P</code>.<br>\nLine 3: An integer <code>K</code>, representing how many songs to boost.\n</p>\n<p><b>Output Specification:</b><br>\nPrint an integer value representing the total boosted score.\n</p>\n<h3>Example 1:</h3>\n<p>\n<b>Input:</b><br>\n<pre>4\n10 20 30 40\n3</pre>\n<b>Output:</b><br>\n<pre>140</pre>\n<b>Explanation:</b><br>\nBoost first K = 3 songs:<br>\nSong 0: 10 * (0 + 1) = 10.<br>\nSong 1: 20 * (1 + 1) = 40.<br>\nSong 2: 30 * (2 + 1) = 90.<br>\nTotal = 10 + 40 + 90 = 140.\n</p>\n<h3>Example 2:</h3>\n<p>\n<b>Input:</b><br>\n<pre>3\n5 5 5\n2</pre>\n<b>Output:</b><br>\n<pre>15</pre>\n<b>Explanation:</b><br>\nSong 0: 5 * 1 = 5.<br>\nSong 1: 5 * 2 = 10.<br>\nTotal = 5 + 10 = 15.\n</p>",
+      "code": "import sys\n\ndef main():\n    tokens = sys.stdin.read().split()\n    if not tokens:\n        print(0)\n        return\n    n = int(tokens[0])\n    p = list(map(int, tokens[1:1+n]))\n    k = int(tokens[1+n])\n    limit = min(k, n)\n    total = sum(p[i] * (i + 1) for i in range(limit))\n    print(total)\n\nif __name__ == '__main__':\n    main()",
+      "codes": {
+        "python": "import sys\n\ndef main():\n    tokens = sys.stdin.read().split()\n    if not tokens:\n        print(0)\n        return\n    n = int(tokens[0])\n    p = list(map(int, tokens[1:1+n]))\n    k = int(tokens[1+n])\n    limit = min(k, n)\n    total = sum(p[i] * (i + 1) for i in range(limit))\n    print(total)\n\nif __name__ == '__main__':\n    main()",
+        "c": "#include <stdio.h>\n\nint main(void) {\n    int n;\n    if (scanf(\"%d\", &n) != 1) return 0;\n    int p[10000];\n    for (int i = 0; i < n; i++) scanf(\"%d\", &p[i]);\n    int k;\n    scanf(\"%d\", &k);\n    int limit = (k < n) ? k : n;\n    long long total = 0;\n    for (int i = 0; i < limit; i++) {\n        total += (long long)p[i] * (i + 1);\n    }\n    printf(\"%lld\\n\", total);\n    return 0;\n}",
+        "cpp": "#include <iostream>\n#include <vector>\n#include <algorithm>\n\nusing namespace std;\n\nint main() {\n    int n;\n    if (cin >> n) {\n        vector<int> p(n);\n        for (int i = 0; i < n; ++i) cin >> p[i];\n        int k;\n        cin >> k;\n        int limit = min(k, n);\n        long long total = 0;\n        for (int i = 0; i < limit; ++i) {\n            total += (long long)p[i] * (i + 1);\n        }\n        cout << total << endl;\n    }\n    return 0;\n}"
+      },
+      "language": "python",
+      "problemLocked": false,
+      "problemLockHash": "",
+      "testsLocked": false,
+      "testLockHash": "",
+      "tests": [
+        {
+          "input": "4\n10 20 30 40\n3",
+          "expected": "140",
+          "studentDefined": false
+        },
+        {
+          "input": "3\n5 5 5\n2",
+          "expected": "15",
+          "studentDefined": false
+        },
+        {
+          "input": "2\n10 20\n5",
+          "expected": "50",
+          "studentDefined": false
+        },
+        {
+          "input": "3\n10 20 30\n0",
+          "expected": "0",
+          "studentDefined": false
+        }
+      ],
+      "customFonts": []
+    },
+    {
+      "id": "Q-MV2BC2AP-O4X0",
+      "title": "Question 23: Car Park Fee Sum",
+      "problemHtml": "<h2>Problem Statement</h2>\n<p>A parking lot serves <code>N</code> cars. The parking duration of each car is given in an integer array <code>H</code>, where <code>H[i]</code> represents the number of hours the <code>i</code>-th car was parked. The first 2 hours are free, and each additional hour costs 3 units. Your task is to find and return an integer value representing the total parking fee collected.</p>\n<p><b>Note:</b> A car parked for 2 hours or less pays nothing.</p>\n<p><b>Input Specification:</b><br>\nLine 1: An integer <code>N</code>, representing the number of cars.<br>\nLine 2: <code>N</code> space-separated integers representing parking durations <code>H</code> in hours.\n</p>\n<p><b>Output Specification:</b><br>\nPrint an integer value representing the total parking fee collected.\n</p>\n<h3>Example 1:</h3>\n<p>\n<b>Input:</b><br>\n<pre>3\n1 4 5</pre>\n<b>Output:</b><br>\n<pre>15</pre>\n<b>Explanation:</b><br>\nCar 1 (1 hr): 1 <= 2 -> fee = 0.<br>\nCar 2 (4 hr): chargeable = 4 - 2 = 2 hrs -> fee = 2 * 3 = 6.<br>\nCar 3 (5 hr): chargeable = 5 - 2 = 3 hrs -> fee = 3 * 3 = 9.<br>\nTotal fee = 0 + 6 + 9 = 15.\n</p>\n<h3>Example 2:</h3>\n<p>\n<b>Input:</b><br>\n<pre>2\n2 10</pre>\n<b>Output:</b><br>\n<pre>24</pre>\n<b>Explanation:</b><br>\nCar 1 (2 hr): fee = 0.<br>\nCar 2 (10 hr): (10 - 2) * 3 = 24.<br>\nTotal fee = 0 + 24 = 24.\n</p>",
+      "code": "import sys\n\ndef main():\n    tokens = sys.stdin.read().split()\n    if not tokens:\n        print(0)\n        return\n    n = int(tokens[0])\n    h = list(map(int, tokens[1:1+n]))\n    total = sum(max(0, x - 2) * 3 for x in h)\n    print(total)\n\nif __name__ == '__main__':\n    main()",
+      "codes": {
+        "python": "import sys\n\ndef main():\n    tokens = sys.stdin.read().split()\n    if not tokens:\n        print(0)\n        return\n    n = int(tokens[0])\n    h = list(map(int, tokens[1:1+n]))\n    total = sum(max(0, x - 2) * 3 for x in h)\n    print(total)\n\nif __name__ == '__main__':\n    main()",
+        "c": "#include <stdio.h>\n\nint main(void) {\n    int n;\n    if (scanf(\"%d\", &n) != 1) return 0;\n    long long total = 0;\n    for (int i = 0; i < n; i++) {\n        int h;\n        scanf(\"%d\", &h);\n        if (h > 2) {\n            total += (long long)(h - 2) * 3;\n        }\n    }\n    printf(\"%lld\\n\", total);\n    return 0;\n}",
+        "cpp": "#include <iostream>\n\nusing namespace std;\n\nint main() {\n    int n;\n    if (cin >> n) {\n        long long total = 0;\n        for (int i = 0; i < n; ++i) {\n            int h;\n            cin >> h;\n            if (h > 2) {\n                total += (long long)(h - 2) * 3;\n            }\n        }\n        cout << total << endl;\n    }\n    return 0;\n}"
+      },
+      "language": "python",
+      "problemLocked": false,
+      "problemLockHash": "",
+      "testsLocked": false,
+      "testLockHash": "",
+      "tests": [
+        {
+          "input": "3\n1 4 5",
+          "expected": "15",
+          "studentDefined": false
+        },
+        {
+          "input": "2\n2 10",
+          "expected": "24",
+          "studentDefined": false
+        },
+        {
+          "input": "3\n1 2 2",
+          "expected": "0",
+          "studentDefined": false
+        },
+        {
+          "input": "1\n6",
+          "expected": "12",
+          "studentDefined": false
+        }
+      ],
+      "customFonts": []
+    },
+    {
+      "id": "Q-MV2BE3ON-8L4L",
+      "title": "Question 24: Book Library Rank",
+      "problemHtml": "<h2>Problem Statement</h2>\n<p>Given <code>N</code> book ratings and a target rating <code>T</code>, sort the ratings in descending order. Return the 1-based rank of the first occurrence of <code>T</code> in the sorted list. If <code>T</code> does not appear, return <code>0</code>. Your task is to find and return an integer value representing the rank of <code>T</code>.</p>\n<p><b>Note:</b> Ranks are 1-based. Duplicate ratings are counted individually, but the first occurrence wins.</p>\n<p><b>Input Specification:</b><br>\nLine 1: An integer <code>N</code>, representing the number of books.<br>\nLine 2: <code>N</code> space-separated integers representing the book ratings <code>R</code>.<br>\nLine 3: An integer <code>T</code>, representing the target rating.\n</p>\n<p><b>Output Specification:</b><br>\nPrint an integer value representing the rank of <code>T</code>, or <code>0</code> if not found.\n</p>\n<h3>Example 1:</h3>\n<p>\n<b>Input:</b><br>\n<pre>5\n4 7 2 9 7\n7</pre>\n<b>Output:</b><br>\n<pre>2</pre>\n<b>Explanation:</b><br>\nSorted descending = [9, 7, 7, 4, 2].<br>\nThe first occurrence of 7 is at rank 2.<br>\nResult = 2.\n</p>\n<h3>Example 2:</h3>\n<p>\n<b>Input:</b><br>\n<pre>3\n5 8 3\n6</pre>\n<b>Output:</b><br>\n<pre>0</pre>\n<b>Explanation:</b><br>\nSorted descending = [8, 5, 3]. Rating 6 is not in the list, so output is 0.\n</p>",
+      "code": "import sys\n\ndef main():\n    tokens = sys.stdin.read().split()\n    if not tokens:\n        print(0)\n        return\n    n = int(tokens[0])\n    r = list(map(int, tokens[1:1+n]))\n    t = int(tokens[1+n])\n    r_sorted = sorted(r, reverse=True)\n    try:\n        rank = r_sorted.index(t) + 1\n        print(rank)\n    except ValueError:\n        print(0)\n\nif __name__ == '__main__':\n    main()",
+      "codes": {
+        "python": "import sys\n\ndef main():\n    tokens = sys.stdin.read().split()\n    if not tokens:\n        print(0)\n        return\n    n = int(tokens[0])\n    r = list(map(int, tokens[1:1+n]))\n    t = int(tokens[1+n])\n    r_sorted = sorted(r, reverse=True)\n    try:\n        rank = r_sorted.index(t) + 1\n        print(rank)\n    except ValueError:\n        print(0)\n\nif __name__ == '__main__':\n    main()",
+        "c": "#include <stdio.h>\n#include <stdlib.h>\n\nint cmp_desc(const void *a, const void *b) {\n    return (*(int *)b - *(int *)a);\n}\n\nint main(void) {\n    int n;\n    if (scanf(\"%d\", &n) != 1) return 0;\n    int r[10000];\n    for (int i = 0; i < n; i++) scanf(\"%d\", &r[i]);\n    int t;\n    scanf(\"%d\", &t);\n    qsort(r, n, sizeof(int), cmp_desc);\n    int rank = 0;\n    for (int i = 0; i < n; i++) {\n        if (r[i] == t) {\n            rank = i + 1;\n            break;\n        }\n    }\n    printf(\"%d\\n\", rank);\n    return 0;\n}",
+        "cpp": "#include <iostream>\n#include <vector>\n#include <algorithm>\n\nusing namespace std;\n\nint main() {\n    int n;\n    if (cin >> n) {\n        vector<int> r(n);\n        for (int i = 0; i < n; ++i) cin >> r[i];\n        int t;\n        cin >> t;\n        sort(r.begin(), r.end(), greater<int>());\n        int rank = 0;\n        for (int i = 0; i < n; ++i) {\n            if (r[i] == t) {\n                rank = i + 1;\n                break;\n            }\n        }\n        cout << rank << endl;\n    }\n    return 0;\n}"
+      },
+      "language": "python",
+      "problemLocked": false,
+      "problemLockHash": "",
+      "testsLocked": false,
+      "testLockHash": "",
+      "tests": [
+        {
+          "input": "5\n4 7 2 9 7\n7",
+          "expected": "2",
+          "studentDefined": false
+        },
+        {
+          "input": "3\n5 8 3\n6",
+          "expected": "0",
+          "studentDefined": false
+        },
+        {
+          "input": "1\n10\n10",
+          "expected": "1",
+          "studentDefined": false
+        },
+        {
+          "input": "4\n1 2 3 4\n1",
+          "expected": "4",
+          "studentDefined": false
+        }
+      ],
+      "customFonts": []
+    },
+    {
+      "id": "Q-MV2BFIJZ-UOXV",
+      "title": "Question 25: Solar Panel Yield",
+      "problemHtml": "<h2>Problem Statement</h2>\n<p><code>N</code> solar panels recorded sunlight hours. Each panel produces <code>hours * M</code> energy units. If the calculated energy for a panel exceeds 200 units, it is capped at 200 units. Your task is to find and return an integer value representing the total energy yield across all panels.</p>\n<p><b>Note:</b> Each panel's output is capped at 200 units (i.e. <code>min(hours * M, 200)</code>).</p>\n<p><b>Input Specification:</b><br>\nLine 1: An integer <code>N</code>, representing the number of panels.<br>\nLine 2: <code>N</code> space-separated integers representing sunlight hours <code>H</code> per panel.<br>\nLine 3: An integer <code>M</code>, representing the multiplier.\n</p>\n<p><b>Output Specification:</b><br>\nPrint an integer value representing the total energy yield across all panels.\n</p>\n<h3>Example 1:</h3>\n<p>\n<b>Input:</b><br>\n<pre>3\n10 30 5\n8</pre>\n<b>Output:</b><br>\n<pre>320</pre>\n<b>Explanation:</b><br>\nPanel 0: 10 * 8 = 80.<br>\nPanel 1: 30 * 8 = 240 -> capped at 200.<br>\nPanel 2: 5 * 8 = 40.<br>\nTotal yield = 80 + 200 + 40 = 320.\n</p>\n<h3>Example 2:</h3>\n<p>\n<b>Input:</b><br>\n<pre>2\n5 7\n3</pre>\n<b>Output:</b><br>\n<pre>36</pre>\n<b>Explanation:</b><br>\nPanel 0: 5 * 3 = 15.<br>\nPanel 1: 7 * 3 = 21.<br>\nTotal yield = 15 + 21 = 36.\n</p>",
+      "code": "import sys\n\ndef main():\n    tokens = sys.stdin.read().split()\n    if not tokens:\n        print(0)\n        return\n    n = int(tokens[0])\n    h = list(map(int, tokens[1:1+n]))\n    m = int(tokens[1+n])\n    total = sum(min(x * m, 200) for x in h)\n    print(total)\n\nif __name__ == '__main__':\n    main()",
+      "codes": {
+        "python": "import sys\n\ndef main():\n    tokens = sys.stdin.read().split()\n    if not tokens:\n        print(0)\n        return\n    n = int(tokens[0])\n    h = list(map(int, tokens[1:1+n]))\n    m = int(tokens[1+n])\n    total = sum(min(x * m, 200) for x in h)\n    print(total)\n\nif __name__ == '__main__':\n    main()",
+        "c": "#include <stdio.h>\n\nint main(void) {\n    int n;\n    if (scanf(\"%d\", &n) != 1) return 0;\n    int h[10000];\n    for (int i = 0; i < n; i++) scanf(\"%d\", &h[i]);\n    int m;\n    scanf(\"%d\", &m);\n    long long total = 0;\n    for (int i = 0; i < n; i++) {\n        long long yield_val = (long long)h[i] * m;\n        if (yield_val > 200) yield_val = 200;\n        total += yield_val;\n    }\n    printf(\"%lld\\n\", total);\n    return 0;\n}",
+        "cpp": "#include <iostream>\n#include <vector>\n#include <algorithm>\n\nusing namespace std;\n\nint main() {\n    int n;\n    if (cin >> n) {\n        vector<int> h(n);\n        for (int i = 0; i < n; ++i) cin >> h[i];\n        int m;\n        cin >> m;\n        long long total = 0;\n        for (int x : h) {\n            long long yield_val = (long long)x * m;\n            total += min(yield_val, 200LL);\n        }\n        cout << total << endl;\n    }\n    return 0;\n}"
+      },
+      "language": "python",
+      "problemLocked": false,
+      "problemLockHash": "",
+      "testsLocked": false,
+      "testLockHash": "",
+      "tests": [
+        {
+          "input": "3\n10 30 5\n8",
+          "expected": "320",
+          "studentDefined": false
+        },
+        {
+          "input": "2\n5 7\n3",
+          "expected": "36",
+          "studentDefined": false
+        },
+        {
+          "input": "1\n100\n5",
+          "expected": "200",
+          "studentDefined": false
+        },
+        {
+          "input": "2\n0 10\n10",
+          "expected": "100",
+          "studentDefined": false
+        }
+      ],
+      "customFonts": []
+    },
+    {
+      "id": "Q-MV2BI5DL-BFH5",
+      "title": "Question 26: Cinema Snack Tip",
+      "problemHtml": "<h2>Problem Statement</h2>\n<p>A cinema snack bar collects a tip equal to 15 percent of each bill amount, with the result rounded down to the nearest integer. Given <code>N</code> bills, calculate the total tips collected. Your task is to find and return an integer value representing the total tips collected.</p>\n<p><b>Note:</b> Use integer division while calculating the tip for each bill: <code>tip_i = (bill_i * 15) // 100</code>.</p>\n<p><b>Input Specification:</b><br>\nLine 1: An integer <code>N</code>, representing the number of bills.<br>\nLine 2: <code>N</code> space-separated integers representing the bill amounts <code>B</code>.\n</p>\n<p><b>Output Specification:</b><br>\nPrint an integer value representing the total tips collected.\n</p>\n<h3>Example 1:</h3>\n<p>\n<b>Input:</b><br>\n<pre>3\n100 200 50</pre>\n<b>Output:</b><br>\n<pre>52</pre>\n<b>Explanation:</b><br>\nBill 100 -> (100 * 15) // 100 = 15.<br>\nBill 200 -> (200 * 15) // 100 = 30.<br>\nBill 50 -> (50 * 15) // 100 = 7 (integer division).<br>\nTotal tip = 15 + 30 + 7 = 52.\n</p>\n<h3>Example 2:</h3>\n<p>\n<b>Input:</b><br>\n<pre>2\n80 120</pre>\n<b>Output:</b><br>\n<pre>30</pre>\n<b>Explanation:</b><br>\nBill 80 -> 12.<br>\nBill 120 -> 18.<br>\nTotal = 12 + 18 = 30.\n</p>",
+      "code": "import sys\n\ndef main():\n    tokens = sys.stdin.read().split()\n    if not tokens:\n        print(0)\n        return\n    n = int(tokens[0])\n    b = list(map(int, tokens[1:1+n]))\n    total = sum((x * 15) // 100 for x in b)\n    print(total)\n\nif __name__ == '__main__':\n    main()",
+      "codes": {
+        "python": "import sys\n\ndef main():\n    tokens = sys.stdin.read().split()\n    if not tokens:\n        print(0)\n        return\n    n = int(tokens[0])\n    b = list(map(int, tokens[1:1+n]))\n    total = sum((x * 15) // 100 for x in b)\n    print(total)\n\nif __name__ == '__main__':\n    main()",
+        "c": "#include <stdio.h>\n\nint main(void) {\n    int n;\n    if (scanf(\"%d\", &n) != 1) return 0;\n    long long total = 0;\n    for (int i = 0; i < n; i++) {\n        int bill;\n        scanf(\"%d\", &bill);\n        total += ((long long)bill * 15) / 100;\n    }\n    printf(\"%lld\\n\", total);\n    return 0;\n}",
+        "cpp": "#include <iostream>\n\nusing namespace std;\n\nint main() {\n    int n;\n    if (cin >> n) {\n        long long total = 0;\n        for (int i = 0; i < n; ++i) {\n            int bill;\n            cin >> bill;\n            total += ((long long)bill * 15) / 100;\n        }\n        cout << total << endl;\n    }\n    return 0;\n}"
+      },
+      "language": "python",
+      "problemLocked": false,
+      "problemLockHash": "",
+      "testsLocked": false,
+      "testLockHash": "",
+      "tests": [
+        {
+          "input": "3\n100 200 50",
+          "expected": "52",
+          "studentDefined": false
+        },
+        {
+          "input": "2\n80 120",
+          "expected": "30",
+          "studentDefined": false
+        },
+        {
+          "input": "1\n5",
+          "expected": "0",
+          "studentDefined": false
+        },
+        {
+          "input": "4\n10 20 30 40",
+          "expected": "14",
+          "studentDefined": false
+        }
+      ],
+      "customFonts": []
+    },
+    {
+      "id": "Q-MV2BJIHA-7JX6",
+      "title": "Question 27: Museum Audio Skip",
+      "problemHtml": "<h2>Problem Statement</h2>\n<p>A museum guide tag string <code>T</code> of length <code>N</code> contains lowercase tags. Compress the string by removing any tag character that is identical to the one immediately before it. Your task is to find and return an integer value representing the length of the resulting compressed string.</p>\n<p><b>Note:</b> Only immediate consecutive duplicates are removed. Non-adjacent repeats are kept.</p>\n<p><b>Input Specification:</b><br>\nLine 1: An integer <code>N</code>, representing the length of the tag string.<br>\nLine 2: A string <code>T</code> of lowercase tags.\n</p>\n<p><b>Output Specification:</b><br>\nPrint an integer value representing the length of the resulting compressed string.\n</p>\n<h3>Example 1:</h3>\n<p>\n<b>Input:</b><br>\n<pre>6\naabccc</pre>\n<b>Output:</b><br>\n<pre>3</pre>\n<b>Explanation:</b><br>\n'a' -> keep ('a').<br>\nNext 'a' matches previous -> drop.<br>\n'b' -> keep (\"ab\").<br>\n'c' -> keep (\"abc\").<br>\nNext 'c' -> drop.<br>\nNext 'c' -> drop.<br>\nCompressed string = \"abc\", length = 3.\n</p>\n<h3>Example 2:</h3>\n<p>\n<b>Input:</b><br>\n<pre>5\nabcba</pre>\n<b>Output:</b><br>\n<pre>5</pre>\n<b>Explanation:</b><br>\nNo adjacent duplicates were found. Compressed string remains \"abcba\", length = 5.\n</p>",
+      "code": "import sys\n\ndef main():\n    tokens = sys.stdin.read().split()\n    if not tokens:\n        print(0)\n        return\n    n = int(tokens[0])\n    t = tokens[1] if len(tokens) > 1 else \"\"\n    s = t[:n]\n    if not s:\n        print(0)\n        return\n    length = 1\n    for i in range(1, len(s)):\n        if s[i] != s[i-1]:\n            length += 1\n    print(length)\n\nif __name__ == '__main__':\n    main()",
+      "codes": {
+        "python": "import sys\n\ndef main():\n    tokens = sys.stdin.read().split()\n    if not tokens:\n        print(0)\n        return\n    n = int(tokens[0])\n    t = tokens[1] if len(tokens) > 1 else \"\"\n    s = t[:n]\n    if not s:\n        print(0)\n        return\n    length = 1\n    for i in range(1, len(s)):\n        if s[i] != s[i-1]:\n            length += 1\n    print(length)\n\nif __name__ == '__main__':\n    main()",
+        "c": "#include <stdio.h>\n#include <string.h>\n\nint main(void) {\n    int n;\n    char t[10000];\n    if (scanf(\"%d %s\", &n, t) == 2) {\n        if (n <= 0 || t[0] == '\\0') {\n            printf(\"0\\n\");\n            return 0;\n        }\n        int count = 1;\n        for (int i = 1; i < n && t[i] != '\\0'; i++) {\n            if (t[i] != t[i-1]) {\n                count++;\n            }\n        }\n        printf(\"%d\\n\", count);\n    }\n    return 0;\n}",
+        "cpp": "#include <iostream>\n#include <string>\n\nusing namespace std;\n\nint main() {\n    int n;\n    string t;\n    if (cin >> n >> t) {\n        if (n <= 0 || t.empty()) {\n            cout << 0 << endl;\n            return 0;\n        }\n        int count = 1;\n        for (int i = 1; i < n && i < (int)t.length(); ++i) {\n            if (t[i] != t[i-1]) {\n                count++;\n            }\n        }\n        cout << count << endl;\n    }\n    return 0;\n}"
+      },
+      "language": "python",
+      "problemLocked": false,
+      "problemLockHash": "",
+      "testsLocked": false,
+      "testLockHash": "",
+      "tests": [
+        {
+          "input": "6\naabccc",
+          "expected": "3",
+          "studentDefined": false
+        },
+        {
+          "input": "5\nabcba",
+          "expected": "5",
+          "studentDefined": false
+        },
+        {
+          "input": "4\naaaa",
+          "expected": "1",
+          "studentDefined": false
+        },
+        {
+          "input": "1\nz",
+          "expected": "1",
+          "studentDefined": false
+        }
+      ],
+      "customFonts": []
+    },
+    {
+      "id": "Q-MV2BL0Y5-SLS0",
+      "title": "Question 28: Airport Security Flow",
+      "problemHtml": "<h2>Problem Statement</h2>\n<p>A single security lane serves <code>N</code> passengers with scan times stored in an integer array <code>S</code>. A running clock <code>C</code> starts at 0. For each passenger with scan time <code>t</code>:\n<ul>\n  <li>if <code>t > C</code>, reset <code>C</code> to <code>t</code>;</li>\n  <li>otherwise, increase <code>C</code> by <code>t</code> (<code>C += t</code>).</li>\n</ul>\nAfter each update, add <code>C</code> to the total cumulative wait. Your task is to find and return an integer value representing the total cumulative wait.</p>\n<p><b>Note:</b> The reset rule uses strict inequality (<code>t > C</code>).</p>\n<p><b>Input Specification:</b><br>\nLine 1: An integer <code>N</code>, representing the number of passengers.<br>\nLine 2: <code>N</code> space-separated integers representing scan times <code>S</code>.\n</p>\n<p><b>Output Specification:</b><br>\nPrint an integer value representing the total cumulative wait.\n</p>\n<h3>Example 1:</h3>\n<p>\n<b>Input:</b><br>\n<pre>3\n5 2 10</pre>\n<b>Output:</b><br>\n<pre>22</pre>\n<b>Explanation:</b><br>\nC = 0, total = 0.<br>\nPassenger 1 (t = 5): 5 > 0 -> C resets to 5; total += 5 -> total = 5.<br>\nPassenger 2 (t = 2): 2 <= 5 -> C += 2 = 7; total += 7 -> total = 12.<br>\nPassenger 3 (t = 10): 10 > 7 -> C resets to 10; total += 10 -> total = 22.<br>\nTotal cumulative wait = 22.\n</p>\n<h3>Example 2:</h3>\n<p>\n<b>Input:</b><br>\n<pre>4\n3 3 3 3</pre>\n<b>Output:</b><br>\n<pre>30</pre>\n<b>Explanation:</b><br>\nPassenger 1: C = 3, total = 3.<br>\nPassenger 2: C = 6, total = 9.<br>\nPassenger 3: C = 9, total = 18.<br>\nPassenger 4: C = 12, total = 30.<br>\nTotal cumulative wait = 30.\n</p>",
+      "code": "import sys\n\ndef main():\n    tokens = sys.stdin.read().split()\n    if not tokens:\n        print(0)\n        return\n    n = int(tokens[0])\n    s = list(map(int, tokens[1:1+n]))\n    c = 0\n    total = 0\n    for t in s:\n        if t > c:\n            c = t\n        else:\n            c += t\n        total += c\n    print(total)\n\nif __name__ == '__main__':\n    main()",
+      "codes": {
+        "python": "import sys\n\ndef main():\n    tokens = sys.stdin.read().split()\n    if not tokens:\n        print(0)\n        return\n    n = int(tokens[0])\n    s = list(map(int, tokens[1:1+n]))\n    c = 0\n    total = 0\n    for t in s:\n        if t > c:\n            c = t\n        else:\n            c += t\n        total += c\n    print(total)\n\nif __name__ == '__main__':\n    main()",
+        "c": "#include <stdio.h>\n\nint main(void) {\n    int n;\n    if (scanf(\"%d\", &n) != 1) return 0;\n    long long c = 0, total = 0;\n    for (int i = 0; i < n; i++) {\n        long long t;\n        scanf(\"%lld\", &t);\n        if (t > c) {\n            c = t;\n        } else {\n            c += t;\n        }\n        total += c;\n    }\n    printf(\"%lld\\n\", total);\n    return 0;\n}",
+        "cpp": "#include <iostream>\n\nusing namespace std;\n\nint main() {\n    int n;\n    if (cin >> n) {\n        long long c = 0, total = 0;\n        for (int i = 0; i < n; ++i) {\n            long long t;\n            cin >> t;\n            if (t > c) {\n                c = t;\n            } else {\n                c += t;\n            }\n            total += c;\n        }\n        cout << total << endl;\n    }\n    return 0;\n}"
+      },
+      "language": "python",
+      "problemLocked": false,
+      "problemLockHash": "",
+      "testsLocked": false,
+      "testLockHash": "",
+      "tests": [
+        {
+          "input": "3\n5 2 10",
+          "expected": "22",
+          "studentDefined": false
+        },
+        {
+          "input": "4\n3 3 3 3",
+          "expected": "30",
+          "studentDefined": false
+        },
+        {
+          "input": "1\n5",
+          "expected": "5",
+          "studentDefined": false
+        },
+        {
+          "input": "2\n10 1",
+          "expected": "21",
+          "studentDefined": false
+        }
+      ],
+      "customFonts": []
+    },
+    {
+      "id": "Q-MV2BMWJ4-3CZC",
+      "title": "Question 29: Elevator Trip Distance",
+      "problemHtml": "<h2>Problem Statement</h2>\n<p>An elevator starts at floor 0 and receives <code>N</code> floor requests in order. It travels to each requested floor one after another and finally returns to floor 0. Your task is to find and return an integer value representing the total distance traveled.</p>\n<p><b>Note:</b> All requested floors are non-negative integers. Requests are handled strictly in the given order.</p>\n<p><b>Input Specification:</b><br>\nLine 1: An integer <code>N</code>, representing the number of requests.<br>\nLine 2: <code>N</code> space-separated integers representing the requested floors <code>F</code> in order.\n</p>\n<p><b>Output Specification:</b><br>\nPrint an integer value representing the total distance traveled.\n</p>\n<h3>Example 1:</h3>\n<p>\n<b>Input:</b><br>\n<pre>3\n3 8 5</pre>\n<b>Output:</b><br>\n<pre>16</pre>\n<b>Explanation:</b><br>\nSegment 0 -> 3: |3 - 0| = 3.<br>\nSegment 3 -> 8: |8 - 3| = 5.<br>\nSegment 8 -> 5: |5 - 8| = 3.<br>\nSegment 5 -> 0: |0 - 5| = 5.<br>\nTotal distance = 3 + 5 + 3 + 5 = 16.\n</p>\n<h3>Example 2:</h3>\n<p>\n<b>Input:</b><br>\n<pre>4\n2 6 4 2</pre>\n<b>Output:</b><br>\n<pre>12</pre>\n<b>Explanation:</b><br>\n0 -> 2: 2.<br>\n2 -> 6: 4.<br>\n6 -> 4: 2.<br>\n4 -> 2: 2.<br>\n2 -> 0: 2.<br>\nTotal distance = 2 + 4 + 2 + 2 + 2 = 12.\n</p>",
+      "code": "import sys\n\ndef main():\n    tokens = sys.stdin.read().split()\n    if not tokens:\n        print(0)\n        return\n    n = int(tokens[0])\n    f = list(map(int, tokens[1:1+n]))\n    cur = 0\n    dist = 0\n    for target in f:\n        dist += abs(target - cur)\n        cur = target\n    dist += abs(0 - cur)\n    print(dist)\n\nif __name__ == '__main__':\n    main()",
+      "codes": {
+        "python": "import sys\n\ndef main():\n    tokens = sys.stdin.read().split()\n    if not tokens:\n        print(0)\n        return\n    n = int(tokens[0])\n    f = list(map(int, tokens[1:1+n]))\n    cur = 0\n    dist = 0\n    for target in f:\n        dist += abs(target - cur)\n        cur = target\n    dist += abs(0 - cur)\n    print(dist)\n\nif __name__ == '__main__':\n    main()",
+        "c": "#include <stdio.h>\n#include <stdlib.h>\n\nint main(void) {\n    int n;\n    if (scanf(\"%d\", &n) != 1) return 0;\n    long long dist = 0;\n    int cur = 0;\n    for (int i = 0; i < n; i++) {\n        int target;\n        scanf(\"%d\", &target);\n        dist += abs(target - cur);\n        cur = target;\n    }\n    dist += abs(0 - cur);\n    printf(\"%lld\\n\", dist);\n    return 0;\n}",
+        "cpp": "#include <iostream>\n#include <cmath>\n\nusing namespace std;\n\nint main() {\n    int n;\n    if (cin >> n) {\n        long long dist = 0;\n        int cur = 0;\n        for (int i = 0; i < n; ++i) {\n            int target;\n            cin >> target;\n            dist += abs(target - cur);\n            cur = target;\n        }\n        dist += abs(0 - cur);\n        cout << dist << endl;\n    }\n    return 0;\n}"
+      },
+      "language": "python",
+      "problemLocked": false,
+      "problemLockHash": "",
+      "testsLocked": false,
+      "testLockHash": "",
+      "tests": [
+        {
+          "input": "3\n3 8 5",
+          "expected": "16",
+          "studentDefined": false
+        },
+        {
+          "input": "4\n2 6 4 2",
+          "expected": "12",
+          "studentDefined": false
+        },
+        {
+          "input": "1\n10",
+          "expected": "20",
+          "studentDefined": false
+        },
+        {
+          "input": "2\n0 0",
+          "expected": "0",
+          "studentDefined": false
+        }
+      ],
+      "customFonts": []
+    },
+    {
+      "id": "Q-MV2BOJTP-0QHC",
+      "title": "Question 30: Treasure Map Scan",
+      "problemHtml": "<h2>Problem Statement</h2>\n<p>An archeologist decodes a treasure map string <code>M</code> of length <code>N</code> containing uppercase symbols, digits, and lowercase letters. 'X' scores 10, 'O' scores 5, each digit ('0'-'9') contributes its numeric value, and all other characters score 0. Your task is to find and return an integer value representing the total treasure score.</p>\n<p><b>Note:</b> Only 'X', 'O', and digits '0'-'9' contribute. All other characters score 0.</p>\n<p><b>Input Specification:</b><br>\nLine 1: An integer <code>N</code>, representing the map length.<br>\nLine 2: A string <code>M</code> representing the encoded map.\n</p>\n<p><b>Output Specification:</b><br>\nPrint an integer value representing the total treasure score.\n</p>\n<h3>Example 1:</h3>\n<p>\n<b>Input:</b><br>\n<pre>5\nXO3aX</pre>\n<b>Output:</b><br>\n<pre>28</pre>\n<b>Explanation:</b><br>\n'X' -> 10.<br>\n'O' -> 5.<br>\n'3' -> 3.<br>\n'a' -> 0.<br>\n'X' -> 10.<br>\nTotal Treasure Score = 10 + 5 + 3 + 0 + 10 = 28.\n</p>\n<h3>Example 2:</h3>\n<p>\n<b>Input:</b><br>\n<pre>4\nOO5b</pre>\n<b>Output:</b><br>\n<pre>15</pre>\n<b>Explanation:</b><br>\n'O' (5) + 'O' (5) + '5' (5) + 'b' (0) = 15.\n</p>",
+      "code": "import sys\n\ndef main():\n    tokens = sys.stdin.read().split()\n    if not tokens:\n        print(0)\n        return\n    n = int(tokens[0])\n    m = tokens[1] if len(tokens) > 1 else \"\"\n    total = 0\n    for ch in m[:n]:\n        if ch == 'X':\n            total += 10\n        elif ch == 'O':\n            total += 5\n        elif ch.isdigit():\n            total += int(ch)\n    print(total)\n\nif __name__ == '__main__':\n    main()",
+      "codes": {
+        "python": "import sys\n\ndef main():\n    tokens = sys.stdin.read().split()\n    if not tokens:\n        print(0)\n        return\n    n = int(tokens[0])\n    m = tokens[1] if len(tokens) > 1 else \"\"\n    total = 0\n    for ch in m[:n]:\n        if ch == 'X':\n            total += 10\n        elif ch == 'O':\n            total += 5\n        elif ch.isdigit():\n            total += int(ch)\n    print(total)\n\nif __name__ == '__main__':\n    main()",
+        "c": "#include <stdio.h>\n#include <string.h>\n\nint main(void) {\n    int n;\n    char m[10000];\n    if (scanf(\"%d %s\", &n, m) == 2) {\n        long long total = 0;\n        for (int i = 0; i < n && m[i] != '\\0'; i++) {\n            if (m[i] == 'X') {\n                total += 10;\n            } else if (m[i] == 'O') {\n                total += 5;\n            } else if (m[i] >= '0' && m[i] <= '9') {\n                total += m[i] - '0';\n            }\n        }\n        printf(\"%lld\\n\", total);\n    }\n    return 0;\n}",
+        "cpp": "#include <iostream>\n#include <string>\n\nusing namespace std;\n\nint main() {\n    int n;\n    string m;\n    if (cin >> n >> m) {\n        long long total = 0;\n        for (int i = 0; i < n && i < (int)m.length(); ++i) {\n            if (m[i] == 'X') {\n                total += 10;\n            } else if (m[i] == 'O') {\n                total += 5;\n            } else if (m[i] >= '0' && m[i] <= '9') {\n                total += m[i] - '0';\n            }\n        }\n        cout << total << endl;\n    }\n    return 0;\n}"
+      },
+      "language": "python",
+      "problemLocked": false,
+      "problemLockHash": "",
+      "testsLocked": false,
+      "testLockHash": "",
+      "tests": [
+        {
+          "input": "5\nXO3aX",
+          "expected": "28",
+          "studentDefined": false
+        },
+        {
+          "input": "4\nOO5b",
+          "expected": "15",
+          "studentDefined": false
+        },
+        {
+          "input": "3\nabc",
+          "expected": "0",
+          "studentDefined": false
+        },
+        {
+          "input": "4\nXXOO",
+          "expected": "30",
+          "studentDefined": false
+        }
+      ],
+      "customFonts": []
+    }
+  ]
+}
