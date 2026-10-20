@@ -1,0 +1,1077 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, interactive-widget=resizes-content">
+    <title>Trip AI ✈️ End-to-End User Guide & Documentation</title>
+    <meta name="description" content="Comprehensive step-by-step guide to using Trip AI travel intelligence engine, Google Lens area inspector, GPS route optimizer, budget calculator, and bus finder.">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Outfit:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                        heading: ['"Outfit"', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#eff6ff',
+                            100: '#dbeafe',
+                            200: '#bfdbfe',
+                            300: '#93c5fd',
+                            400: '#60a5fa',
+                            500: '#3b82f6',
+                            600: '#2563eb',
+                            700: '#1d4ed8',
+                            800: '#1e40af',
+                            900: '#1e3a8a',
+                        },
+                        gemini: {
+                            purple: '#8b5cf6',
+                            blue: '#3b82f6',
+                            cyan: '#06b6d4',
+                            glow: '#a855f7'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <style>
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+        }
+        .dark .glass-panel {
+            background: rgba(17, 24, 39, 0.85);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .gradient-text {
+            background: linear-gradient(135deg, #2563eb 0%, #7c3aed 50%, #db2777 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .step-badge {
+            background: linear-gradient(135deg, #2563eb, #7c3aed);
+            color: #ffffff;
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
+        }
+        /* Custom Scrollbar & Utility */
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: rgba(0, 0, 0, 0.05); }
+        ::-webkit-scrollbar-thumb { background: #93c5fd; border-radius: 9999px; }
+        .dark ::-webkit-scrollbar-thumb { background: #374151; }
+
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+        /* Mobile Drawer Animations */
+        #mobileMenuDrawer {
+            transition: max-height 0.35s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease;
+        }
+        #mobileMenuDrawer.menu-closed {
+            max-height: 0;
+            opacity: 0;
+            pointer-events: none;
+            overflow: hidden;
+        }
+        #mobileMenuDrawer.menu-open {
+            max-height: 85vh;
+            opacity: 1;
+            pointer-events: auto;
+            overflow-y: auto;
+        }
+
+        .nav-pill:active {
+            transform: scale(0.94);
+        }
+
+        /* Mobile 2-Row Upper Navigation Buttons */
+        @media (max-width: 768px) {
+            .quick-jump-nav-container {
+                display: grid !important;
+                grid-template-rows: repeat(2, auto) !important;
+                grid-auto-flow: column !important;
+                gap: 6px !important;
+                overflow-x: auto !important;
+                -webkit-overflow-scrolling: touch !important;
+                padding: 4px 0 !important;
+            }
+            .quick-jump-nav-container .nav-pill {
+                padding: 6px 10px !important;
+                font-size: 11px !important;
+                white-space: nowrap !important;
+            }
+        }
+    </style>
+</head>
+<body class="bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 font-sans transition-colors duration-300 min-h-screen flex flex-col antialiased pb-16 sm:pb-0">
+
+    <!-- Top Announcement Bar -->
+    <div class="bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 text-white text-[11px] sm:text-xs py-1.5 sm:py-2 px-3 text-center font-medium flex items-center justify-between shadow-md">
+        <div class="flex items-center gap-1.5 sm:gap-2 overflow-hidden">
+            <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-white/20 text-white flex-shrink-0">
+                📖 Guide
+            </span>
+            <span class="truncate font-semibold">Trip AI Complete Master User Guide</span>
+        </div>
+        <div class="flex items-center gap-1.5 sm:gap-2 flex-shrink-0">
+            <a href="index.html" class="px-2 sm:px-2.5 py-0.5 rounded-lg bg-white/20 hover:bg-white/30 text-white font-bold text-[10px] sm:text-xs flex items-center gap-1 transition-all">
+                <i class="fa-solid fa-arrow-left"></i> <span class="hidden sm:inline">Back to</span> App
+            </a>
+            <a href="https://supportsourcecode.lovable.app/home" target="_blank" class="px-2 sm:px-2.5 py-0.5 rounded-lg bg-white/20 hover:bg-white/30 text-white font-bold text-[10px] sm:text-xs flex items-center gap-1 transition-all">
+                <i class="fa-solid fa-house text-amber-300"></i> <span class="hidden sm:inline">Main</span>
+            </a>
+            <a href="https://interactive-media-display.lovable.app/" target="_blank" class="px-2 sm:px-2.5 py-0.5 rounded-lg bg-amber-400 hover:bg-amber-300 text-slate-900 font-extrabold text-[10px] sm:text-xs flex items-center gap-1 shadow-sm transition-all">
+                <i class="fa-solid fa-bag-shopping"></i> Store
+            </a>
+        </div>
+    </div>
+
+    <!-- Navigation Bar -->
+    <header class="sticky top-0 z-50 glass-panel border-b border-slate-200/80 dark:border-slate-800 shadow-sm transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 h-14 sm:h-20 flex items-center justify-between">
+            <!-- Brand Logo -->
+            <a href="index.html" class="flex items-center gap-2 sm:gap-3 group">
+                <div class="w-8 h-8 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl bg-gradient-to-tr from-blue-600 to-indigo-600 flex items-center justify-center text-white shadow-lg group-hover:scale-105 transition-transform flex-shrink-0">
+                    <i class="fa-solid fa-compass fa-spin-pulse text-xs sm:text-lg text-amber-300" style="--fa-animation-duration: 6s;"></i>
+                </div>
+                <div>
+                    <div class="flex items-center gap-1.5">
+                        <span class="font-heading font-extrabold text-lg sm:text-2xl tracking-tight gradient-text">Trip</span>
+                        <span class="px-1.5 py-0.5 rounded-md text-[9px] sm:text-[10px] font-black uppercase tracking-wider bg-purple-100 dark:bg-purple-900/50 text-purple-600 dark:text-purple-300 border border-purple-200 dark:border-purple-700">Guide</span>
+                    </div>
+                    <p class="text-[10px] sm:text-[11px] text-slate-500 dark:text-slate-400 font-medium hidden md:block">End-to-End User Manual & Features</p>
+                </div>
+            </a>
+
+            <!-- Quick Nav Jump (Desktop) -->
+            <nav class="hidden lg:flex items-center gap-4 text-xs sm:text-sm font-semibold text-slate-600 dark:text-slate-300">
+                <a href="#quick-start" class="hover:text-blue-600 dark:hover:text-blue-400 transition-colors flex items-center gap-1">🚀 Quick Start</a>
+                <a href="#gmaps-api-key" class="hover:text-amber-600 dark:hover:text-amber-400 transition-colors flex items-center gap-1">🔑 Maps Key</a>
+                <a href="#google-lens" class="hover:text-cyan-600 dark:hover:text-cyan-400 transition-colors flex items-center gap-1">🔍 Google Lens</a>
+                <a href="#gps-planner" class="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors flex items-center gap-1">📍 GPS Planner</a>
+                <a href="#step-bus" class="hover:text-amber-600 dark:hover:text-amber-400 transition-colors flex items-center gap-1">🚌 Bus Finder</a>
+                <a href="#food-finder" class="hover:text-orange-600 dark:hover:text-orange-400 transition-colors flex items-center gap-1">🍽️ Food Finder</a>
+                <a href="#cookies-export" class="hover:text-rose-600 dark:hover:text-rose-400 transition-colors flex items-center gap-1">💾 PDF & Cookies</a>
+                <a href="#faq" class="hover:text-purple-600 dark:hover:text-purple-400 transition-colors flex items-center gap-1">❓ FAQ</a>
+            </nav>
+
+            <!-- Actions (Desktop & Mobile) -->
+            <div class="flex items-center gap-1.5 sm:gap-2">
+                <button onclick="toggleDarkMode()" title="Toggle Theme" aria-label="Toggle Theme" class="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 flex items-center justify-center text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition-all text-xs sm:text-base cursor-pointer">
+                    <i id="themeIcon" class="fa-solid fa-moon"></i>
+                </button>
+
+                <a href="index.html" class="px-2.5 py-1.5 sm:px-4 sm:py-2 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-extrabold text-[11px] sm:text-sm shadow-md hover:scale-105 active:scale-95 transition-all flex items-center gap-1.5">
+                    <i class="fa-solid fa-play text-xs sm:text-sm"></i>
+                    <span class="hidden xs:inline">Launch App</span>
+                    <span class="xs:hidden">App</span>
+                </a>
+
+                <!-- Mobile Menu Button -->
+                <button id="mobileMenuBtn" onclick="toggleMobileMenu()" aria-label="Toggle Menu" class="lg:hidden w-8 h-8 rounded-xl bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 flex items-center justify-center text-slate-700 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-700 transition-all text-sm cursor-pointer">
+                    <i id="mobileMenuIcon" class="fa-solid fa-bars"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile Menu Drawer Dropdown -->
+        <div id="mobileMenuDrawer" class="lg:hidden menu-closed border-t border-slate-200 dark:border-slate-800 bg-white/95 dark:bg-slate-950/95 backdrop-blur-2xl px-4 py-4 space-y-3 shadow-2xl">
+            <div class="flex items-center justify-between pb-2 border-b border-slate-200 dark:border-slate-800">
+                <span class="text-xs font-black uppercase tracking-wider text-slate-400 dark:text-slate-500">Navigation & Guide Sections</span>
+                <button onclick="closeMobileMenu()" class="text-xs text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 font-bold p-1">
+                    <i class="fa-solid fa-xmark text-sm"></i>
+                </button>
+            </div>
+
+            <nav class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs font-bold">
+                <a href="#quick-start" onclick="closeMobileMenu()" class="flex items-center gap-2.5 p-2.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-800 dark:text-slate-200 hover:bg-blue-50 dark:hover:bg-blue-950/50 hover:border-blue-300 transition-all">
+                    <span class="w-7 h-7 rounded-lg bg-blue-500 text-white flex items-center justify-center text-xs shadow-sm">🚀</span>
+                    <div>
+                        <div class="font-extrabold text-slate-900 dark:text-white">Quick Start</div>
+                        <div class="text-[10px] text-slate-500 font-normal">3-step travel journey</div>
+                    </div>
+                </a>
+
+                <a href="#gmaps-api-key" onclick="closeMobileMenu()" class="flex items-center gap-2.5 p-2.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-800 dark:text-slate-200 hover:bg-amber-50 dark:hover:bg-amber-950/50 hover:border-amber-300 transition-all">
+                    <span class="w-7 h-7 rounded-lg bg-amber-500 text-slate-950 flex items-center justify-center text-xs shadow-sm">🔑</span>
+                    <div>
+                        <div class="font-extrabold text-slate-900 dark:text-white">Google Maps Key</div>
+                        <div class="text-[10px] text-slate-500 font-normal">Step-by-step key setup & cookies</div>
+                    </div>
+                </a>
+
+                <a href="#google-lens" onclick="closeMobileMenu()" class="flex items-center gap-2.5 p-2.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-800 dark:text-slate-200 hover:bg-cyan-50 dark:hover:bg-cyan-950/50 hover:border-cyan-300 transition-all">
+                    <span class="w-7 h-7 rounded-lg bg-cyan-500 text-white flex items-center justify-center text-xs shadow-sm">🔍</span>
+                    <div>
+                        <div class="font-extrabold text-slate-900 dark:text-white">Google Lens AI</div>
+                        <div class="text-[10px] text-slate-500 font-normal">Double-click map inspector</div>
+                    </div>
+                </a>
+
+                <a href="#gps-planner" onclick="closeMobileMenu()" class="flex items-center gap-2.5 p-2.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-800 dark:text-slate-200 hover:bg-indigo-50 dark:hover:bg-indigo-950/50 hover:border-indigo-300 transition-all">
+                    <span class="w-7 h-7 rounded-lg bg-indigo-500 text-white flex items-center justify-center text-xs shadow-sm">📍</span>
+                    <div>
+                        <div class="font-extrabold text-slate-900 dark:text-white">GPS Day Route Planner</div>
+                        <div class="text-[10px] text-slate-500 font-normal">Shortest & cheapest paths</div>
+                    </div>
+                </a>
+
+                <a href="#step-bus" onclick="closeMobileMenu()" class="flex items-center gap-2.5 p-2.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-800 dark:text-slate-200 hover:bg-amber-50 dark:hover:bg-amber-950/50 hover:border-amber-300 transition-all">
+                    <span class="w-7 h-7 rounded-lg bg-amber-500 text-white flex items-center justify-center text-xs shadow-sm">🚌</span>
+                    <div>
+                        <div class="font-extrabold text-slate-900 dark:text-white">Bus Finder & Routes</div>
+                        <div class="text-[10px] text-slate-500 font-normal">Country & State lookup</div>
+                    </div>
+                </a>
+
+                <a href="#food-finder" onclick="closeMobileMenu()" class="flex items-center gap-2.5 p-2.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-800 dark:text-slate-200 hover:bg-orange-50 dark:hover:bg-orange-950/50 hover:border-orange-300 transition-all">
+                    <span class="w-7 h-7 rounded-lg bg-orange-500 text-white flex items-center justify-center text-xs shadow-sm">🍽️</span>
+                    <div>
+                        <div class="font-extrabold text-slate-900 dark:text-white">Nearby Food Finder</div>
+                        <div class="text-[10px] text-slate-500 font-normal">Veg / Non-veg spot radar</div>
+                    </div>
+                </a>
+
+                <a href="#cookies-export" onclick="closeMobileMenu()" class="flex items-center gap-2.5 p-2.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-800 dark:text-slate-200 hover:bg-rose-50 dark:hover:bg-rose-950/50 hover:border-rose-300 transition-all">
+                    <span class="w-7 h-7 rounded-lg bg-rose-500 text-white flex items-center justify-center text-xs shadow-sm">💾</span>
+                    <div>
+                        <div class="font-extrabold text-slate-900 dark:text-white">PDF / HTML & Cookies</div>
+                        <div class="text-[10px] text-slate-500 font-normal">Export reports & clear cache</div>
+                    </div>
+                </a>
+
+                <a href="#faq" onclick="closeMobileMenu()" class="flex items-center gap-2.5 p-2.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-800 dark:text-slate-200 hover:bg-purple-50 dark:hover:bg-purple-950/50 hover:border-purple-300 transition-all">
+                    <span class="w-7 h-7 rounded-lg bg-purple-500 text-white flex items-center justify-center text-xs shadow-sm">❓</span>
+                    <div>
+                        <div class="font-extrabold text-slate-900 dark:text-white">Frequently Asked Questions</div>
+                        <div class="text-[10px] text-slate-500 font-normal">Tips, tricks & troubleshooting</div>
+                    </div>
+                </a>
+
+                <a href="https://wa.me/917903933705?text=Hello!%20I%20want%20to%20purchase%20this%20Trip%20Travel%20AI%20app%20for%20personal%20use%20without%20lagging.%20Please%20share%20the%20details%20and%20pricing." target="_blank" rel="noopener noreferrer" class="flex items-center gap-2.5 p-2.5 rounded-xl bg-emerald-50 dark:bg-emerald-950/50 border border-emerald-200 dark:border-emerald-800 text-emerald-800 dark:text-emerald-200 hover:bg-emerald-100 transition-all">
+                    <span class="w-7 h-7 rounded-lg bg-emerald-500 text-white flex items-center justify-center text-xs shadow-sm"><i class="fa-brands fa-whatsapp"></i></span>
+                    <div>
+                        <div class="font-extrabold text-emerald-900 dark:text-emerald-100">WhatsApp Support & Buy</div>
+                        <div class="text-[10px] text-emerald-600 dark:text-emerald-400 font-normal">+91 7903933705</div>
+                    </div>
+                </a>
+            </nav>
+
+            <div class="pt-2 flex items-center gap-2">
+                <a href="index.html" class="flex-1 py-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-bold rounded-xl text-xs flex items-center justify-center gap-1.5 shadow-md">
+                    <i class="fa-solid fa-compass"></i> Open App
+                </a>
+                <a href="https://supportsourcecode.lovable.app/home" target="_blank" class="px-3 py-2.5 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 font-bold rounded-xl text-xs flex items-center justify-center gap-1 border border-slate-200 dark:border-slate-700">
+                    <i class="fa-solid fa-house text-amber-500"></i> Main
+                </a>
+            </div>
+        </div>
+
+        <!-- Horizontal Scrollable Quick-Jump Navigation Pills (All screens) -->
+        <div class="border-t border-slate-200/60 dark:border-slate-800/60 bg-slate-50/90 dark:bg-slate-900/90 backdrop-blur-md py-2 px-3 shadow-xs">
+            <div class="max-w-7xl mx-auto flex items-center gap-1.5 overflow-x-auto no-scrollbar scroll-smooth quick-jump-nav-container">
+                <span class="text-[10px] font-extrabold uppercase tracking-wider text-slate-400 dark:text-slate-500 pl-1 pr-1 flex items-center gap-1 flex-shrink-0">
+                    <i class="fa-solid fa-compass text-blue-500 text-[10px]"></i> Jump:
+                </span>
+                <a href="#quick-start" class="nav-pill flex-shrink-0 px-2.5 py-1 rounded-xl bg-white dark:bg-slate-800 hover:bg-blue-50 dark:hover:bg-blue-950/60 text-slate-700 dark:text-slate-200 border border-slate-200/80 dark:border-slate-700 text-[11px] font-bold flex items-center gap-1.5 shadow-xs transition-all">
+                    <span>🚀</span> Quick Start
+                </a>
+                <a href="#google-lens" class="nav-pill flex-shrink-0 px-2.5 py-1 rounded-xl bg-white dark:bg-slate-800 hover:bg-cyan-50 dark:hover:bg-cyan-950/60 text-slate-700 dark:text-slate-200 border border-slate-200/80 dark:border-slate-700 text-[11px] font-bold flex items-center gap-1.5 shadow-xs transition-all">
+                    <span>🔍</span> Google Lens
+                </a>
+                <a href="#gps-planner" class="nav-pill flex-shrink-0 px-2.5 py-1 rounded-xl bg-white dark:bg-slate-800 hover:bg-indigo-50 dark:hover:bg-indigo-950/60 text-slate-700 dark:text-slate-200 border border-slate-200/80 dark:border-slate-700 text-[11px] font-bold flex items-center gap-1.5 shadow-xs transition-all">
+                    <span>📍</span> GPS Route
+                </a>
+                <a href="#step-bus" class="nav-pill flex-shrink-0 px-2.5 py-1 rounded-xl bg-white dark:bg-slate-800 hover:bg-amber-50 dark:hover:bg-amber-950/60 text-slate-700 dark:text-slate-200 border border-slate-200/80 dark:border-slate-700 text-[11px] font-bold flex items-center gap-1.5 shadow-xs transition-all">
+                    <span>🚌</span> Bus Finder
+                </a>
+                <a href="#food-finder" class="nav-pill flex-shrink-0 px-2.5 py-1 rounded-xl bg-white dark:bg-slate-800 hover:bg-orange-50 dark:hover:bg-orange-950/60 text-slate-700 dark:text-slate-200 border border-slate-200/80 dark:border-slate-700 text-[11px] font-bold flex items-center gap-1.5 shadow-xs transition-all">
+                    <span>🍽️</span> Food Finder
+                </a>
+                <a href="#cookies-export" class="nav-pill flex-shrink-0 px-2.5 py-1 rounded-xl bg-white dark:bg-slate-800 hover:bg-rose-50 dark:hover:bg-rose-950/60 text-slate-700 dark:text-slate-200 border border-slate-200/80 dark:border-slate-700 text-[11px] font-bold flex items-center gap-1.5 shadow-xs transition-all">
+                    <span>💾</span> PDF / Cookies
+                </a>
+                <a href="#faq" class="nav-pill flex-shrink-0 px-2.5 py-1 rounded-xl bg-white dark:bg-slate-800 hover:bg-purple-50 dark:hover:bg-purple-950/60 text-slate-700 dark:text-slate-200 border border-slate-200/80 dark:border-slate-700 text-[11px] font-bold flex items-center gap-1.5 shadow-xs transition-all">
+                    <span>❓</span> FAQ
+                </a>
+                <a href="https://wa.me/917903933705?text=Hello!%20I%20want%20to%20purchase%20this%20Trip%20Travel%20AI%20app%20for%20personal%20use%20without%20lagging.%20Please%20share%20the%20details%20and%20pricing." target="_blank" rel="noopener noreferrer" class="nav-pill flex-shrink-0 px-2.5 py-1 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white text-[11px] font-bold flex items-center gap-1 shadow-sm transition-all">
+                    <i class="fa-brands fa-whatsapp text-xs"></i> WhatsApp Buy
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Header -->
+    <section class="relative py-12 sm:py-16 bg-gradient-to-b from-blue-50/80 via-indigo-50/40 to-slate-50 dark:from-slate-900 dark:via-slate-950 dark:to-slate-950 border-b border-slate-200/80 dark:border-slate-800">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 text-center space-y-4">
+            <span class="px-3.5 py-1.5 rounded-full text-xs font-black uppercase tracking-wider bg-blue-100 dark:bg-blue-950/60 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-800 shadow-sm inline-flex items-center gap-2">
+                <i class="fa-solid fa-graduation-cap text-amber-500"></i> Master User Guide
+            </span>
+            <h1 class="font-heading font-extrabold text-3xl sm:text-5xl text-slate-900 dark:text-white tracking-tight">
+                How to Use <span class="gradient-text">Trip AI Travel Engine</span>
+            </h1>
+            <p class="text-sm sm:text-base text-slate-600 dark:text-slate-400 max-w-2xl mx-auto leading-relaxed">
+                Learn how to plan custom milestone itineraries, scan any area in the world with Google Lens AI, compute shortest/cheapest GPS routes, export full-detail PDF/HTML reports, and find top local food spots.
+            </p>
+
+            <div class="flex flex-wrap items-center justify-center gap-3 pt-2">
+                <a href="#quick-start" class="px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs sm:text-sm shadow-md flex items-center gap-2 transition-all">
+                    <i class="fa-solid fa-rocket"></i> Get Started in 3 Steps
+                </a>
+                <a href="https://wa.me/917903933705" target="_blank" class="px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs sm:text-sm shadow-md flex items-center gap-2 transition-all">
+                    <i class="fa-brands fa-whatsapp text-base"></i> WhatsApp Support (+91 7903933705)
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Content Container -->
+    <main class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-16 flex-1">
+
+        <!-- 1. Quick Start Guide -->
+        <section id="quick-start" class="scroll-mt-24 space-y-6">
+            <div class="flex items-center gap-3 border-b border-slate-200 dark:border-slate-800 pb-3">
+                <div class="w-10 h-10 rounded-2xl bg-blue-600 text-white flex items-center justify-center text-lg font-black shadow-md">1</div>
+                <div>
+                    <h2 class="font-heading font-extrabold text-2xl text-slate-900 dark:text-white">Quick Start: 3-Step Journey</h2>
+                    <p class="text-xs text-slate-500 dark:text-slate-400">From opening the site to generating a full itinerary.</p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Step 1 -->
+                <div class="glass-panel p-6 rounded-3xl border border-slate-200 dark:border-slate-800 space-y-3 relative hover:shadow-xl transition-all">
+                    <span class="w-8 h-8 rounded-full step-badge flex items-center justify-center font-black text-sm">1</span>
+                    <h3 class="font-heading font-extrabold text-lg text-slate-900 dark:text-white">Search Any Destination</h3>
+                    <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+                        Type any city, state, or country in the search box (e.g. <em>Jaipur, Paris, Tokyo, Dubai, Bali, New York</em>). Set your duration (1–14 days), travelers, and budget style.
+                    </p>
+                    <div class="p-2.5 bg-blue-50 dark:bg-blue-950/40 rounded-xl text-[11px] text-blue-700 dark:text-blue-300 font-semibold border border-blue-100 dark:border-blue-900">
+                        💡 <strong>Pro Tip:</strong> Supports 8 global currencies with automatic real-time rate conversion.
+                    </div>
+                </div>
+
+                <!-- Step 2 -->
+                <div class="glass-panel p-6 rounded-3xl border border-slate-200 dark:border-slate-800 space-y-3 relative hover:shadow-xl transition-all">
+                    <span class="w-8 h-8 rounded-full step-badge flex items-center justify-center font-black text-sm">2</span>
+                    <h3 class="font-heading font-extrabold text-lg text-slate-900 dark:text-white">Explore 4K Map & Checkpoints</h3>
+                    <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+                        View high-resolution satellite imagery with turn-by-turn milestone pins. Check entry fees, optimal visiting times, distance calculations, and transit links.
+                    </p>
+                    <div class="p-2.5 bg-purple-50 dark:bg-purple-950/40 rounded-xl text-[11px] text-purple-700 dark:text-purple-300 font-semibold border border-purple-100 dark:border-purple-900">
+                        🗺️ <strong>Pro Tip:</strong> Click any milestone in the list to instantly zoom into that exact location on Google Maps.
+                    </div>
+                </div>
+
+                <!-- Step 3 -->
+                <div class="glass-panel p-6 rounded-3xl border border-slate-200 dark:border-slate-800 space-y-3 relative hover:shadow-xl transition-all">
+                    <span class="w-8 h-8 rounded-full step-badge flex items-center justify-center font-black text-sm">3</span>
+                    <h3 class="font-heading font-extrabold text-lg text-slate-900 dark:text-white">Inspect, Customize & Follow</h3>
+                    <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+                        Double-click the map for Google Lens AI area analysis, calculate the shortest route from your live GPS location, and follow turn-by-turn checkpoints all day!
+                    </p>
+                    <div class="p-2.5 bg-emerald-50 dark:bg-emerald-950/40 rounded-xl text-[11px] text-emerald-700 dark:text-emerald-300 font-semibold border border-emerald-100 dark:border-emerald-900">
+                        ✅ <strong>Pro Tip:</strong> Check off checkpoints as you visit them to track live tour progress!
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 2. Google Maps API Key Setup & Live Directions Guide -->
+        <section id="gmaps-api-key" class="scroll-mt-24 space-y-6">
+            <div class="flex items-center gap-3 border-b border-slate-200 dark:border-slate-800 pb-3">
+                <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-blue-600 via-indigo-600 to-purple-600 text-white flex items-center justify-center text-lg font-black shadow-md">
+                    <i class="fa-solid fa-key text-amber-300"></i>
+                </div>
+                <div>
+                    <h2 class="font-heading font-extrabold text-2xl text-slate-900 dark:text-white">Google Maps API Key Setup & Live Directions</h2>
+                    <p class="text-xs text-slate-500 dark:text-slate-400">Step-by-step tutorial to get your key, paste it, encrypt it in cookies, and start turn-by-turn navigation.</p>
+                </div>
+            </div>
+
+            <div class="glass-panel p-6 sm:p-8 rounded-3xl border border-slate-200 dark:border-slate-800 space-y-6 text-xs sm:text-sm leading-relaxed text-slate-600 dark:text-slate-300">
+                <div class="p-5 rounded-2xl bg-gradient-to-r from-blue-900 via-indigo-950 to-purple-950 text-white flex flex-col sm:flex-row items-center justify-between gap-4 shadow-xl">
+                    <div class="space-y-1">
+                        <span class="px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase bg-amber-400 text-slate-950">Official Google Cloud Link</span>
+                        <h3 class="font-heading font-extrabold text-base sm:text-lg text-white">Google Maps Platform Console</h3>
+                        <p class="text-xs text-slate-300">Get your official Google Maps API key in under 2 minutes with free monthly Google Cloud credits.</p>
+                    </div>
+                    <a href="https://console.cloud.google.com/google/maps-apis/overview" target="_blank" rel="noopener noreferrer"
+                       class="px-5 py-3 rounded-2xl bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 text-slate-950 font-black text-xs shadow-lg flex items-center gap-2 hover:scale-105 active:scale-95 transition-all text-center shrink-0">
+                        <i class="fa-brands fa-google text-sm"></i>
+                        <span>Open Google Cloud Console ➔</span>
+                    </a>
+                </div>
+
+                <!-- 5 Steps Detailed Grid -->
+                <div class="space-y-3">
+                    <h3 class="font-heading font-extrabold text-base text-slate-900 dark:text-white flex items-center gap-2">
+                        <i class="fa-solid fa-list-check text-blue-500"></i>
+                        <span>5 Easy Steps to Get and Connect Your Key:</span>
+                    </h3>
+
+                    <div class="grid grid-cols-1 md:grid-cols-5 gap-3">
+                        <div class="p-4 rounded-2xl bg-slate-50 dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 space-y-2">
+                            <div class="flex items-center gap-2">
+                                <span class="w-7 h-7 rounded-xl bg-blue-600 text-white font-black text-xs flex items-center justify-center">1</span>
+                                <span class="font-extrabold text-slate-900 dark:text-white text-xs">Open Console</span>
+                            </div>
+                            <p class="text-[11px] text-slate-500 dark:text-slate-400">
+                                Open <a href="https://console.cloud.google.com/google/maps-apis/overview" target="_blank" class="text-blue-500 underline font-bold">Google Cloud Maps Platform</a> and sign in.
+                            </p>
+                        </div>
+
+                        <div class="p-4 rounded-2xl bg-slate-50 dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 space-y-2">
+                            <div class="flex items-center gap-2">
+                                <span class="w-7 h-7 rounded-xl bg-indigo-600 text-white font-black text-xs flex items-center justify-center">2</span>
+                                <span class="font-extrabold text-slate-900 dark:text-white text-xs">Create Project</span>
+                            </div>
+                            <p class="text-[11px] text-slate-500 dark:text-slate-400">
+                                Select or click <strong>New Project</strong> and name it (e.g. <em>Trip AI Engine</em>).
+                            </p>
+                        </div>
+
+                        <div class="p-4 rounded-2xl bg-slate-50 dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 space-y-2">
+                            <div class="flex items-center gap-2">
+                                <span class="w-7 h-7 rounded-xl bg-purple-600 text-white font-black text-xs flex items-center justify-center">3</span>
+                                <span class="font-extrabold text-slate-900 dark:text-white text-xs">Enable APIs</span>
+                            </div>
+                            <p class="text-[11px] text-slate-500 dark:text-slate-400">
+                                Go to <strong>APIs & Services &gt; Library</strong>. Enable <strong>Directions API</strong>, <strong>Maps JavaScript API</strong> & <strong>Places API</strong>.
+                            </p>
+                        </div>
+
+                        <div class="p-4 rounded-2xl bg-slate-50 dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 space-y-2">
+                            <div class="flex items-center gap-2">
+                                <span class="w-7 h-7 rounded-xl bg-amber-600 text-white font-black text-xs flex items-center justify-center">4</span>
+                                <span class="font-extrabold text-slate-900 dark:text-white text-xs">Get API Key</span>
+                            </div>
+                            <p class="text-[11px] text-slate-500 dark:text-slate-400">
+                                Go to <strong>Credentials</strong>, click <strong>+ CREATE CREDENTIALS</strong> and choose <strong>API key</strong>.
+                            </p>
+                        </div>
+
+                        <div class="p-4 rounded-2xl bg-slate-50 dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 space-y-2">
+                            <div class="flex items-center gap-2">
+                                <span class="w-7 h-7 rounded-xl bg-emerald-600 text-white font-black text-xs flex items-center justify-center">5</span>
+                                <span class="font-extrabold text-slate-900 dark:text-white text-xs">Paste &amp; Encrypt</span>
+                            </div>
+                            <p class="text-[11px] text-slate-500 dark:text-slate-400">
+                                Copy the key (starts with <code class="font-mono text-emerald-600 font-bold">AIzaSy...</code>), click <strong>Maps Key</strong> in Trip AI, and click <strong>Save &amp; Encrypt</strong>.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Cookie Encryption & Privacy Architecture -->
+                <div class="p-4 rounded-2xl bg-emerald-50/70 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-900/50 space-y-2">
+                    <h4 class="font-heading font-extrabold text-sm text-emerald-900 dark:text-emerald-200 flex items-center gap-2">
+                        <i class="fa-solid fa-lock text-emerald-600"></i>
+                        <span>Client-Side Encryption &amp; Cookie Lifetime</span>
+                    </h4>
+                    <p class="text-xs text-emerald-800/90 dark:text-emerald-300/90 leading-relaxed">
+                        • <strong>End-to-End Client Encryption:</strong> Your key is encrypted before being stored, ensuring it is never saved as plaintext.<br>
+                        • <strong>Cookie Name:</strong> Stored under <code class="font-mono font-bold bg-white/80 dark:bg-slate-900 px-1.5 py-0.5 rounded">trip_gmaps_api_key</code> with <code class="font-mono">SameSite=Lax</code> security policy.<br>
+                        • <strong>Automatic Deletion:</strong> If you clear your browser cookies or click <strong>Delete Cookies</strong>, your encrypted key is instantly deleted from memory and storage.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 2. Google Lens AI Area Inspector -->
+        <section id="google-lens" class="scroll-mt-24 space-y-6">
+            <div class="flex items-center gap-3 border-b border-slate-200 dark:border-slate-800 pb-3">
+                <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-amber-500 to-rose-500 text-white flex items-center justify-center text-lg font-black shadow-md">
+                    <i class="fa-solid fa-camera"></i>
+                </div>
+                <div>
+                    <h2 class="font-heading font-extrabold text-2xl text-slate-900 dark:text-white">Google Lens AI Area Inspector</h2>
+                    <p class="text-xs text-slate-500 dark:text-slate-400">Scan any geographic area on the map by double-clicking.</p>
+                </div>
+            </div>
+
+            <div class="glass-panel p-6 sm:p-8 rounded-3xl border border-slate-200 dark:border-slate-800 space-y-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
+                    <div class="space-y-3 text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+                        <p class="font-bold text-slate-900 dark:text-white text-base">
+                            ✨ How Double-Click Area Scanning Works:
+                        </p>
+                        <ul class="space-y-2.5">
+                            <li class="flex items-start gap-2">
+                                <span class="text-blue-500 font-bold mt-0.5"><i class="fa-solid fa-circle-check"></i></span>
+                                <span><strong>Double-Click Anywhere:</strong> Double-click on any point on the 4K satellite map. A glowing cyan Google Lens scanning box will appear instantly.</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <span class="text-blue-500 font-bold mt-0.5"><i class="fa-solid fa-circle-check"></i></span>
+                                <span><strong>Draggable & 8-Direction Resizable:</strong> Drag the top gradient header to move the box. Drag any of the 8 resize handles (corners and edges) to expand or shrink the scanned bounding area.</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <span class="text-blue-500 font-bold mt-0.5"><i class="fa-solid fa-circle-check"></i></span>
+                                <span><strong>Ask Anything:</strong> Type custom questions into the input box or click quick prompt chips (<em>History & Architecture, Best Food, Instagram Photo Spots, Public Bus/Transit, or "Where is this place?"</em>).</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <span class="text-blue-500 font-bold mt-0.5"><i class="fa-solid fa-circle-check"></i></span>
+                                <span><strong>Global Reverse Geocoding:</strong> Automatically resolves coordinates worldwide (e.g. <em>China, Japan, France, USA, India</em>) and tailors the AI answers to that real country and region.</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <span class="text-blue-500 font-bold mt-0.5"><i class="fa-solid fa-circle-check"></i></span>
+                                <span><strong>Save & Close:</strong> Saves all inspection notes into browser session cookies and local storage.</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Visual Mockup Box -->
+                    <div class="p-5 rounded-2xl bg-slate-900 text-white border-2 border-cyan-400 shadow-glow relative overflow-hidden text-xs space-y-3">
+                        <div class="flex items-center justify-between border-b border-white/10 pb-2">
+                            <div class="flex items-center gap-2">
+                                <span class="w-6 h-6 rounded bg-cyan-500/30 text-cyan-300 flex items-center justify-center font-bold text-xs"><i class="fa-solid fa-camera"></i></span>
+                                <span class="font-extrabold text-xs">Google Lens AI Scanner</span>
+                            </div>
+                            <span class="px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 font-bold text-[10px]">Live Global GPS</span>
+                        </div>
+                        <div class="p-3 bg-black/40 rounded-xl border border-white/5 space-y-1.5">
+                            <div class="text-amber-300 font-bold text-xs">Q: Where is this place?</div>
+                            <div class="text-[11px] text-slate-300 leading-relaxed">
+                                🌍 <strong>Exact Identification:</strong> Zoigê County / Ngawa Tibetan & Qiang Prefecture, Sichuan, China 🇨🇳<br>
+                                🏔️ <strong>Geography:</strong> Eastern edge of Qinghai-Tibetan Plateau (~3,450m elevation). Ruo'ergai Alpine Wetlands.
+                            </div>
+                        </div>
+                        <div class="flex items-center justify-between pt-1 text-[11px]">
+                            <span class="text-cyan-300 font-bold"><i class="fa-solid fa-cookie-bite mr-1"></i> Auto-saved to Cookies</span>
+                            <span class="px-2.5 py-1 rounded bg-emerald-600 text-white font-bold text-[10px]">Save & Close</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. GPS Day Route Planner -->
+        <section id="gps-planner" class="scroll-mt-24 space-y-6">
+            <div class="flex items-center gap-3 border-b border-slate-200 dark:border-slate-800 pb-3">
+                <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-blue-600 to-indigo-600 text-white flex items-center justify-center text-lg font-black shadow-md">
+                    <i class="fa-solid fa-route"></i>
+                </div>
+                <div>
+                    <h2 class="font-heading font-extrabold text-2xl text-slate-900 dark:text-white">Live GPS Day Route Planner</h2>
+                    <p class="text-xs text-slate-500 dark:text-slate-400">Compute the Shortest, Cheapest, and AI-Balanced routes from where you are standing.</p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Shortest Route Plan -->
+                <div class="glass-panel p-6 rounded-3xl border-2 border-emerald-500/50 space-y-3 relative hover:shadow-xl transition-all">
+                    <div class="flex items-center justify-between">
+                        <span class="px-2.5 py-1 rounded-full bg-emerald-100 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-300 font-black text-xs">🚀 Shortest Route</span>
+                        <span class="text-xs font-bold text-slate-400">Fastest Transit</span>
+                    </div>
+                    <h3 class="font-heading font-extrabold text-base text-slate-900 dark:text-white">Minimum Travel Distance</h3>
+                    <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+                        Uses greedy nearest-neighbor TSP geometry to sort checkpoints so you spend minimal time on roads and avoid backtracking.
+                    </p>
+                </div>
+
+                <!-- Cheapest Route Plan -->
+                <div class="glass-panel p-6 rounded-3xl border-2 border-blue-500/50 space-y-3 relative hover:shadow-xl transition-all">
+                    <div class="flex items-center justify-between">
+                        <span class="px-2.5 py-1 rounded-full bg-blue-100 dark:bg-blue-950 text-blue-700 dark:text-blue-300 font-black text-xs">💰 Cheapest Transit</span>
+                        <span class="text-xs font-bold text-slate-400">Budget Saver</span>
+                    </div>
+                    <h3 class="font-heading font-extrabold text-base text-slate-900 dark:text-white">Public Transit & Bus Nodes</h3>
+                    <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+                        Prioritizes stops accessible by city municipal AC buses, e-rickshaws, and metro networks for maximum cost savings.
+                    </p>
+                </div>
+
+                <!-- Balanced AI Route Plan -->
+                <div class="glass-panel p-6 rounded-3xl border-2 border-purple-500/50 space-y-3 relative hover:shadow-xl transition-all">
+                    <div class="flex items-center justify-between">
+                        <span class="px-2.5 py-1 rounded-full bg-purple-100 dark:bg-purple-950 text-purple-700 dark:text-purple-300 font-black text-xs">⭐ Balanced AI Plan</span>
+                        <span class="text-xs font-bold text-slate-400">Recommended</span>
+                    </div>
+                    <h3 class="font-heading font-extrabold text-base text-slate-900 dark:text-white">Optimal Tourist Experience</h3>
+                    <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+                        Balances visiting hours, lighting conditions, lunch breaks, and checkpoint ratings for a smooth full-day journey.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Follow Mode Explanation -->
+            <div class="p-5 rounded-2xl bg-gradient-to-r from-blue-50 via-indigo-50 to-purple-50 dark:from-slate-900 dark:via-blue-950/40 dark:to-purple-950/40 border border-blue-200 dark:border-blue-900 text-xs sm:text-sm space-y-2">
+                <div class="font-extrabold text-slate-900 dark:text-white flex items-center gap-2">
+                    <i class="fa-solid fa-person-walking text-blue-600 text-base"></i>
+                    <span>"Select & Follow This Plan All Day" Mode:</span>
+                </div>
+                <p class="text-slate-600 dark:text-slate-300 leading-relaxed">
+                    When you click <strong>"Select & Follow This Plan All Day"</strong>, a persistent Tour Guide floating bar appears at the bottom. You can check off each milestone as you reach it. You can <strong>minimize</strong> the bar into a compact icon anytime and tap to expand back!
+                </p>
+            </div>
+        </section>
+
+        <!-- 4. Public & Private Bus Availability & Route Finder -->
+        <section id="step-bus" class="scroll-mt-24 space-y-6">
+            <div class="flex items-center gap-3 border-b border-slate-200 dark:border-slate-800 pb-3">
+                <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-amber-500 to-orange-500 text-white flex items-center justify-center text-lg font-black shadow-md">
+                    <i class="fa-solid fa-bus"></i>
+                </div>
+                <div>
+                    <h2 class="font-heading font-extrabold text-2xl text-slate-900 dark:text-white">Public & Private Bus Availability & Route Finder</h2>
+                    <p class="text-xs text-slate-500 dark:text-slate-400">Step 1: Select Country ➔ Step 2: Select State / Region ➔ Step 3: Search Bus Number</p>
+                </div>
+            </div>
+
+            <div class="glass-panel p-6 sm:p-8 rounded-3xl border border-slate-200 dark:border-slate-800 space-y-5 text-xs sm:text-sm leading-relaxed text-slate-600 dark:text-slate-300">
+                <p>
+                    To ensure 100% accurate transit data without route confusion across different cities globally, Trip AI enforces a structured 3-step lookup workflow:
+                </p>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div class="p-4 rounded-2xl bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800 space-y-2">
+                        <div class="flex items-center gap-2 font-black text-amber-800 dark:text-amber-200">
+                            <span class="w-6 h-6 rounded-full bg-amber-500 text-white flex items-center justify-center text-xs">1</span>
+                            <span>Select Country</span>
+                        </div>
+                        <p class="text-xs text-slate-600 dark:text-slate-400">
+                            Choose the country (e.g. 🇮🇳 India, 🇦🇪 UAE, 🇺🇸 United States, 🇫🇷 France, 🇯🇵 Japan, 🇬🇧 UK, etc.).
+                        </p>
+                    </div>
+
+                    <div class="p-4 rounded-2xl bg-blue-50 dark:bg-blue-950/40 border border-blue-200 dark:border-blue-800 space-y-2">
+                        <div class="flex items-center gap-2 font-black text-blue-800 dark:text-blue-200">
+                            <span class="w-6 h-6 rounded-full bg-blue-600 text-white flex items-center justify-center text-xs">2</span>
+                            <span>Select State / Region</span>
+                        </div>
+                        <p class="text-xs text-slate-600 dark:text-slate-400">
+                            The State dropdown automatically populates with states/provinces (e.g. Rajasthan, Karnataka, Maharashtra, Dubai, New York, Île-de-France).
+                        </p>
+                    </div>
+
+                    <div class="p-4 rounded-2xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800 space-y-2">
+                        <div class="flex items-center gap-2 font-black text-emerald-800 dark:text-emerald-200">
+                            <span class="w-6 h-6 rounded-full bg-emerald-600 text-white flex items-center justify-center text-xs">3</span>
+                            <span>Enter Bus Number</span>
+                        </div>
+                        <p class="text-xs text-slate-600 dark:text-slate-400">
+                            Type the bus number (e.g. <strong>KIA-8</strong>, <strong>AC-5</strong>, <strong>500-D</strong>, <strong>Bus 72</strong>, <strong>E100</strong>) or tap any popular route chip.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="p-4 rounded-2xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 space-y-2">
+                    <strong class="font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                        <i class="fa-solid fa-circle-check text-emerald-500"></i> What You Get:
+                    </strong>
+                    <ul class="list-disc pl-5 space-y-1 text-slate-600 dark:text-slate-400">
+                        <li><strong>Stop-by-Stop Route Itinerary</strong> with sequence numbers and landmarks.</li>
+                        <li><strong>Official Transit Authority</strong> details (BMTC, JCTSL, BEST, RATP, RTA Dubai, DTC, MTA).</li>
+                        <li><strong>Operating Timings & Headway Frequencies</strong> (Peak vs. Non-peak intervals).</li>
+                        <li><strong>1-Click Google Maps Transit Directions</strong> tailored to that exact state and country.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- 5. Local Food & Restaurant Finder -->
+        <section id="food-finder" class="scroll-mt-24 space-y-6">
+            <div class="flex items-center gap-3 border-b border-slate-200 dark:border-slate-800 pb-3">
+                <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-amber-500 to-orange-600 text-white flex items-center justify-center text-lg font-black shadow-md">
+                    🍽️
+                </div>
+                <div>
+                    <h2 class="font-heading font-extrabold text-2xl text-slate-900 dark:text-white">Nearby Food & Restaurant Finder</h2>
+                    <p class="text-xs text-slate-500 dark:text-slate-400">Closest restaurants sorted by real GPS distance with dietary filters.</p>
+                </div>
+            </div>
+
+            <div class="glass-panel p-6 sm:p-8 rounded-3xl border border-slate-200 dark:border-slate-800 space-y-4 text-xs sm:text-sm leading-relaxed text-slate-600 dark:text-slate-300">
+                <p>Click the floating <strong>"Find Food"</strong> button anytime to open the culinary finder:</p>
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-center">
+                    <div class="p-3 bg-emerald-50 dark:bg-emerald-950/40 rounded-xl border border-emerald-200 dark:border-emerald-800 font-bold text-emerald-700 dark:text-emerald-300">
+                        🟢 100% Pure Veg
+                    </div>
+                    <div class="p-3 bg-rose-50 dark:bg-rose-950/40 rounded-xl border border-rose-200 dark:border-rose-800 font-bold text-rose-700 dark:text-rose-300">
+                        🔴 Non-Veg & Seafood
+                    </div>
+                    <div class="p-3 bg-green-50 dark:bg-green-950/40 rounded-xl border border-green-200 dark:border-green-800 font-bold text-green-700 dark:text-green-300">
+                        🌱 Vegan / Organic
+                    </div>
+                    <div class="p-3 bg-amber-50 dark:bg-amber-950/40 rounded-xl border border-amber-200 dark:border-amber-800 font-bold text-amber-700 dark:text-amber-300">
+                        🍢 Street Delicacies
+                    </div>
+                </div>
+                <p>
+                    Every restaurant displays its verified Google rating, specialty dishes, estimated price for two, exact walking/driving distance from your coordinates, and a 1-click button to open turn-by-turn navigation in Google Maps!
+                </p>
+            </div>
+        </section>
+
+        <!-- 5. Cookie Management & PDF/HTML Export -->
+        <section id="cookies-export" class="scroll-mt-24 space-y-6">
+            <div class="flex items-center gap-3 border-b border-slate-200 dark:border-slate-800 pb-3">
+                <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-rose-600 to-indigo-600 text-white flex items-center justify-center text-lg font-black shadow-md">
+                    <i class="fa-solid fa-file-pdf"></i>
+                </div>
+                <div>
+                    <h2 class="font-heading font-extrabold text-2xl text-slate-900 dark:text-white">PDF / HTML Downloads & Cookie Management</h2>
+                    <p class="text-xs text-slate-500 dark:text-slate-400">Full detailed inspection reports, persistent sessions & instant cleanup.</p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- PDF Export -->
+                <div class="glass-panel p-6 rounded-3xl border border-slate-200 dark:border-slate-800 space-y-3 hover:shadow-xl transition-all">
+                    <div class="w-10 h-10 rounded-2xl bg-rose-600 text-white flex items-center justify-center text-lg shadow-md">
+                        <i class="fa-solid fa-file-pdf"></i>
+                    </div>
+                    <h3 class="font-heading font-extrabold text-base text-slate-900 dark:text-white">Download PDF Report</h3>
+                    <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+                        Generates a multi-page A4 PDF document containing summary index tables, exact GPS coordinates, user questions, and complete AI knowledge breakdowns.
+                    </p>
+                </div>
+
+                <!-- HTML Export -->
+                <div class="glass-panel p-6 rounded-3xl border border-slate-200 dark:border-slate-800 space-y-3 hover:shadow-xl transition-all">
+                    <div class="w-10 h-10 rounded-2xl bg-blue-600 text-white flex items-center justify-center text-lg shadow-md">
+                        <i class="fa-solid fa-code"></i>
+                    </div>
+                    <h3 class="font-heading font-extrabold text-base text-slate-900 dark:text-white">Download HTML File</h3>
+                    <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+                        Exports a standalone, self-contained HTML file with embedded styling, dark/light typography, and interactive Google Maps links for all checkpoints.
+                    </p>
+                </div>
+
+                <!-- Clear Cookies -->
+                <div class="glass-panel p-6 rounded-3xl border border-slate-200 dark:border-slate-800 space-y-3 hover:shadow-xl transition-all">
+                    <div class="w-10 h-10 rounded-2xl bg-slate-200 dark:bg-slate-800 text-rose-600 flex items-center justify-center text-lg shadow-md">
+                        <i class="fa-solid fa-trash-can"></i>
+                    </div>
+                    <h3 class="font-heading font-extrabold text-base text-slate-900 dark:text-white">Delete Cookies Button</h3>
+                    <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+                        Located at the top navbar, top announcement bar, map toolbar, and modal. One click completely sweeps all session cookies and resets the cache.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 6. Frequently Asked Questions (FAQ) -->
+        <section id="faq" class="scroll-mt-24 space-y-6">
+            <div class="flex items-center gap-3 border-b border-slate-200 dark:border-slate-800 pb-3">
+                <div class="w-10 h-10 rounded-2xl bg-purple-600 text-white flex items-center justify-center text-lg font-black shadow-md">
+                    <i class="fa-solid fa-circle-question"></i>
+                </div>
+                <div>
+                    <h2 class="font-heading font-extrabold text-2xl text-slate-900 dark:text-white">Frequently Asked Questions</h2>
+                    <p class="text-xs text-slate-500 dark:text-slate-400">Everything you need to know about Trip AI.</p>
+                </div>
+            </div>
+
+            <div class="space-y-4 text-xs sm:text-sm">
+                <details class="glass-panel p-5 rounded-2xl border border-slate-200 dark:border-slate-800 cursor-pointer group">
+                    <summary class="font-extrabold text-slate-900 dark:text-white flex items-center justify-between">
+                        <span>How do I place a Google Lens scan rectangle on the map?</span>
+                        <i class="fa-solid fa-chevron-down text-xs text-slate-400 group-open:rotate-180 transition-transform"></i>
+                    </summary>
+                    <p class="mt-3 text-slate-600 dark:text-slate-400 leading-relaxed">
+                        Simply double-click anywhere on the 4K satellite map. A resizable and draggable rectangle box will spawn at that exact spot. You can drag it by its header bar or resize it using any of the 8 edge/corner handles.
+                    </p>
+                </details>
+
+                <details class="glass-panel p-5 rounded-2xl border border-slate-200 dark:border-slate-800 cursor-pointer group">
+                    <summary class="font-extrabold text-slate-900 dark:text-white flex items-center justify-between">
+                        <span>Are my saved area notes and itineraries private?</span>
+                        <i class="fa-solid fa-chevron-down text-xs text-slate-400 group-open:rotate-180 transition-transform"></i>
+                    </summary>
+                    <p class="mt-3 text-slate-600 dark:text-slate-400 leading-relaxed">
+                        Yes! All saved inspection notes are stored directly in your browser's private session cookies (<code>trip_lens_notes</code>) and local storage. No personal data is sent to external advertising servers. You can click <strong>"Delete Cookies"</strong> anytime to erase everything.
+                    </p>
+                </details>
+
+                <details class="glass-panel p-5 rounded-2xl border border-slate-200 dark:border-slate-800 cursor-pointer group">
+                    <summary class="font-extrabold text-slate-900 dark:text-white flex items-center justify-between">
+                        <span>Can I use this app on my smartphone without lag?</span>
+                        <i class="fa-solid fa-chevron-down text-xs text-slate-400 group-open:rotate-180 transition-transform"></i>
+                    </summary>
+                    <p class="mt-3 text-slate-600 dark:text-slate-400 leading-relaxed">
+                        Yes! The entire interface is responsive and lightweight with mobile-optimized button sizes, zero-overlap floating controls, and hardware-accelerated map rendering. For a dedicated ad-free commercial license, click the WhatsApp button (+91-7903933705).
+                    </p>
+                </details>
+
+                <details class="glass-panel p-5 rounded-2xl border border-slate-200 dark:border-slate-800 cursor-pointer group">
+                    <summary class="font-extrabold text-slate-900 dark:text-white flex items-center justify-between">
+                        <span>Why do I need to select Country and State before searching for a bus number?</span>
+                        <i class="fa-solid fa-chevron-down text-xs text-slate-400 group-open:rotate-180 transition-transform"></i>
+                    </summary>
+                    <p class="mt-3 text-slate-600 dark:text-slate-400 leading-relaxed">
+                        Public bus line codes often overlap internationally (e.g. <em>Route 72</em> runs in Paris, London, and New York; <em>AC-5</em> in Jaipur; <em>KIA-8</em> in Bengaluru; <em>E100</em> in Dubai). Selecting your <strong>Country</strong> and <strong>State / Region</strong> first guarantees that Trip AI matches the exact local transport authority, stops sequence, regional currency fare, and generates a pinpoint Google Maps transit route.
+                    </p>
+                </details>
+
+                <details class="glass-panel p-5 rounded-2xl border border-slate-200 dark:border-slate-800 cursor-pointer group">
+                    <summary class="font-extrabold text-slate-900 dark:text-white flex items-center justify-between">
+                        <span>How does the live GPS Day Tour Planner calculate routes?</span>
+                        <i class="fa-solid fa-chevron-down text-xs text-slate-400 group-open:rotate-180 transition-transform"></i>
+                    </summary>
+                    <p class="mt-3 text-slate-600 dark:text-slate-400 leading-relaxed">
+                        When you share your GPS coordinates, Trip AI calculates the geodesic distance from your current location to all selected landmarks and runs optimization algorithms to generate three distinct plans: Shortest Distance, Cheapest Public Transit, and Balanced Sightseeing.
+                    </p>
+                </details>
+
+                <details class="glass-panel p-5 rounded-2xl border border-slate-200 dark:border-slate-800 cursor-pointer group">
+                    <summary class="font-extrabold text-slate-900 dark:text-white flex items-center justify-between">
+                        <span>How does the Mobile Quick-Jump bar and Navigation menu work?</span>
+                        <i class="fa-solid fa-chevron-down text-xs text-slate-400 group-open:rotate-180 transition-transform"></i>
+                    </summary>
+                    <p class="mt-3 text-slate-600 dark:text-slate-400 leading-relaxed">
+                        On mobile devices, you have three quick ways to navigate:
+                        <br>1. <strong>Quick-Jump Pill Bar:</strong> Swipe horizontally across the sticky pill bar at the top to jump directly to Quick Start, Google Lens, GPS Planner, Bus Finder, Food Radar, or FAQ.
+                        <br>2. <strong>Mobile Menu Drawer:</strong> Tap the top-right menu button (☰) to open a full categorized drawer with icon cards.
+                        <br>3. <strong>Bottom Quick Dock:</strong> Tap bottom icons anytime for 1-click access to App, Sections, WhatsApp Buy, Theme Switcher, or Back to Top.
+                    </p>
+                </details>
+
+                <details class="glass-panel p-5 rounded-2xl border border-slate-200 dark:border-slate-800 cursor-pointer group">
+                    <summary class="font-extrabold text-slate-900 dark:text-white flex items-center justify-between">
+                        <span>How does the automatic virtual keyboard scrolling work when typing on mobile?</span>
+                        <i class="fa-solid fa-chevron-down text-xs text-slate-400 group-open:rotate-180 transition-transform"></i>
+                    </summary>
+                    <p class="mt-3 text-slate-600 dark:text-slate-400 leading-relaxed">
+                        When you tap any search input, destination box, or Google Lens question field on your smartphone, Trip AI's <strong>Virtual Keyboard Auto-Scroll Engine</strong> detects the virtual keyboard opening and smoothly shifts the screen upward. The active typing box remains centered and visible above the keyboard throughout your session.
+                    </p>
+                </details>
+            </div>
+        </section>
+
+        <!-- 7. Support & Ecosystem Banner -->
+        <section class="glass-panel p-8 rounded-3xl border-2 border-blue-500/40 text-center space-y-4">
+            <div class="w-12 h-12 mx-auto rounded-2xl bg-gradient-to-tr from-blue-600 via-indigo-600 to-purple-600 text-white flex items-center justify-center text-xl shadow-glow">
+                <i class="fa-solid fa-headset"></i>
+            </div>
+            <h3 class="font-heading font-extrabold text-xl sm:text-2xl text-slate-900 dark:text-white">Need Personal App Setup or Support?</h3>
+            <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-400 max-w-xl mx-auto leading-relaxed">
+                Purchase this Trip Travel AI application for personal use without lagging. Connect directly with our team on WhatsApp.
+            </p>
+            <div class="flex flex-wrap items-center justify-center gap-3 pt-2">
+                <a href="https://wa.me/917903933705?text=Hello!%20I%20want%20to%20purchase%20this%20Trip%20Travel%20AI%20app%20for%20personal%20use%20without%20lagging.%20Please%20share%20the%20details%20and%20pricing."
+                   target="_blank" rel="noopener noreferrer"
+                   class="px-6 py-3 rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white font-extrabold text-xs sm:text-sm shadow-xl flex items-center gap-2 hover:scale-105 active:scale-95 transition-all">
+                    <i class="fa-brands fa-whatsapp text-lg"></i>
+                    <span>Contact WhatsApp (+91 7903933705)</span>
+                </a>
+                <a href="index.html" class="px-6 py-3 rounded-2xl bg-blue-600 hover:bg-blue-700 text-white font-extrabold text-xs sm:text-sm shadow-md flex items-center gap-2 transition-all">
+                    <i class="fa-solid fa-map-location-dot"></i>
+                    <span>Open Travel Planner</span>
+                </a>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="glass-panel border-t border-slate-200 dark:border-slate-800 mt-16 py-8 text-slate-600 dark:text-slate-400 text-xs text-center space-y-2">
+        <p>&copy; 2026 Trip AI. All rights reserved. Powered by Google Maps Platform & Google Gemini AI.</p>
+        <div class="flex items-center justify-center gap-4">
+            <a href="https://supportsourcecode.lovable.app/home" target="_blank" class="hover:underline">Main Page</a>
+            <a href="https://interactive-media-display.lovable.app/" target="_blank" class="hover:underline">App Store</a>
+            <a href="index.html" class="hover:underline">App</a>
+            <a href="#quick-start" class="hover:underline">Top ↑</a>
+        </div>
+    </footer>
+
+    <script>
+        function initTheme() {
+            const isDark = localStorage.getItem("trip_dark_mode") === "true" ||
+                           (!("trip_dark_mode" in localStorage) && window.matchMedia("(prefers-color-scheme: dark)").matches);
+            applyTheme(isDark);
+        }
+
+        function toggleDarkMode() {
+            const isDark = !document.documentElement.classList.contains("dark");
+            applyTheme(isDark);
+            localStorage.setItem("trip_dark_mode", isDark);
+        }
+
+        function applyTheme(isDark) {
+            if (isDark) {
+                document.documentElement.classList.add("dark");
+                const icons = document.querySelectorAll(".theme-toggle-icon, #themeIcon");
+                icons.forEach(ic => ic.className = "fa-solid fa-sun text-yellow-400 theme-toggle-icon");
+            } else {
+                document.documentElement.classList.remove("dark");
+                const icons = document.querySelectorAll(".theme-toggle-icon, #themeIcon");
+                icons.forEach(ic => ic.className = "fa-solid fa-moon text-slate-700 dark:text-slate-300 theme-toggle-icon");
+            }
+        }
+
+        // Mobile Menu Drawer Controls
+        function toggleMobileMenu() {
+            const drawer = document.getElementById("mobileMenuDrawer");
+            const icon = document.getElementById("mobileMenuIcon");
+            if (!drawer) return;
+
+            const isOpen = drawer.classList.contains("menu-open");
+            if (isOpen) {
+                closeMobileMenu();
+            } else {
+                drawer.classList.remove("menu-closed");
+                drawer.classList.add("menu-open");
+                if (icon) {
+                    icon.classList.remove("fa-bars");
+                    icon.classList.add("fa-xmark");
+                }
+            }
+        }
+
+        function closeMobileMenu() {
+            const drawer = document.getElementById("mobileMenuDrawer");
+            const icon = document.getElementById("mobileMenuIcon");
+            if (!drawer) return;
+            drawer.classList.remove("menu-open");
+            drawer.classList.add("menu-closed");
+            if (icon) {
+                icon.classList.remove("fa-xmark");
+                icon.classList.add("fa-bars");
+            }
+        }
+
+        // Close mobile drawer when clicking outside
+        document.addEventListener("click", function(e) {
+            const drawer = document.getElementById("mobileMenuDrawer");
+            const btn = document.getElementById("mobileMenuBtn");
+            if (drawer && drawer.classList.contains("menu-open")) {
+                if (!drawer.contains(e.target) && !btn.contains(e.target)) {
+                    closeMobileMenu();
+                }
+            }
+        });
+
+        // Mobile Virtual Keyboard Auto-Scroll Engine
+        (function initMobileKeyboardAutoScroll() {
+            function isMobileOrTouch() {
+                return window.innerWidth <= 1024 || ('ontouchstart' in window) || navigator.maxTouchPoints > 0;
+            }
+
+            function isTextInputElement(el) {
+                if (!el) return false;
+                if (el.isContentEditable) return true;
+                const tagName = (el.tagName || '').toLowerCase();
+                if (tagName === 'textarea') return true;
+                if (tagName === 'input') {
+                    const type = (el.type || 'text').toLowerCase();
+                    const nonTextTypes = ['checkbox', 'radio', 'button', 'submit', 'reset', 'file', 'image', 'hidden', 'range', 'color'];
+                    return !nonTextTypes.includes(type);
+                }
+                return false;
+            }
+
+            function scrollIntoOptimalView(el) {
+                if (!el || !isTextInputElement(el)) return;
+                try {
+                    el.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'nearest' });
+                } catch (err) {
+                    el.scrollIntoView(false);
+                }
+
+                if (window.visualViewport) {
+                    setTimeout(() => {
+                        const rect = el.getBoundingClientRect();
+                        const vvHeight = window.visualViewport.height;
+                        const vvTop = window.visualViewport.offsetTop || 0;
+                        if (rect.bottom > vvTop + vvHeight - 20) {
+                            const scrollOffset = rect.bottom - (vvTop + vvHeight - 60);
+                            window.scrollBy({ top: scrollOffset, behavior: 'smooth' });
+                        }
+                    }, 150);
+                }
+            }
+
+            document.addEventListener('focusin', function(e) {
+                if (!isMobileOrTouch()) return;
+                const target = e.target;
+                if (isTextInputElement(target)) {
+                    setTimeout(() => scrollIntoOptimalView(target), 120);
+                    setTimeout(() => scrollIntoOptimalView(target), 320);
+                }
+            }, { passive: true });
+
+            if (window.visualViewport) {
+                let prevHeight = window.visualViewport.height;
+                window.visualViewport.addEventListener('resize', function() {
+                    if (!isMobileOrTouch()) return;
+                    const curHeight = window.visualViewport.height;
+                    const active = document.activeElement;
+                    if (curHeight < prevHeight - 60 && isTextInputElement(active)) {
+                        setTimeout(() => scrollIntoOptimalView(active), 100);
+                    }
+                    prevHeight = curHeight;
+                });
+            }
+        })();
+
+        document.addEventListener("DOMContentLoaded", initTheme);
+    </script>
+
+    <!-- Mobile Bottom Quick Navigation Dock (Visible on small screens) -->
+    <nav aria-label="Mobile Navigation" class="sm:hidden fixed bottom-3 left-3 right-3 z-40 bg-white/90 dark:bg-slate-900/90 backdrop-blur-xl border border-slate-200/80 dark:border-slate-800 rounded-2xl p-1.5 shadow-2xl flex items-center justify-around">
+        <a href="index.html" class="flex flex-col items-center justify-center py-1 px-2.5 rounded-xl text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 active:scale-90 transition-transform">
+            <i class="fa-solid fa-compass text-sm text-blue-600"></i>
+            <span class="text-[10px] font-bold mt-0.5">App</span>
+        </a>
+        <button onclick="toggleMobileMenu()" class="flex flex-col items-center justify-center py-1 px-2.5 rounded-xl text-slate-600 dark:text-slate-300 hover:text-indigo-600 dark:hover:text-indigo-400 active:scale-90 transition-transform">
+            <i class="fa-solid fa-layer-group text-sm text-indigo-600"></i>
+            <span class="text-[10px] font-bold mt-0.5">Sections</span>
+        </button>
+        <a href="https://wa.me/917903933705?text=Hello!%20I%20want%20to%20purchase%20this%20Trip%20Travel%20AI%20app%20for%20personal%20use%20without%20lagging.%20Please%20share%20the%20details%20and%20pricing." target="_blank" rel="noopener noreferrer" class="flex flex-col items-center justify-center py-1 px-2.5 rounded-xl text-emerald-600 dark:text-emerald-400 active:scale-90 transition-transform">
+            <i class="fa-brands fa-whatsapp text-base text-emerald-500"></i>
+            <span class="text-[10px] font-bold mt-0.5">WhatsApp</span>
+        </a>
+        <button onclick="toggleDarkMode()" class="flex flex-col items-center justify-center py-1 px-2.5 rounded-xl text-slate-600 dark:text-slate-300 active:scale-90 transition-transform">
+            <i class="fa-solid fa-moon text-sm text-amber-500 theme-toggle-icon"></i>
+            <span class="text-[10px] font-bold mt-0.5">Theme</span>
+        </button>
+        <button onclick="window.scrollTo({top: 0, behavior: 'smooth'})" class="flex flex-col items-center justify-center py-1 px-2.5 rounded-xl text-slate-600 dark:text-slate-300 hover:text-blue-600 active:scale-90 transition-transform">
+            <i class="fa-solid fa-arrow-up text-sm"></i>
+            <span class="text-[10px] font-bold mt-0.5">Top</span>
+        </button>
+    </nav>
+
+    <!-- Floating WhatsApp Support & Personal License Widget -->
+    <div id="waFloatingWidget" class="fixed bottom-20 sm:bottom-6 right-3 sm:right-6 z-40 max-w-[calc(100vw-24px)] sm:max-w-xs font-sans">
+      <div style="position:relative;background:#ffffff;color:#0f172a;border-radius:16px;box-shadow:0 12px 36px rgba(0,0,0,0.25),0 0 0 1px rgba(37,211,102,0.35);padding:14px 16px;display:flex;flex-direction:column;gap:8px;">
+        <button onclick="document.getElementById('waFloatingWidget').style.display='none'" title="Close" aria-label="Close" style="position:absolute;top:8px;right:8px;background:#f1f5f9;border:1px solid #cbd5e1;color:#64748b;width:24px;height:24px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;line-height:1;transition:all 0.2s;" onmouseover="this.style.background='#ef4444';this.style.color='#fff';this.style.borderColor='#ef4444'" onmouseout="this.style.background='#f1f5f9';this.style.color='#64748b';this.style.borderColor='#cbd5e1'">✕</button>
+        <div style="display:flex;align-items:center;gap:10px;padding-right:20px;">
+          <div style="width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,#25D366,#128C7E);display:flex;align-items:center;justify-content:center;color:#fff;font-size:22px;flex-shrink:0;box-shadow:0 4px 10px rgba(37,211,102,0.4);">
+            <svg style="width:22px;height:22px;fill:#ffffff;" viewBox="0 0 24 24"><path d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21 5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.816 9.816 0 0 0 12.04 2zm5.77 14.18c-.24.68-1.4 1.26-1.95 1.34-.52.08-1.2.12-3.48-.83-2.68-1.12-4.4-3.84-4.54-4.02-.13-.19-1.08-1.44-1.08-2.75 0-1.31.69-1.96.93-2.22.25-.26.54-.33.72-.33.18 0 .36 0 .52.01.17.01.4.06.61.56.22.53.75 1.83.82 1.96.07.14.11.3.02.48-.09.19-.14.3-.27.46-.14.16-.3.35-.42.47-.14.14-.29.3-.12.59.16.29.73 1.21 1.57 1.96 1.08.96 1.99 1.26 2.27 1.4.29.14.45.12.62-.07.17-.19.72-.84.92-1.13.19-.29.39-.24.66-.14.27.1 1.71.81 2.01.96.29.15.49.22.56.34.07.13.07.74-.17 1.42z"/></svg>
+          </div>
+          <div>
+            <div style="font-weight:800;font-size:13px;color:#0f172a;line-height:1.2;">WhatsApp Personal Link</div>
+            <div style="font-size:11px;font-weight:700;color:#16a34a;">+91-7903933705</div>
+          </div>
+        </div>
+        <p style="font-size:11.5px;line-height:1.45;color:#475569;margin:0;">
+          If you want to purchase this Trip Travel AI app for personal use without lagging, please WhatsApp us here.
+        </p>
+        <a href="https://wa.me/917903933705?text=Hello!%20I%20want%20to%20purchase%20this%20Trip%20Travel%20AI%20app%20for%20personal%20use%20without%20lagging.%20Please%20share%20the%20details%20and%20pricing." target="_blank" rel="noopener noreferrer" style="display:flex;align-items:center;justify-content:center;gap:6px;background:linear-gradient(135deg,#25D366,#128C7E);color:#ffffff;text-decoration:none;font-size:12px;font-weight:700;padding:8px 12px;border-radius:10px;box-shadow:0 3px 10px rgba(37,211,102,0.3);transition:filter 0.2s;" onmouseover="this.style.filter='brightness(1.1)'" onmouseout="this.style.filter='brightness(1)'">
+          <svg style="width:15px;height:15px;fill:#ffffff;" viewBox="0 0 24 24"><path d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21 5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.816 9.816 0 0 0 12.04 2zm5.77 14.18c-.24.68-1.4 1.26-1.95 1.34-.52.08-1.2.12-3.48-.83-2.68-1.12-4.4-3.84-4.54-4.02-.13-.19-1.08-1.44-1.08-2.75 0-1.31.69-1.96.93-2.22.25-.26.54-.33.72-.33.18 0 .36 0 .52.01.17.01.4.06.61.56.22.53.75 1.83.82 1.96.07.14.11.3.02.48-.09.19-.14.3-.27.46-.14.16-.3.35-.42.47-.14.14-.29.3-.12.59.16.29.73 1.21 1.57 1.96 1.08.96 1.99 1.26 2.27 1.4.29.14.45.12.62-.07.17-.19.72-.84.92-1.13.19-.29.39-.24.66-.14.27.1 1.71.81 2.01.96.29.15.49.22.56.34.07.13.07.74-.17 1.42z"/></svg>
+          <span>Chat on WhatsApp (+91 7903933705)</span>
+        </a>
+      </div>
+    </div>
+</body>
+</html>
