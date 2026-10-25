@@ -801,9 +801,13 @@ class CanvasEngine {
         if (this.isRotatingSTLModel && this.stlRotateTarget) {
             const dx = screenX - this.lastSTLRotateScreen.x;
             const dy = screenY - this.lastSTLRotateScreen.y;
+            // The projection reverses the apparent horizontal direction, so use
+            // the screen delta directly to keep right/left drags intuitive.
             this.stlRotateTarget.stlRotationY = (this.stlRotateTarget.stlRotationY || 0) + dx * 0.012;
+            // Browser pointer Y grows downward, while a positive X rotation tilts
+            // the model downward on screen. Invert the delta for natural drag motion.
             this.stlRotateTarget.stlRotationX = Math.max(-Math.PI / 2, Math.min(Math.PI / 2,
-                (this.stlRotateTarget.stlRotationX || 0) + dy * 0.012));
+                (this.stlRotateTarget.stlRotationX || 0) - dy * 0.012));
             this.lastSTLRotateScreen = { x: screenX, y: screenY };
             this.requestRender();
             return;
@@ -1226,9 +1230,6 @@ class CanvasEngine {
         const hitObj = this.findObjectAt(world.x, world.y);
         if (hitObj && this.isEditableObject(hitObj)) {
             this.editObjectInline(hitObj, world.x, world.y);
-        } else {
-            // Double click anywhere on canvas creates new text at that exact place!
-            this.createInlineTextEditor(screenX, screenY, world.x, world.y);
         }
     }
 
