@@ -1,0 +1,2674 @@
+﻿<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Lumenboard Visual Studio — Complete User Guide &amp; Master Manual</title>
+<link href="public/favicon.svg" rel="icon" type="image/svg+xml"/>
+<style>
+    :root {
+      --primary: #6c5ce7;
+      --primary-dark: #5846db;
+      --primary-light: #eceafd;
+      --primary-glow: rgba(108, 92, 231, 0.25);
+      --accent-mint: #00b894;
+      --accent-mint-light: #e6faf5;
+      --accent-coral: #ff7675;
+      --accent-coral-light: #ffecec;
+      --accent-sun: #fdcb6e;
+      --accent-sun-light: #fff9e6;
+      --accent-sky: #0984e3;
+      --accent-sky-light: #e8f4fc;
+      
+      --bg: #f9f7f2;
+      --bg-card: #ffffff;
+      --bg-card-alt: #f4f1eb;
+      --bg-subtle: #eeea6010;
+      --text: #252239;
+      --text-muted: #686375;
+      --text-light: #918ba0;
+      --border: #e2ded5;
+      --border-focus: #6c5ce7;
+      
+      --shadow-sm: 0 2px 8px rgba(37, 34, 57, 0.05);
+      --shadow-md: 0 6px 20px rgba(37, 34, 57, 0.08);
+      --shadow-lg: 0 14px 36px rgba(37, 34, 57, 0.12);
+      --shadow-glow: 0 0 24px var(--primary-glow);
+      
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 20px;
+      --radius-xl: 28px;
+      
+      --font-sans: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      
+      --transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    [data-theme="dark"] {
+      --bg: #14131d;
+      --bg-card: #1e1c2b;
+      --bg-card-alt: #262438;
+      --text: #f3f1fa;
+      --text-muted: #a6a1b8;
+      --text-light: #77728a;
+      --border: #322e47;
+      --primary-light: #2b2650;
+      --accent-mint-light: #16382d;
+      --accent-coral-light: #3f1e26;
+      --accent-sun-light: #3e331a;
+      --accent-sky-light: #182e4e;
+      --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.25);
+      --shadow-md: 0 6px 20px rgba(0, 0, 0, 0.35);
+      --shadow-lg: 0 14px 36px rgba(0, 0, 0, 0.45);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      font-size: 16px;
+    }
+
+    body {
+      font-family: var(--font-sans);
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    /* Top Sticky Navigation Bar */
+    .header-nav {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      background: rgba(249, 247, 242, 0.85);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--border);
+      transition: background 0.3s ease, border-color 0.3s ease;
+    }
+
+    [data-theme="dark"] .header-nav {
+      background: rgba(20, 19, 29, 0.85);
+    }
+
+    .nav-container {
+      max-width: 1360px;
+      margin: 0 auto;
+      padding: 0.75rem 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+
+    .brand-wrap {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      text-decoration: none;
+      color: var(--text);
+    }
+
+    .brand-dots {
+      display: inline-flex;
+      gap: 4px;
+    }
+
+    .brand-dots span {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+    }
+
+    .brand-dots span:nth-child(1) { background: #6c5ce7; }
+    .brand-dots span:nth-child(2) { background: #00b894; }
+    .brand-dots span:nth-child(3) { background: #ff7675; }
+
+    .brand-title {
+      font-size: 1.25rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+    }
+
+    .brand-badge {
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      padding: 0.2rem 0.5rem;
+      border-radius: 100px;
+      background: var(--primary-light);
+      color: var(--primary);
+      letter-spacing: 0.05em;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      font-weight: 600;
+      padding: 0.4rem 0.8rem;
+      border-radius: var(--radius-sm);
+      transition: var(--transition);
+    }
+
+    .nav-links a:hover,
+    .nav-links a.active {
+      color: var(--primary);
+      background: var(--primary-light);
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .theme-toggle-btn,
+    .btn-action {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      color: var(--text);
+      font-family: inherit;
+      font-size: 0.9rem;
+      font-weight: 600;
+      padding: 0.5rem 0.9rem;
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: var(--transition);
+    }
+
+    .theme-toggle-btn:hover,
+    .btn-action:hover {
+      border-color: var(--primary);
+      box-shadow: var(--shadow-sm);
+      transform: translateY(-1px);
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: #ffffff !important;
+      border-color: var(--primary);
+    }
+
+    .btn-primary:hover {
+      background: var(--primary-dark);
+      border-color: var(--primary-dark);
+      box-shadow: var(--shadow-glow);
+    }
+
+    /* Layout Structure */
+    .main-wrapper {
+      max-width: 1360px;
+      margin: 0 auto;
+      padding: 2.5rem 1.5rem 6rem;
+    }
+
+    /* Hero Banner */
+    .hero-section {
+      text-align: center;
+      padding: 3rem 1.5rem 4rem;
+      margin-bottom: 2.5rem;
+      background: radial-gradient(circle at 50% 0%, var(--primary-light) 0%, transparent 70%);
+      border-radius: var(--radius-xl);
+      border: 1px solid var(--border);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.4rem 1rem;
+      border-radius: 100px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 1.5rem;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .hero-title {
+      font-size: clamp(2.2rem, 5vw, 3.6rem);
+      font-weight: 900;
+      letter-spacing: -0.03em;
+      line-height: 1.15;
+      margin-bottom: 1.25rem;
+      color: var(--text);
+    }
+
+    .hero-title span {
+      background: linear-gradient(135deg, #6c5ce7 0%, #00b894 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero-desc {
+      font-size: 1.15rem;
+      color: var(--text-muted);
+      max-width: 780px;
+      margin: 0 auto 2rem;
+      line-height: 1.65;
+    }
+
+    .search-hero-box {
+      max-width: 600px;
+      margin: 0 auto;
+      position: relative;
+    }
+
+    .search-hero-box input {
+      width: 100%;
+      padding: 1rem 1.25rem 1rem 3.25rem;
+      font-size: 1.05rem;
+      font-family: inherit;
+      border-radius: 100px;
+      border: 2px solid var(--border);
+      background: var(--bg-card);
+      color: var(--text);
+      box-shadow: var(--shadow-md);
+      transition: var(--transition);
+      outline: none;
+    }
+
+    .search-hero-box input:focus {
+      border-color: var(--primary);
+      box-shadow: var(--shadow-glow);
+    }
+
+    .search-hero-box .search-icon {
+      position: absolute;
+      left: 1.25rem;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 1.25rem;
+      color: var(--text-light);
+      pointer-events: none;
+    }
+
+    /* Quick Feature Highlights */
+    .highlight-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1.25rem;
+      margin-top: 2.5rem;
+    }
+
+    .highlight-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 1.5rem;
+      text-align: left;
+      transition: var(--transition);
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .highlight-card:hover {
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-md);
+      border-color: var(--primary);
+    }
+
+    .highlight-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.4rem;
+      font-weight: 800;
+    }
+
+    .hi-purple { background: var(--primary-light); color: var(--primary); }
+    .hi-mint { background: var(--accent-mint-light); color: var(--accent-mint); }
+    .hi-coral { background: var(--accent-coral-light); color: var(--accent-coral); }
+    .hi-sun { background: var(--accent-sun-light); color: #d48b00; }
+    [data-theme="dark"] .hi-sun { color: var(--accent-sun); }
+    .hi-sky { background: var(--accent-sky-light); color: var(--accent-sky); }
+
+    .highlight-card h3 {
+      font-size: 1.1rem;
+      font-weight: 750;
+      letter-spacing: -0.01em;
+    }
+
+    .highlight-card p {
+      font-size: 0.88rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    /* Section Headers */
+    .section-block {
+      margin-top: 4.5rem;
+      scroll-margin-top: 5rem;
+    }
+
+    .section-header {
+      margin-bottom: 2rem;
+      text-align: left;
+    }
+
+    .section-eyebrow {
+      display: inline-block;
+      font-size: 0.8rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--primary);
+      margin-bottom: 0.4rem;
+    }
+
+    .section-title {
+      font-size: 2rem;
+      font-weight: 850;
+      letter-spacing: -0.02em;
+      color: var(--text);
+    }
+
+    .section-subtitle {
+      font-size: 1.05rem;
+      color: var(--text-muted);
+      margin-top: 0.35rem;
+      max-width: 800px;
+    }
+
+    /* Interactive Interface Anatomy Map */
+    .anatomy-container {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-xl);
+      padding: 1.75rem;
+      box-shadow: var(--shadow-md);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .anatomy-mockup {
+      background: var(--bg-card-alt);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 1rem;
+      display: grid;
+      grid-template-columns: 240px 1fr 280px;
+      grid-template-rows: 54px 1fr 48px;
+      gap: 10px;
+      min-height: 520px;
+      font-size: 0.85rem;
+      position: relative;
+    }
+
+    @media (max-width: 1024px) {
+      .anatomy-mockup {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto;
+      }
+    }
+
+    .mock-zone {
+      border: 2px dashed var(--border);
+      border-radius: var(--radius-md);
+      background: var(--bg-card);
+      padding: 1rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      cursor: pointer;
+      transition: var(--transition);
+      position: relative;
+    }
+
+    .mock-zone:hover,
+    .mock-zone.active {
+      border-color: var(--primary);
+      background: var(--primary-light);
+      box-shadow: var(--shadow-sm);
+      transform: scale(1.01);
+    }
+
+    .mock-zone-badge {
+      position: absolute;
+      top: 8px;
+      left: 8px;
+      background: var(--primary);
+      color: #fff;
+      font-size: 0.7rem;
+      font-weight: 800;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .mock-zone strong {
+      font-size: 0.95rem;
+      margin-top: 0.5rem;
+      color: var(--text);
+    }
+
+    .mock-zone span {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-top: 0.25rem;
+    }
+
+    .mock-topbar { grid-column: 1 / -1; display: flex; flex-direction: row; justify-content: space-between; align-items: center; }
+    .mock-rail { grid-column: 1 / 2; display: flex; flex-direction: column; gap: 6px; }
+    .mock-canvas { grid-column: 2 / 3; display: flex; flex-direction: column; align-items: center; justify-content: center; background: var(--bg-card); border-style: solid; border-color: var(--border); }
+    .mock-inspector { grid-column: 3 / 4; }
+    .mock-footer { grid-column: 1 / -1; display: flex; flex-direction: row; justify-content: space-between; }
+
+    .anatomy-details-panel {
+      margin-top: 1.5rem;
+      background: var(--bg-card-alt);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 1.5rem;
+      transition: var(--transition);
+    }
+
+    .anatomy-details-panel h4 {
+      font-size: 1.2rem;
+      font-weight: 800;
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .anatomy-details-panel p {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      line-height: 1.6;
+    }
+
+    /* Step-by-Step Interactive Workflow Guide */
+    .steps-container {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .step-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 1.75rem;
+      display: grid;
+      grid-template-columns: 70px 1fr 320px;
+      gap: 1.75rem;
+      align-items: center;
+      transition: var(--transition);
+    }
+
+          /* Drawer theme button specific styles */
+      button.doc-drawer-portal-link, .doc-drawer-theme-btn {
+        font-family: inherit;
+        width: 100%;
+        text-align: left;
+        cursor: pointer;
+        outline: none;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        background: rgba(255, 255, 255, 0.04);
+        color: inherit;
+      }
+      [data-theme="light"] button.doc-drawer-portal-link, [data-theme="light"] .doc-drawer-theme-btn {
+        background: #f8fafc;
+        border-color: #e2e8f0;
+        color: #1e293b;
+      }
+
+      /* =========================================================
+         TABLET & MOBILE BREAKPOINTS (<= 900px, <= 640px, <= 480px)
+         ========================================================= */
+      @media (max-width: 900px) {
+        .doc-mobile-menu-btn {
+          display: inline-flex !important;
+        }
+        
+        .navbar, header.guide-header, header.top-nav, header.site-header, header.top-navbar, header.header-bar, header.header, .top-nav, .header-nav, .main-header, .top-header, header, nav {
+          padding: 10px 16px !important;
+          gap: 12px !important;
+          height: auto !important;
+          min-height: 54px !important;
+          display: flex !important;
+          flex-direction: row !important;
+          align-items: center !important;
+          justify-content: space-between !important;
+        }
+
+        .header-inner {
+          padding: 0 !important;
+          width: 100% !important;
+          display: flex !important;
+          flex-direction: row !important;
+          align-items: center !important;
+          justify-content: space-between !important;
+        }
+
+        /* Hide desktop action buttons in header on mobile; they are neatly accessible under 3 horizontal lines (☰) */
+        .doc-nav-bar-actions, [class*="doc-nav-bar-actions"], .nav-actions, header.guide-header .nav-actions, .header-actions, .header-controls, .top-nav-actions {
+          display: none !important;
+        }
+        
+        /* Container and Content adjustments */
+        .container, .app-container, .app-layout, .main-layout {
+          grid-template-columns: 1fr !important;
+          padding: 1rem 0.85rem !important;
+          gap: 1.5rem !important;
+        }
+        .sidebar, .guide-sidebar, .sidebar-nav, .sidebar-toc, nav.sidebar {
+          display: none !important;
+        }
+      }
+
+      @media (max-width: 640px) {
+        .brand-container, .brand-group, .nav-brand, .brand, .brand-logo-group {
+          gap: 8px !important;
+        }
+        .brand-title, .brand-text h1, .brand span:not(.brand-badge) {
+          font-size: 1.05rem !important;
+        }
+        .brand-title span.badge, .brand-badge, .brand-text p {
+          display: none !important;
+        }
+        .nav-search, .search-wrapper, .header-search {
+          display: none !important;
+        }
+        .header-controls {
+          gap: 6px !important;
+        }
+
+        .doc-nav-bar-actions, [class*="doc-nav-bar-actions"], .nav-actions, header.guide-header .nav-actions, .header-actions, .header-controls, .top-nav-actions {
+          display: none !important;
+        }
+
+        /* Floating buttons mobile adjustments */
+        .wa-doc-float-btn {
+          bottom: max(14px, env(safe-area-inset-bottom, 14px)) !important;
+          right: 14px !important;
+          padding: 9px 15px !important;
+          font-size: 12.5px !important;
+          border-radius: 25px !important;
+        }
+        .back-to-top-btn, #backToTop, .scroll-top-btn {
+          bottom: max(68px, calc(68px + env(safe-area-inset-bottom, 0px))) !important;
+          right: 14px !important;
+          width: 38px !important;
+          height: 38px !important;
+          font-size: 1rem !important;
+        }
+
+        /* Table touch scrolling */
+        .shortcut-table, .feature-table, table {
+          display: block !important;
+          width: 100% !important;
+          overflow-x: auto !important;
+          -webkit-overflow-scrolling: touch !important;
+        }
+        .hero, .hero-banner {
+          padding: 1.5rem 1rem !important;
+          border-radius: 14px !important;
+        }
+        .hero h1, .hero h2, .hero-title {
+          font-size: 1.6rem !important;
+        }
+        .guide-section, section {
+          scroll-margin-top: 65px !important;
+        }
+      }
+    </style>
+<!-- WhatsApp Integration for Lumenboard Documentation -->
+<!-- Lumenboard Documentation Navigation & WhatsApp Styles -->
+
+
+            <!-- Lumenboard Documentation External Navigation & WhatsApp Styles -->
+    <style id="wa-doc-style">
+      /* Base Navigation Button Styles */
+      .doc-nav-bar-actions {
+        display: flex !important;
+        align-items: center !important;
+        gap: 8px !important;
+        flex-wrap: wrap !important;
+      }
+      .doc-btn-nav {
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        gap: 6px !important;
+        padding: 7px 14px !important;
+        font-size: 0.85rem !important;
+        font-weight: 700 !important;
+        border-radius: 20px !important;
+        text-decoration: none !important;
+        transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
+        cursor: pointer !important;
+        border: 1px solid transparent !important;
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+        white-space: nowrap !important;
+        user-select: none !important;
+        -webkit-tap-highlight-color: transparent !important;
+      }
+      .doc-btn-main {
+        background: linear-gradient(135deg, #02c9de, #0072ff) !important;
+        color: #ffffff !important;
+        border-color: rgba(2, 201, 222, 0.4) !important;
+        box-shadow: 0 2px 8px rgba(2, 201, 222, 0.35) !important;
+      }
+      .doc-btn-main:hover {
+        background: linear-gradient(135deg, #00b4c7, #005fdb) !important;
+        color: #ffffff !important;
+        transform: translateY(-1px) !important;
+        box-shadow: 0 4px 12px rgba(2, 201, 222, 0.5) !important;
+      }
+      .doc-btn-store {
+        background: linear-gradient(135deg, #8b5cf6, #ec4899) !important;
+        color: #ffffff !important;
+        border-color: rgba(139, 92, 246, 0.4) !important;
+        box-shadow: 0 2px 8px rgba(139, 92, 246, 0.35) !important;
+      }
+      .doc-btn-store:hover {
+        background: linear-gradient(135deg, #7c3aed, #db2777) !important;
+        color: #ffffff !important;
+        transform: translateY(-1px) !important;
+        box-shadow: 0 4px 12px rgba(139, 92, 246, 0.5) !important;
+      }
+      .doc-btn-matrix {
+        background: #f1f5f9 !important;
+        color: #1e293b !important;
+        border-color: #cbd5e1 !important;
+      }
+      .doc-btn-matrix:hover {
+        background: #e2e8f0 !important;
+        color: #0f172a !important;
+        transform: translateY(-1px) !important;
+      }
+      [data-theme="dark"] .doc-btn-matrix {
+        background: #1e293b !important;
+        color: #e2e8f0 !important;
+        border-color: #334155 !important;
+      }
+      .doc-btn-buy-nav {
+        background: linear-gradient(135deg, #25d366, #128c7e) !important;
+        color: #ffffff !important;
+        border-color: #25d366 !important;
+        box-shadow: 0 2px 8px rgba(37,211,102,0.3) !important;
+      }
+      .doc-btn-buy-nav:hover {
+        background: linear-gradient(135deg, #1ebc57, #0e7064) !important;
+        color: #ffffff !important;
+        box-shadow: 0 4px 12px rgba(37,211,102,0.5) !important;
+        transform: translateY(-1px) !important;
+      }
+      .wa-doc-hero-cta {
+        margin-top: 20px;
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+        align-items: center;
+      }
+      .wa-doc-hero-btn-main {
+        background: linear-gradient(135deg, #02c9de, #0072ff);
+        color: #ffffff !important;
+        text-decoration: none !important;
+        padding: 9px 20px;
+        border-radius: 25px;
+        font-weight: 800;
+        font-size: 13.5px;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        box-shadow: 0 3px 12px rgba(2, 201, 222, 0.4);
+        transition: all 0.2s ease;
+      }
+      .wa-doc-hero-btn-main:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 5px 16px rgba(2, 201, 222, 0.6);
+      }
+      .wa-doc-hero-btn-store {
+        background: linear-gradient(135deg, #8b5cf6, #6d28d9);
+        color: #ffffff !important;
+        text-decoration: none !important;
+        padding: 9px 20px;
+        border-radius: 25px;
+        font-weight: 800;
+        font-size: 13.5px;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        box-shadow: 0 3px 12px rgba(139, 92, 246, 0.4);
+        transition: all 0.2s ease;
+      }
+      .wa-doc-hero-btn-store:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 5px 16px rgba(139, 92, 246, 0.6);
+      }
+      .wa-doc-hero-btn-matrix {
+        background: rgba(255,255,255,0.15);
+        color: #ffffff !important;
+        text-decoration: none !important;
+        padding: 9px 18px;
+        border-radius: 25px;
+        font-weight: 700;
+        font-size: 13.5px;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        border: 1px solid rgba(255,255,255,0.3);
+        transition: all 0.2s ease;
+      }
+      .wa-doc-hero-btn-matrix:hover {
+        background: rgba(255,255,255,0.3);
+      }
+      .wa-doc-hero-btn-wa {
+        background: #25d366;
+        color: #ffffff !important;
+        text-decoration: none !important;
+        padding: 9px 20px;
+        border-radius: 25px;
+        font-weight: 800;
+        font-size: 13.5px;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        box-shadow: 0 3px 12px rgba(37,211,102,0.4);
+        transition: all 0.2s ease;
+      }
+      .wa-doc-hero-btn-wa:hover {
+        background: #1ebc57;
+        transform: translateY(-1px);
+        box-shadow: 0 5px 16px rgba(37,211,102,0.6);
+      }
+      .wa-doc-float-btn {
+        position: fixed;
+        bottom: 25px;
+        right: 25px;
+        background: linear-gradient(135deg, #25d366, #128c7e);
+        color: #ffffff !important;
+        text-decoration: none !important;
+        padding: 12px 22px;
+        border-radius: 50px;
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        font-weight: 800;
+        font-size: 14px;
+        box-shadow: 0 6px 22px rgba(37,211,102,0.5);
+        z-index: 99999;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        animation: waPulse 2s infinite;
+        transition: all 0.2s;
+        user-select: none;
+        -webkit-tap-highlight-color: transparent;
+      }
+      .wa-doc-float-btn:hover {
+        transform: scale(1.05);
+        box-shadow: 0 8px 28px rgba(37,211,102,0.7);
+        color: #fff !important;
+      }
+      @keyframes waPulse {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.04); }
+        100% { transform: scale(1); }
+      }
+
+      /* =========================================================
+         MOBILE RESPONSIVE NAVIGATION & TOUCH ICONS
+         ========================================================= */
+      .doc-mobile-menu-btn {
+        display: none !important;
+        width: 38px;
+        height: 38px;
+        border-radius: 10px;
+        background: rgba(2, 201, 222, 0.12);
+        border: 1.5px solid rgba(2, 201, 222, 0.4);
+        color: #02c9de;
+        cursor: pointer;
+        align-items: center;
+        justify-content: center;
+        font-size: 18px;
+        font-weight: 800;
+        transition: all 0.2s ease;
+        -webkit-tap-highlight-color: transparent;
+        outline: none;
+        flex-shrink: 0;
+      }
+      .doc-mobile-menu-btn:hover, .doc-mobile-menu-btn:active {
+        background: rgba(2, 201, 222, 0.25);
+        border-color: #02c9de;
+        transform: scale(1.05);
+      }
+      .doc-mobile-menu-btn.active {
+        background: rgba(239, 68, 68, 0.15);
+        border-color: #ef4444;
+        color: #f87171;
+      }
+
+      /* Mobile Drawer Backdrop */
+      .doc-mobile-backdrop {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.65);
+        backdrop-filter: blur(6px);
+        -webkit-backdrop-filter: blur(6px);
+        z-index: 100000;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+      }
+      .doc-mobile-backdrop.open {
+        display: block;
+        opacity: 1;
+      }
+
+      /* Mobile Navigation Drawer */
+      .doc-mobile-drawer {
+        position: fixed;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        width: min(85vw, 360px);
+        background: #0f172a;
+        color: #f8fafc;
+        z-index: 100001;
+        box-shadow: -8px 0 32px rgba(0, 0, 0, 0.6);
+        border-left: 1px solid rgba(2, 201, 222, 0.25);
+        display: flex;
+        flex-direction: column;
+        transform: translateX(100%);
+        transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+      }
+      [data-theme="light"] .doc-mobile-drawer {
+        background: #ffffff;
+        color: #1e293b;
+        border-left-color: #e2e8f0;
+      }
+      .doc-mobile-drawer.open {
+        transform: translateX(0);
+      }
+
+      /* Drawer Header */
+      .doc-drawer-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 16px 20px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        background: rgba(255, 255, 255, 0.03);
+      }
+      [data-theme="light"] .doc-drawer-header {
+        border-bottom-color: #e2e8f0;
+        background: #f8fafc;
+      }
+      .doc-drawer-title {
+        font-size: 15px;
+        font-weight: 800;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        background: linear-gradient(135deg, #02c9de, #0072ff);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+      .doc-drawer-close-btn {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.1);
+        border: none;
+        color: inherit;
+        font-size: 16px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.2s;
+      }
+      .doc-drawer-close-btn:hover {
+        background: #ef4444;
+        color: #fff;
+      }
+
+      /* Drawer Body */
+      .doc-drawer-body {
+        padding: 16px 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        flex: 1;
+      }
+      .doc-drawer-section-title {
+        font-size: 11px;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: #94a3b8;
+        margin-bottom: 10px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+      .doc-drawer-portal-links {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+      .doc-drawer-portal-link {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 10px 14px;
+        border-radius: 12px;
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        text-decoration: none;
+        color: inherit;
+        font-size: 13.5px;
+        font-weight: 700;
+        transition: all 0.2s;
+      }
+      [data-theme="light"] .doc-drawer-portal-link {
+        background: #f8fafc;
+        border-color: #e2e8f0;
+      }
+      .doc-drawer-portal-link:hover, .doc-drawer-portal-link:active {
+        background: rgba(2, 201, 222, 0.12);
+        border-color: #02c9de;
+        transform: translateX(3px);
+      }
+      .doc-drawer-portal-link .icon-badge {
+        width: 32px;
+        height: 32px;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 15px;
+        flex-shrink: 0;
+      }
+      .doc-drawer-toc-list {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        list-style: none;
+      }
+      .doc-drawer-toc-item a {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 9px 12px;
+        border-radius: 8px;
+        color: #94a3b8;
+        text-decoration: none;
+        font-size: 13px;
+        font-weight: 600;
+        transition: all 0.2s;
+      }
+      [data-theme="light"] .doc-drawer-toc-item a {
+        color: #64748b;
+      }
+      .doc-drawer-toc-item a:hover, .doc-drawer-toc-item a.active {
+        color: #02c9de;
+        background: rgba(2, 201, 222, 0.1);
+        font-weight: 700;
+        transform: translateX(4px);
+      }
+      .doc-drawer-toc-item .num-badge {
+        font-size: 10px;
+        font-weight: 800;
+        padding: 2px 6px;
+        border-radius: 4px;
+        background: rgba(255, 255, 255, 0.08);
+        color: #02c9de;
+      }
+
+      /* =========================================================
+         AUTOMATIC MOBILE KEYBOARD POP-UP ADAPTATION STYLES
+         ========================================================= */
+      body.keyboard-visible {
+        padding-bottom: 20px !important;
+      }
+      body.keyboard-visible .wa-doc-float-btn,
+      body.keyboard-visible #waFloatingWidget,
+      body.keyboard-visible .back-to-top-btn,
+      body.keyboard-visible #backToTop,
+      body.keyboard-visible .scroll-top-btn {
+        opacity: 0 !important;
+        pointer-events: none !important;
+        transform: translateY(20px) !important;
+        transition: opacity 0.2s ease, transform 0.2s ease !important;
+      }
+
+      /* Body lock when drawer is open */
+      body.doc-drawer-open {
+        overflow: hidden !important;
+      }
+
+            /* Drawer theme button specific styles */
+      button.doc-drawer-portal-link, .doc-drawer-theme-btn {
+        font-family: inherit;
+        width: 100%;
+        text-align: left;
+        cursor: pointer;
+        outline: none;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        background: rgba(255, 255, 255, 0.04);
+        color: inherit;
+      }
+      [data-theme="light"] button.doc-drawer-portal-link, [data-theme="light"] .doc-drawer-theme-btn {
+        background: #f8fafc;
+        border-color: #e2e8f0;
+        color: #1e293b;
+      }
+
+      /* =========================================================
+         TABLET & MOBILE BREAKPOINTS (<= 900px, <= 640px, <= 480px)
+         ========================================================= */
+      @media (max-width: 900px) {
+        .doc-mobile-menu-btn {
+          display: inline-flex !important;
+        }
+        
+        .navbar, header.guide-header, header.top-nav, header.site-header, header.top-navbar, header.header-bar, header.header, .top-nav, .header-nav, .main-header, .top-header, header, nav {
+          padding: 10px 16px !important;
+          gap: 12px !important;
+          height: auto !important;
+          min-height: 54px !important;
+          display: flex !important;
+          flex-direction: row !important;
+          align-items: center !important;
+          justify-content: space-between !important;
+        }
+
+        .header-inner {
+          padding: 0 !important;
+          width: 100% !important;
+          display: flex !important;
+          flex-direction: row !important;
+          align-items: center !important;
+          justify-content: space-between !important;
+        }
+
+        /* Hide desktop action buttons in header on mobile; they are neatly accessible under 3 horizontal lines (â˜°) */
+        .doc-nav-bar-actions, [class*="doc-nav-bar-actions"], .nav-actions, header.guide-header .nav-actions, .header-actions, .header-controls, .top-nav-actions {
+          display: none !important;
+        }
+        
+        /* Container and Content adjustments */
+        .container, .app-container, .app-layout, .main-layout {
+          grid-template-columns: 1fr !important;
+          padding: 1rem 0.85rem !important;
+          gap: 1.5rem !important;
+        }
+        .sidebar, .guide-sidebar, .sidebar-nav, .sidebar-toc, nav.sidebar {
+          display: none !important;
+        }
+      }
+
+      @media (max-width: 640px) {
+        .brand-container, .brand-group, .nav-brand, .brand, .brand-logo-group {
+          gap: 8px !important;
+        }
+        .brand-title, .brand-text h1, .brand span:not(.brand-badge) {
+          font-size: 1.05rem !important;
+        }
+        .brand-title span.badge, .brand-badge, .brand-text p {
+          display: none !important;
+        }
+        .nav-search, .search-wrapper, .header-search {
+          display: none !important;
+        }
+        .header-controls {
+          gap: 6px !important;
+        }
+
+        .doc-nav-bar-actions, [class*="doc-nav-bar-actions"], .nav-actions, header.guide-header .nav-actions, .header-actions, .header-controls, .top-nav-actions {
+          display: none !important;
+        }
+
+        /* Floating buttons mobile adjustments */
+        .wa-doc-float-btn {
+          bottom: max(14px, env(safe-area-inset-bottom, 14px)) !important;
+          right: 14px !important;
+          padding: 9px 15px !important;
+          font-size: 12.5px !important;
+          border-radius: 25px !important;
+        }
+        .back-to-top-btn, #backToTop, .scroll-top-btn {
+          bottom: max(68px, calc(68px + env(safe-area-inset-bottom, 0px))) !important;
+          right: 14px !important;
+          width: 38px !important;
+          height: 38px !important;
+          font-size: 1rem !important;
+        }
+
+        /* Table touch scrolling */
+        .shortcut-table, .feature-table, table {
+          display: block !important;
+          width: 100% !important;
+          overflow-x: auto !important;
+          -webkit-overflow-scrolling: touch !important;
+        }
+        .hero, .hero-banner {
+          padding: 1.5rem 1rem !important;
+          border-radius: 14px !important;
+        }
+        .hero h1, .hero h2, .hero-title {
+          font-size: 1.6rem !important;
+        }
+        .guide-section, section {
+          scroll-margin-top: 65px !important;
+        }
+      }
+    </style>
+    
+</head>
+<body data-theme="light">
+<!-- Sticky Top Navigation -->
+<header class="header-nav" role="banner">
+<div class="nav-container">
+<a aria-label="Lumenboard User Guide Home" class="brand-wrap" href="#">
+<div aria-hidden="true" class="brand-dots">
+<span></span><span></span><span></span>
+</div>
+<span class="brand-title">Lumenboard Visual Studio</span>
+<span class="brand-badge">Master Guide</span>
+</a>
+<ul class="nav-links">
+<li><a class="active" href="#quickstart">Quick Start</a></li>
+<li><a href="#anatomy">Interface Map</a></li>
+<li><a href="#features">Feature Suite</a></li>
+<li><a href="#workflows">Step-by-Step</a></li>
+<li><a href="#shortcuts">Shortcuts</a></li>
+<li><a href="#faq">FAQ</a></li>
+</ul>
+<div class="nav-actions">
+    <a href="https://supportsourcecode.lovable.app/home" class="doc-btn-nav doc-btn-main" title="Open Main Page (https://supportsourcecode.lovable.app/home)">🏠 Main Page</a>
+    <a href="https://interactive-media-display.lovable.app/" target="_blank" class="doc-btn-nav doc-btn-store" title="Open App Store (https://interactive-media-display.lovable.app/)">🛒 App Store</a>
+    <a href="../../compare.html" class="doc-btn-nav doc-btn-matrix" title="View 25-Version Matrix">📊 Compare Matrix</a>
+    <a href="https://api.whatsapp.com/send?phone=917903933705&text=Hello%2C%20I%20am%20reading%20the%20guide%20for%20software%20version%3A%20Source_code_large_pdf_V_1.1%20%28Large%20PDF%20V1.1%29.%20I%20would%20like%20to%20purchase%20/%20inquire%20about%20this%20package." target="_blank" class="doc-btn-nav doc-btn-buy-nav" title="Purchase Source_code_large_pdf_V_1.1 on WhatsApp">💬 Buy (Large PDF V1.1)</a>
+    
+
+
+
+<button aria-label="Toggle Dark Theme" class="theme-toggle-btn" id="themeToggle">
+<span id="themeIcon">🌓</span> <span>Theme</span>
+</button>
+<button class="btn-action" onclick="window.print()" title="Print this complete guide or save to PDF">
+<span>🖨</span> Print Manual
+        </button>
+</div>
+</div>
+</header>
+<main class="main-wrapper" role="main">
+<!-- Hero Section -->
+<section class="hero-section">
+<div class="hero-tag">
+<span>✨</span> End-to-End Visual Mastery &amp; Interactive Handbook
+      </div>
+<h1 class="hero-title">
+        The Complete Guide to <span>Lumenboard</span>
+</h1>
+<p class="hero-desc">
+        Everything you need to create stunning visual lessons, interactive architecture maps, freehand sketch annotations, auto-generated code flowcharts, and presentation-ready PowerPoint &amp; PDF exports.
+      </p>
+
+<!-- Quick Feature Cards -->
+<div class="highlight-grid">
+<div class="highlight-card">
+<div class="highlight-icon hi-purple">⚡</div>
+<h3>Smart Connectors</h3>
+<p>Automatic collision-free orthogonal routing with draggable mid-points, bridge hops, and bidirectional arrows.</p>
+</div>
+<div class="highlight-card">
+<div class="highlight-icon hi-mint">✍️</div>
+<h3>Rich Text &amp; Data Tables</h3>
+<p>Full inline formatting, format painter, multi-column tables, font styling, and color highlighters.</p>
+</div>
+<div class="highlight-card">
+<div class="highlight-icon hi-coral">🤖</div>
+<h3>Code &amp; Text Visualizers</h3>
+<p>Convert raw HTML/CSS/JS source code or plain text explanations into connected HLD/LLD diagrams instantly.</p>
+</div>
+<div class="highlight-card">
+<div class="highlight-icon hi-sun">📑</div>
+<h3>Multi-Lesson &amp; ZIP Packs</h3>
+<p>Organize multi-page visual lessons with tab colors, direct JSON editing, and bulk page deletion.</p>
+</div>
+<div class="highlight-card">
+<div class="highlight-icon hi-sky">📊</div>
+<h3>Native PowerPoint &amp; PDF</h3>
+<p>Export true editable Microsoft PowerPoint shapes (.pptx), multi-page PDF documents, 2x PNG, and SVG.</p>
+</div>
+</div>
+</section>
+<!-- Quick Start Guide -->
+<section class="section-block" id="quickstart">
+<div class="section-header">
+<span class="section-eyebrow">GETTING STARTED</span>
+<h2 class="section-title">5-Minute Quick Start Guide</h2>
+<p class="section-subtitle">Follow these core steps to build and present your first visual diagram in minutes.</p>
+</div>
+<div class="steps-container">
+<!-- Step 1 -->
+<div class="step-card">
+<div class="step-number">1</div>
+<div class="step-content">
+<h3>Add Shapes, Cards &amp; Decision Diamonds</h3>
+<p>From the left <strong>Tool Rail</strong> or the <strong>Design Library</strong>, click any shape (Rectangle, Square, Circle, Diamond, Pill, Callout, or Frame Container) to place it on the canvas. Double-click any shape to immediately edit its title and details.</p>
+<div class="step-tags">
+<span class="tag-badge">□ Concept</span>
+<span class="tag-badge">◇ Decision</span>
+<span class="tag-badge">⌗ Frame Container</span>
+<span class="tag-badge">Double-Click to Edit</span>
+</div>
+</div>
+<div class="step-preview-box">
+<strong>💡 Pro Tip:</strong>
+<p>Frames act as magnetic containers! Moving a frame will automatically transport all shapes and connectors placed inside it.</p>
+</div>
+</div>
+<!-- Step 2 -->
+<div class="step-card">
+<div class="step-number">2</div>
+<div class="step-content">
+<h3>Connect Objects with Smart Arrows</h3>
+<p>Hold <kbd>Shift</kbd> and hover near the edge of any shape to reveal the glowing <strong>(+) Connector Handle</strong>. Drag the handle to any target shape to instantly spawn a smart connecting line. Choose between straight, orthogonal elbow, curved, or dashed styles.</p>
+<div class="step-tags">
+<span class="tag-badge">Hold Shift + Drag</span>
+<span class="tag-badge">Smart Auto-Routing</span>
+<span class="tag-badge">Bridge Line Hops</span>
+<span class="tag-badge">Reset Route</span>
+</div>
+</div>
+<div class="step-preview-box">
+<strong>⚡ Obstacle Avoidance:</strong>
+<p>Lumenboard's A* routing engine automatically maneuvers arrows around intervening cards so lines never collide or tangle.</p>
+</div>
+</div>
+<!-- Step 3 -->
+<div class="step-card">
+<div class="step-number">3</div>
+<div class="step-content">
+<h3>Write Formatted Rich Text &amp; Insert Tables</h3>
+<p>Select the <strong>Text Tool (T)</strong> and click on the canvas to place a rich text block. Use the floating formatting bar for <strong>Bold</strong>, <em>Italic</em>, colors, bulleted/numbered lists, indentations, and the <strong>8×8 Table Cell Picker</strong>.</p>
+<div class="step-tags">
+<span class="tag-badge"><kbd>T</kbd> Text Tool</span>
+<span class="tag-badge">▦ Interactive Tables</span>
+<span class="tag-badge">🖌 Format Painter</span>
+<span class="tag-badge">Auto-Expanding Box</span>
+</div>
+</div>
+<div class="step-preview-box">
+<strong>🖌 Format Painter:</strong>
+<p>Highlight styled text, click the paintbrush icon, and click destination text to clone fonts, sizes, and colors instantly.</p>
+</div>
+</div>
+<!-- Step 4 -->
+<div class="step-card">
+<div class="step-number">4</div>
+<div class="step-content">
+<h3>Freehand Sketching &amp; Highlighting</h3>
+<p>Switch between the <strong>Pencil</strong> (semi-opaque sketch), <strong>Pen</strong> (crisp vector ink), <strong>Marker</strong> (28% highlighter blend), and <strong>Eraser</strong> (vector stroke eraser). Smooth curves are calculated in real time without lag.</p>
+<div class="step-tags">
+<span class="tag-badge">✎ Pencil</span>
+<span class="tag-badge">✒ Pen</span>
+<span class="tag-badge">▰ Marker Highlighter</span>
+<span class="tag-badge">◇ Stroke Eraser</span>
+</div>
+</div>
+<div class="step-preview-box">
+<strong>🎨 Color &amp; Size Control:</strong>
+<p>Adjust brush thickness from 1px to 100px and choose custom hex colors directly from the active tool toolbar.</p>
+</div>
+</div>
+<!-- Step 5 -->
+<div class="step-card">
+<div class="step-number">5</div>
+<div class="step-content">
+<h3>Export to Native PowerPoint, PDF, SVG &amp; ZIP</h3>
+<p>Click the <strong>Export ↗</strong> button in the top right to download your work in presentation-grade formats: true editable Microsoft PowerPoint slides (.pptx), multi-lesson PDFs, 2x supersampled PNGs, SVGs, or timestamped Lesson ZIP archives.</p>
+<div class="step-tags">
+<span class="tag-badge">Editable .PPTX</span>
+<span class="tag-badge">Multi-Page PDF</span>
+<span class="tag-badge">High-Res PNG</span>
+<span class="tag-badge">Lesson ZIP</span>
+</div>
+</div>
+<div class="step-preview-box">
+<strong>📊 Native PPTX Shapes:</strong>
+<p>Exported PowerPoint slides contain native vector shapes and editable text, allowing full post-export editing in Microsoft Office!</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Interactive Interface Anatomy Map -->
+<section class="section-block" id="anatomy">
+<div class="section-header">
+<span class="section-eyebrow">WORKSPACE LAYOUT</span>
+<h2 class="section-title">Interactive Workspace Anatomy</h2>
+<p class="section-subtitle">Click on any section of the diagram below to explore its role, tools, and shortcuts.</p>
+</div>
+<div class="anatomy-container">
+<div class="anatomy-mockup">
+<!-- Top Bar -->
+<div class="mock-zone mock-topbar" onclick="selectZone('topbar')">
+<span class="mock-zone-badge">1</span>
+<strong>Top Navigation Bar</strong>
+<span>Project Title, Save Status, File Menu (Import/Download), Visualizers, Fullscreen, Dark Mode &amp; Export</span>
+</div>
+<!-- Left Rail -->
+<div class="mock-zone mock-rail" onclick="selectZone('rail')">
+<span class="mock-zone-badge">2</span>
+<strong>Creation Tool Rail</strong>
+<span>Select (↖), Pan (✥), Pencil, Pen, Marker, Eraser, Concept, Decision, Text (T), Connectors &amp; Help</span>
+</div>
+<!-- Center Canvas -->
+<div class="mock-zone mock-canvas" onclick="selectZone('canvas')">
+<span class="mock-zone-badge">3</span>
+<strong>Infinite Canvas Stage (up to 8000×6000)</strong>
+<span>Dual scrollbars, Rubberband Marquee, Drag-and-Drop, Smart Connectors, Zoom &amp; Freehand Strokes</span>
+</div>
+<!-- Right Inspector -->
+<div class="mock-zone mock-inspector" onclick="selectZone('inspector')">
+<span class="mock-zone-badge">4</span>
+<strong>Properties Inspector</strong>
+<span>Fill Color, 100% Opacity Toggle, Geometry (W/H), Rotation (-180° to 180°), Layer Order, Icon Size</span>
+</div>
+<!-- Bottom Footer -->
+<div class="mock-zone mock-footer" onclick="selectZone('footer')">
+<span class="mock-zone-badge">5</span>
+<strong>Lesson Switcher &amp; Viewport Controls</strong>
+<span>Multi-Lesson Tabs, Drag-Reorder, Tab Colors, Canvas Size Extender &amp; Continuous Zoom (35%–200%)</span>
+</div>
+</div>
+<div class="anatomy-details-panel" id="anatomyDetails">
+<h4><span id="zoneIcon">📍</span> <span id="zoneTitle">Click any zone above to learn more</span></h4>
+<p id="zoneDesc">Lumenboard Visual Studio is divided into 5 powerful functional zones designed for fluid creation, effortless styling, and rapid multi-page lesson delivery.</p>
+</div>
+</div>
+</section>
+<!-- Deep Dive Feature Suite -->
+<section class="section-block" id="features">
+<div class="section-header">
+<span class="section-eyebrow">COMPREHENSIVE MANUAL</span>
+<h2 class="section-title">Deep Dive Feature Suite</h2>
+<p class="section-subtitle">Explore detailed capabilities, specialized tools, and advanced settings.</p>
+</div>
+<!-- Feature Tabs Navigation -->
+<div class="feature-tabs-nav" role="tablist">
+<button class="feature-tab-btn active" onclick="openTab('tab-shapes')"><span>📐</span> Shapes &amp; Cards</button>
+<button class="feature-tab-btn" onclick="openTab('tab-connectors')"><span>⚡</span> Smart Arrows</button>
+<button class="feature-tab-btn" onclick="openTab('tab-text')"><span>✍️</span> Rich Text &amp; Tables</button>
+<button class="feature-tab-btn" onclick="openTab('tab-drawing')"><span>🎨</span> Freehand Drawing</button>
+<button class="feature-tab-btn" onclick="openTab('tab-media')"><span>🖼️</span> Images &amp; Cropping</button>
+<button class="feature-tab-btn" onclick="openTab('tab-ai')"><span>🤖</span> Code &amp; Text Visualizer</button>
+<button class="feature-tab-btn" onclick="openTab('tab-lessons')"><span>📑</span> Multi-Lesson System</button>
+<button class="feature-tab-btn" onclick="openTab('tab-export')"><span>💾</span> Export &amp; Import</button>
+</div>
+<!-- Tab 1: Shapes & Cards -->
+<div class="feature-tab-content active" id="tab-shapes">
+<div class="grid-2col">
+<div>
+<h3 style="font-size:1.5rem; margin-bottom:1rem; font-weight:800;">Diagram Elements &amp; Shapes</h3>
+<p style="color:var(--text-muted); margin-bottom:1.5rem;">
+              Lumenboard provides a rich palette of semantic diagram shapes tailored for learning and technical documentation.
+            </p>
+<ul class="feature-list">
+<li>
+<span class="check-icon">✓</span>
+<div>
+<strong>7 Core Shapes:</strong> Rectangles, Squares, Circles, Diamonds, Decision Hexagons, Rounded Pills, and Sticky Note Callouts.
+                </div>
+</li>
+<li>
+<span class="check-icon">✓</span>
+<div>
+<strong>Magnetic Frames:</strong> Group complex diagrams into labeled sections. Moving or deleting a frame automatically manages all nested items.
+                </div>
+</li>
+<li>
+<span class="check-icon">✓</span>
+<div>
+<strong>Aspect Ratio Locking:</strong> Circles, squares, and imported images maintain perfect proportions automatically when resized from any corner handle.
+                </div>
+</li>
+<li>
+<span class="check-icon">✓</span>
+<div>
+<strong>Desktop Icons Library:</strong> Insert specialized icons for Web, PC, DB, API, Code, Documents, Users, and Settings with custom tone coloring.
+                </div>
+</li>
+</ul>
+</div>
+<div class="card-box">
+<h4>Shape Properties &amp; Styling</h4>
+<p style="font-size:0.9rem; color:var(--text-muted); margin-bottom:1rem;">
+              Select any shape to reveal the Properties Inspector on the right panel:
+            </p>
+<div style="display:flex; flex-direction:column; gap:0.75rem; font-size:0.88rem;">
+<div><strong>🎨 Custom Color Swatches:</strong> 12 palette presets + full native hex color picker.</div>
+<div><strong>👁 Fill Mode:</strong> Choose between Opaque fill or 100% Transparent fill for transparent overlay boxes.</div>
+<div><strong>🔄 Free Rotation:</strong> Rotate any card from -180° to +180° with 15° snap increments.</div>
+<div><strong>📚 Overlapping Layers:</strong> Coordinate-aware "Place Above" and "Place Below" layering buttons.</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Tab 2: Smart Arrows -->
+<div class="feature-tab-content" id="tab-connectors">
+<div class="grid-2col">
+<div>
+<h3 style="font-size:1.5rem; margin-bottom:1rem; font-weight:800;">Smart Connectors &amp; Line Physics</h3>
+<p style="color:var(--text-muted); margin-bottom:1.5rem;">
+              Create intelligent connections between concepts that dynamically adapt as you move objects across the canvas.
+            </p>
+<ul class="feature-list">
+<li>
+<span class="check-icon">✓</span>
+<div>
+<strong>Hold Shift to Connect:</strong> Simply hold <kbd>Shift</kbd> and drag from any edge or endpoint to connect to any other object.
+                </div>
+</li>
+<li>
+<span class="check-icon">✓</span>
+<div>
+<strong>A* Collision Avoidance:</strong> Orthogonal elbow lines automatically calculate detour paths around obstacles so lines stay crystal clear.
+                </div>
+</li>
+<li>
+<span class="check-icon">✓</span>
+<div>
+<strong>Automatic Bridge Hops:</strong> When two connectors cross paths, an SVG arch bridge automatically renders to clarify flow direction.
+                </div>
+</li>
+<li>
+<span class="check-icon">✓</span>
+<div>
+<strong>Draggable Mid-Point Bends:</strong> Click and drag the circular bend handle to introduce manual curving or custom orthogonal routes.
+                </div>
+</li>
+</ul>
+</div>
+<div class="card-box">
+<h4>Connector Style Varieties</h4>
+<div style="display:grid; grid-template-columns:1fr 1fr; gap:0.75rem; font-size:0.88rem; margin-top:0.5rem;">
+<div style="padding:0.6rem; background:var(--bg-card); border-radius:6px; border:1px solid var(--border);"><strong>Straight Arrow (→)</strong><br/><small>Direct node-to-node line</small></div>
+<div style="padding:0.6rem; background:var(--bg-card); border-radius:6px; border:1px solid var(--border);"><strong>Elbow Line (↳)</strong><br/><small>90° orthogonal routing</small></div>
+<div style="padding:0.6rem; background:var(--bg-card); border-radius:6px; border:1px solid var(--border);"><strong>Curved Arrow (∿)</strong><br/><small>Smooth cubic Bézier arc</small></div>
+<div style="padding:0.6rem; background:var(--bg-card); border-radius:6px; border:1px solid var(--border);"><strong>Dashed Connector (⇢)</strong><br/><small>Async or optional flows</small></div>
+</div>
+<div class="alert-box tip" style="margin-top:1rem; margin-bottom:0;">
+<div class="alert-icon">💡</div>
+<div class="alert-content">
+<strong>Bidirectional Arrows:</strong>
+<p>Select any connector and toggle "Both" in Line Endings to generate two-way communication links (↔).</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Tab 3: Rich Text & Tables -->
+<div class="feature-tab-content" id="tab-text">
+<div class="grid-2col">
+<div>
+<h3 style="font-size:1.5rem; margin-bottom:1rem; font-weight:800;">Rich Text Engine &amp; Table Studio</h3>
+<p style="color:var(--text-muted); margin-bottom:1.5rem;">
+              Create multi-style textual annotations, documentation blocks, formatted tables, and bulleted takeaways directly on the canvas.
+            </p>
+<ul class="feature-list">
+<li>
+<span class="check-icon">✓</span>
+<div>
+<strong>Inline Typography:</strong> Choose from 5 font families (Arial, Georgia, Verdana, Tahoma, Courier New) and 7 size steps (10px to 48px).
+                </div>
+</li>
+<li>
+<span class="check-icon">✓</span>
+<div>
+<strong>Text Styling:</strong> Instant Bold (<kbd>Ctrl+B</kbd>), Italic (<kbd>Ctrl+I</kbd>), Underline (<kbd>Ctrl+U</kbd>), Strikethrough, Text Colors, and Highlighter fills.
+                </div>
+</li>
+<li>
+<span class="check-icon">✓</span>
+<div>
+<strong>Interactive 8×8 Table Creator:</strong> Hover over the grid picker to insert structured HTML tables with header rows and auto-bordered cells.
+                </div>
+</li>
+<li>
+<span class="check-icon">✓</span>
+<div>
+<strong>Format Painter (🖌):</strong> Copy complex font styles and highlight colors with a single click and paint them over new text.
+                </div>
+</li>
+</ul>
+</div>
+<div class="card-box">
+<h4>Auto-Expanding Canvas Containers</h4>
+<p style="font-size:0.9rem; color:var(--text-muted); line-height:1.5; margin-bottom:1rem;">
+              Text boxes automatically calculate natural content height and expand seamlessly without clipping or overflowing. Safe HTML sanitization cleans incoming pastes from Word and websites.
+            </p>
+<div style="background:var(--bg-card); padding:1rem; border-radius:8px; border:1px solid var(--border); font-family:var(--font-mono); font-size:0.8rem;">
+              &lt;table&gt;<br/>
+                &lt;th&gt;Concept&lt;/th&gt;&lt;th&gt;Definition&lt;/th&gt;<br/>
+                &lt;tr&gt;&lt;td&gt;HTML&lt;/td&gt;&lt;td&gt;Document Structure&lt;/td&gt;&lt;/tr&gt;<br/>
+              &lt;/table&gt;
+            </div>
+</div>
+</div>
+</div>
+<!-- Tab 4: Freehand Drawing -->
+<div class="feature-tab-content" id="tab-drawing">
+<div class="grid-2col">
+<div>
+<h3 style="font-size:1.5rem; margin-bottom:1rem; font-weight:800;">Freehand Sketching &amp; Annotation Suite</h3>
+<p style="color:var(--text-muted); margin-bottom:1.5rem;">
+              Sketch ideas freely, underline key points, write formulas, or draw diagrams using a responsive, stylus-friendly vector engine.
+            </p>
+<ul class="feature-list">
+<li>
+<span class="check-icon">✓</span>
+<div>
+<strong>Pencil Tool (✎):</strong> 72% opacity natural sketching tool with fine stroke widths for drafts and light outlines.
+                </div>
+</li>
+<li>
+<span class="check-icon">✓</span>
+<div>
+<strong>Pen Tool (✒):</strong> 100% solid, crisp vector ink for definitive annotations, handwriting, and illustrations.
+                </div>
+</li>
+<li>
+<span class="check-icon">✓</span>
+<div>
+<strong>Marker Highlighter (▰):</strong> 28% translucent highlighter that blends beneath or over text without obscuring underlying words.
+                </div>
+</li>
+<li>
+<span class="check-icon">✓</span>
+<div>
+<strong>Vector Eraser (◇):</strong> Segment-aware stroke eraser that intelligently cuts through intersecting lines and splits paths cleanly.
+                </div>
+</li>
+</ul>
+</div>
+<div class="card-box">
+<h4>Stroke Physics &amp; Tablet Compatibility</h4>
+<p style="font-size:0.9rem; color:var(--text-muted); margin-bottom:1rem;">
+              Full hardware support for stylus drawing tablets (Wacom, Huion, Apple Pencil, Microsoft Surface Pen) with barrel-button protection.
+            </p>
+<div class="alert-box note" style="margin-bottom:0;">
+<div class="alert-icon">💡</div>
+<div class="alert-content">
+<strong>Strokes are Objects:</strong>
+<p>Every drawn stroke is saved as a selectable vector object! You can move, re-color, resize, or rotate strokes even after drawing them.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Tab 5: Images & Cropping -->
+<div class="feature-tab-content" id="tab-media">
+<div class="grid-2col">
+<div>
+<h3 style="font-size:1.5rem; margin-bottom:1rem; font-weight:800;">Media Uploads &amp; Precision Image Cropping</h3>
+<p style="color:var(--text-muted); margin-bottom:1.5rem;">
+              Embed external images, icons, and animated GIFs into your diagrams with local storage and built-in cropping.
+            </p>
+<ul class="feature-list">
+<li>
+<span class="check-icon">✓</span>
+<div>
+<strong>Multi-Format Import:</strong> PNG, JPG, JPEG, WebP, BMP, SVG, ICO, and Animated GIFs.
+                </div>
+</li>
+<li>
+<span class="check-icon">✓</span>
+<div>
+<strong>Direct Clipboard Paste (<kbd>Ctrl+V</kbd>):</strong> Copy an image from anywhere (web, snipping tool, screenshots) and paste it directly onto the canvas.
+                </div>
+</li>
+<li>
+<span class="check-icon">✓</span>
+<div>
+<strong>Visual Image Cropper:</strong> Right-click any image and select <strong>"Crop image"</strong> to drag an interactive marquee and extract the desired region.
+                </div>
+</li>
+<li>
+<span class="check-icon">✓</span>
+<div>
+<strong>IndexedDB Local Storage:</strong> Images and cropped assets are stored safely in the browser's IndexedDB database without data loss.
+                </div>
+</li>
+</ul>
+</div>
+<div class="card-box">
+<h4>Right-Click Context Menu</h4>
+<p style="font-size:0.9rem; color:var(--text-muted); margin-bottom:1rem;">
+              Right-click any image card on the canvas to access fast shortcuts:
+            </p>
+<div style="display:flex; flex-direction:column; gap:0.5rem; font-size:0.9rem;">
+<div><strong>✂ Crop Image:</strong> Opens the high-resolution crop modal.</div>
+<div><strong>⧉ Copy Image:</strong> Copies the image to your OS clipboard.</div>
+<div><strong>✂ Cut Image:</strong> Removes the image while copying it.</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Tab 6: AI Code & Text Visualizer -->
+<div class="feature-tab-content" id="tab-ai">
+<div class="grid-2col">
+<div>
+<h3 style="font-size:1.5rem; margin-bottom:1rem; font-weight:800;">Code &amp; Text Auto-Visualizer</h3>
+<p style="color:var(--text-muted); margin-bottom:1.5rem;">
+              Transform raw source code snippets or unstructured textual explanations into fully connected architectural diagrams automatically.
+            </p>
+<ul class="feature-list">
+<li>
+<span class="check-icon">✓</span>
+<div>
+<strong>Code Visualizer (&lt;/&gt;):</strong> Parses HTML, CSS, JavaScript, or general code structures into High-Level (HLD) or Low-Level (LLD) relationship trees.
+                </div>
+</li>
+<li>
+<span class="check-icon">✓</span>
+<div>
+<strong>Text Visualizer (TXT):</strong> Extracts key concepts, definitions, and sequential stages from paragraphs or bullet lists into linked learning cards.
+                </div>
+</li>
+<li>
+<span class="check-icon">✓</span>
+<div>
+<strong>100% Client-Side Privacy:</strong> Your code and text stay entirely within your browser and are never transmitted to external servers.
+                </div>
+</li>
+<li>
+<span class="check-icon">✓</span>
+<div>
+<strong>Fully Editable Output:</strong> All generated boxes, titles, syntax code panels, and connectors remain fully editable and movable.
+                </div>
+</li>
+</ul>
+</div>
+<div class="card-box">
+<h4>High Level (HLD) vs Low Level (LLD)</h4>
+<div style="display:flex; flex-direction:column; gap:0.75rem; font-size:0.88rem;">
+<div style="padding:0.75rem; background:var(--bg-card); border-radius:8px; border:1px solid var(--border);">
+<strong>HLD (High Level Architecture):</strong><br/>
+                Creates a horizontal end-to-end pipeline (e.g. Source Code → DOM → CSS → Event Loop → UI Output).
+              </div>
+<div style="padding:0.75rem; background:var(--bg-card); border-radius:8px; border:1px solid var(--border);">
+<strong>LLD (Low Level Detailed Flow):</strong><br/>
+                Creates hierarchical parent-child trees with embedded syntax snippets, event listeners, and function blocks.
+              </div>
+</div>
+</div>
+</div>
+</div>
+<!-- Tab 7: Multi-Lesson System -->
+<div class="feature-tab-content" id="tab-lessons">
+<div class="grid-2col">
+<div>
+<h3 style="font-size:1.5rem; margin-bottom:1rem; font-weight:800;">Multi-Lesson &amp; Page Management</h3>
+<p style="color:var(--text-muted); margin-bottom:1.5rem;">
+              Manage multi-chapter lessons, multi-page slide decks, or large multi-step workflows with independent canvas tabs.
+            </p>
+<ul class="feature-list">
+<li>
+<span class="check-icon">✓</span>
+<div>
+<strong>Independent History Stacks:</strong> Each lesson tab maintains its own independent 250-level Undo (<kbd>Ctrl+Z</kbd>) and Redo (<kbd>Ctrl+Y</kbd>) history.
+                </div>
+</li>
+<li>
+<span class="check-icon">✓</span>
+<div>
+<strong>Drag-and-Drop Tab Reordering:</strong> Reorder lesson tabs by simply dragging them along the bottom footer bar.
+                </div>
+</li>
+<li>
+<span class="check-icon">✓</span>
+<div>
+<strong>Custom Tab Colors:</strong> Right-click any lesson tab to assign distinct accent colors for quick visual categorization.
+                </div>
+</li>
+<li>
+<span class="check-icon">✓</span>
+<div>
+<strong>Batch Page Management Panel:</strong> Select individual pages or 100-page ranges to perform bulk page deletions effortlessly.
+                </div>
+</li>
+</ul>
+</div>
+<div class="card-box">
+<h4>Direct JSON Code Editor</h4>
+<p style="font-size:0.9rem; color:var(--text-muted); margin-bottom:1rem;">
+              Right-click any lesson tab and select <strong>"Update JSON code"</strong> to view or directly paste raw diagram JSON arrays without affecting other lessons.
+            </p>
+<div class="alert-box tip" style="margin-bottom:0;">
+<div class="alert-icon">💡</div>
+<div class="alert-content">
+<strong>Large PDF Handling:</strong>
+<p>Importing large multi-hundred-page PDFs streams pages sequentially into separate lesson tabs without freezing your browser memory.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Tab 8: Export & Import -->
+<div class="feature-tab-content" id="tab-export">
+<div class="grid-2col">
+<div>
+<h3 style="font-size:1.5rem; margin-bottom:1rem; font-weight:800;">Export &amp; Import Ecosystem</h3>
+<p style="color:var(--text-muted); margin-bottom:1.5rem;">
+              Share your visual ideas anywhere with native presentation slides, publication-quality documents, or compressed project archives.
+            </p>
+<ul class="feature-list">
+<li>
+<span class="check-icon">✓</span>
+<div>
+<strong>Editable PowerPoint (.pptx):</strong> Generates true Microsoft PowerPoint shapes, vector connectors, and text runs with theme typography.
+                </div>
+</li>
+<li>
+<span class="check-icon">✓</span>
+<div>
+<strong>Multi-Page PDF (.pdf):</strong> Assembles a high-resolution PDF document where Lesson 1 becomes Page 1, Lesson 2 becomes Page 2, etc.
+                </div>
+</li>
+<li>
+<span class="check-icon">✓</span>
+<div>
+<strong>Scalable SVG (.svg):</strong> Crisp, infinite-resolution vector graphics with embedded images for web and print publishing.
+                </div>
+</li>
+<li>
+<span class="check-icon">✓</span>
+<div>
+<strong>2x High-Res PNG (.png):</strong> Supersampled raster images with transparent backgrounds and sharp typography.
+                </div>
+</li>
+<li>
+<span class="check-icon">✓</span>
+<div>
+<strong>Lesson ZIP Archive (.zip):</strong> Timestamped archive containing individual JSON files, manifest metadata, and extracted media blobs.
+                </div>
+</li>
+</ul>
+</div>
+<div class="card-box">
+<h4>Supported File Imports</h4>
+<div style="display:flex; flex-direction:column; gap:0.6rem; font-size:0.88rem;">
+<div><strong>📄 Multi-Page PDF:</strong> Imports up to 3GB PDFs as individual lesson slides.</div>
+<div><strong>📑 Word DOCX Lesson Pack:</strong> Reads formatted <code>Doc_to_diagram.docx</code> templates.</div>
+<div><strong>📦 Lesson ZIP &amp; Project JSON:</strong> Restores full multi-lesson workspaces.</div>
+<div><strong>🖼️ Images &amp; GIFs:</strong> PNG, JPG, WebP, SVG, ICO, GIF.</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Interactive Live Simulator -->
+<section class="simulator-box">
+<span class="section-eyebrow">INTERACTIVE LAB</span>
+<h2 style="font-size:1.8rem; font-weight:850; margin-bottom:0.5rem;">Try the Smart Connector Simulator</h2>
+<p style="color:var(--text-muted); max-width:640px; margin:0 auto;">
+        Drag the cards below to see how Lumenboard dynamically routes smart arrows with live obstacle avoidance and automatic line bridges.
+      </p>
+<div class="sim-canvas" id="simCanvas">
+<svg class="sim-svg-layer" id="simSvg">
+<defs>
+<marker id="simArrow" markerheight="6" markerwidth="6" orient="auto-start-reverse" refx="8" refy="5" viewbox="0 0 10 10">
+<path d="M 0 0 L 10 5 L 0 10 z" fill="#6c5ce7"></path>
+</marker>
+</defs>
+<path fill="none" id="simPath1" marker-end="url(#simArrow)" stroke="#6c5ce7" stroke-linecap="round" stroke-width="3"></path>
+<path fill="none" id="simPath2" marker-end="url(#simArrow)" stroke="#00b894" stroke-linecap="round" stroke-width="3"></path>
+</svg>
+<div class="sim-node sim-node-1" id="simNode1">1. Concept A</div>
+<div class="sim-node sim-node-2" id="simNode2">2. Concept B</div>
+<div class="sim-node sim-node-3" id="simNode3">3. Concept C</div>
+</div>
+<div class="sim-controls">
+<button class="btn-action" onclick="resetSimPositions()"><span>↺</span> Reset Nodes</button>
+<button class="btn-action" onclick="toggleSimStyle()"><span>∿</span> Switch Line Style: <b id="simStyleLabel">Elbow</b></button>
+</div>
+</section>
+<!-- Keyboard Shortcuts Cheat Sheet -->
+<section class="section-block" id="shortcuts">
+<div class="section-header">
+<span class="section-eyebrow">EFFICIENCY BOOSTERS</span>
+<h2 class="section-title">Keyboard Shortcuts &amp; Gestures</h2>
+<p class="section-subtitle">Speed up your diagramming workflow with complete keyboard accelerators.</p>
+</div>
+<div class="shortcuts-container">
+<div class="shortcuts-header-bar">
+<div class="shortcuts-filter-pills" id="shortcutFilters">
+<button class="filter-pill active" onclick="filterShortcuts('all')">All Shortcuts</button>
+<button class="filter-pill" onclick="filterShortcuts('general')">General</button>
+<button class="filter-pill" onclick="filterShortcuts('canvas')">Canvas &amp; Pan</button>
+<button class="filter-pill" onclick="filterShortcuts('selection')">Selection &amp; Move</button>
+<button class="filter-pill" onclick="filterShortcuts('text')">Text Formatting</button>
+</div>
+</div>
+<div class="shortcuts-table-wrap">
+<table class="shortcuts-table" id="shortcutsTable">
+<thead>
+<tr>
+<th>Action</th>
+<th>Shortcut / Gesture</th>
+<th>Category</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr data-cat="general">
+<td><strong>Save Project</strong></td>
+<td><kbd>Ctrl</kbd> + <kbd>S</kbd></td>
+<td>General</td>
+<td>Save all diagram items and lessons to local browser storage</td>
+</tr>
+<tr data-cat="general">
+<td><strong>Undo Action</strong></td>
+<td><kbd>Ctrl</kbd> + <kbd>Z</kbd></td>
+<td>General</td>
+<td>Revert the previous canvas operation (up to 250 history levels)</td>
+</tr>
+<tr data-cat="general">
+<td><strong>Redo Action</strong></td>
+<td><kbd>Ctrl</kbd> + <kbd>Y</kbd> / <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>Z</kbd></td>
+<td>General</td>
+<td>Reapply the undone canvas change</td>
+</tr>
+<tr data-cat="general">
+<td><strong>Full Screen Mode</strong></td>
+<td><kbd>Ctrl</kbd> + <kbd>F</kbd></td>
+<td>General</td>
+<td>Enter or exit distraction-free full screen studio view</td>
+</tr>
+<tr data-cat="general">
+<td><strong>Exit / Close Modal</strong></td>
+<td><kbd>Esc</kbd></td>
+<td>General</td>
+<td>Dismiss any open dialog, modal, crop tool, or context menu</td>
+</tr>
+<tr data-cat="selection">
+<td><strong>Select All Items</strong></td>
+<td><kbd>Ctrl</kbd> + <kbd>A</kbd></td>
+<td>Selection</td>
+<td>Select all objects and cards on the active lesson canvas</td>
+</tr>
+<tr data-cat="selection">
+<td><strong>Copy Selected</strong></td>
+<td><kbd>Ctrl</kbd> + <kbd>C</kbd></td>
+<td>Selection</td>
+<td>Copy selected objects (or image raster) to internal &amp; OS clipboard</td>
+</tr>
+<tr data-cat="selection">
+<td><strong>Cut Selected</strong></td>
+<td><kbd>Ctrl</kbd> + <kbd>X</kbd></td>
+<td>Selection</td>
+<td>Cut selected shapes and store them in the clipboard</td>
+</tr>
+<tr data-cat="selection">
+<td><strong>Paste Objects / Images</strong></td>
+<td><kbd>Ctrl</kbd> + <kbd>V</kbd></td>
+<td>Selection</td>
+<td>Paste copied objects or images at the current mouse cursor position</td>
+</tr>
+<tr data-cat="selection">
+<td><strong>Delete Selected</strong></td>
+<td><kbd>Delete</kbd> / <kbd>Backspace</kbd></td>
+<td>Selection</td>
+<td>Permanently remove selected shapes, connectors, or text boxes</td>
+</tr>
+<tr data-cat="selection">
+<td><strong>Multi-Select Objects</strong></td>
+<td><kbd>Shift</kbd> + <kbd>Click</kbd> / <kbd>Ctrl</kbd> + <kbd>Click</kbd></td>
+<td>Selection</td>
+<td>Add or remove individual objects from the active selection</td>
+</tr>
+<tr data-cat="selection">
+<td><strong>Marquee Rubberband</strong></td>
+<td><kbd>Click + Drag</kbd> on empty canvas</td>
+<td>Selection</td>
+<td>Draw a selection rectangle to highlight multiple objects at once</td>
+</tr>
+<tr data-cat="selection">
+<td><strong>Smart Connect Edge</strong></td>
+<td><kbd>Shift</kbd> + <kbd>Drag from Shape Edge</kbd></td>
+<td>Selection</td>
+<td>Spawn a smart arrow connector directly between two objects</td>
+</tr>
+<tr data-cat="selection">
+<td><strong>Snap Rotation</strong></td>
+<td><kbd>Shift</kbd> + <kbd>Rotate Handle</kbd></td>
+<td>Selection</td>
+<td>Snap object rotation angle to 15° increments</td>
+</tr>
+<tr data-cat="canvas">
+<td><strong>Smooth Zoom</strong></td>
+<td><kbd>Ctrl</kbd> + <kbd>Mouse Wheel</kbd></td>
+<td>Canvas</td>
+<td>Zoom in or out smoothly from 35% to 200%</td>
+</tr>
+<tr data-cat="canvas">
+<td><strong>Pan Canvas</strong></td>
+<td><kbd>Middle Click</kbd> or <kbd>Pan Tool (✥)</kbd></td>
+<td>Canvas</td>
+<td>Scroll smoothly across the infinite 8000×6000 canvas area</td>
+</tr>
+<tr data-cat="canvas">
+<td><strong>Fit Diagram to View</strong></td>
+<td><kbd>Fit Button (⌗)</kbd></td>
+<td>Canvas</td>
+<td>Automatically centers and fits all diagram items into the viewport</td>
+</tr>
+<tr data-cat="text">
+<td><strong>Bold Text</strong></td>
+<td><kbd>Ctrl</kbd> + <kbd>B</kbd></td>
+<td>Text Formatting</td>
+<td>Toggle bold styling on highlighted rich text</td>
+</tr>
+<tr data-cat="text">
+<td><strong>Italic Text</strong></td>
+<td><kbd>Ctrl</kbd> + <kbd>I</kbd></td>
+<td>Text Formatting</td>
+<td>Toggle italic styling on highlighted rich text</td>
+</tr>
+<tr data-cat="text">
+<td><strong>Underline Text</strong></td>
+<td><kbd>Ctrl</kbd> + <kbd>U</kbd></td>
+<td>Text Formatting</td>
+<td>Toggle underline styling on highlighted rich text</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</section>
+<!-- Frequently Asked Questions -->
+<section class="section-block" id="faq">
+<div class="section-header">
+<span class="section-eyebrow">HELP &amp; TROUBLESHOOTING</span>
+<h2 class="section-title">Frequently Asked Questions</h2>
+<p class="section-subtitle">Common questions and expert answers for power users.</p>
+</div>
+<div class="faq-grid">
+<div class="faq-item open">
+<button class="faq-question" onclick="toggleFaq(this)">
+<span>How does PowerPoint (.pptx) export handle custom shapes and text?</span>
+<span class="faq-icon">+</span>
+</button>
+<div class="faq-answer">
+            Lumenboard uses <code>pptxgenjs</code> to generate true native vector shapes, editable text frames, and native line connectors on every slide. That means after opening the file in Microsoft PowerPoint, Apple Keynote, or Google Slides, you can click on any box, change its text, recolor it, or restyle it just like native presentation objects!
+          </div>
+</div>
+<div class="faq-item">
+<button class="faq-question" onclick="toggleFaq(this)">
+<span>Can I import huge PDFs with hundreds of pages?</span>
+<span class="faq-icon">+</span>
+</button>
+<div class="faq-answer">
+            Yes! Lumenboard includes a streaming, range-based PDF parser (powered by PDF.js) capable of opening PDFs up to 3GB. It streams page rasterization sequentially at 3x resolution into individual lesson tabs without running out of browser memory.
+          </div>
+</div>
+<div class="faq-item">
+<button class="faq-question" onclick="toggleFaq(this)">
+<span>Where is my diagram data stored? Is it secure?</span>
+<span class="faq-icon">+</span>
+</button>
+<div class="faq-answer">
+            All your diagrams, code snippets, uploaded images, and lesson packs are stored 100% locally in your browser (via LocalStorage and IndexedDB). No private code or data is ever uploaded to external cloud servers without your explicit action.
+          </div>
+</div>
+<div class="faq-item">
+<button class="faq-question" onclick="toggleFaq(this)">
+<span>How do I delete unwanted lesson pages in bulk?</span>
+<span class="faq-icon">+</span>
+</button>
+<div class="faq-answer">
+            Click on the <strong>Delete pages</strong> tab in the left Design panel. You can select individual pages, use range buttons (e.g. "Select 1–100"), or click "Select all" to delete hundreds of unnecessary pages in a single click.
+          </div>
+</div>
+<div class="faq-item">
+<button class="faq-question" onclick="toggleFaq(this)">
+<span>How do I reset an arrow's path if I dragged its bend handle?</span>
+<span class="faq-icon">+</span>
+</button>
+<div class="faq-answer">
+            Select the connector line and look at the Properties Inspector on the right panel. A button labeled <strong>"Reset automatic route"</strong> will appear. Clicking it instantly clears any manual bend points and restores automatic collision-avoiding A* routing.
+          </div>
+</div>
+</div>
+</section>
+<!-- Footer -->
+<footer class="footer-section" role="contentinfo">
+<p><strong>Lumenboard Visual Studio</strong> — Designed for Interactive Learning, Systems Architecture &amp; Presentation Design.</p>
+<p>Press <kbd>Ctrl</kbd> + <kbd>S</kbd> anytime to save your project locally.</p>
+</footer>
+</main>
+<script>
+    // Theme Toggle Functionality
+    const themeToggleBtn = document.getElementById("themeToggle");
+    const themeIcon = document.getElementById("themeIcon");
+
+    function setTheme(theme) {
+      document.body.setAttribute("data-theme", theme);
+      localStorage.setItem("lumenboard-guide-theme", theme);
+      themeIcon.textContent = theme === "dark" ? "☀️" : "🌓";
+    }
+
+    const savedTheme = localStorage.getItem("lumenboard-guide-theme") || 
+      (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+    setTheme(savedTheme);
+
+    themeToggleBtn.addEventListener("click", () => {
+      const current = document.body.getAttribute("data-theme");
+      setTheme(current === "dark" ? "light" : "dark");
+    });
+
+    // Anatomy Zone Data
+    const zoneData = {
+      topbar: {
+        title: "Top Navigation Bar",
+        icon: "🧭",
+        desc: "Houses the project title and save indicator, File import menu (JSON, ZIP, DOCX, 3GB PDF, Images, GIFs), quick visualizers (Code & Text), full-screen toggle (Ctrl+F), theme switcher, and the Master Export button for PPTX, PDF, SVG, PNG, and ZIP archives."
+      },
+      rail: {
+        title: "Creation Tool Rail",
+        icon: "🛠️",
+        desc: "Your primary toolbox: Selection mode (↖), Infinite Pan hand (✥), Freehand vector brushes (Pencil ✎, Pen ✒, Marker highlighter ▰, Eraser ◇), fast shape creators, Rich Text tool (T), connectors, sticky notes, and container frames (⌗)."
+      },
+      canvas: {
+        title: "Infinite Canvas Stage",
+        icon: "🎨",
+        desc: "The infinite 2D drafting area (up to 8000×6000 px) with synchronized top/bottom scrollbars, marquee selection, A* smart collision-avoidance connectors, bridge hops, and smooth zoom ranging from 35% to 200%."
+      },
+      inspector: {
+        title: "Properties & Styling Inspector",
+        icon: "⚙️",
+        desc: "Context-aware properties panel: Customize fill colors, toggle 100% transparent backgrounds, adjust geometry dimensions (W/H), rotate shapes from -180° to +180° with 15° snap, adjust overlapping coordinate layers, and upload custom icons."
+      },
+      footer: {
+        title: "Lesson Switcher & Viewport Controls",
+        icon: "📑",
+        desc: "Switch between lesson canvases, rename lessons on double-click, drag-and-drop to reorder, set tab accent colors, expand canvas dimensions (+ / - / Fit), and use continuous hold-to-zoom controls."
+      }
+    };
+
+    function selectZone(zoneKey) {
+      const data = zoneData[zoneKey];
+      if (!data) return;
+      document.getElementById("zoneTitle").textContent = data.title;
+      document.getElementById("zoneIcon").textContent = data.icon;
+      document.getElementById("zoneDesc").textContent = data.desc;
+      
+      document.querySelectorAll(".mock-zone").forEach(el => el.classList.remove("active"));
+      event.currentTarget.classList.add("active");
+    }
+
+    // Feature Tabs Switcher
+    function openTab(tabId) {
+      document.querySelectorAll(".feature-tab-content").forEach(tab => tab.classList.remove("active"));
+      document.querySelectorAll(".feature-tab-btn").forEach(btn => btn.classList.remove("active"));
+      
+      document.getElementById(tabId).classList.add("active");
+      event.currentTarget.classList.add("active");
+    }
+
+    // Shortcut Filter
+    function filterShortcuts(category) {
+      document.querySelectorAll(".filter-pill").forEach(p => p.classList.remove("active"));
+      event.currentTarget.classList.add("active");
+      
+      const rows = document.querySelectorAll("#shortcutsTable tbody tr");
+      rows.forEach(row => {
+        if (category === "all" || row.getAttribute("data-cat") === category) {
+          row.style.display = "";
+        } else {
+          row.style.display = "none";
+        }
+      });
+    }
+
+    // Search Box Filtering
+    const manualSearch = document.getElementById("manualSearch");
+    if (typeof manualSearch !== "undefined" && manualSearch) manualSearch.addEventListener("input", (e) => {
+      const query = e.target.value.toLowerCase().trim();
+      const rows = document.querySelectorAll("#shortcutsTable tbody tr");
+      
+      rows.forEach(row => {
+        const text = row.textContent.toLowerCase();
+        row.style.display = text.includes(query) ? "" : "none";
+      });
+
+      // Highlight FAQ items matching query
+      document.querySelectorAll(".faq-item").forEach(faq => {
+        const text = faq.textContent.toLowerCase();
+        if (query && text.includes(query)) {
+          faq.classList.add("open");
+        }
+      });
+    });
+
+    // FAQ Accordions
+    function toggleFaq(button) {
+      const item = button.parentElement;
+      item.classList.toggle("open");
+    }
+
+    // Interactive Live Simulator Logic
+    const simCanvas = document.getElementById("simCanvas");
+    const node1 = document.getElementById("simNode1");
+    const node2 = document.getElementById("simNode2");
+    const node3 = document.getElementById("simNode3");
+    const path1 = document.getElementById("simPath1");
+    const path2 = document.getElementById("simPath2");
+    const simStyleLabel = document.getElementById("simStyleLabel");
+
+    let simStyle = "elbow"; // 'elbow' or 'curved' or 'straight'
+
+    function updateSimPaths() {
+      const cRect = simCanvas.getBoundingClientRect();
+      const r1 = node1.getBoundingClientRect();
+      const r2 = node2.getBoundingClientRect();
+      const r3 = node3.getBoundingClientRect();
+
+      const p1 = { x: (r1.left + r1.right)/2 - cRect.left, y: (r1.top + r1.bottom)/2 - cRect.top };
+      const p2 = { x: (r2.left + r2.right)/2 - cRect.left, y: (r2.top + r2.bottom)/2 - cRect.top };
+      const p3 = { x: (r3.left + r3.right)/2 - cRect.left, y: (r3.top + r3.bottom)/2 - cRect.top };
+
+      if (simStyle === "straight") {
+        path1.setAttribute("d", `M ${p1.x + 50} ${p1.y} L ${p2.x - 50} ${p2.y}`);
+        path2.setAttribute("d", `M ${p2.x + 50} ${p2.y} L ${p3.x - 50} ${p3.y}`);
+      } else if (simStyle === "curved") {
+        const midX1 = (p1.x + p2.x) / 2;
+        const midX2 = (p2.x + p3.x) / 2;
+        path1.setAttribute("d", `M ${p1.x + 50} ${p1.y} C ${midX1} ${p1.y - 40}, ${midX1} ${p2.y + 40}, ${p2.x - 50} ${p2.y}`);
+        path2.setAttribute("d", `M ${p2.x + 50} ${p2.y} C ${midX2} ${p2.y - 40}, ${midX2} ${p3.y + 40}, ${p3.x - 50} ${p3.y}`);
+      } else { // elbow
+        const midX1 = (p1.x + 50 + p2.x - 50) / 2;
+        const midX2 = (p2.x + 50 + p3.x - 50) / 2;
+        path1.setAttribute("d", `M ${p1.x + 50} ${p1.y} L ${midX1} ${p1.y} L ${midX1} ${p2.y} L ${p2.x - 50} ${p2.y}`);
+        path2.setAttribute("d", `M ${p2.x + 50} ${p2.y} L ${midX2} ${p2.y} L ${midX2} ${p3.y} L ${p3.x - 50} ${p3.y}`);
+      }
+    }
+
+    function makeDraggable(el) {
+      let isDragging = false;
+      let startX, startY, initialLeft, initialTop;
+
+      el.addEventListener("pointerdown", (e) => {
+        isDragging = true;
+        el.setPointerCapture(e.pointerId);
+        startX = e.clientX;
+        startY = e.clientY;
+        initialLeft = el.offsetLeft;
+        initialTop = el.offsetTop;
+      });
+
+      el.addEventListener("pointermove", (e) => {
+        if (!isDragging) return;
+        const dx = e.clientX - startX;
+        const dy = e.clientY - startY;
+        el.style.left = `${initialLeft + dx}px`;
+        el.style.top = `${initialTop + dy}px`;
+        updateSimPaths();
+      });
+
+      const stopDrag = () => { isDragging = false; };
+      el.addEventListener("pointerup", stopDrag);
+      el.addEventListener("pointercancel", stopDrag);
+    }
+
+    makeDraggable(node1);
+    makeDraggable(node2);
+    makeDraggable(node3);
+
+    function resetSimPositions() {
+      node1.style.left = "15%"; node1.style.top = "35%";
+      node2.style.left = "45%"; node2.style.top = "35%";
+      node3.style.left = "75%"; node3.style.top = "35%";
+      updateSimPaths();
+    }
+
+    function toggleSimStyle() {
+      const styles = ["elbow", "curved", "straight"];
+      const nextIdx = (styles.indexOf(simStyle) + 1) % styles.length;
+      simStyle = styles[nextIdx];
+      simStyleLabel.textContent = simStyle.charAt(0).toUpperCase() + simStyle.slice(1);
+      updateSimPaths();
+    }
+
+    window.addEventListener("resize", updateSimPaths);
+    setTimeout(updateSimPaths, 200);
+  </script>
+
+
+    <a href="https://api.whatsapp.com/send?phone=917903933705&text=Hello%2C%20I%20am%20reading%20the%20guide%20for%20software%20version%3A%20Source_code_large_pdf_V_1.1%20%28Large%20PDF%20V1.1%29.%20I%20would%20like%20to%20purchase%20/%20inquire%20about%20this%20package." target="_blank" class="wa-doc-float-btn" title="Purchase Source_code_large_pdf_V_1.1 on WhatsApp">
+      <span>💬 Buy This Version (+91-7903933705)</span>
+    </a>
+    
+        <!-- Mobile Responsive Navigation & TOC Drawer Script with Auto-Scroll Keyboard Viewport Adaptation -->
+    <script id="wa-doc-mobile-nav-js">
+      (function initDocMobileNav() {
+        // 1. Locate navigation actions container
+        const navContainer = document.querySelector('.doc-nav-bar-actions') || 
+                             document.querySelector('.nav-actions') || 
+                             document.querySelector('.header-controls') || 
+                             document.querySelector('.header-actions') || 
+                             document.querySelector('.top-nav-actions') || 
+                             document.querySelector('header') || 
+                             document.querySelector('nav');
+        if (!navContainer) return;
+
+        // 2. Create or find Mobile Menu Toggle Button (☰)
+        let menuBtn = document.getElementById('docMobileMenuBtn');
+        if (!menuBtn) {
+          menuBtn = document.createElement('button');
+          menuBtn.id = 'docMobileMenuBtn';
+          menuBtn.className = 'doc-mobile-menu-btn';
+          menuBtn.setAttribute('aria-label', 'Toggle Navigation and Table of Contents');
+          menuBtn.setAttribute('title', 'Table of Contents & Navigation');
+          menuBtn.innerHTML = '☰';
+          
+          const headerControls = document.querySelector('.header-actions') || 
+                                 document.querySelector('.header-controls') || 
+                                 document.querySelector('.nav-controls') || 
+                                 document.querySelector('.top-nav-actions') ||
+                                 document.querySelector('.header-inner') || 
+                                 document.querySelector('header') || 
+                                 document.querySelector('nav');
+          if (headerControls && headerControls !== navContainer) {
+            headerControls.appendChild(menuBtn);
+          } else {
+            navContainer.appendChild(menuBtn);
+          }
+        }
+
+        // 3. Ensure .doc-btn-nav have text wrapped in .nav-text for clean icon-only mobile mode
+        document.querySelectorAll('.doc-btn-nav').forEach(btn => {
+          if (!btn.querySelector('.nav-text')) {
+            const raw = btn.textContent.trim();
+            const parts = raw.split(/\s+/);
+            if (parts.length > 1) {
+              btn.innerHTML = parts[0] + ' <span class="nav-text">' + parts.slice(1).join(' ') + '</span>';
+            }
+          }
+        });
+
+        // 4. Universal Theme Management Helper for Drawer
+        function getCurrentTheme() {
+          return document.documentElement.getAttribute('data-theme') || 
+                 document.body.getAttribute('data-theme') || 
+                 (document.body.classList.contains('dark') ? 'dark' : 
+                 (localStorage.getItem('lumenboard_guide_theme') || 
+                  localStorage.getItem('lumenboard-theme') || 
+                  localStorage.getItem('lumenboard_theme') || 
+                  localStorage.getItem('lumenboard-help-theme') || 
+                  localStorage.getItem('lumenboard-docs-theme') || 
+                  localStorage.getItem('lumenboard_help_theme') || 
+                  (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')));
+        }
+
+        function updateDrawerThemeUI(theme) {
+          const isLight = theme === 'light';
+          const drawerIcon = document.getElementById('drawerThemeIcon');
+          const drawerTitle = document.getElementById('drawerThemeTitle');
+          const drawerDesc = document.getElementById('drawerThemeDesc');
+          if (drawerIcon && drawerTitle && drawerDesc) {
+            if (isLight) {
+              drawerIcon.textContent = '◐';
+              drawerIcon.style.background = 'linear-gradient(135deg, #6366f1, #4f46e5)';
+              drawerTitle.textContent = '• ◐ Dark Theme Toggle (#theme-toggle)';
+              drawerDesc.textContent = 'Switch to Dark Theme';
+            } else {
+              drawerIcon.textContent = '☀';
+              drawerIcon.style.background = 'linear-gradient(135deg, #f59e0b, #eab308)';
+              drawerTitle.textContent = '• ☀ Light Theme Toggle (#theme-toggle)';
+              drawerDesc.textContent = 'Switch to Light Theme';
+            }
+          }
+        }
+        window.updateDrawerThemeUI = updateDrawerThemeUI;
+
+        function setUniversalTheme(theme) {
+          document.documentElement.setAttribute('data-theme', theme);
+          document.body.setAttribute('data-theme', theme);
+          if (theme === 'dark') {
+            document.body.classList.add('dark');
+            document.documentElement.classList.add('dark');
+          } else {
+            document.body.classList.remove('dark');
+            document.documentElement.classList.remove('dark');
+          }
+          ['lumenboard_guide_theme', 'lumenboard-theme', 'lumenboard_theme', 'lumenboard-help-theme', 'lumenboard-docs-theme', 'lumenboard_help_theme'].forEach(key => {
+            try { localStorage.setItem(key, theme); } catch(e) {}
+          });
+
+          // Sync with page theme icons/text if present
+          const pageIcon = document.getElementById('theme-icon') || document.getElementById('themeIcon');
+          const pageText = document.getElementById('theme-text') || document.getElementById('themeText') || document.getElementById('themeLabel');
+          if (pageIcon) {
+            pageIcon.textContent = theme === 'light' ? '☀' : '🌙';
+          }
+          if (pageText) {
+            pageText.textContent = theme === 'light' ? 'Light' : 'Dark';
+          }
+
+          updateDrawerThemeUI(theme);
+        }
+        window.setUniversalTheme = setUniversalTheme;
+
+        // 5. Create Mobile Backdrop & Drawer
+        let backdrop = document.getElementById('docMobileBackdrop');
+        if (!backdrop) {
+          backdrop = document.createElement('div');
+          backdrop.id = 'docMobileBackdrop';
+          backdrop.className = 'doc-mobile-backdrop';
+          document.body.appendChild(backdrop);
+        }
+
+        let drawer = document.getElementById('docMobileDrawer');
+        if (!drawer) {
+          drawer = document.createElement('div');
+          drawer.id = 'docMobileDrawer';
+          drawer.className = 'doc-mobile-drawer';
+
+          const buyBtn = document.querySelector('.doc-btn-buy-nav') || document.querySelector('.wa-doc-float-btn');
+          const buyUrl = buyBtn ? buyBtn.getAttribute('href') : 'https://api.whatsapp.com/send?phone=917903933705';
+          const buyTitle = buyBtn ? buyBtn.textContent.trim().replace(/^💬\s*/, '') : 'Buy Package';
+          const docTitle = document.title.split('—')[0].trim() || 'Lumenboard Guide';
+          const initialTheme = getCurrentTheme();
+          const isLight = initialTheme === 'light';
+
+          drawer.innerHTML = `
+            <div class="doc-drawer-header">
+              <div class="doc-drawer-title">
+                <span>📑</span> ${docTitle}
+              </div>
+              <button class="doc-drawer-close-btn" id="docDrawerCloseBtn" aria-label="Close menu">✕</button>
+            </div>
+            <div class="doc-drawer-body">
+              <div>
+                <div class="doc-drawer-section-title">🚀 Portals & Quick Actions</div>
+                <div class="doc-drawer-portal-links">
+                  <a href="../../compare.html" class="doc-drawer-portal-link" title="Compare Matrix">
+                    <span class="icon-badge" style="background:linear-gradient(135deg,#f59e0b,#ef4444);color:#fff;">📊</span>
+                    <div>
+                      <div>• 📊 Compare Matrix</div>
+                      <small style="font-size:10.5px;color:#94a3b8;font-weight:500;">25-Version Feature Matrix</small>
+                    </div>
+                  </a>
+                  <a href="${buyUrl}" target="_blank" class="doc-drawer-portal-link" title="${buyTitle}">
+                    <span class="icon-badge" style="background:linear-gradient(135deg,#25d366,#128c7e);color:#fff;">💬</span>
+                    <div>
+                      <div>• 💬 ${buyTitle}</div>
+                      <small style="font-size:10.5px;color:#94a3b8;font-weight:500;">WhatsApp Instant License &amp; Support</small>
+                    </div>
+                  </a>
+                  <button type="button" class="doc-drawer-portal-link doc-drawer-theme-btn" id="drawerThemeToggle" aria-label="Toggle Light/Dark Theme" title="Toggle Light/Dark Theme">
+                    <span class="icon-badge" id="drawerThemeIcon" style="background:${isLight ? 'linear-gradient(135deg, #6366f1, #4f46e5)' : 'linear-gradient(135deg, #f59e0b, #eab308)'};color:#fff;">${isLight ? '◐' : '☀'}</span>
+                    <div>
+                      <div id="drawerThemeTitle">• ${isLight ? '◐ Dark Theme Toggle (#theme-toggle)' : '☀ Light Theme Toggle (#theme-toggle)'}</div>
+                      <small id="drawerThemeDesc" style="font-size:10.5px;color:#94a3b8;font-weight:500;">${isLight ? 'Switch to Dark Theme' : 'Switch to Light Theme'}</small>
+                    </div>
+                  </button>
+                  <a href="https://supportsourcecode.lovable.app/home" class="doc-drawer-portal-link" title="Main Page">
+                    <span class="icon-badge" style="background:linear-gradient(135deg,#02c9de,#0072ff);color:#fff;">🏠</span>
+                    <div>
+                      <div>• 🏠 Main Page Portal</div>
+                      <small style="font-size:10.5px;color:#94a3b8;font-weight:500;">Live Demos &amp; Documentation</small>
+                    </div>
+                  </a>
+                  <a href="https://interactive-media-display.lovable.app/" target="_blank" class="doc-drawer-portal-link" title="App Store">
+                    <span class="icon-badge" style="background:linear-gradient(135deg,#8b5cf6,#ec4899);color:#fff;">🛒</span>
+                    <div>
+                      <div>• 🛒 App Store Portal</div>
+                      <small style="font-size:10.5px;color:#94a3b8;font-weight:500;">Explore 25+ Software Releases</small>
+                    </div>
+                  </a>
+                </div>
+              </div>
+
+              <div>
+                <div class="doc-drawer-section-title">📖 Table of Contents</div>
+                <ul class="doc-drawer-toc-list" id="docDrawerTocList"></ul>
+              </div>
+            </div>
+          `;
+          document.body.appendChild(drawer);
+
+          // Populate Table of Contents from Sidebar or headings
+          const tocList = document.getElementById('docDrawerTocList');
+          const sidebarLinks = document.querySelectorAll('.sidebar a, .guide-sidebar a, .sidebar-nav a, .sidebar-toc a, nav.sidebar a');
+
+          if (sidebarLinks && sidebarLinks.length > 0) {
+            sidebarLinks.forEach((link) => {
+              const href = link.getAttribute('href');
+              if (href && href.startsWith('#')) {
+                const li = document.createElement('li');
+                li.className = 'doc-drawer-toc-item';
+                const a = document.createElement('a');
+                a.href = href;
+                a.innerHTML = link.innerHTML;
+                li.appendChild(a);
+                tocList.appendChild(li);
+              }
+            });
+          } else {
+            const sections = document.querySelectorAll('section[id], .guide-section[id], h2[id]');
+            sections.forEach((sec, idx) => {
+              const id = sec.getAttribute('id');
+              const title = sec.querySelector('h2, h3')?.textContent?.trim() || sec.textContent?.trim()?.substring(0, 30) || id;
+              if (id) {
+                const li = document.createElement('li');
+                li.className = 'doc-drawer-toc-item';
+                li.innerHTML = `<a href="#${id}"><span class="num-badge">${String(idx + 1).padStart(2, '0')}</span> ${title}</a>`;
+                tocList.appendChild(li);
+              }
+            });
+          }
+        }
+
+        // Toggle Drawer Function
+        function toggleDrawer(open) {
+          const isOpen = typeof open === 'boolean' ? open : !drawer.classList.contains('open');
+          drawer.classList.toggle('open', isOpen);
+          backdrop.classList.toggle('open', isOpen);
+          menuBtn.classList.toggle('active', isOpen);
+          menuBtn.innerHTML = isOpen ? '✕' : '☰';
+          document.body.classList.toggle('doc-drawer-open', isOpen);
+          if (isOpen && window.updateDrawerThemeUI) {
+            window.updateDrawerThemeUI(getCurrentTheme());
+          }
+        }
+
+        menuBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          toggleDrawer();
+        });
+
+        backdrop.addEventListener('click', () => toggleDrawer(false));
+        document.getElementById('docDrawerCloseBtn')?.addEventListener('click', () => toggleDrawer(false));
+
+        // Drawer Theme Toggle Click Handler
+        const drawerThemeToggleBtn = document.getElementById('drawerThemeToggle');
+        if (drawerThemeToggleBtn) {
+          drawerThemeToggleBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            const currentTheme = getCurrentTheme();
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            
+            // Try page-specific theme toggler if available
+            const pageThemeBtn = document.querySelector('.navbar #themeToggle, .navbar #theme-toggle, .navbar #themeToggleBtn, .top-nav #themeToggle, .top-nav #theme-toggle, .top-nav #themeToggleBtn, .header-actions #themeToggle, .header-actions #theme-toggle, .header-actions #themeToggleBtn, .header-controls #themeToggle, .header-controls #theme-toggle, .nav-actions #themeToggle, .nav-actions #theme-toggle, .top-nav-actions #themeToggle, .header-actions .btn-icon, .header-actions .btn-icon-toggle, .header-actions .btn-toggle-theme, .header-actions .btn-icon-only');
+
+            if (typeof window.setTheme === 'function') {
+              window.setTheme(newTheme);
+            } else if (typeof window.applyTheme === 'function') {
+              window.applyTheme(newTheme);
+            } else if (pageThemeBtn && pageThemeBtn !== drawerThemeToggleBtn) {
+              pageThemeBtn.click();
+            } else {
+              setUniversalTheme(newTheme);
+            }
+            updateDrawerThemeUI(newTheme);
+          });
+        }
+
+        // Observe external theme changes
+        if (window.MutationObserver) {
+          const observer = new MutationObserver(() => {
+            updateDrawerThemeUI(getCurrentTheme());
+          });
+          observer.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme', 'class'] });
+          observer.observe(document.body, { attributes: true, attributeFilter: ['data-theme', 'class'] });
+        }
+
+        // Smooth TOC scroll on mobile
+        drawer.querySelectorAll('a').forEach(link => {
+          link.addEventListener('click', (e) => {
+            const href = link.getAttribute('href');
+            if (href && href.startsWith('#')) {
+              const target = document.querySelector(href);
+              if (target) {
+                e.preventDefault();
+                toggleDrawer(false);
+                setTimeout(() => {
+                  target.scrollIntoView({ behavior: 'smooth' });
+                }, 120);
+              }
+            } else {
+              toggleDrawer(false);
+            }
+          });
+        });
+
+        // Close on Esc
+        document.addEventListener('keydown', (e) => {
+          if (e.key === 'Escape' && drawer.classList.contains('open')) {
+            toggleDrawer(false);
+          }
+        });
+
+        // =============================================================
+        // 6. Automatic Screen Scroll Up on Mobile Keyboard Pop-up
+        // =============================================================
+        let isKeyboardOpen = false;
+
+        function scrollToFocusedElement(element) {
+          if (!element) element = document.activeElement;
+          if (!element) return;
+
+          const isInput = element.tagName === 'INPUT' || 
+                          element.tagName === 'TEXTAREA' || 
+                          element.isContentEditable || 
+                          element.getAttribute('role') === 'textbox';
+
+          if (!isInput) return;
+
+          // Multi-stage smooth scroll to account for virtual keyboard slide-up animation timing
+          const doScroll = () => {
+            const rect = element.getBoundingClientRect();
+            const header = document.querySelector('.suite-header, header.navbar, header.guide-header, header.top-nav, header.site-header, header.top-navbar, header.header-bar, header.header, .navbar');
+            const headerHeight = header ? header.offsetHeight : 60;
+
+            // Target offset ensuring input is positioned clearly in view with header offset
+            const targetY = window.pageYOffset + rect.top - headerHeight - 20;
+
+            window.scrollTo({
+              top: Math.max(0, targetY),
+              behavior: 'smooth'
+            });
+          };
+
+          doScroll();
+          setTimeout(doScroll, 100);
+          setTimeout(doScroll, 250);
+          setTimeout(doScroll, 450);
+        }
+
+        // Visual Viewport API for accurate virtual keyboard detection
+        if (window.visualViewport) {
+          window.visualViewport.addEventListener('resize', function() {
+            const windowHeight = window.innerHeight;
+            const viewportHeight = window.visualViewport.height;
+            const diff = windowHeight - viewportHeight;
+
+            // Keyboard is considered open if viewport shrinks by > 150px
+            if (diff > 150) {
+              if (!isKeyboardOpen) {
+                isKeyboardOpen = true;
+                document.body.classList.add('keyboard-visible');
+                scrollToFocusedElement();
+              }
+            } else {
+              if (isKeyboardOpen) {
+                isKeyboardOpen = false;
+                document.body.classList.remove('keyboard-visible');
+              }
+            }
+          });
+        }
+
+        // Input Focus Listeners (for all mobile and desktop browsers)
+        document.addEventListener('focusin', function(e) {
+          const target = e.target;
+          if (target && (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.isContentEditable)) {
+            document.body.classList.add('keyboard-visible');
+            scrollToFocusedElement(target);
+          }
+        });
+
+        document.addEventListener('focusout', function(e) {
+          setTimeout(function() {
+            const active = document.activeElement;
+            const stillInput = active && (active.tagName === 'INPUT' || active.tagName === 'TEXTAREA' || active.isContentEditable);
+            
+            if (!stillInput) {
+              if (!window.visualViewport || (window.innerHeight - window.visualViewport.height) <= 150) {
+                isKeyboardOpen = false;
+                document.body.classList.remove('keyboard-visible');
+              }
+            }
+          }, 200);
+        });
+      })();
+    </script>
+
+</body>
+</html>

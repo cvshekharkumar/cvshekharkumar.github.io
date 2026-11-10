@@ -1,0 +1,280 @@
+<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'>
+<head>
+    <meta charset="utf-8">
+    <title>Business Requirements Document (BRD) - Smart Whiteboard Learning Application</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            font-size: 11pt;
+            line-height: 1.6;
+            color: #1e293b;
+            background-color: #ffffff;
+            margin: 40px;
+        }
+        h1, h2, h3, h4 {
+            color: #0f172a;
+            font-family: 'Segoe UI Semibold', Arial, sans-serif;
+            page-break-after: avoid;
+        }
+        h1 {
+            font-size: 24pt;
+            color: #1e40af;
+            border-bottom: 3px solid #3b82f6;
+            padding-bottom: 8px;
+            margin-top: 0;
+        }
+        h2 {
+            font-size: 16pt;
+            color: #1d4ed8;
+            border-bottom: 1.5px solid #e2e8f0;
+            padding-bottom: 4px;
+            margin-top: 24pt;
+        }
+        h3 {
+            font-size: 13pt;
+            color: #334155;
+            margin-top: 16pt;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 14pt 0;
+            font-size: 10pt;
+        }
+        th, td {
+            border: 1px solid #cbd5e1;
+            padding: 8px 12px;
+            text-align: left;
+        }
+        th {
+            background-color: #f1f5f9;
+            color: #0f172a;
+            font-weight: 600;
+        }
+        tr:nth-child(even) {
+            background-color: #f8fafc;
+        }
+        .header-box {
+            background-color: #f0fdf4;
+            border-left: 4px solid #16a34a;
+            padding: 12px 16px;
+            margin: 16pt 0;
+        }
+        ul, ol {
+            margin-top: 4px;
+            margin-bottom: 12px;
+            padding-left: 24px;
+        }
+        li {
+            margin-bottom: 4px;
+        }
+        .footer {
+            margin-top: 40pt;
+            border-top: 1px solid #e2e8f0;
+            padding-top: 10pt;
+            font-size: 9pt;
+            color: #64748b;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>BUSINESS REQUIREMENTS DOCUMENT (BRD)</h1>
+    <div class="header-box">
+        <strong>Project Name:</strong> Smart Interactive Whiteboard Application for Education & STEM Learning<br>
+        <strong>Document Identifier:</strong> BRD-WHITEBOARD-2026-V1.0<br>
+        <strong>Target Product:</strong> Interactive Web-Based Learning Whiteboard Suite<br>
+        <strong>Main Page Hyperlink:</strong> <a href="https://supportsourcecode.lovable.app/home" target="_blank">https://supportsourcecode.lovable.app/home</a><br>
+        <strong>App Store Hyperlink:</strong> <a href="https://interactive-media-display.lovable.app/" target="_blank">https://interactive-media-display.lovable.app/</a><br>
+        <strong>Document Status:</strong> Approved / Production Ready<br>
+        <strong>Date:</strong> September 2026
+    </div>
+
+    <h2>1. Document Overview & Executive Summary</h2>
+    <p>
+        The <strong>Smart Interactive Whiteboard Application</strong> is a next-generation, high-performance browser-based digital whiteboard designed specifically for modern educators, STEM tutors, students, and collaborative learning environments. 
+        The platform eliminates dependency on heavy desktop software while offering real-time fluid drawing, geometric shape manipulation, dynamic math plotting, AI-powered tutoring, drag-and-drop multimedia embedding, and state persistence.
+    </p>
+
+    <h2>2. Business Objectives & Value Proposition</h2>
+    <table>
+        <tr>
+            <th>Business Objective</th>
+            <th>Description & Success Metric</th>
+        </tr>
+        <tr>
+            <td><strong>Frictionless Teaching</strong></td>
+            <td>Zero-install, browser-accessible canvas providing instantaneous startup with 60 FPS rendering on any device (desktops, laptops, interactive smartboards).</td>
+        </tr>
+        <tr>
+            <td><strong>STEM & Interactive Pedagogy</strong></td>
+            <td>Equip teachers with embedded STEM widgets (LaTeX equation cards, Cartesian 2D graphing engine, dynamic chemistry element blocks, and interactive flashcard quizzes).</td>
+        </tr>
+        <tr>
+            <td><strong>Real-Time AI Tutor Assistance</strong></td>
+            <td>Integrate live verified search and generative AI knowledge retrieval to derive mathematical formulas, step-by-step physics laws, and concept notes on demand.</td>
+        </tr>
+        <tr>
+            <td><strong>Data Reliability & Persistence</strong></td>
+            <td>Automatic browser state caching across refreshes, preventing accidental data loss during lectures, coupled with single-click privacy cookie/cache wipe.</td>
+        </tr>
+        <tr>
+            <td><strong>Multi-Format Presentation & Export</strong></td>
+            <td>Export multi-slide lectures as standalone interactive HTML presentations, full-dimension PNG/JPEG visuals, or portable JSON project archives.</td>
+        </tr>
+    </table>
+
+    <h2>3. Stakeholder Personas & Target Users</h2>
+    <ul>
+        <li><strong>STEM Instructors & Professors:</strong> Need precise geometric tools, smooth freehand annotations, curve plotting, and formula cards.</li>
+        <li><strong>K-12 & University Students:</strong> Benefit from Cornell note structures, interactive quiz cards, and AI-assisted conceptual summaries.</li>
+        <li><strong>Online Tutors & Coaches:</strong> Require drag-and-drop diagram imports, laser pointers for live engagement, and seamless export capabilities.</li>
+    </ul>
+
+    <h2>4. Scope of the Application</h2>
+    <h3>4.1 In-Scope Capabilities</h3>
+    <ul>
+        <li>Vector-accelerated HTML5 Canvas with Pan, Zoom, Coordinate Grid, and Viewport Navigation.</li>
+        <li>Multi-pen suite: Pen, Pencil, Highlighter (with alpha blend), Laser Pointer, and Eraser.</li>
+        <li>Comprehensive geometric shape library (Rectangle, Rounded Rect, Circle, Curve, Arrow, Star, Triangle, Line, Polygon).</li>
+        <li>8-point transform bounding box for scaling, rotating, and resizing items.</li>
+        <li>Multi-object marquee selection, group shifting, and Ctrl/Shift+Click deselect.</li>
+        <li>Drag-and-drop and clipboard import for Images, Animated GIFs, and Text.</li>
+        <li>Multi-Slide/Page lecture deck manager with add, duplicate, reorder, and delete.</li>
+        <li>Classroom widgets: Random Student Picker, Interactive Quiz Creator, LaTeX Cards, Periodic Table.</li>
+        <li>Live AI Tutor with Google Search & Academic Knowledge engine and Gemini API integration.</li>
+        <li>Persistence engine with Auto-Save and explicit "Clear Cookies & Screen Data".</li>
+        <li>Multi-theme engine: Classic White, Math Graph Paper, Dot Matrix, Lined Notebook, Blackboard, and Blueprint.</li>
+    </ul>
+
+    <h3>4.2 Out-of-Scope (Future Releases)</h3>
+    <ul>
+        <li>Real-time multi-user WebRTC collaborative peer-to-peer room editing (Planned for Phase 2).</li>
+        <li>Native cloud database authentication and synchronization (Planned for Phase 2).</li>
+    </ul>
+
+    <h2>5. Functional Requirements (FR)</h2>
+    <table>
+        <tr>
+            <th>ID</th>
+            <th>Module</th>
+            <th>Requirement Specification</th>
+            <th>Priority</th>
+        </tr>
+        <tr>
+            <td><strong>FR-01</strong></td>
+            <td>Drawing Engine</td>
+            <td>The system shall support freehand pen, pencil, highlighter (with semi-transparent overlay), and laser pointer with adjustable stroke widths and colors.</td>
+            <td>High</td>
+        </tr>
+        <tr>
+            <td><strong>FR-02</strong></td>
+            <td>Geometric Shapes</td>
+            <td>The system shall allow drawing rectangles, circles, stars, polygons, lines, arrows, and smooth quadratic curves with real-time preview.</td>
+            <td>High</td>
+        </tr>
+        <tr>
+            <td><strong>FR-03</strong></td>
+            <td>Text & Sticky Notes</td>
+            <td>The system shall provide inline text editing and sticky note cards with customized backgrounds, font sizing, and markdown-like display.</td>
+            <td>High</td>
+        </tr>
+        <tr>
+            <td><strong>FR-04</strong></td>
+            <td>Selection & Transform</td>
+            <td>The system shall support rectangular marquee selection, group dragging, Ctrl/Shift individual deselect, and 8-point corner/edge resizing handles.</td>
+            <td>High</td>
+        </tr>
+        <tr>
+            <td><strong>FR-05</strong></td>
+            <td>Media Import</td>
+            <td>The system shall accept drag-and-drop and copy-paste (`Ctrl+V`) for PNG, JPG, WebP, and animated GIF files, positioning them at viewport center.</td>
+            <td>High</td>
+        </tr>
+        <tr>
+            <td><strong>FR-06</strong></td>
+            <td>Persistence & Privacy</td>
+            <td>The system shall automatically debounce-save all slide objects to `localStorage`. The canvas data shall only be wiped when the user triggers "Clear Cookies & Screen Data".</td>
+            <td>High</td>
+        </tr>
+        <tr>
+            <td><strong>FR-07</strong></td>
+            <td>AI Tutor & Knowledge</td>
+            <td>The system shall query live Google AI & verified knowledge APIs to generate factual definitions, step-by-step proofs, and mathematical solutions with 1-click whiteboard insertion.</td>
+            <td>High</td>
+        </tr>
+        <tr>
+            <td><strong>FR-08</strong></td>
+            <td>Export Capabilities</td>
+            <td>The system shall export single slides as PNG/JPEG fitting the full content bounding box, export entire lecture decks into standalone self-contained HTML files, and backup to JSON.</td>
+            <td>High</td>
+        </tr>
+        <tr>
+            <td><strong>FR-09</strong></td>
+            <td>STEM Widgets</td>
+            <td>The system shall provide an algebraic function plotter ($y = f(x)$), LaTeX formula renderer, element viewer, and student selector.</td>
+            <td>Medium</td>
+        </tr>
+        <tr>
+            <td><strong>FR-10</strong></td>
+            <td>AI Quiz Generator</td>
+            <td>The system shall query live Google AI / Knowledge Base for any user-provided topic to dynamically generate 4-option MCQs with marked correct answers, explanations, and 1-click interactive whiteboard import.</td>
+            <td>High</td>
+        </tr>
+    </table>
+
+    <h2>6. Non-Functional Requirements (NFR)</h2>
+    <ul>
+        <li><strong>Performance:</strong> Canvas rendering must maintain 60 frames per second during active continuous drawing and transformation operations.</li>
+        <li><strong>Usability & Responsiveness:</strong> Clean, minimalist Tailwind-styled UI with dark/light mode toggle and floating toolbar dock optimized for desktop, tablet, and smart interactive displays.</li>
+        <li><strong>Audio Feedback:</strong> Real-time synthesized classroom audio feedback for pencil strokes, pops, item erasures, and chimes.</li>
+        <li><strong>Cross-Browser Compatibility:</strong> Fully compatible with Google Chrome, Microsoft Edge, Mozilla Firefox, and Apple Safari with zero third-party plugin requirements.</li>
+        <li><strong>Security & Privacy:</strong> Zero telemetry or unauthorized data leakage; all whiteboard data remains local in the user's browser environment unless explicitly exported.</li>
+    </ul>
+
+    <h2>7. Architecture & Technology Stack</h2>
+    <table>
+        <tr>
+            <th>Layer</th>
+            <th>Technology</th>
+            <th>Role</th>
+        </tr>
+        <tr>
+            <td><strong>Frontend Core</strong></td>
+            <td>HTML5, Canvas 2D API, CSS3, Tailwind CSS</td>
+            <td>High-performance client-side rendering and responsive presentation layout.</td>
+        </tr>
+        <tr>
+            <td><strong>Application Logic</strong></td>
+            <td>Vanilla ES6+ JavaScript Modular Architecture</td>
+            <td>`canvas-engine.js` (Core rendering & transforms), `widgets.js` (STEM & AI Tutor), `templates.js` (Note templates), `audio.js` (Sound synthesizer), `app.js` (UI event orchestration).</td>
+        </tr>
+        <tr>
+            <td><strong>Icons & Typography</strong></td>
+            <td>FontAwesome 6.4, Inter / Segoe UI Typography</td>
+            <td>Crisp vector icons and legible academic typography.</td>
+        </tr>
+        <tr>
+            <td><strong>External Integrations</strong></td>
+            <td>Google AI / Gemini REST API, Wikimedia Verified Knowledge APIs</td>
+            <td>Live conceptual answers, mathematical derivations, and academic references.</td>
+        </tr>
+    </table>
+
+    <h2>8. Acceptance Criteria & Sign-Off</h2>
+    <ol>
+        <li>Pen, pencil, highlighter, and curves produce smooth continuous vector lines without stuttering.</li>
+        <li>Selected single or multiple objects can be shifted together, resized via corner handles, and deselected with Ctrl+Click.</li>
+        <li>Drag-and-drop of images and GIFs renders instantly and persists across page refreshes.</li>
+        <li>AI Tutor queries live verified knowledge search and generates accurate structured solutions.</li>
+        <li>Clicking "Clear Cookies & Screen Data" cleans the canvas and resets local storage and cookies completely.</li>
+        <li>Full-page HTML export downloads a complete multi-slide bundle with working slide transitions.</li>
+    </ol>
+
+    <div class="footer">
+        Smart Whiteboard Learning Application &copy; 2026 | Comprehensive Business Requirements Document (BRD)
+    </div>
+
+</body>
+</html>

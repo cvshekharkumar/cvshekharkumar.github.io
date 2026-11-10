@@ -1,0 +1,36 @@
+{
+  "assessmentFile": "C:\\Users\\hp\\Desktop\\Ai work\\AI work\\cvshekharkumar.github.io-main\\ide\\SET-MUJDFHP0-all-questions.json",
+  "setId": "SET-MUJDFHP0",
+  "questions": 30,
+  "testCases": 120,
+  "languages": [
+    "python",
+    "c",
+    "cpp"
+  ],
+  "executions": 360,
+  "passed": 360,
+  "failed": 0,
+  "verifiedAt": "2026-10-20T11:10:52.784Z",
+  "failures": [],
+  "summaryByLanguage": {
+    "python": {
+      "questions": 30,
+      "testCases": 120,
+      "passed": 120,
+      "failed": 0
+    },
+    "c": {
+      "questions": 30,
+      "testCases": 120,
+      "passed": 120,
+      "failed": 0
+    },
+    "cpp": {
+      "questions": 30,
+      "testCases": 120,
+      "passed": 120,
+      "failed": 0
+    }
+  }
+}

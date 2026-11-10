@@ -1,0 +1,2026 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5, viewport-fit=cover, interactive-widget=resizes-content">
+  <title>Assessment IDE - Complete User Guide & Documentation</title>
+  <style>
+    :root {
+      --navy: #04245a;
+      --blue: #0844bd;
+      --blue-glow: rgba(8, 68, 189, 0.35);
+      --indigo: #4f46e5;
+      --teal: #0891b2;
+      --emerald: #059669;
+      --bg: #f4f7fb;
+      --panel: #ffffff;
+      --line: #bfd2eb;
+      --text: #08265a;
+      --text-muted: #536b8e;
+      --soft: #eef3f8;
+      --card-bg: rgba(255, 255, 255, 0.94);
+      --hero-grad: linear-gradient(135deg, #04245a 0%, #0d3b8f 50%, #1e40af 100%);
+      --accent-grad: linear-gradient(135deg, #2563eb, #7c3aed);
+      --radius: 14px;
+      --header-height: 64px;
+      --pill-nav-height: 48px;
+    }
+    body.dark {
+      --bg: #091322;
+      --panel: #101c2d;
+      --line: #29415f;
+      --text: #edf4ff;
+      --text-muted: #9bb0cd;
+      --soft: #17263b;
+      --card-bg: rgba(16, 28, 45, 0.95);
+      --hero-grad: linear-gradient(135deg, #06152b 0%, #0c2344 50%, #173b75 100%);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      transition: background 0.3s, color 0.3s;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+    body.no-scroll {
+      overflow: hidden !important;
+    }
+
+    /* Virtual Keyboard Active Adjustments (Mobile View) */
+    body.keyboard-open #waFloatingWidget,
+    body.keyboard-open .floating-fab-group {
+      opacity: 0 !important;
+      pointer-events: none !important;
+      transform: translateY(20px) !important;
+      transition: opacity 0.2s ease, transform 0.2s ease;
+    }
+    input, textarea, select {
+      scroll-margin-top: 130px;
+    }
+
+    /* Top Sticky Navigation Header */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      height: var(--header-height);
+      background: var(--navy);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 20px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+      gap: 12px;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+      color: #fff;
+      min-width: 0;
+    }
+    .brand-badge {
+      width: 38px;
+      height: 38px;
+      background: linear-gradient(135deg, #3976e9, #ffd12f);
+      border-radius: 10px;
+      display: grid;
+      place-items: center;
+      font-weight: 900;
+      font-size: 18px;
+      color: #04245a;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.25);
+      flex-shrink: 0;
+    }
+    .brand-title {
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    .brand-title b { 
+      font-size: 15px; 
+      letter-spacing: -0.2px; 
+      white-space: nowrap; 
+      overflow: hidden; 
+      text-overflow: ellipsis; 
+    }
+    .brand-title small { 
+      font-size: 11px; 
+      opacity: 0.8; 
+      white-space: nowrap; 
+      overflow: hidden; 
+      text-overflow: ellipsis; 
+    }
+    
+    .nav-tools {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-shrink: 0;
+    }
+    .nav-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 7px 13px;
+      border-radius: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      background: rgba(255, 255, 255, 0.1);
+      color: #fff;
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 600;
+      transition: all 0.2s ease;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    .nav-btn:hover {
+      background: rgba(255, 255, 255, 0.22);
+      border-color: #fff;
+      transform: translateY(-1px);
+    }
+    .nav-btn.primary {
+      background: linear-gradient(135deg, #2563eb, #3b82f6);
+      border: 1px solid #60a5fa;
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.4);
+    }
+    .nav-btn.primary:hover {
+      background: linear-gradient(135deg, #1d4ed8, #2563eb);
+    }
+    .theme-toggle-btn {
+      background: transparent;
+      border: 1px solid rgba(255,255,255,0.3);
+      color: #fff;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 16px;
+      display: grid;
+      place-items: center;
+      transition: all 0.2s;
+      flex-shrink: 0;
+    }
+    .theme-toggle-btn:hover { background: rgba(255,255,255,0.18); }
+
+    /* Hamburger Mobile Menu Toggle Button */
+    .mobile-menu-btn {
+      display: none;
+      width: 40px;
+      height: 40px;
+      background: rgba(255, 255, 255, 0.12);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      border-radius: 10px;
+      color: #fff;
+      cursor: pointer;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 5px;
+      padding: 8px;
+      transition: all 0.25s ease;
+      flex-shrink: 0;
+    }
+    .mobile-menu-btn:hover {
+      background: rgba(255, 255, 255, 0.22);
+    }
+    .mobile-menu-btn .bar {
+      width: 22px;
+      height: 2px;
+      background: #ffffff;
+      border-radius: 2px;
+      transition: all 0.3s ease;
+      transform-origin: center;
+    }
+    .mobile-menu-btn.active .bar:nth-child(1) {
+      transform: translateY(7px) rotate(45deg);
+    }
+    .mobile-menu-btn.active .bar:nth-child(2) {
+      opacity: 0;
+      transform: scaleX(0);
+    }
+    .mobile-menu-btn.active .bar:nth-child(3) {
+      transform: translateY(-7px) rotate(-45deg);
+    }
+
+    /* Mobile Sticky Sub-Navigation Pill Bar */
+    .mobile-topic-nav {
+      display: none;
+      position: sticky;
+      top: var(--header-height);
+      z-index: 950;
+      background: var(--card-bg);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--line);
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.04);
+      padding: 8px 12px;
+      overflow-x: auto;
+      white-space: nowrap;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+    }
+    .mobile-topic-nav::-webkit-scrollbar {
+      display: none;
+    }
+    .topic-pills {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .topic-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 13px;
+      border-radius: 20px;
+      background: var(--soft);
+      border: 1px solid var(--line);
+      color: var(--text);
+      font-size: 12.5px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.2s ease;
+      flex-shrink: 0;
+    }
+    .topic-pill:hover, .topic-pill.active {
+      background: var(--blue);
+      color: #fff;
+      border-color: var(--blue);
+      box-shadow: 0 3px 10px rgba(8, 68, 189, 0.3);
+      transform: translateY(-1px);
+    }
+
+    /* Mobile Drawer & Overlay */
+    .mobile-drawer-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(4, 20, 48, 0.65);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      z-index: 1090;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s ease, visibility 0.3s ease;
+    }
+    .mobile-drawer-overlay.open {
+      opacity: 1;
+      visibility: visible;
+    }
+    .mobile-drawer {
+      position: fixed;
+      top: 0;
+      right: 0;
+      width: min(340px, 86vw);
+      height: 100%;
+      background: var(--panel);
+      z-index: 1100;
+      box-shadow: -8px 0 30px rgba(0, 0, 0, 0.35);
+      display: flex;
+      flex-direction: column;
+      transform: translateX(100%);
+      transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      overflow: hidden;
+    }
+    .mobile-drawer.open {
+      transform: translateX(0);
+    }
+    .drawer-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 20px;
+      background: var(--navy);
+      color: #fff;
+    }
+    .drawer-close-btn {
+      background: rgba(255, 255, 255, 0.15);
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      color: #fff;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      cursor: pointer;
+      display: grid;
+      place-items: center;
+      font-size: 15px;
+      font-weight: 700;
+    }
+    .drawer-body {
+      flex: 1;
+      overflow-y: auto;
+      padding: 20px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    .drawer-section-title {
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+      padding-left: 6px;
+    }
+    .drawer-links-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .drawer-link {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 11px 14px;
+      border-radius: 10px;
+      background: var(--soft);
+      border: 1px solid var(--line);
+      color: var(--text);
+      text-decoration: none;
+      font-size: 13.5px;
+      font-weight: 600;
+      transition: all 0.2s;
+    }
+    .drawer-link:hover {
+      background: var(--blue);
+      color: #fff;
+      border-color: var(--blue);
+      transform: translateX(3px);
+    }
+    .drawer-link.primary {
+      background: linear-gradient(135deg, #2563eb, #3b82f6);
+      color: #fff;
+      border-color: #60a5fa;
+    }
+    .drawer-link-icon {
+      font-size: 18px;
+    }
+    .drawer-toc-nav {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .drawer-toc-link {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 9px 12px;
+      border-radius: 8px;
+      color: var(--text);
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 500;
+      transition: all 0.2s;
+    }
+    .drawer-toc-link:hover, .drawer-toc-link.active {
+      background: rgba(8, 68, 189, 0.1);
+      color: var(--blue);
+      font-weight: 700;
+      transform: translateX(4px);
+    }
+    .drawer-footer {
+      padding: 14px 16px;
+      border-top: 1px solid var(--line);
+      background: var(--soft);
+      display: flex;
+      gap: 10px;
+    }
+    .drawer-theme-btn {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 9px;
+      border-radius: 8px;
+      border: 1px solid var(--line);
+      background: var(--panel);
+      color: var(--text);
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    /* Floating Mobile Controls (Back to Top & FABs) */
+    .floating-fab-group {
+      position: fixed;
+      bottom: 24px;
+      right: 20px;
+      z-index: 990;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .floating-fab {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: var(--navy);
+      color: #fff;
+      border: 2px solid rgba(255, 255, 255, 0.4);
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.3);
+      cursor: pointer;
+      display: grid;
+      place-items: center;
+      font-size: 18px;
+      font-weight: 700;
+      transition: all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      opacity: 0;
+      pointer-events: none;
+      transform: scale(0.8) translateY(10px);
+    }
+    .floating-fab.visible {
+      opacity: 1;
+      pointer-events: auto;
+      transform: scale(1) translateY(0);
+    }
+    .floating-fab:hover {
+      background: var(--blue);
+      transform: scale(1.1) translateY(-2px);
+    }
+    .floating-toc-fab {
+      display: none;
+      background: linear-gradient(135deg, #2563eb, #7c3aed);
+      opacity: 1 !important;
+      pointer-events: auto !important;
+      transform: scale(1) translateY(0) !important;
+    }
+
+    /* Hero Section */
+    .hero {
+      background: var(--hero-grad);
+      color: #fff;
+      padding: 48px 24px 60px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 20% 30%, rgba(59, 130, 246, 0.2) 0%, transparent 60%),
+                  radial-gradient(circle at 80% 70%, rgba(236, 72, 153, 0.15) 0%, transparent 60%);
+      pointer-events: none;
+    }
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(8px);
+      padding: 5px 14px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+      border: 1px solid rgba(255, 255, 255, 0.25);
+    }
+    .hero h1 {
+      font-size: clamp(26px, 4.5vw, 42px);
+      font-weight: 900;
+      letter-spacing: -0.8px;
+      line-height: 1.2;
+      margin-bottom: 14px;
+    }
+    .hero p {
+      font-size: clamp(14px, 2vw, 17px);
+      max-width: 740px;
+      margin: 0 auto 28px;
+      opacity: 0.9;
+    }
+    .search-box {
+      max-width: 540px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 2;
+    }
+    .search-box input {
+      width: 100%;
+      padding: 14px 20px 14px 46px;
+      border-radius: 30px;
+      border: 1px solid rgba(255,255,255,0.3);
+      background: rgba(255, 255, 255, 0.95);
+      color: #04245a;
+      font-size: 15px;
+      outline: none;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.25);
+      transition: all 0.2s;
+    }
+    .search-box input:focus {
+      background: #fff;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.35), 0 0 0 3px rgba(59, 130, 246, 0.5);
+    }
+    .search-box .search-icon {
+      position: absolute;
+      left: 18px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 18px;
+      color: #64748b;
+      pointer-events: none;
+    }
+
+    /* Main Container & Layout */
+    .container {
+      max-width: 1240px;
+      margin: -30px auto 60px;
+      padding: 0 20px;
+      display: grid;
+      grid-template-columns: 270px 1fr;
+      gap: 28px;
+      position: relative;
+      z-index: 10;
+    }
+
+    /* Sidebar TOC */
+    .sidebar {
+      position: sticky;
+      top: calc(var(--header-height) + 20px);
+      height: fit-content;
+      max-height: calc(100vh - var(--header-height) - 40px);
+      overflow-y: auto;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 20px;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.05);
+    }
+    .sidebar h3 {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: var(--text-muted);
+      margin-bottom: 14px;
+      font-weight: 800;
+    }
+    .toc-nav {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .toc-nav li a {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 12px;
+      border-radius: 8px;
+      color: var(--text);
+      text-decoration: none;
+      font-size: 13.5px;
+      font-weight: 500;
+      transition: all 0.15s ease;
+    }
+    .toc-nav li a:hover, .toc-nav li a.active {
+      background: rgba(8, 68, 189, 0.1);
+      color: var(--blue);
+      font-weight: 700;
+      transform: translateX(4px);
+    }
+    .toc-nav li a .icon {
+      font-size: 16px;
+      flex-shrink: 0;
+    }
+
+    /* Content Area */
+    .content {
+      display: flex;
+      flex-direction: column;
+      gap: 32px;
+      min-width: 0;
+    }
+    .guide-card {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 32px;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.04);
+      scroll-margin-top: 90px;
+    }
+    .card-header {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 24px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--line);
+    }
+    .card-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      background: var(--soft);
+      display: grid;
+      place-items: center;
+      font-size: 24px;
+      color: var(--blue);
+      flex-shrink: 0;
+    }
+    .card-header h2 {
+      font-size: 22px;
+      font-weight: 800;
+      letter-spacing: -0.4px;
+      color: var(--text);
+    }
+    .card-header p {
+      font-size: 13.5px;
+      color: var(--text-muted);
+    }
+
+    /* Step Grid */
+    .steps-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 18px;
+      margin: 20px 0;
+    }
+    .step-box {
+      background: var(--soft);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 20px;
+      position: relative;
+      transition: all 0.2s;
+    }
+    .step-box:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.06);
+      border-color: var(--blue);
+    }
+    .step-num {
+      width: 28px;
+      height: 28px;
+      background: var(--blue);
+      color: #fff;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      font-size: 13px;
+      font-weight: 800;
+      margin-bottom: 12px;
+    }
+    .step-box h4 {
+      font-size: 16px;
+      font-weight: 700;
+      margin-bottom: 8px;
+      color: var(--text);
+    }
+    .step-box p {
+      font-size: 13.5px;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    /* Callouts */
+    .callout {
+      padding: 16px 20px;
+      border-radius: 10px;
+      margin: 20px 0;
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
+      font-size: 14px;
+      line-height: 1.55;
+    }
+    .callout.info {
+      background: rgba(8, 68, 189, 0.08);
+      border-left: 4px solid var(--blue);
+      color: var(--text);
+    }
+    .callout.warning {
+      background: rgba(234, 88, 12, 0.08);
+      border-left: 4px solid #ea580c;
+      color: var(--text);
+    }
+    .callout.success {
+      background: rgba(5, 150, 105, 0.08);
+      border-left: 4px solid var(--emerald);
+      color: var(--text);
+    }
+    .callout-icon {
+      font-size: 20px;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    /* Responsive Tables */
+    .table-responsive {
+      overflow-x: auto;
+      margin: 20px 0;
+      border-radius: 10px;
+      border: 1px solid var(--line);
+    }
+    .custom-table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 13.5px;
+    }
+    .custom-table th {
+      background: var(--soft);
+      padding: 12px 16px;
+      font-weight: 700;
+      color: var(--text);
+      border-bottom: 1px solid var(--line);
+      white-space: nowrap;
+    }
+    .custom-table td {
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--line);
+      color: var(--text);
+    }
+    .custom-table tr:last-child td {
+      border-bottom: none;
+    }
+    .custom-table tr:hover td {
+      background: rgba(8, 68, 189, 0.03);
+    }
+
+    /* Code & Keyboard Badges */
+    code {
+      font-family: Consolas, Monaco, "Courier New", monospace;
+      background: var(--soft);
+      border: 1px solid var(--line);
+      padding: 2px 6px;
+      border-radius: 6px;
+      font-size: 12.5px;
+      color: var(--blue);
+    }
+    .kbd {
+      display: inline-block;
+      padding: 2px 7px;
+      font-family: inherit;
+      font-size: 11.5px;
+      font-weight: 700;
+      line-height: 1.4;
+      color: var(--text);
+      background-color: var(--soft);
+      border: 1px solid var(--line);
+      border-radius: 5px;
+      box-shadow: 0 1px 0 rgba(0,0,0,0.2), inset 0 0 0 1px #ffffff;
+      white-space: nowrap;
+    }
+
+    /* FAQ Accordion */
+    .faq-item {
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      margin-bottom: 12px;
+      overflow: hidden;
+      background: var(--panel);
+    }
+    .faq-question {
+      padding: 16px 20px;
+      cursor: pointer;
+      font-weight: 700;
+      font-size: 15px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: var(--soft);
+      user-select: none;
+    }
+    .faq-question::after {
+      content: '+';
+      font-size: 20px;
+      font-weight: 400;
+      transition: transform 0.2s;
+    }
+    .faq-item.open .faq-question::after {
+      transform: rotate(45deg);
+    }
+    .faq-answer {
+      padding: 16px 20px;
+      font-size: 14px;
+      line-height: 1.6;
+      color: var(--text);
+      display: none;
+      border-top: 1px solid var(--line);
+    }
+    .faq-item.open .faq-answer {
+      display: block;
+    }
+
+    /* CTA Banner */
+    .cta-banner {
+      background: var(--accent-grad);
+      color: #fff;
+      border-radius: var(--radius);
+      padding: 40px 24px;
+      text-align: center;
+      margin-top: 10px;
+      box-shadow: 0 10px 30px rgba(37, 99, 235, 0.35);
+    }
+    .cta-banner h2 {
+      font-size: 26px;
+      font-weight: 900;
+      margin-bottom: 10px;
+    }
+    .cta-banner p {
+      font-size: 15px;
+      opacity: 0.9;
+      max-width: 600px;
+      margin: 0 auto 24px;
+    }
+    .cta-btns {
+      display: flex;
+      gap: 14px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .cta-btn {
+      padding: 12px 24px;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 700;
+      text-decoration: none;
+      transition: all 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .cta-btn.primary {
+      background: #fff;
+      color: var(--blue);
+      box-shadow: 0 4px 14px rgba(0,0,0,0.15);
+    }
+    .cta-btn.primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(0,0,0,0.25);
+    }
+    .cta-btn.secondary {
+      background: rgba(255, 255, 255, 0.15);
+      color: #fff;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+    }
+    .cta-btn.secondary:hover {
+      background: rgba(255, 255, 255, 0.25);
+    }
+
+    /* Footer */
+    footer {
+      text-align: center;
+      padding: 30px 20px;
+      color: var(--text-muted);
+      font-size: 13px;
+      border-top: 1px solid var(--line);
+      background: var(--panel);
+    }
+
+    /* Media Queries */
+    @media (max-width: 960px) {
+      .container {
+        grid-template-columns: 1fr;
+      }
+      .sidebar {
+        display: none;
+      }
+      .nav-tools a.nav-btn:not(.primary) {
+        display: none !important;
+      }
+      .nav-tools .mobile-menu-btn {
+        display: inline-flex !important;
+        width: 100% !important;
+        height: 34px !important;
+        border-radius: 8px !important;
+        padding: 0 !important;
+        flex-direction: row !important;
+        gap: 6px !important;
+        align-items: center !important;
+        justify-content: center !important;
+      }
+      .nav-tools .mobile-menu-btn .bar {
+        display: none !important;
+      }
+      .nav-tools .mobile-menu-btn::after {
+        content: '📑 Menu';
+        font-size: 12px;
+        font-weight: 700;
+      }
+      
+      /* Mobile Topic Pills */
+      .mobile-topic-nav { display: block; }
+      .topic-pills {
+        display: grid !important;
+        grid-template-rows: repeat(2, auto) !important;
+        grid-auto-flow: column !important;
+        gap: 6px !important;
+        overflow-x: auto !important;
+        -webkit-overflow-scrolling: touch !important;
+        padding: 4px 0 !important;
+      }
+      
+      .floating-toc-fab { display: grid; }
+      .guide-card { scroll-margin-top: 125px; padding: 22px 16px; }
+      .hero { padding: 36px 14px 46px; }
+      .brand-title small { display: none; }
+    }
+
+    @media (max-width: 480px) {
+      header { padding: 8px 12px !important; }
+      .brand-badge { width: 34px; height: 34px; font-size: 16px; border-radius: 8px; }
+      .brand-title b { font-size: 13.5px; }
+      .nav-btn.primary { padding: 0 8px; font-size: 12px; }
+      .guide-card { padding: 18px 14px; }
+      .card-header { gap: 10px; }
+      .card-icon { width: 40px; height: 40px; font-size: 20px; }
+      .step-box { padding: 14px; }
+      #waFloatingWidget {
+        left: 12px !important;
+        right: 12px !important;
+        bottom: 12px !important;
+      }
+      #waFloatingWidget > div {
+        max-width: 100% !important;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Sticky Navigation Header -->
+  <header>
+    <a href="index.html" class="brand" title="Assessment IDE">
+      <div class="brand-badge">Py</div>
+      <div class="brand-title">
+        <b>Assessment IDE Documentation</b>
+        <small>Comprehensive User Guide & Technical Manual</small>
+      </div>
+    </a>
+    <div class="nav-tools">
+      <a href="https://supportsourcecode.lovable.app/home" target="_blank" rel="noopener noreferrer" class="nav-btn" title="Home (Main Portal)">🏠 Home</a>
+      <a href="https://interactive-media-display.lovable.app/" target="_blank" rel="noopener noreferrer" class="nav-btn" title="Interactive App Store">🛍️ App store</a>
+      <a href="index.html" class="nav-btn primary" title="Back to Assessment IDE">
+        <span>←</span> <span class="btn-text-full">Back to App</span>
+      </a>
+      <button class="theme-toggle-btn" id="themeToggle" title="Toggle Dark/Light Mode" aria-label="Toggle Theme">☾</button>
+      <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Open Navigation Menu" title="Menu">
+        <span class="bar"></span>
+        <span class="bar"></span>
+        <span class="bar"></span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Mobile Sticky Topic Quick-Navigation Bar -->
+  <nav class="mobile-topic-nav" id="mobileTopicNav" aria-label="Documentation Topics">
+    <div class="topic-pills">
+      <a href="#quickstart" class="topic-pill active">🚀 Quick Start</a>
+      <a href="#header-controls" class="topic-pill">🧭 Header & Controls</a>
+      <a href="#teacher" class="topic-pill">👩‍🏫 Teacher & Authoring</a>
+      <a href="#editor" class="topic-pill">📝 Problem Editor</a>
+      <a href="#security" class="topic-pill">🔒 Locks & Security</a>
+      <a href="#candidate" class="topic-pill">🧑‍🎓 Candidate Flow</a>
+      <a href="#proctoring" class="topic-pill">📷 Proctoring & Anti-Cheat</a>
+      <a href="#reports" class="topic-pill">📊 Reports & Exports</a>
+      <a href="#shortcuts" class="topic-pill">⌨️ Shortcuts</a>
+      <a href="#faq" class="topic-pill">❓ FAQ</a>
+    </div>
+  </nav>
+
+  <!-- Mobile Drawer Overlay & Slide-Out Menu -->
+  <div class="mobile-drawer-overlay" id="drawerOverlay" aria-hidden="true"></div>
+  <aside class="mobile-drawer" id="mobileDrawer" aria-label="Mobile Navigation Menu" aria-hidden="true">
+    <div class="drawer-header">
+      <a href="index.html" class="brand">
+        <div class="brand-badge">Py</div>
+        <div class="brand-title">
+          <b>Assessment IDE</b>
+          <small>User Guide & Docs</small>
+        </div>
+      </a>
+      <button class="drawer-close-btn" id="drawerCloseBtn" aria-label="Close Menu">✕</button>
+    </div>
+    
+    <div class="drawer-body">
+      <!-- Quick Actions -->
+      <div>
+        <div class="drawer-section-title">Quick Actions</div>
+        <div class="drawer-links-group">
+          <a href="index.html" class="drawer-link primary">
+            <span class="drawer-link-icon">🚀</span>
+            <span>Back to Assessment IDE</span>
+          </a>
+          <a href="https://supportsourcecode.lovable.app/home" target="_blank" rel="noopener noreferrer" class="drawer-link">
+            <span class="drawer-link-icon">🏠</span>
+            <span>Home (Main Portal)</span>
+          </a>
+          <a href="https://interactive-media-display.lovable.app/" target="_blank" rel="noopener noreferrer" class="drawer-link">
+            <span class="drawer-link-icon">🛍️</span>
+            <span>Interactive App Store</span>
+          </a>
+          <a href="https://supportsourcecode.lovable.app/mcq" target="_blank" rel="noopener noreferrer" class="drawer-link">
+            <span class="drawer-link-icon">📘</span>
+            <span>Online Support & Mock Sets</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- Table of Contents -->
+      <div>
+        <div class="drawer-section-title">Documentation Chapters</div>
+        <ul class="drawer-toc-nav">
+          <li><a href="#quickstart" class="drawer-toc-link active"><span class="drawer-link-icon">🚀</span> Quick Start Guide</a></li>
+          <li><a href="#header-controls" class="drawer-toc-link"><span class="drawer-link-icon">🧭</span> Header Controls & Workspace</a></li>
+          <li><a href="#teacher" class="drawer-toc-link"><span class="drawer-link-icon">👩‍🏫</span> Teacher MCQ Authoring</a></li>
+          <li><a href="#editor" class="drawer-toc-link"><span class="drawer-link-icon">📝</span> Rich Statement Editor</a></li>
+          <li><a href="#security" class="drawer-toc-link"><span class="drawer-link-icon">🔒</span> Security Locks & Passcodes</a></li>
+          <li><a href="#candidate" class="drawer-toc-link"><span class="drawer-link-icon">🧑‍🎓</span> Candidate Verification & Exam</a></li>
+          <li><a href="#proctoring" class="drawer-toc-link"><span class="drawer-link-icon">📷</span> Camera, Screen & Anti-Cheat</a></li>
+          <li><a href="#reports" class="drawer-toc-link"><span class="drawer-link-icon">📊</span> Reports & Submission Formats</a></li>
+          <li><a href="#shortcuts" class="drawer-toc-link"><span class="drawer-link-icon">⌨️</span> Keyboard Shortcuts</a></li>
+          <li><a href="#faq" class="drawer-toc-link"><span class="drawer-link-icon">❓</span> FAQs & Troubleshooting</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="drawer-footer">
+      <button class="drawer-theme-btn" id="drawerThemeToggle">
+        <span id="drawerThemeIcon">☾</span>
+        <span id="drawerThemeText">Dark Mode</span>
+      </button>
+      <a href="https://wa.me/917903933705" target="_blank" rel="noopener noreferrer" class="drawer-theme-btn" style="background:#25D366;color:#fff;border-color:#25D366;">
+        <span>💬</span>
+        <span>WhatsApp</span>
+      </a>
+    </div>
+  </aside>
+
+  <!-- Floating Mobile Action Controls (Back to Top & Quick TOC) -->
+  <div class="floating-fab-group">
+    <button class="floating-fab floating-toc-fab" id="floatingTocFab" title="Table of Contents" aria-label="Table of Contents">📑</button>
+    <button class="floating-fab" id="backToTopFab" title="Back to Top" aria-label="Back to Top">↑</button>
+  </div>
+
+  <!-- Hero Header -->
+  <section class="hero">
+    <div class="hero-badge">✨ Complete Assessment Platform Documentation</div>
+    <h1>Master the Assessment IDE & MCQ Platform</h1>
+    <p>Comprehensive guide covering rich problem authoring, question management, security lock architectures, consent-based proctoring, candidate exam workflows, and multi-format reports.</p>
+    
+    <div class="search-box">
+      <span class="search-icon">🔍</span>
+      <input type="text" id="docSearchInput" placeholder="Search documentation (e.g., locks, timer, proctoring, export ZIP, MCQ)..." aria-label="Search documentation">
+    </div>
+  </section>
+
+  <!-- Main Container -->
+  <div class="container">
+    
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar">
+      <h3>Quick Navigation</h3>
+      <ul class="toc-nav">
+        <li><a href="#quickstart" class="active"><span class="icon">🚀</span> Quick Start</a></li>
+        <li><a href="#header-controls"><span class="icon">🧭</span> Header & Controls</a></li>
+        <li><a href="#teacher"><span class="icon">👩‍🏫</span> Teacher & Authoring</a></li>
+        <li><a href="#editor"><span class="icon">📝</span> Problem Editor</a></li>
+        <li><a href="#security"><span class="icon">🔒</span> Locks & Passcodes</a></li>
+        <li><a href="#candidate"><span class="icon">🧑‍🎓</span> Candidate Exam Flow</a></li>
+        <li><a href="#proctoring"><span class="icon">📷</span> Camera & Screen Evidence</a></li>
+        <li><a href="#reports"><span class="icon">📊</span> Reports & Exports</a></li>
+        <li><a href="#shortcuts"><span class="icon">⌨️</span> Keyboard Shortcuts</a></li>
+        <li><a href="#faq"><span class="icon">❓</span> FAQs & Troubleshooting</a></li>
+      </ul>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="content">
+
+      <!-- 1. Quick Start -->
+      <section id="quickstart" class="guide-card">
+        <div class="card-header">
+          <div class="card-icon">🚀</div>
+          <div>
+            <h2>Quick Start in 3 Easy Steps</h2>
+            <p>Get up and running as a Teacher or a Candidate in minutes</p>
+          </div>
+        </div>
+
+        <div class="callout info">
+          <span class="callout-icon">💡</span>
+          <div>
+            <b>Instant Mock Test Exploration:</b> Click <code>🚀 Try with mock test data</code> on the welcome dialog to immediately load a pre-configured 7-question Python MCQ assessment set with rich problem statements, formatted code blocks, custom choices, and verified answer keys.
+          </div>
+        </div>
+
+        <h3 style="margin-top: 15px; font-size: 17px; color: var(--blue);">👩‍🏫 For Teachers / Examiners:</h3>
+        <div class="steps-grid">
+          <div class="step-box">
+            <div class="step-num">1</div>
+            <h4>Create Questions & Options</h4>
+            <p>Write rich problem statements with code snippets, images, GIFs, and videos. Choose <b>Single choice</b> or <b>Multiple choice</b> and configure answer options.</p>
+          </div>
+          <div class="step-box">
+            <div class="step-num">2</div>
+            <h4>Configure Timer & Locks</h4>
+            <p>Set duration in minutes. Protect problem statements, answer options, question types, and timer with teacher passcodes.</p>
+          </div>
+          <div class="step-box">
+            <div class="step-num">3</div>
+            <h4>Export Set ZIP or JSON</h4>
+            <p>Click <b>Export Set ZIP</b>, specify a student package password, and distribute the ZIP package to candidates for a secure, proctored test.</p>
+          </div>
+        </div>
+
+        <h3 style="margin-top: 25px; font-size: 17px; color: var(--emerald);">🧑‍🎓 For Students / Candidates:</h3>
+        <div class="steps-grid">
+          <div class="step-box">
+            <div class="step-num">1</div>
+            <h4>Import Assessment ZIP</h4>
+            <p>Click <b>Import ZIP</b>, select your teacher-provided test ZIP, and enter the assessment password provided by your examiner.</p>
+          </div>
+          <div class="step-box">
+            <div class="step-num">2</div>
+            <h4>Verify & Start</h4>
+            <p>Enter your Full Name and Roll Number. Review the proctoring rules, allow camera and screen sharing, and click <b>Ready to Exam</b>.</p>
+          </div>
+          <div class="step-box">
+            <div class="step-num">3</div>
+            <h4>Answer & Submit</h4>
+            <p>Navigate forward through questions, choose your answers, and click <b>Finish Assessment</b> (or let timer auto-submit) to download your verified submission package.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- 2. Header & Controls -->
+      <section id="header-controls" class="guide-card">
+        <div class="card-header">
+          <div class="card-icon">🧭</div>
+          <div>
+            <h2>Header Controls & Workspace Management</h2>
+            <p>Master the top navigation toolbar, environment resets, and question picker</p>
+          </div>
+        </div>
+
+        <div class="table-responsive">
+          <table class="custom-table">
+            <thead>
+              <tr>
+                <th>Element / Button</th>
+                <th>Purpose</th>
+                <th>Logic & Security Behavior</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><b>Brand & Set ID</b></td>
+                <td>Displays platform identity and current assessment Set ID badge.</td>
+                <td>Generated dynamically or restored from imported ZIP/JSON package.</td>
+              </tr>
+              <tr>
+                <td><b>Upper Header Links</b><br>(Help Guide, Home, App store)</td>
+                <td>Navigation links to external guides, portals, and application store.</td>
+                <td><b>Teacher Passcode Lock:</b> When locked for an active exam, clicking any upper header link will prompt for the teacher security passcode to prevent unauthorized web browsing.</td>
+              </tr>
+              <tr>
+                <td><b>Auto-Save Indicator</b></td>
+                <td>Displays <code>Saved</code> or <code>Saving...</code> status.</td>
+                <td>Debounced auto-save (400ms) preserves question edits in browser memory automatically.</td>
+              </tr>
+              <tr>
+                <td><b>Time & Set Timer</b></td>
+                <td>Configures total assessment time in minutes (1 to 1440 min).</td>
+                <td>Duration is stored in assessment metadata. Can be permanently locked by the teacher.</td>
+              </tr>
+              <tr>
+                <td><b>Lock Timer</b></td>
+                <td>Passcode-protects exam duration.</td>
+                <td>Creates a SHA-256 password hash. Disables timer changes and forces countdown upon candidate start.</td>
+              </tr>
+              <tr>
+                <td><b>Live Countdown Display</b></td>
+                <td>Shows remaining assessment time in <code>HH:MM:SS</code> format.</td>
+                <td>Turns red and pulses with high priority when 5 minutes or less remain.</td>
+              </tr>
+              <tr>
+                <td><b>Question Counter</b></td>
+                <td>Displays candidate progress (e.g., <code>Current/Total question : 1/7</code>).</td>
+                <td>Calculates live index and total questions in the set.</td>
+              </tr>
+              <tr>
+                <td><b>Clear Cookies</b></td>
+                <td>Environment reset button.</td>
+                <td>Clears assessment cookies, localStorage cache, active candidate sessions, and camera metadata, reloading a clean workspace.</td>
+              </tr>
+              <tr>
+                <td><b>+ Question & Lock Adding</b></td>
+                <td>Adds a new question to the assessment.</td>
+                <td><b>Lock Adding:</b> Teachers can lock question creation with a passcode so unauthorized questions cannot be added.</td>
+              </tr>
+              <tr>
+                <td><b>Theme Toggle (☾ / ☼)</b></td>
+                <td>Switches between Dark Mode and Light Mode.</td>
+                <td>Saves user preference in <code>localStorage</code> for consistent viewing.</td>
+              </tr>
+              <tr>
+                <td><b>Question Picker & Palette</b></td>
+                <td>Dropdown displaying "All Questions" in a responsive numbered grid.</td>
+                <td>Highlights current question. In candidate mode, picker is hidden for sequential forward-only progression.</td>
+              </tr>
+              <tr>
+                <td><b>Mobile Floating Next</b></td>
+                <td>Floating button positioned on mobile screens for seamless forward navigation.</td>
+                <td>Synchronized with top navigation bar Next button; automatically hides when modal dialogs are open.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- 3. Teacher & Authoring -->
+      <section id="teacher" class="guide-card">
+        <div class="card-header">
+          <div class="card-icon">👩‍🏫</div>
+          <div>
+            <h2>Teacher MCQ Authoring & Question Management</h2>
+            <p>Build rich multi-choice assessments, customize option sets, and manage answer keys</p>
+          </div>
+        </div>
+
+        <div class="steps-grid">
+          <div class="step-box">
+            <h4>1. Choose Question Type</h4>
+            <p>Select between <b>Single choice (one correct)</b> with radio buttons or <b>Multiple choice (checkboxes)</b> allowing multiple correct options. Lock the dropdown with <b>Lock Editing</b>.</p>
+          </div>
+          <div class="step-box">
+            <h4>2. Author Options</h4>
+            <p>Click <b>+ Add Option</b> to add options (A, B, C, D...). Edit option text directly. Use the trash icon to delete options. Freeze option text with <b>Lock Editing</b>.</p>
+          </div>
+          <div class="step-box">
+            <h4>3. Define Answer Key</h4>
+            <p>In the <b>Correct answer key</b> tab, mark the correct option(s). Use <b>Clear Key</b> to reset. Lock the clear button with <b>Lock Editing</b> to prevent accidental resets.</p>
+          </div>
+          <div class="step-box">
+            <h4>4. Exam Owner Setup</h4>
+            <p>Click <b>Exam Setup</b> in the action row to configure your examiner email and post-exam submission window (in minutes) embedded in the package.</p>
+          </div>
+        </div>
+
+        <div class="callout warning">
+          <span class="callout-icon">🔒</span>
+          <div>
+            <b>Strict Candidate Key Protection:</b> The Correct Answer Key and answer authoring controls are strictly restricted to teachers. When a student imports a protected assessment ZIP, the entire answer key panel is automatically force-hidden and blocked from the candidate interface.
+          </div>
+        </div>
+      </section>
+
+      <!-- 4. Problem Statement Editor -->
+      <section id="editor" class="guide-card">
+        <div class="card-header">
+          <div class="card-icon">📝</div>
+          <div>
+            <h2>Rich Problem Statement Editor</h2>
+            <p>WYSIWYG authoring with rich text, embedded media, code blocks, and custom web fonts</p>
+          </div>
+        </div>
+
+        <div class="table-responsive">
+          <table class="custom-table">
+            <thead>
+              <tr>
+                <th>Toolbar Tool</th>
+                <th>Shortcut / Action</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><b>Paragraph Styles</b></td>
+                <td>Dropdown</td>
+                <td>Normal Paragraph (<code>p</code>), Headings (<code>h1</code>, <code>h2</code>, <code>h3</code>), and Code Block (<code>pre</code>).</td>
+              </tr>
+              <tr>
+                <td><b>Font Family</b></td>
+                <td>Dropdown</td>
+                <td>Standard typography (Arial, Calibri, Cambria, Georgia, Times New Roman, Verdana, Consolas) plus custom embedded fonts.</td>
+              </tr>
+              <tr>
+                <td><b>Font Size</b></td>
+                <td>Dropdown</td>
+                <td>Selectable point sizes: 10, 12, 14, 18, 24, and 36 pt.</td>
+              </tr>
+              <tr>
+                <td><b>Undo & Redo</b></td>
+                <td><span class="kbd">Ctrl</span>+<span class="kbd">Z</span> / <span class="kbd">Y</span></td>
+                <td>Revert or re-apply formatting and text edits.</td>
+              </tr>
+              <tr>
+                <td><b>Text Styling</b></td>
+                <td><span class="kbd">Ctrl</span>+<span class="kbd">B</span> / <span class="kbd">I</span> / <span class="kbd">U</span></td>
+                <td><b>Bold</b>, <i>Italic</i>, <u>Underline</u>, and <s>Strike-through</s>.</td>
+              </tr>
+              <tr>
+                <td><b>Color & Highlight</b></td>
+                <td>Color Pickers</td>
+                <td>Custom foreground text color and background highlight color.</td>
+              </tr>
+              <tr>
+                <td><b>Lists & Alignment</b></td>
+                <td>Toolbar Buttons</td>
+                <td>Bulleted lists, numbered lists, and Left / Center / Right text justification.</td>
+              </tr>
+              <tr>
+                <td><b>Hyperlinks</b></td>
+                <td>Link Button</td>
+                <td>Insert clickable web links into problem descriptions.</td>
+              </tr>
+              <tr>
+                <td><b>Image / GIF Embedding</b></td>
+                <td><span class="kbd">Ctrl</span>+<span class="kbd">V</span> or File Picker</td>
+                <td>Directly paste clipboard screenshots or upload local PNG/JPG/GIF files. Automatically encoded as base64 Data URLs inside the question.</td>
+              </tr>
+              <tr>
+                <td><b>Video Embedding</b></td>
+                <td>Video Button</td>
+                <td>Embed local MP4/WebM video clips directly into questions with native HTML5 player controls.</td>
+              </tr>
+              <tr>
+                <td><b>Custom Font Upload</b></td>
+                <td>Font Button</td>
+                <td>Upload WOFF, WOFF2, TTF, or OTF font files. Automatically creates <code>@font-face</code> rules and adds font name to dropdown.</td>
+              </tr>
+              <tr>
+                <td><b>Media Deletion</b></td>
+                <td><span class="kbd">Delete</span> / <span class="kbd">Backspace</span></td>
+                <td>Select any embedded image, GIF, or video and press Delete, or right-click to choose "Delete selected media".</td>
+              </tr>
+              <tr>
+                <td><b>Problem Fullscreen</b></td>
+                <td>⛶ Button</td>
+                <td>Expands problem statement editor into full-window focus mode.</td>
+              </tr>
+              <tr>
+                <td><b>Lock Editing</b></td>
+                <td>Passcode Lock</td>
+                <td>Freezes problem statement content into read-only mode with SHA-256 passcode. Disables toolbar, paste, drop, and editing.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- 5. Security & Locks -->
+      <section id="security" class="guide-card">
+        <div class="card-header">
+          <div class="card-icon">🔒</div>
+          <div>
+            <h2>Security Locks & Passcode Protection</h2>
+            <p>Comprehensive cryptographic application controls for exam integrity</p>
+          </div>
+        </div>
+
+        <p>The platform features an advanced modular locking architecture. Every lock uses the browser's Web Crypto API to generate a one-way <b>SHA-256 cryptographic hash</b> of the teacher's passcode (minimum 4 characters). Plaintext passwords are never stored in exports.</p>
+
+        <div class="table-responsive">
+          <table class="custom-table">
+            <thead>
+              <tr>
+                <th>Lock Type</th>
+                <th>Target Area</th>
+                <th>Protection Behavior</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><b>Upper Header Links Lock</b></td>
+                <td>Help Guide, Home, App Store Links</td>
+                <td>Prevents candidates from leaving the exam or reading external resources. Clicking prompts for the teacher unlock passcode.</td>
+              </tr>
+              <tr>
+                <td><b>Problem Statement Lock</b></td>
+                <td>Rich Text Problem Editor</td>
+                <td>Freezes problem text, diagrams, and formatting into read-only view. Blocks editing, pasting, and media removal.</td>
+              </tr>
+              <tr>
+                <td><b>Timer Lock</b></td>
+                <td>Duration & Set Timer Controls</td>
+                <td>Prevents students from altering exam duration. Enforces countdown start upon assessment entry.</td>
+              </tr>
+              <tr>
+                <td><b>Lock Adding Questions</b></td>
+                <td><code>+ Question</code> Header Button</td>
+                <td>Prevents students or unauthorized users from inserting additional questions into the assessment set.</td>
+              </tr>
+              <tr>
+                <td><b>Question Type Lock</b></td>
+                <td>Single / Multiple Choice Selector</td>
+                <td>Freezes the question type selection (Single Choice vs Multiple Choice) across all questions.</td>
+              </tr>
+              <tr>
+                <td><b>Answer Options Lock</b></td>
+                <td>Option Inputs & <code>+ Add Option</code></td>
+                <td>Freezes option text inputs and disables adding or removing options.</td>
+              </tr>
+              <tr>
+                <td><b>Clear Key Lock</b></td>
+                <td><code>Clear Key</code> Button</td>
+                <td>Prevents accidental or unauthorized clearing of the configured correct answer key.</td>
+              </tr>
+              <tr>
+                <td><b>Delete Question Lock</b></td>
+                <td><code>Delete</code> Question Button</td>
+                <td>Prevents deletion of questions from the active assessment set.</td>
+              </tr>
+              <tr>
+                <td><b>Protected ZIP Password</b></td>
+                <td>Complete Assessment ZIP Package</td>
+                <td>Mandatory teacher password created during <b>Export Set ZIP</b>. Students must enter this password to import and open the test.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="callout info">
+          <span class="callout-icon">🛡️</span>
+          <div>
+            <b>Application-Level Integrity:</b> Locks provide robust application-level control for classroom and institutional testing. When combined with our consent-based camera and screen proctoring, examiners receive a complete, tamper-evident record.
+          </div>
+        </div>
+      </section>
+
+      <!-- 6. Candidate Exam Flow -->
+      <section id="candidate" class="guide-card">
+        <div class="card-header">
+          <div class="card-icon">🧑‍🎓</div>
+          <div>
+            <h2>Candidate Verification & Exam Workflow</h2>
+            <p>Step-by-step candidate journey from verification to submission</p>
+          </div>
+        </div>
+
+        <div class="steps-grid">
+          <div class="step-box">
+            <div class="step-num">1</div>
+            <h4>Import & Authenticate</h4>
+            <p>Candidate imports the teacher ZIP package and enters the required assessment access password.</p>
+          </div>
+          <div class="step-box">
+            <div class="step-num">2</div>
+            <h4>Candidate Verification</h4>
+            <p>Candidate fills in Full Name and Roll Number. Date, hour, and minute are automatically stamped from device clock.</p>
+          </div>
+          <div class="step-box">
+            <div class="step-num">3</div>
+            <h4>Hardware & Consent Check</h4>
+            <p>Candidate checks camera & screen consents, opens camera preview, shares full screen, and unlocks <b>Ready to Exam</b>.</p>
+          </div>
+          <div class="step-box">
+            <div class="step-num">4</div>
+            <h4>Start Assessment</h4>
+            <p>The "Ready to start?" confirmation begins the locked countdown timer and initiates real-time proctoring evidence capture.</p>
+          </div>
+          <div class="step-box">
+            <div class="step-num">5</div>
+            <h4>Sequential Answering</h4>
+            <p>Candidate progresses forward question-by-question. Previous navigation is hidden to preserve integrity.</p>
+          </div>
+          <div class="step-box">
+            <div class="step-num">6</div>
+            <h4>Finish & Package Export</h4>
+            <p>Upon clicking Finish (or at timer expiration), the application generates the completed ZIP, PDF report, and result HTML.</p>
+          </div>
+        </div>
+
+        <div class="callout success">
+          <span class="callout-icon">🔄</span>
+          <div>
+            <b>Refresh-Safe Session Resilience:</b> If a student accidentally refreshes or closes the tab during an exam, the absolute expiration deadline and candidate state stored in <code>localStorage</code> resume seamlessly without resetting the countdown timer.
+          </div>
+        </div>
+      </section>
+
+      <!-- 7. Proctoring & Anti-Cheat -->
+      <section id="proctoring" class="guide-card">
+        <div class="card-header">
+          <div class="card-icon">📷</div>
+          <div>
+            <h2>Camera, Screen Proctoring & Anti-Cheat Architecture</h2>
+            <p>Transparent, consent-based evidence collection for human examiner review</p>
+          </div>
+        </div>
+
+        <div class="steps-grid">
+          <div class="step-box">
+            <h4>📸 Periodic Camera Capture</h4>
+            <p>Captures high-clarity 480x270 PNG camera snapshots once every second. Each frame embeds an indelible timestamp and verification watermark.</p>
+          </div>
+          <div class="step-box">
+            <h4>🎥 Continuous Screen Recording</h4>
+            <p>Records the candidate's shared exam screen continuously via <code>MediaRecorder</code> and saves it as <code>screen-recording/exam-screen.webm</code> inside the submission ZIP.</p>
+          </div>
+          <div class="step-box">
+            <h4>🚫 Clipboard & Context Lockout</h4>
+            <p>Copy, Cut, Paste, Drag, and Drop operations are disabled across all problem statement and option elements during the assessment attempt.</p>
+          </div>
+          <div class="step-box">
+            <h4>⛔ Shortcut & Abort Safeguards</h4>
+            <p>Keyboard shortcuts (Ctrl+C, Ctrl+V, Ctrl+A, Alt tabs) are blocked. Pressing <b>Escape</b> or stopping screen share immediately finishes the attempt and generates the submission package.</p>
+          </div>
+        </div>
+
+        <div class="callout info">
+          <span class="callout-icon">⚖️</span>
+          <div>
+            <b>Ethical Privacy Safeguard:</b> This application explicitly avoids black-box AI algorithms, emotion analysis, eye-gaze tracking, or automated cheating disqualifications. All proctoring evidence is stored locally in the candidate's browser and shared directly with the authorized examiner for human evaluation.
+          </div>
+        </div>
+      </section>
+
+      <!-- 8. Reports & Exports -->
+      <section id="reports" class="guide-card">
+        <div class="card-header">
+          <div class="card-icon">📊</div>
+          <div>
+            <h2>Reports & Submission Formats</h2>
+            <p>Complete multi-format export and verification ecosystem</p>
+          </div>
+        </div>
+
+        <div class="table-responsive">
+          <table class="custom-table">
+            <thead>
+              <tr>
+                <th>Format / Export Action</th>
+                <th>Target Audience</th>
+                <th>Contents & File Structure</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><b>Result Report (.html)</b><br><code>result-report.html</code></td>
+                <td>Candidate & Teacher</td>
+                <td>Standalone interactive HTML report containing candidate info, total score, percentage, attempted count, and question-by-question comparison of chosen answers vs correct answers.</td>
+              </tr>
+              <tr>
+                <td><b>Completed Submission (.zip)</b><br><code>Export Set ZIP</code> / Auto-download</td>
+                <td>Examiner Review</td>
+                <td>Comprehensive bundle containing assessment JSON, question files, <code>instruction.txt</code>, <code>result-report.html</code>, generated PDF report, <code>camera-evidence/</code> PNG snapshots, and <code>screen-recording/exam-screen.webm</code>.</td>
+              </tr>
+              <tr>
+                <td><b>PDF Assessment Report</b><br><code>Export PDF</code></td>
+                <td>Print & Formal Records</td>
+                <td>Sequential printable document rendered with <code>html2pdf.js</code> featuring questions, options, candidate answers, score metrics, and proctoring summary.</td>
+              </tr>
+              <tr>
+                <td><b>Full Assessment JSON</b><br><code>Export JSON</code> / <code>Import JSON</code></td>
+                <td>Teacher Backup & Restore</td>
+                <td>Complete assessment snapshot containing all questions, rich problem HTML, base64 media data URLs, custom fonts, lock states, owner config, and timer settings in a single portable file.</td>
+              </tr>
+              <tr>
+                <td><b>Modular Question JSON</b><br><code>Export Question</code> / <code>Import Question</code></td>
+                <td>Question Banks</td>
+                <td>Single-question portable JSON file for modular question sharing and bank management.</td>
+              </tr>
+              <tr>
+                <td><b>HTML & Word Reports</b><br><code>Export HTML</code> / <code>Export Word</code></td>
+                <td>Institutional Archiving</td>
+                <td>Self-contained sequential reports with high-resolution figures, animated GIFs, embedded video players, and formatted tables.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- 9. Shortcuts -->
+      <section id="shortcuts" class="guide-card">
+        <div class="card-header">
+          <div class="card-icon">⌨️</div>
+          <div>
+            <h2>Keyboard Shortcuts & Productivity</h2>
+            <p>Speed up authoring, editing, and environment navigation</p>
+          </div>
+        </div>
+
+        <div class="table-responsive">
+          <table class="custom-table">
+            <thead>
+              <tr>
+                <th>Key Combination</th>
+                <th>Action</th>
+                <th>Context</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><span class="kbd">Ctrl</span> + <span class="kbd">B</span></td>
+                <td>Toggle <b>Bold</b> formatting</td>
+                <td>Problem statement editor</td>
+              </tr>
+              <tr>
+                <td><span class="kbd">Ctrl</span> + <span class="kbd">I</span></td>
+                <td>Toggle <i>Italic</i> formatting</td>
+                <td>Problem statement editor</td>
+              </tr>
+              <tr>
+                <td><span class="kbd">Ctrl</span> + <span class="kbd">U</span></td>
+                <td>Toggle <u>Underline</u> formatting</td>
+                <td>Problem statement editor</td>
+              </tr>
+              <tr>
+                <td><span class="kbd">Ctrl</span> + <span class="kbd">Z</span></td>
+                <td>Undo previous edit / action</td>
+                <td>Problem statement editor</td>
+              </tr>
+              <tr>
+                <td><span class="kbd">Ctrl</span> + <span class="kbd">Y</span></td>
+                <td>Redo previously undone edit</td>
+                <td>Problem statement editor</td>
+              </tr>
+              <tr>
+                <td><span class="kbd">Ctrl</span> + <span class="kbd">V</span></td>
+                <td>Paste formatted text or embed clipboard images</td>
+                <td>Problem statement editor (Teacher mode)</td>
+              </tr>
+              <tr>
+                <td><span class="kbd">Delete</span> / <span class="kbd">Backspace</span></td>
+                <td>Delete selected embedded image, GIF, or video</td>
+                <td>Problem statement editor</td>
+              </tr>
+              <tr>
+                <td><span class="kbd">Tab</span></td>
+                <td>Insert 4 spaces (soft tab)</td>
+                <td>Code editor / problem statements</td>
+              </tr>
+              <tr>
+                <td><span class="kbd">Escape</span></td>
+                <td>Dismiss modal dialogs, close question palette, exit fullscreen</td>
+                <td>Global IDE interface</td>
+              </tr>
+              <tr>
+                <td><span class="kbd">F11</span></td>
+                <td>Toggle browser full screen mode</td>
+                <td>Global browser window</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- 10. FAQ -->
+      <section id="faq" class="guide-card">
+        <div class="card-header">
+          <div class="card-icon">❓</div>
+          <div>
+            <h2>Frequently Asked Questions (FAQ)</h2>
+            <p>Troubleshooting, best practices, and common inquiries</p>
+          </div>
+        </div>
+
+        <div class="faq-item open">
+          <div class="faq-question">Why does the application recommend Desktop Mode?</div>
+          <div class="faq-answer">
+            Desktop mode provides optimal screen space for the side-by-side problem statement and option authoring panels, and ensures reliable browser permissions for WebRTC camera streaming and full-screen screen recording.
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-question">How does the Upper Header Links Lock work?</div>
+          <div class="faq-answer">
+            Examiners can secure the upper navigation icons (Help Guide, Home, App store) so students cannot click away to external websites during exams. Clicking any locked icon prompts for the teacher unlock passcode.
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-question">How can I quickly test the app with sample mock questions?</div>
+          <div class="faq-answer">
+            Click <b>🚀 Try with mock test data</b> on the welcome modal. This instantly loads a comprehensive 7-question Python MCQ assessment set with rich descriptions, code snippets, formatted options, and pre-configured answer keys.
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-question">What if the candidate's camera or screen sharing does not open?</div>
+          <div class="faq-answer">
+            Ensure your browser allows camera and screen sharing permissions. In Chrome or Edge, click the tune/lock icon next to the URL address bar and set <b>Camera</b> and <b>Screen sharing</b> to "Allow", then re-click "Open Camera" and "Share Screen".
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-question">What happens if a student reloads or closes the tab during an exam?</div>
+          <div class="faq-answer">
+            The assessment session stores the absolute countdown deadline and candidate metadata in <code>localStorage</code>. Reloading the browser immediately resumes the attempt with the exact remaining time without resetting the clock.
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-question">How are Single Choice and Multiple Choice questions scored?</div>
+          <div class="faq-answer">
+            For single-choice questions, the candidate's selection is compared directly to the correct answer. For multiple-choice questions, all correct options must be selected. Total score and percentage are computed instantly and recorded in <code>result-report.html</code>.
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-question">How do I clear saved cookies or reset the workspace?</div>
+          <div class="faq-answer">
+            Click the <b>Clear Cookies</b> button in the top navigation bar. It removes all stored assessment cookies, local cached questions, and active candidate sessions, returning the application to a clean initial state.
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-question">How does Export JSON differ from Export Set ZIP?</div>
+          <div class="faq-answer">
+            <b>Export JSON</b> creates a single unencrypted file containing all questions, rich media data URLs, fonts, and lock hashes for rapid teacher backup. <b>Export Set ZIP</b> creates a password-protected bundle designed for candidates that enforces student verification and hides answer keys.
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-question">How can I embed custom fonts into questions?</div>
+          <div class="faq-answer">
+            Click the <b>Font</b> button on the editor toolbar and select your WOFF, WOFF2, TTF, or OTF file. The font is converted into base64, registered via <code>@font-face</code>, added to the Font Family dropdown, and included in exported ZIP/JSON packages.
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-question">Can multiple files download automatically upon exam finish?</div>
+          <div class="faq-answer">
+            Browsers may show a prompt saying "This site wants to download multiple files". Ensure you click "Allow" so the completed ZIP, PDF report, result HTML, and instruction files download automatically without interruption.
+          </div>
+        </div>
+      </section>
+
+      <!-- CTA Banner -->
+      <section class="cta-banner">
+        <h2>Ready to Launch Your Assessment?</h2>
+        <p>Open the assessment IDE now to author customized problem sets or test instant proctoring with mock data.</p>
+        <div class="cta-btns">
+          <a href="index.html" class="cta-btn primary">🚀 Open Assessment IDE</a>
+          <a href="https://supportsourcecode.lovable.app/mcq" target="_blank" rel="noopener noreferrer" class="cta-btn secondary">📘 Online Support & Sets</a>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <p>© Assessment IDE · Built for rich problem authoring, secure MCQ testing & authenticated proctoring.</p>
+  </footer>
+
+  <!-- Interactive Scripts -->
+  <script>
+    // Theme Management
+    const themeBtn = document.getElementById('themeToggle');
+    const drawerThemeBtn = document.getElementById('drawerThemeToggle');
+    const drawerThemeIcon = document.getElementById('drawerThemeIcon');
+    const drawerThemeText = document.getElementById('drawerThemeText');
+
+    function applyTheme(isDark) {
+      if (isDark) {
+        document.body.classList.add('dark');
+        if (themeBtn) themeBtn.textContent = '☼';
+        if (drawerThemeIcon) drawerThemeIcon.textContent = '☼';
+        if (drawerThemeText) drawerThemeText.textContent = 'Light Mode';
+      } else {
+        document.body.classList.remove('dark');
+        if (themeBtn) themeBtn.textContent = '☾';
+        if (drawerThemeIcon) drawerThemeIcon.textContent = '☾';
+        if (drawerThemeText) drawerThemeText.textContent = 'Dark Mode';
+      }
+      localStorage.setItem('theme', isDark ? 'dark' : 'light');
+    }
+
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme) {
+      applyTheme(savedTheme === 'dark');
+    }
+
+    if (themeBtn) {
+      themeBtn.onclick = () => {
+        applyTheme(!document.body.classList.contains('dark'));
+      };
+    }
+    if (drawerThemeBtn) {
+      drawerThemeBtn.onclick = () => {
+        applyTheme(!document.body.classList.contains('dark'));
+      };
+    }
+
+    // Mobile Drawer Navigation
+    const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+    const drawerCloseBtn = document.getElementById('drawerCloseBtn');
+    const mobileDrawer = document.getElementById('mobileDrawer');
+    const drawerOverlay = document.getElementById('drawerOverlay');
+    const floatingTocFab = document.getElementById('floatingTocFab');
+    const drawerTocLinks = document.querySelectorAll('.drawer-toc-link');
+
+    function openMobileDrawer() {
+      if (mobileDrawer) mobileDrawer.classList.add('open');
+      if (drawerOverlay) drawerOverlay.classList.add('open');
+      if (mobileMenuBtn) mobileMenuBtn.classList.add('active');
+      document.body.classList.add('no-scroll');
+    }
+
+    function closeMobileDrawer() {
+      if (mobileDrawer) mobileDrawer.classList.remove('open');
+      if (drawerOverlay) drawerOverlay.classList.remove('open');
+      if (mobileMenuBtn) mobileMenuBtn.classList.remove('active');
+      document.body.classList.remove('no-scroll');
+    }
+
+    if (mobileMenuBtn) mobileMenuBtn.onclick = openMobileDrawer;
+    if (floatingTocFab) floatingTocFab.onclick = openMobileDrawer;
+    if (drawerCloseBtn) drawerCloseBtn.onclick = closeMobileDrawer;
+    if (drawerOverlay) drawerOverlay.onclick = closeMobileDrawer;
+
+    drawerTocLinks.forEach(link => {
+      link.addEventListener('click', () => {
+        closeMobileDrawer();
+      });
+    });
+
+    // Documentation Search & Filter
+    const searchInput = document.getElementById('docSearchInput');
+    const guideCards = document.querySelectorAll('.guide-card');
+
+    if (searchInput) {
+      searchInput.addEventListener('input', (e) => {
+        const query = e.target.value.toLowerCase().trim();
+        guideCards.forEach(card => {
+          const text = card.textContent.toLowerCase();
+          if (query === '' || text.includes(query)) {
+            card.style.display = 'block';
+          } else {
+            card.style.display = 'none';
+          }
+        });
+      });
+    }
+
+    // FAQ Accordion Toggle
+    const faqQuestions = document.querySelectorAll('.faq-question');
+    faqQuestions.forEach(q => {
+      q.addEventListener('click', () => {
+        const item = q.parentElement;
+        item.classList.toggle('open');
+      });
+    });
+
+    // Active TOC Highlight and Smooth Scrolling Tracking
+    const sections = document.querySelectorAll('.guide-card');
+    const tocLinks = document.querySelectorAll('.toc-nav a');
+    const topicPills = document.querySelectorAll('.topic-pill');
+    const topicNav = document.getElementById('mobileTopicNav');
+    const backToTopFab = document.getElementById('backToTopFab');
+
+    function syncActiveSection() {
+      const scrollPos = window.scrollY + 140;
+      let current = '';
+
+      sections.forEach(section => {
+        if (section.style.display === 'none') return;
+        const sectionTop = section.offsetTop;
+        const sectionHeight = section.offsetHeight;
+        if (scrollPos >= sectionTop && scrollPos < sectionTop + sectionHeight) {
+          current = section.getAttribute('id');
+        }
+      });
+
+      if (!current && sections.length > 0) {
+        current = sections[0].getAttribute('id');
+      }
+
+      // Sidebar links
+      tocLinks.forEach(link => {
+        link.classList.remove('active');
+        if (link.getAttribute('href') === '#' + current) {
+          link.classList.add('active');
+        }
+      });
+
+      // Mobile topic pills
+      topicPills.forEach(pill => {
+        pill.classList.remove('active');
+        if (pill.getAttribute('href') === '#' + current) {
+          pill.classList.add('active');
+          if (topicNav) {
+            const pillLeft = pill.offsetLeft - topicNav.offsetLeft;
+            const targetScroll = pillLeft - (topicNav.clientWidth / 2) + (pill.clientWidth / 2);
+            topicNav.scrollTo({ left: targetScroll, behavior: 'smooth' });
+          }
+        }
+      });
+
+      // Drawer TOC links
+      drawerTocLinks.forEach(link => {
+        link.classList.remove('active');
+        if (link.getAttribute('href') === '#' + current) {
+          link.classList.add('active');
+        }
+      });
+
+      // Back to Top FAB visibility
+      if (backToTopFab) {
+        if (scrollPos > 280) {
+          backToTopFab.classList.add('visible');
+        } else {
+          backToTopFab.classList.remove('visible');
+        }
+      }
+    }
+
+    window.addEventListener('scroll', syncActiveSection, { passive: true });
+
+    if (backToTopFab) {
+      backToTopFab.onclick = () => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      };
+    }
+
+    // Automatic Screen Scroll Up & Keyboard Detection on Mobile
+    let activeInputElement = null;
+    let keyboardScrollTimer = null;
+
+    function scrollElementIntoOptimalView(el) {
+      if (!el) return;
+      const rect = el.getBoundingClientRect();
+      const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+      const headerOffset = 125;
+      const targetY = scrollTop + rect.top - headerOffset;
+      window.scrollTo({
+        top: Math.max(0, targetY),
+        behavior: 'smooth'
+      });
+    }
+
+    function handleInputFocus(e) {
+      const el = e.target;
+      if (!el || !['INPUT', 'TEXTAREA', 'SELECT'].includes(el.tagName)) return;
+      activeInputElement = el;
+      document.body.classList.add('keyboard-open');
+
+      clearTimeout(keyboardScrollTimer);
+      keyboardScrollTimer = setTimeout(() => {
+        scrollElementIntoOptimalView(el);
+      }, 300);
+    }
+
+    function handleInputBlur() {
+      clearTimeout(keyboardScrollTimer);
+      keyboardScrollTimer = setTimeout(() => {
+        if (document.activeElement && ['INPUT', 'TEXTAREA', 'SELECT'].includes(document.activeElement.tagName)) {
+          return;
+        }
+        document.body.classList.remove('keyboard-open');
+        activeInputElement = null;
+      }, 150);
+    }
+
+    document.addEventListener('focusin', handleInputFocus, { passive: true });
+    document.addEventListener('focusout', handleInputBlur, { passive: true });
+
+    if (window.visualViewport) {
+      let previousHeight = window.visualViewport.height;
+
+      window.visualViewport.addEventListener('resize', () => {
+        const currentHeight = window.visualViewport.height;
+        const heightDiff = previousHeight - currentHeight;
+
+        if (heightDiff > 140) {
+          document.body.classList.add('keyboard-open');
+          const focused = document.activeElement;
+          if (focused && ['INPUT', 'TEXTAREA', 'SELECT'].includes(focused.tagName)) {
+            scrollElementIntoOptimalView(focused);
+          }
+        } else if (currentHeight >= window.innerHeight * 0.88) {
+          document.body.classList.remove('keyboard-open');
+        }
+        previousHeight = currentHeight;
+      });
+    }
+  </script>
+
+  <!-- Floating WhatsApp Support & Personal License Widget -->
+  <div id="waFloatingWidget" style="position:fixed;bottom:20px;right:20px;z-index:99999;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;">
+    <div style="position:relative;background:#ffffff;color:#0f172a;border-radius:16px;box-shadow:0 12px 36px rgba(0,0,0,0.25),0 0 0 1px rgba(37,211,102,0.35);padding:14px 16px;max-width:315px;display:flex;flex-direction:column;gap:8px;">
+      <button onclick="document.getElementById('waFloatingWidget').style.display='none'" title="Close" aria-label="Close" style="position:absolute;top:8px;right:8px;background:#f1f5f9;border:1px solid #cbd5e1;color:#64748b;width:24px;height:24px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;line-height:1;transition:all 0.2s;" onmouseover="this.style.background='#ef4444';this.style.color='#fff';this.style.borderColor='#ef4444'" onmouseout="this.style.background='#f1f5f9';this.style.color='#64748b';this.style.borderColor='#cbd5e1'">✕</button>
+      <div style="display:flex;align-items:center;gap:10px;padding-right:20px;">
+        <div style="width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,#25D366,#128C7E);display:flex;align-items:center;justify-content:center;color:#fff;font-size:22px;flex-shrink:0;box-shadow:0 4px 10px rgba(37,211,102,0.4);">
+          <svg style="width:22px;height:22px;fill:#ffffff;" viewBox="0 0 24 24"><path d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21 5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.816 9.816 0 0 0 12.04 2zm5.77 14.18c-.24.68-1.4 1.26-1.95 1.34-.52.08-1.2.12-3.48-.83-2.68-1.12-4.4-3.84-4.54-4.02-.13-.19-1.08-1.44-1.08-2.75 0-1.31.69-1.96.93-2.22.25-.26.54-.33.72-.33.18 0 .36 0 .52.01.17.01.4.06.61.56.22.53.75 1.83.82 1.96.07.14.11.3.02.48-.09.19-.14.3-.27.46-.14.16-.3.35-.42.47-.14.14-.29.3-.12.59.16.29.73 1.21 1.57 1.96 1.08.96 1.99 1.26 2.27 1.4.29.14.45.12.62-.07.17-.19.72-.84.92-1.13.19-.29.39-.24.66-.14.27.1 1.71.81 2.01.96.29.15.49.22.56.34.07.13.07.74-.17 1.42z"/></svg>
+        </div>
+        <div>
+          <div style="font-weight:800;font-size:13px;color:#0f172a;line-height:1.2;">WhatsApp us</div>
+          <div style="font-size:11px;font-weight:700;color:#16a34a;">+91-7903933705</div>
+        </div>
+      </div>
+      <p style="font-size:11.5px;line-height:1.45;color:#475569;margin:0;">
+        If you want to use your personal link to access this app and feel free to slowness of app. Please WhatsApp us here and wait for response and when we will provide link then you can pay and purchase this app for personal use and take exam.
+      </p>
+      <a href="https://wa.me/917903933705?text=Hello!%20I%20want%20to%20use%20my%20personal%20link%20to%20access%20this%20app%20and%20feel%20free%20to%20slowness%20of%20app.%20Please%20provide%20the%20link." target="_blank" rel="noopener noreferrer" style="display:flex;align-items:center;justify-content:center;gap:6px;background:linear-gradient(135deg,#25D366,#128C7E);color:#ffffff;text-decoration:none;font-size:12px;font-weight:700;padding:8px 12px;border-radius:10px;box-shadow:0 3px 10px rgba(37,211,102,0.3);transition:filter 0.2s;" onmouseover="this.style.filter='brightness(1.1)'" onmouseout="this.style.filter='brightness(1)'">
+        <svg style="width:15px;height:15px;fill:#ffffff;" viewBox="0 0 24 24"><path d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21 5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.816 9.816 0 0 0 12.04 2zm5.77 14.18c-.24.68-1.4 1.26-1.95 1.34-.52.08-1.2.12-3.48-.83-2.68-1.12-4.4-3.84-4.54-4.02-.13-.19-1.08-1.44-1.08-2.75 0-1.31.69-1.96.93-2.22.25-.26.54-.33.72-.33.18 0 .36 0 .52.01.17.01.4.06.61.56.22.53.75 1.83.82 1.96.07.14.11.3.02.48-.09.19-.14.3-.27.46-.14.16-.3.35-.42.47-.14.14-.29.3-.12.59.16.29.73 1.21 1.57 1.96 1.08.96 1.99 1.26 2.27 1.4.29.14.45.12.62-.07.17-.19.72-.84.92-1.13.19-.29.39-.24.66-.14.27.1 1.71.81 2.01.96.29.15.49.22.56.34.07.13.07.74-.17 1.42z"/></svg>
+        <span>Chat on WhatsApp (+91 7903933705)</span>
+      </a>
+    </div>
+  </div>
+</body>
+</html>
