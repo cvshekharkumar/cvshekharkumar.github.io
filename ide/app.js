@@ -1227,7 +1227,7 @@ function getDefaultAssessmentState() {
 }
 
 let candidateRunning = false, packageProtected = false, assessmentStarted = false, autoExportStarted = false, importInProgress = false;
-let state = getDefaultAssessmentState(), current = 0, history = [], remaining = 3600, timerHandle;
+let state = getDefaultAssessmentState(), current = 0, selectedMedia = null, history = [], remaining = 3600, timerHandle;
 const code=$('code'),problem=$('problem'),lines=$('lines');function q(){return state.questions[current]}function esc(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}function toast(m){let t=$('toast');t.textContent=m;t.classList.add('show');clearTimeout(t.x);t.x=setTimeout(()=>t.classList.remove('show'),1700)}
 function applyFonts(x){(x.customFonts||[]).forEach(f=>{if(!document.getElementById('font-'+f.id)){let s=document.createElement('style');s.id='font-'+f.id;s.textContent=`@font-face{font-family:${JSON.stringify(f.name)};src:url(${JSON.stringify(f.data)})}`;document.head.appendChild(s)}if(![...$('fontName').options].some(o=>o.value===f.name)){$('fontName').add(new Option(f.name,f.name))}})}
 let isClearingData = false;
@@ -1286,6 +1286,8 @@ function load(){
   if(typeof updateQuestionCountV19==='function')updateQuestionCountV19();
 }
 function openQuestion(i){
+  selectedMedia=null;
+  if($('mediaContext'))$('mediaContext').classList.remove('show');
   current=i;let x=q();if(!x)return;
   if(!x.problemHtml&&x.problem)x.problemHtml=`<p>${esc(x.problem).replace(/\n/g,'<br>')}</p>`;
   x.customFonts=x.customFonts||[];applyFonts(x);
@@ -1725,7 +1727,7 @@ $('importSet').onclick=()=>$('setFile').click();
 $('setFile').onchange=async e=>{try{let arr=new Uint8Array(await e.target.files[0].arrayBuffer()),bin='';for(let b of arr)bin+=String.fromCharCode(b);let r=await fetch('/api/import-set',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({base64:btoa(bin)})}),d=await r.json();if(!d.ok)throw Error(d.error);state={...state,...d.manifest,questions:d.questions};$('setIdText').textContent=state.setId;$('timerMinutes').value=state.timerMinutes||60;openQuestion(0);setTimer(false);if(typeof setHeaderNavLocked==='function')setHeaderNavLocked(true);save();}catch(err){toast(err.message||'Invalid ZIP')}e.target.value=''};
 function setTimer(show=true){state.timerMinutes=Math.max(1,parseInt($('timerMinutes').value)||60);remaining=state.timerMinutes*60;clearInterval(timerHandle);tick();timerHandle=setInterval(()=>{remaining--;tick();if(remaining<=0){clearInterval(timerHandle);$('timeoutModal').classList.add('show')}},1000);save();if(show)toast('Timer set')}function tick(){let h=String(Math.floor(remaining/3600)).padStart(2,'0'),m=String(Math.floor(remaining%3600/60)).padStart(2,'0'),s=String(Math.max(0,remaining%60)).padStart(2,'0');$('timer').textContent=`${h}:${m}:${s}`}$('setTimer').onclick=()=>setTimer();document.querySelectorAll('.tabs button').forEach(b=>b.onclick=()=>{document.querySelectorAll('.tabs button,.tab').forEach(x=>x.classList.remove('active'));b.classList.add('active');$(b.dataset.tab).classList.add('active')});$('fontUp').onclick=()=>font(1);$('fontDown').onclick=()=>font(-1);function font(d){let s=parseInt(getComputedStyle(code).fontSize)+d;const sz=Math.max(11,Math.min(22,s))+'px';const lh=Math.round(parseInt(sz)*1.5)+'px';code.style.fontSize=sz;code.style.lineHeight=lh;lines.style.fontSize=sz;lines.style.lineHeight=lh;const hl=$('codeHighlight');if(hl){hl.style.fontSize=sz;hl.style.lineHeight=lh;}}function initThemeHandler(){const saved=localStorage.getItem('ide_theme_mode');if(saved==='dark'){document.body.classList.add('dark');document.documentElement.classList.add('dark')}const btn=$('theme');const syncText=()=>{if(btn){btn.textContent=document.body.classList.contains('dark')?'☀️ Light':'☾ Dark'}};syncText();const toggle=(e)=>{if(e&&e.type==='touchstart'){e.preventDefault()}document.body.classList.toggle('dark');document.documentElement.classList.toggle('dark');const isDark=document.body.classList.contains('dark');localStorage.setItem('ide_theme_mode',isDark?'dark':'light');syncText()};if(btn){btn.onclick=toggle;btn.addEventListener('touchstart',toggle,{passive:false})}}initThemeHandler();load();
 /* v4: rich media selection/deletion, undo/redo, and sequential reports */
-let selectedMedia=null;
+selectedMedia=null;
 function prepareProblemMedia(container) {
   if (!container) return;
   const mediaEls = container.querySelectorAll('img, video, figure');
@@ -1744,11 +1746,373 @@ if (problem) {
   });
 }
 problem.addEventListener('click',e=>{const m=e.target.closest('video,img,figure');if(selectedMedia)selectedMedia.classList.remove('selected-media');selectedMedia=m;if(m)m.classList.add('selected-media')});
-problem.addEventListener('contextmenu',e=>{const m=e.target.closest('video,img,figure');if(!m)return;e.preventDefault();if(selectedMedia)selectedMedia.classList.remove('selected-media');selectedMedia=m;m.classList.add('selected-media');const menu=$('mediaContext');menu.style.left=Math.min(e.clientX,innerWidth-170)+'px';menu.style.top=Math.min(e.clientY,innerHeight-70)+'px';menu.classList.add('show')});
+problem.addEventListener('contextmenu',e=>{const m=e.target.closest('video,img,figure');if(!m)return;e.preventDefault();if(selectedMedia)selectedMedia.classList.remove('selected-media');selectedMedia=m;m.classList.add('selected-media');const menu=$('mediaContext');const isImg=(m.tagName==='IMG'||!!m.querySelector('img'));const cropMediaBtn=$('cropMedia');if(cropMediaBtn)cropMediaBtn.style.display=isImg?'block':'none';menu.style.left=Math.min(e.clientX,innerWidth-170)+'px';menu.style.top=Math.min(e.clientY,innerHeight-90)+'px';menu.classList.add('show')});
 document.addEventListener('click',e=>{if(!e.target.closest('#mediaContext')&&!e.target.closest('#problem'))$('mediaContext').classList.remove('show')});
 function removeSelectedMedia(){if(!selectedMedia)return;let target=selectedMedia.closest('figure')||selectedMedia;target.remove();selectedMedia=null;$('mediaContext').classList.remove('show');saveCurrent();toast('Media deleted')}
 $('deleteMedia').onclick=removeSelectedMedia;
 problem.addEventListener('keydown',e=>{if((e.key==='Delete'||e.key==='Backspace')&&selectedMedia){e.preventDefault();removeSelectedMedia()}});
+
+/* Question image cropper */
+let currentCropTarget=null;
+const cropState={
+  activeAction:null,
+  startPointer:{x:0,y:0},
+  startRect:{x:0,y:0,w:0,h:0},
+  rect:{x:0,y:0,w:0,h:0},
+  dispW:0,
+  dispH:0,
+  naturalW:0,
+  naturalH:0,
+  loadedImg:null
+};
+
+function getCropTargetImage(providedEl){
+  if(providedEl){
+    if(providedEl.tagName==='IMG')return providedEl;
+    const inner=providedEl.querySelector?providedEl.querySelector('img'):null;
+    if(inner)return inner;
+  }
+  if(selectedMedia){
+    if(selectedMedia.tagName==='IMG')return selectedMedia;
+    const inner=selectedMedia.querySelector?selectedMedia.querySelector('img'):null;
+    if(inner)return inner;
+  }
+  const imgs=problem?problem.querySelectorAll('img'):[];
+  if(imgs.length===1){
+    if(selectedMedia)selectedMedia.classList.remove('selected-media');
+    selectedMedia=imgs[0];
+    selectedMedia.classList.add('selected-media');
+    return imgs[0];
+  }
+  return null;
+}
+
+function updateCropUI(){
+  const cropSelection=$('cropSelection');
+  const cropSize=$('cropSize');
+  if(!cropSelection||!cropState.dispW||!cropState.dispH)return;
+  const r=cropState.rect;
+  cropSelection.style.left=r.x+'px';
+  cropSelection.style.top=r.y+'px';
+  cropSelection.style.width=r.w+'px';
+  cropSelection.style.height=r.h+'px';
+  if(cropSize){
+    const scaleX=cropState.naturalW/cropState.dispW;
+    const scaleY=cropState.naturalH/cropState.dispH;
+    const cw=Math.max(1,Math.round(r.w*scaleX));
+    const ch=Math.max(1,Math.round(r.h*scaleY));
+    cropSize.textContent=`${cw} × ${ch} px (Original: ${cropState.naturalW} × ${cropState.naturalH} px)`;
+  }
+}
+
+function openImageCropper(imgEl){
+  if(typeof isStatementLocked==='function'&&isStatementLocked()){
+    toast('Unlock the problem statement before cropping images');
+    return;
+  }
+  const target=getCropTargetImage(imgEl);
+  if(!target){
+    const imgs=problem?problem.querySelectorAll('img'):[];
+    if(!imgs.length){
+      toast('No image found in question to crop');
+    }else{
+      toast('Please click an image in the question to select it for cropping');
+    }
+    return;
+  }
+  if(selectedMedia&&(selectedMedia.tagName==='VIDEO'||(selectedMedia.querySelector&&selectedMedia.querySelector('video')&&!selectedMedia.querySelector('img')))){
+    toast('Selected media is a video. Please select an image to crop.');
+    return;
+  }
+  const src=target.getAttribute('src')||target.src;
+  if(!src){
+    toast('Image has no valid source');
+    return;
+  }
+  currentCropTarget=target;
+  const modal=$('imageCropModal');
+  const cropSource=$('cropSource');
+  const cropWorkspace=$('cropWorkspace');
+  const cropSelection=$('cropSelection');
+  if(!modal||!cropSource||!cropWorkspace||!cropSelection){
+    toast('Crop modal element not found');
+    return;
+  }
+  const tempImg=new Image();
+  if(!src.startsWith('data:')){
+    tempImg.crossOrigin='anonymous';
+  }
+  tempImg.onload=()=>{
+    const natW=tempImg.naturalWidth||tempImg.width;
+    const natH=tempImg.naturalHeight||tempImg.height;
+    if(!natW||!natH){
+      toast('Unable to read image dimensions');
+      return;
+    }
+    cropState.loadedImg=tempImg;
+    cropState.naturalW=natW;
+    cropState.naturalH=natH;
+    const maxW=Math.max(260,Math.min(window.innerWidth-72,880));
+    const maxH=Math.max(180,Math.min(window.innerHeight-240,500));
+    const scale=Math.min(maxW/natW,maxH/natH,1);
+    const fitScale=(scale===1&&(natW<260||natH<180))?Math.min(maxW/natW,maxH/natH,2):scale;
+    const dispW=Math.max(20,Math.round(natW*fitScale));
+    const dispH=Math.max(20,Math.round(natH*fitScale));
+    cropState.dispW=dispW;
+    cropState.dispH=dispH;
+    cropWorkspace.style.width=dispW+'px';
+    cropWorkspace.style.height=dispH+'px';
+    cropSource.src=tempImg.src;
+    cropSource.style.width=dispW+'px';
+    cropSource.style.height=dispH+'px';
+    const padX=Math.round(dispW*0.05);
+    const padY=Math.round(dispH*0.05);
+    cropState.rect={
+      x:padX,
+      y:padY,
+      w:Math.max(20,dispW-padX*2),
+      h:Math.max(20,dispH-padY*2)
+    };
+    updateCropUI();
+    modal.classList.add('show');
+    modal.setAttribute('aria-hidden','false');
+  };
+  tempImg.onerror=()=>{
+    toast('Failed to load image for cropping');
+  };
+  tempImg.src=src;
+}
+
+function closeImageCropper(){
+  const modal=$('imageCropModal');
+  if(modal){
+    modal.classList.remove('show');
+    modal.setAttribute('aria-hidden','true');
+  }
+  const cropSource=$('cropSource');
+  if(cropSource)cropSource.src='';
+  cropState.loadedImg=null;
+  cropState.activeAction=null;
+  currentCropTarget=null;
+}
+
+function resetCropToFull(){
+  if(!cropState.dispW||!cropState.dispH)return;
+  cropState.rect={x:0,y:0,w:cropState.dispW,h:cropState.dispH};
+  updateCropUI();
+}
+
+function applyImageCrop(){
+  if(!currentCropTarget||!cropState.loadedImg||!cropState.dispW||!cropState.dispH){
+    closeImageCropper();
+    return;
+  }
+  const scaleX=cropState.naturalW/cropState.dispW;
+  const scaleY=cropState.naturalH/cropState.dispH;
+  let cx=Math.max(0,Math.round(cropState.rect.x*scaleX));
+  let cy=Math.max(0,Math.round(cropState.rect.y*scaleY));
+  let cw=Math.round(cropState.rect.w*scaleX);
+  let ch=Math.round(cropState.rect.h*scaleY);
+  cx=Math.min(cropState.naturalW-1,cx);
+  cy=Math.min(cropState.naturalH-1,cy);
+  cw=Math.max(1,Math.min(cropState.naturalW-cx,cw));
+  ch=Math.max(1,Math.min(cropState.naturalH-cy,ch));
+  const canvas=document.createElement('canvas');
+  canvas.width=cw;
+  canvas.height=ch;
+  const ctx=canvas.getContext('2d');
+  ctx.imageSmoothingEnabled=true;
+  ctx.imageSmoothingQuality='high';
+  try{
+    ctx.drawImage(cropState.loadedImg,cx,cy,cw,ch,0,0,cw,ch);
+  }catch(err){
+    console.error('Crop drawImage failed:',err);
+    toast('Error drawing cropped image');
+    return;
+  }
+  let mime='image/png';
+  const curSrc=currentCropTarget.getAttribute('src')||'';
+  if(curSrc.startsWith('data:image/jpeg')||curSrc.startsWith('data:image/jpg')){
+    mime='image/jpeg';
+  }else if(curSrc.startsWith('data:image/webp')){
+    mime='image/webp';
+  }
+  let croppedUrl;
+  try{
+    croppedUrl=canvas.toDataURL(mime,0.95);
+  }catch(err){
+    console.error('Crop toDataURL failed:',err);
+    toast('Cannot crop image due to browser security restrictions on external images');
+    return;
+  }
+  currentCropTarget.setAttribute('src',croppedUrl);
+  currentCropTarget.removeAttribute('width');
+  currentCropTarget.removeAttribute('height');
+  if(currentCropTarget.style.width&&currentCropTarget.style.width.endsWith('px')){
+    currentCropTarget.style.width='';
+  }
+  if(currentCropTarget.style.height&&currentCropTarget.style.height.endsWith('px')){
+    currentCropTarget.style.height='';
+  }
+  if(typeof prepareProblemMedia==='function'){
+    prepareProblemMedia(problem);
+  }
+  saveCurrent();
+  closeImageCropper();
+  toast('Image cropped successfully');
+}
+
+let cropInteractionInitialized=false;
+function initCropInteraction(){
+  if(cropInteractionInitialized)return;
+  cropInteractionInitialized=true;
+  const cropSelection=$('cropSelection');
+  const cropWorkspace=$('cropWorkspace');
+  if(!cropSelection||!cropWorkspace)return;
+  cropSelection.addEventListener('pointerdown',e=>{
+    e.preventDefault();
+    e.stopPropagation();
+    const handle=e.target.getAttribute('data-crop-handle');
+    cropState.activeAction=handle||'move';
+    cropState.startPointer={x:e.clientX,y:e.clientY};
+    cropState.startRect={...cropState.rect};
+    try{cropSelection.setPointerCapture(e.pointerId);}catch(_){}
+  });
+  cropWorkspace.addEventListener('pointerdown',e=>{
+    if(e.target.closest('#cropSelection'))return;
+    e.preventDefault();
+    const bounds=cropWorkspace.getBoundingClientRect();
+    const px=Math.max(0,Math.min(cropState.dispW,e.clientX-bounds.left));
+    const py=Math.max(0,Math.min(cropState.dispH,e.clientY-bounds.top));
+    cropState.activeAction='new';
+    cropState.startPointer={x:px,y:py};
+    cropState.rect={x:px,y:py,w:0,h:0};
+    updateCropUI();
+    try{cropWorkspace.setPointerCapture(e.pointerId);}catch(_){}
+  });
+  const onPointerMove=e=>{
+    if(!cropState.activeAction)return;
+    e.preventDefault();
+    const action=cropState.activeAction;
+    const minSize=20;
+    if(action==='move'){
+      const dx=e.clientX-cropState.startPointer.x;
+      const dy=e.clientY-cropState.startPointer.y;
+      let nx=cropState.startRect.x+dx;
+      let ny=cropState.startRect.y+dy;
+      nx=Math.max(0,Math.min(cropState.dispW-cropState.startRect.w,nx));
+      ny=Math.max(0,Math.min(cropState.dispH-cropState.startRect.h,ny));
+      cropState.rect.x=Math.round(nx);
+      cropState.rect.y=Math.round(ny);
+      updateCropUI();
+    }else if(action==='new'){
+      const bounds=cropWorkspace.getBoundingClientRect();
+      const curX=Math.max(0,Math.min(cropState.dispW,e.clientX-bounds.left));
+      const curY=Math.max(0,Math.min(cropState.dispH,e.clientY-bounds.top));
+      const x=Math.min(cropState.startPointer.x,curX);
+      const y=Math.min(cropState.startPointer.y,curY);
+      const w=Math.abs(curX-cropState.startPointer.x);
+      const h=Math.abs(curY-cropState.startPointer.y);
+      cropState.rect={
+        x:Math.round(x),
+        y:Math.round(y),
+        w:Math.round(w),
+        h:Math.round(h)
+      };
+      updateCropUI();
+    }else{
+      const dx=e.clientX-cropState.startPointer.x;
+      const dy=e.clientY-cropState.startPointer.y;
+      let x1=cropState.startRect.x;
+      let y1=cropState.startRect.y;
+      let x2=cropState.startRect.x+cropState.startRect.w;
+      let y2=cropState.startRect.y+cropState.startRect.h;
+      if(action.includes('w')){
+        x1=Math.max(0,Math.min(x2-minSize,cropState.startRect.x+dx));
+      }
+      if(action.includes('e')){
+        x2=Math.min(cropState.dispW,Math.max(x1+minSize,cropState.startRect.x+cropState.startRect.w+dx));
+      }
+      if(action.includes('n')){
+        y1=Math.max(0,Math.min(y2-minSize,cropState.startRect.y+dy));
+      }
+      if(action.includes('s')){
+        y2=Math.min(cropState.dispH,Math.max(y1+minSize,cropState.startRect.y+cropState.startRect.h+dy));
+      }
+      cropState.rect={
+        x:Math.round(x1),
+        y:Math.round(y1),
+        w:Math.round(x2-x1),
+        h:Math.round(y2-y1)
+      };
+      updateCropUI();
+    }
+  };
+  const onPointerUp=e=>{
+    if(!cropState.activeAction)return;
+    if(cropState.activeAction==='new'){
+      if(cropState.rect.w<20||cropState.rect.h<20){
+        const padX=Math.round(cropState.dispW*0.05);
+        const padY=Math.round(cropState.dispH*0.05);
+        cropState.rect={
+          x:padX,
+          y:padY,
+          w:Math.max(20,cropState.dispW-padX*2),
+          h:Math.max(20,cropState.dispH-padY*2)
+        };
+        updateCropUI();
+      }
+    }
+    cropState.activeAction=null;
+  };
+  window.addEventListener('pointermove',onPointerMove);
+  window.addEventListener('pointerup',onPointerUp);
+  window.addEventListener('pointercancel',onPointerUp);
+}
+
+if($('cropImage'))$('cropImage').onclick=()=>openImageCropper();
+if($('cropMedia'))$('cropMedia').onclick=()=>{const menu=$('mediaContext');if(menu)menu.classList.remove('show');openImageCropper();};
+if($('closeCrop'))$('closeCrop').onclick=closeImageCropper;
+if($('cancelCrop'))$('cancelCrop').onclick=closeImageCropper;
+if($('resetCrop'))$('resetCrop').onclick=resetCropToFull;
+if($('applyCrop'))$('applyCrop').onclick=applyImageCrop;
+
+const cropModalEl=$('imageCropModal');
+if(cropModalEl){
+  cropModalEl.addEventListener('click',e=>{
+    if(e.target===cropModalEl)closeImageCropper();
+  });
+}
+
+document.addEventListener('keydown',e=>{
+  if(cropModalEl&&cropModalEl.classList.contains('show')){
+    if(e.key==='Escape'){
+      e.preventDefault();
+      closeImageCropper();
+    }else if(e.key==='Enter'){
+      e.preventDefault();
+      applyImageCrop();
+    }
+  }
+});
+
+if(problem){
+  problem.addEventListener('dblclick',e=>{
+    const m=e.target.closest('img,figure');
+    if(m){
+      const img=m.tagName==='IMG'?m:m.querySelector('img');
+      if(img){
+        if(selectedMedia)selectedMedia.classList.remove('selected-media');
+        selectedMedia=img;
+        selectedMedia.classList.add('selected-media');
+        openImageCropper(img);
+      }
+    }
+  });
+}
+
+initCropInteraction();
+
 $('problemUndo').onclick=()=>{problem.focus();document.execCommand('undo');saveCurrent()};
 $('problemRedo').onclick=()=>{problem.focus();document.execCommand('redo');saveCurrent()};
 function reportPayload(){saveCurrent();return {state,history};}
