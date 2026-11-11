@@ -1,0 +1,14 @@
+{
+  "format": "python-assessment-set",
+  "version": 3,
+  "setId": "SET-MW5BX722",
+  "title": "Python Assessment",
+  "name": "6_july_26",
+  "timerMinutes": 60,
+  "totalQuestions": 12,
+  "packageSecurity": {
+    "protected": false,
+    "deleteQuestionsAllowed": true
+  },
+  "exportedAt": "2026-11-08T04:58:47.874Z"
+}
