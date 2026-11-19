@@ -1,0 +1,2530 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Task Wall — Master User Guide & Operational Manual</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #6d5efc;
+      --primary-hover: #5b4be8;
+      --primary-deep: #4a3fd6;
+      --primary-light: rgba(109, 94, 252, 0.12);
+      --secondary: #8b5cf6;
+      --accent: #f5a524;
+      --success: #17b978;
+      --danger: #e5484d;
+      --ink: #1b1630;
+      
+      --bg: #0d0a1a;
+      --bg-surface: #141028;
+      --card-bg: rgba(26, 21, 51, 0.85);
+      --card-border: rgba(109, 94, 252, 0.22);
+      --card-hover-border: rgba(139, 92, 246, 0.55);
+      --text-main: #f5f3ff;
+      --text-muted: #a59fc4;
+      --text-dim: #716b94;
+      --code-bg: #090714;
+      --code-text: #e0dbfc;
+      --sidebar-bg: #120e24;
+      --hero-gradient: linear-gradient(135deg, #120e28 0%, #2a1b54 50%, #4a216b 100%);
+      --shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.25);
+      --shadow-md: 0 10px 30px -5px rgba(0, 0, 0, 0.45);
+      --shadow-lg: 0 20px 45px -10px rgba(0, 0, 0, 0.6);
+      --shadow-glow: 0 0 35px rgba(109, 94, 252, 0.3);
+      --radius-sm: 8px;
+      --radius-md: 14px;
+      --radius-lg: 20px;
+    }
+
+    body.light-theme {
+      --bg: #f5f4fd;
+      --bg-surface: #ffffff;
+      --card-bg: rgba(255, 255, 255, 0.94);
+      --card-border: rgba(109, 94, 252, 0.18);
+      --card-hover-border: #6d5efc;
+      --text-main: #1b1630;
+      --text-muted: #55506b;
+      --text-dim: #8a86a0;
+      --code-bg: #f0edfe;
+      --code-text: #2d2060;
+      --sidebar-bg: #ffffff;
+      --hero-gradient: linear-gradient(135deg, #6d5efc 0%, #8b5cf6 55%, #7c3aed 100%);
+      --shadow-sm: 0 4px 12px rgba(30, 20, 70, 0.06);
+      --shadow-md: 0 10px 25px -5px rgba(30, 20, 70, 0.12);
+      --shadow-lg: 0 20px 40px -10px rgba(30, 20, 70, 0.18);
+      --shadow-glow: 0 0 30px rgba(109, 94, 252, 0.2);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; font-size: 16px; }
+    body {
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text-main);
+      line-height: 1.7;
+      min-height: 100vh;
+      transition: background 0.3s ease, color 0.3s ease;
+      overflow-x: hidden;
+    }
+
+    /* Ambient background lights */
+    .glow-sphere-1, .glow-sphere-2, .glow-sphere-3 {
+      position: fixed;
+      border-radius: 50%;
+      filter: blur(140px);
+      z-index: -1;
+      pointer-events: none;
+      opacity: 0.35;
+    }
+    .glow-sphere-1 { top: -10%; left: -5%; width: 600px; height: 600px; background: radial-gradient(circle, #6d5efc, #8b5cf6); }
+    .glow-sphere-2 { bottom: 5%; right: -5%; width: 650px; height: 650px; background: radial-gradient(circle, #4a3fd6, #ec4899); opacity: 0.25; }
+    .glow-sphere-3 { top: 40%; left: 35%; width: 500px; height: 500px; background: radial-gradient(circle, #17b978, #0ea5e9); opacity: 0.15; }
+
+    /* Top Sticky Header */
+    header.guide-header {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      background: rgba(18, 14, 36, 0.88);
+      border-bottom: 1px solid var(--card-border);
+      transition: all 0.3s ease;
+    }
+    body.light-theme header.guide-header {
+      background: rgba(255, 255, 255, 0.90);
+    }
+    .header-inner {
+      max-width: 1440px;
+      margin: 0 auto;
+      padding: 12px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+    .brand-group {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+      color: inherit;
+    }
+    .logo-box {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, #6d5efc, #ec4899);
+      display: grid;
+      place-items: center;
+      font-weight: 900;
+      font-size: 22px;
+      color: #fff;
+      box-shadow: 0 4px 16px rgba(109, 94, 252, 0.45);
+    }
+    .brand-meta h1 {
+      font-size: 1.15rem;
+      font-weight: 800;
+      letter-spacing: -0.3px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .brand-meta span.version-tag {
+      font-size: 10.5px;
+      text-transform: uppercase;
+      font-weight: 800;
+      letter-spacing: 0.8px;
+      background: var(--primary-light);
+      color: var(--primary);
+      border: 1px solid rgba(109, 94, 252, 0.3);
+      padding: 2px 8px;
+      border-radius: 999px;
+    }
+    .brand-meta p {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .search-input-wrap {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+    .search-input-wrap input {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid var(--card-border);
+      border-radius: 999px;
+      padding: 8px 16px 8px 36px;
+      color: var(--text-main);
+      font-size: 0.88rem;
+      width: 220px;
+      transition: all 0.25s ease;
+      outline: none;
+      font-family: inherit;
+    }
+    body.light-theme .search-input-wrap input {
+      background: #f1f0fa;
+    }
+    .search-input-wrap input:focus {
+      width: 280px;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px var(--primary-light);
+      background: rgba(255, 255, 255, 0.15);
+    }
+    .search-input-wrap .search-ico {
+      position: absolute;
+      left: 12px;
+      font-size: 14px;
+      opacity: 0.65;
+      pointer-events: none;
+    }
+
+    .btn-header {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 8px 15px;
+      border-radius: 999px;
+      font-size: 13px;
+      font-weight: 700;
+      text-decoration: none;
+      cursor: pointer;
+      border: 1px solid var(--card-border);
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--text-main);
+      transition: all 0.2s ease;
+      white-space: nowrap;
+      min-height: 38px;
+    }
+    body.light-theme .btn-header {
+      background: #f1f0fa;
+    }
+    .btn-header:hover {
+      background: var(--primary);
+      color: #fff;
+      border-color: var(--primary);
+      transform: translateY(-1px);
+      box-shadow: var(--shadow-sm);
+    }
+    .btn-header.primary {
+      background: linear-gradient(135deg, #6d5efc, #8b5cf6);
+      color: #fff;
+      border: none;
+      box-shadow: 0 4px 14px rgba(109, 94, 252, 0.35);
+    }
+    .btn-header.primary:hover {
+      background: linear-gradient(135deg, #5b4be8, #7c3aed);
+      box-shadow: 0 6px 20px rgba(109, 94, 252, 0.5);
+    }
+    .mobile-menu-btn {
+      display: none;
+      align-items: center;
+      justify-content: center;
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid var(--card-border);
+      color: var(--text-main);
+      font-size: 20px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      -webkit-tap-highlight-color: transparent;
+      flex-shrink: 0;
+    }
+    body.light-theme .mobile-menu-btn {
+      background: #f1f0fa;
+    }
+    .mobile-menu-btn:hover, .mobile-menu-btn:active {
+      background: var(--primary);
+      color: #fff;
+      border-color: var(--primary);
+    }
+
+    /* Backdrop for mobile drawer */
+    .sidebar-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(10, 8, 24, 0.68);
+      backdrop-filter: blur(5px);
+      -webkit-backdrop-filter: blur(5px);
+      z-index: 994;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.28s ease, visibility 0.28s ease;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .sidebar-backdrop.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    /* Drawer Header & Mobile Search inside Drawer */
+    .sidebar-mobile-header {
+      display: none;
+      align-items: center;
+      justify-content: space-between;
+      padding: 6px 4px 14px;
+      margin-bottom: 12px;
+      border-bottom: 1px solid var(--card-border);
+    }
+    .sidebar-mobile-header h3 {
+      font-size: 1.12rem;
+      font-weight: 800;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .sidebar-close-btn {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid var(--card-border);
+      color: var(--text-muted);
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      cursor: pointer;
+      display: grid;
+      place-items: center;
+      font-size: 16px;
+      font-weight: 700;
+      transition: all 0.2s ease;
+      -webkit-tap-highlight-color: transparent;
+    }
+    body.light-theme .sidebar-close-btn {
+      background: #f1f0fa;
+    }
+    .sidebar-close-btn:hover, .sidebar-close-btn:active {
+      background: var(--danger);
+      color: #fff;
+      border-color: var(--danger);
+    }
+    .sidebar-drawer-search {
+      display: none;
+      margin-bottom: 16px;
+    }
+    .sidebar-drawer-search input {
+      width: 100%;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 10px 14px 10px 38px;
+      color: var(--text-main);
+      font-size: 0.9rem;
+      outline: none;
+      font-family: inherit;
+      transition: all 0.2s ease;
+    }
+    body.light-theme .sidebar-drawer-search input {
+      background: #f1f0fa;
+    }
+    .sidebar-drawer-search input:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px var(--primary-light);
+    }
+
+    /* Mobile Bottom Navigation Bar */
+    .mobile-bottom-bar {
+      display: none;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      z-index: 990;
+      background: rgba(18, 14, 36, 0.94);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-top: 1px solid var(--card-border);
+      padding: 6px 10px calc(6px + env(safe-area-inset-bottom, 0px));
+      justify-content: space-around;
+      align-items: center;
+      box-shadow: 0 -6px 24px rgba(0, 0, 0, 0.38);
+    }
+    body.light-theme .mobile-bottom-bar {
+      background: rgba(255, 255, 255, 0.95);
+      box-shadow: 0 -6px 24px rgba(30, 20, 70, 0.09);
+    }
+    .mobile-bottom-btn {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 3px;
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      font-size: 10.5px;
+      font-weight: 700;
+      text-decoration: none;
+      padding: 6px 6px;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.18s ease;
+      min-width: 48px;
+      -webkit-tap-highlight-color: transparent;
+      font-family: inherit;
+    }
+    .mobile-bottom-btn .m-ico {
+      font-size: 19px;
+      line-height: 1;
+      display: grid;
+      place-items: center;
+      transition: transform 0.18s ease;
+    }
+    .mobile-bottom-btn:hover, .mobile-bottom-btn:active {
+      color: var(--text-main);
+      background: var(--primary-light);
+    }
+    .mobile-bottom-btn:active .m-ico {
+      transform: scale(0.88);
+    }
+    .mobile-bottom-btn.active-action {
+      color: var(--primary);
+    }
+    .mobile-bottom-btn.primary-pill {
+      background: linear-gradient(135deg, #6d5efc, #8b5cf6);
+      color: #fff;
+      border-radius: 12px;
+      padding: 6px 12px;
+      box-shadow: 0 4px 12px rgba(109, 94, 252, 0.35);
+    }
+    .mobile-bottom-btn.primary-pill:active {
+      background: linear-gradient(135deg, #5b4be8, #7c3aed);
+      transform: scale(0.96);
+    }
+
+    /* Layout Structure */
+    .app-layout {
+      max-width: 1440px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      gap: 32px;
+      padding: 32px 24px 80px;
+    }
+
+    /* Sticky Sidebar Navigation */
+    aside.guide-sidebar {
+      position: sticky;
+      top: 90px;
+      height: calc(100vh - 110px);
+      overflow-y: auto;
+      scrollbar-width: thin;
+      scrollbar-color: var(--card-border) transparent;
+      padding-right: 8px;
+    }
+    aside.guide-sidebar::-webkit-scrollbar { width: 4px; }
+    aside.guide-sidebar::-webkit-scrollbar-thumb { background: var(--card-border); border-radius: 4px; }
+
+    .nav-section-title {
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 1.1px;
+      color: var(--text-dim);
+      margin: 20px 0 8px 12px;
+    }
+    .nav-section-title:first-child { margin-top: 0; }
+    .side-nav-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+    .side-nav-link {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 9px 14px;
+      border-radius: 10px;
+      font-size: 13.5px;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-decoration: none;
+      transition: all 0.18s ease;
+    }
+    .side-nav-link:hover {
+      color: var(--text-main);
+      background: var(--primary-light);
+      transform: translateX(3px);
+    }
+    .side-nav-link.active {
+      color: #fff;
+      background: linear-gradient(135deg, #6d5efc, #8b5cf6);
+      font-weight: 700;
+      box-shadow: 0 4px 14px rgba(109, 94, 252, 0.3);
+    }
+    .side-nav-link .nav-ico { font-size: 16px; flex-shrink: 0; }
+
+    /* Main Content Area */
+    main.guide-main {
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 40px;
+    }
+
+    /* Hero Banner */
+    .hero-banner {
+      position: relative;
+      background: var(--hero-gradient);
+      border-radius: var(--radius-lg);
+      padding: 48px 40px;
+      color: #fff;
+      overflow: hidden;
+      box-shadow: var(--shadow-lg);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+    }
+    .hero-banner::before {
+      content: "";
+      position: absolute;
+      top: -50%;
+      right: -20%;
+      width: 500px;
+      height: 500px;
+      background: radial-gradient(circle, rgba(255,255,255,0.2) 0%, transparent 65%);
+      pointer-events: none;
+    }
+    .hero-badge-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 16px;
+    }
+    .hero-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(255, 255, 255, 0.18);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      padding: 4px 12px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.3px;
+    }
+    .hero-pill.live {
+      background: rgba(23, 185, 120, 0.25);
+      border-color: rgba(23, 185, 120, 0.5);
+      color: #a7f3d0;
+    }
+    .hero-banner h2 {
+      font-size: clamp(2rem, 3.2vw, 2.8rem);
+      font-weight: 900;
+      line-height: 1.18;
+      letter-spacing: -0.8px;
+      margin-bottom: 14px;
+    }
+    .hero-banner p.hero-desc {
+      font-size: 1.12rem;
+      max-width: 800px;
+      line-height: 1.6;
+      color: rgba(255, 255, 255, 0.9);
+      margin-bottom: 28px;
+    }
+    .hero-cta-group {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+    .hero-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 24px;
+      border-radius: 12px;
+      font-size: 14px;
+      font-weight: 800;
+      text-decoration: none;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .hero-btn.primary {
+      background: #ffffff;
+      color: var(--primary-deep);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+    }
+    .hero-btn.primary:hover {
+      background: #f5f4fd;
+      transform: translateY(-2px);
+      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.28);
+    }
+    .hero-btn.secondary {
+      background: rgba(255, 255, 255, 0.15);
+      border: 1px solid rgba(255, 255, 255, 0.35);
+      color: #ffffff;
+      backdrop-filter: blur(8px);
+    }
+    .hero-btn.secondary:hover {
+      background: rgba(255, 255, 255, 0.28);
+      transform: translateY(-2px);
+    }
+
+    /* Content Cards & Sections */
+    .guide-section {
+      scroll-margin-top: 100px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    .section-header {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 16px;
+      border-bottom: 2px solid var(--card-border);
+      padding-bottom: 12px;
+    }
+    .section-title {
+      font-size: 1.65rem;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .section-title .sec-badge {
+      font-size: 12px;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: 999px;
+      background: var(--primary-light);
+      color: var(--primary);
+    }
+    .section-desc {
+      font-size: 1rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius-md);
+      padding: 24px 28px;
+      box-shadow: var(--shadow-sm);
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+    .card:hover {
+      border-color: var(--card-hover-border);
+    }
+
+    .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 20px; }
+    .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px; }
+    .grid-4 { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 16px; }
+
+    /* Feature Highlight Boxes */
+    .feature-box {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius-md);
+      padding: 20px 22px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+    .feature-box:hover {
+      transform: translateY(-2px);
+      border-color: var(--primary);
+      box-shadow: var(--shadow-glow);
+    }
+    .feat-icon-title {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .feat-icon-sq {
+      width: 42px;
+      height: 42px;
+      border-radius: 10px;
+      display: grid;
+      place-items: center;
+      font-size: 20px;
+      flex-shrink: 0;
+    }
+    .feat-icon-sq.purple { background: rgba(109, 94, 252, 0.15); color: #8b5cf6; }
+    .feat-icon-sq.green { background: rgba(23, 185, 120, 0.15); color: #17b978; }
+    .feat-icon-sq.amber { background: rgba(245, 165, 36, 0.15); color: #f5a524; }
+    .feat-icon-sq.red { background: rgba(229, 72, 77, 0.15); color: #e5484d; }
+    .feat-icon-sq.blue { background: rgba(14, 165, 233, 0.15); color: #0ea5e9; }
+    .feat-icon-title h4 {
+      font-size: 1.05rem;
+      font-weight: 800;
+      color: var(--text-main);
+    }
+    .feature-box p {
+      font-size: 0.92rem;
+      color: var(--text-muted);
+      line-height: 1.55;
+    }
+
+    /* Interactive Live Sandbox Card for Demo Tasks */
+    .demo-sandbox-card {
+      background: linear-gradient(135deg, rgba(109, 94, 252, 0.08) 0%, rgba(23, 185, 120, 0.06) 100%);
+      border: 2px solid var(--primary);
+      border-radius: var(--radius-lg);
+      padding: 28px 32px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    .demo-sandbox-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+    .demo-sandbox-header h3 {
+      font-size: 1.35rem;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .sandbox-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .btn-action-glow {
+      background: linear-gradient(135deg, #17b978, #10b981);
+      color: #fff;
+      padding: 10px 20px;
+      border-radius: 10px;
+      border: none;
+      font-weight: 800;
+      font-size: 14px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 4px 16px rgba(23, 185, 120, 0.35);
+      transition: all 0.2s ease;
+    }
+    .btn-action-glow:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 22px rgba(23, 185, 120, 0.5);
+    }
+    .btn-action-secondary {
+      background: var(--primary-light);
+      border: 1px solid var(--primary);
+      color: var(--text-main);
+      padding: 10px 18px;
+      border-radius: 10px;
+      font-weight: 700;
+      font-size: 14px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s ease;
+    }
+    .btn-action-secondary:hover {
+      background: var(--primary);
+      color: #fff;
+    }
+
+    /* Visual Simulated Task Card Representation */
+    .mock-card-preview {
+      background: #ffffff;
+      color: #1b1630;
+      border-radius: 14px;
+      padding: 20px;
+      position: relative;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.25);
+      border-left: 7px solid var(--amber);
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      font-size: 14px;
+    }
+    .mock-card-preview.done {
+      border-left-color: var(--success);
+      opacity: 0.85;
+    }
+    .mock-card-preview .card-top-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .mock-card-preview .status-label {
+      font-weight: 800;
+      font-size: 12px;
+      color: #8a86a0;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .mock-card-preview .prio-badge {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 800;
+      padding: 3px 10px;
+      border-radius: 999px;
+      text-transform: uppercase;
+    }
+    .prio-high { background: #fdecec; color: #c0362c; border: 1px solid #f3b7b2; }
+    .prio-medium { background: #fef3e0; color: #a5670a; border: 1px solid #f6d59a; }
+    .prio-low { background: #e8f7ef; color: #0f7a4e; border: 1px solid #b6e5cd; }
+
+    .mock-meta-table {
+      background: #f9f8fe;
+      border-radius: 8px;
+      padding: 10px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      font-size: 12.5px;
+      border: 1px dashed #e2def5;
+    }
+    .mock-meta-row {
+      display: flex;
+      gap: 8px;
+    }
+    .mock-meta-row b {
+      color: var(--primary-deep);
+      min-width: 80px;
+    }
+
+    .mock-steps-list {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      background: #faf9ff;
+      border: 1px solid #eceafd;
+      padding: 10px 12px;
+      border-radius: 8px;
+    }
+    .mock-step-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+    }
+    .mock-step-item.checked { text-decoration: line-through; color: #9a96ad; }
+
+    /* Interactive Tab Switcher */
+    .tab-container {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .tab-nav {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      background: rgba(255, 255, 255, 0.05);
+      padding: 6px;
+      border-radius: 12px;
+      border: 1px solid var(--card-border);
+    }
+    body.light-theme .tab-nav { background: #eeebfc; }
+    .tab-btn {
+      padding: 10px 18px;
+      border-radius: 8px;
+      border: none;
+      background: transparent;
+      color: var(--text-muted);
+      font-weight: 700;
+      font-size: 13.5px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s ease;
+      font-family: inherit;
+    }
+    .tab-btn:hover {
+      color: var(--text-main);
+      background: rgba(255, 255, 255, 0.1);
+    }
+    .tab-btn.active {
+      background: var(--primary);
+      color: #ffffff;
+      box-shadow: 0 4px 12px rgba(109, 94, 252, 0.35);
+    }
+    .tab-content {
+      display: none;
+      animation: fadeIn 0.25s ease forwards;
+    }
+    .tab-content.active { display: block; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* Code & JSON Previews */
+    .code-block-wrap {
+      position: relative;
+      background: var(--code-bg);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      margin: 12px 0;
+    }
+    .code-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 16px;
+      background: rgba(255, 255, 255, 0.04);
+      border-bottom: 1px solid var(--card-border);
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text-dim);
+    }
+    .code-copy-btn {
+      background: var(--primary-light);
+      border: 1px solid var(--card-border);
+      color: var(--text-main);
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .code-copy-btn:hover {
+      background: var(--primary);
+      color: #fff;
+    }
+    pre.code-view {
+      padding: 16px;
+      overflow-x: auto;
+      font-family: 'Fira Code', monospace;
+      font-size: 13px;
+      line-height: 1.55;
+      color: var(--code-text);
+      scrollbar-width: thin;
+    }
+
+    /* Step-by-Step Flow List */
+    .workflow-steps {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .workflow-step {
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius-md);
+      padding: 18px 22px;
+      position: relative;
+      transition: border-color 0.2s ease, transform 0.2s ease;
+    }
+    .workflow-step:hover {
+      border-color: var(--primary);
+      transform: translateX(4px);
+    }
+    .step-num-bubble {
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, #6d5efc, #8b5cf6);
+      color: #fff;
+      font-weight: 900;
+      font-size: 16px;
+      display: grid;
+      place-items: center;
+      flex-shrink: 0;
+      box-shadow: 0 4px 12px rgba(109, 94, 252, 0.35);
+    }
+    .step-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .step-content h4 {
+      font-size: 1.08rem;
+      font-weight: 800;
+      color: var(--text-main);
+    }
+    .step-content p {
+      font-size: 0.94rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+
+    /* Comparison & Matrix Tables */
+    .table-container {
+      width: 100%;
+      overflow-x: auto;
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius-md);
+      background: var(--card-bg);
+    }
+    table.guide-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13.5px;
+      text-align: left;
+    }
+    table.guide-table th {
+      background: rgba(109, 94, 252, 0.12);
+      color: var(--text-main);
+      font-weight: 800;
+      padding: 14px 18px;
+      border-bottom: 2px solid var(--card-border);
+      white-space: nowrap;
+    }
+    table.guide-table td {
+      padding: 12px 18px;
+      border-bottom: 1px solid var(--card-border);
+      color: var(--text-muted);
+      vertical-align: top;
+    }
+    table.guide-table tr:last-child td { border-bottom: none; }
+    table.guide-table tr:hover td { background: rgba(255, 255, 255, 0.03); }
+    body.light-theme table.guide-table tr:hover td { background: #faf9ff; }
+
+    /* Callout & Alert Boxes */
+    .callout {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      padding: 16px 20px;
+      border-radius: var(--radius-md);
+      font-size: 0.95rem;
+      line-height: 1.6;
+      border-left: 5px solid;
+    }
+    .callout.info {
+      background: rgba(109, 94, 252, 0.12);
+      border-left-color: var(--primary);
+      color: var(--text-main);
+    }
+    .callout.warning {
+      background: rgba(245, 165, 36, 0.12);
+      border-left-color: var(--accent);
+      color: var(--text-main);
+    }
+    .callout.success {
+      background: rgba(23, 185, 120, 0.12);
+      border-left-color: var(--success);
+      color: var(--text-main);
+    }
+    .callout.danger {
+      background: rgba(229, 72, 77, 0.12);
+      border-left-color: var(--danger);
+      color: var(--text-main);
+    }
+    .callout .callout-ico { font-size: 20px; flex-shrink: 0; margin-top: 2px; }
+
+    /* FAQ Accordion */
+    .faq-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .faq-item {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      transition: border-color 0.2s ease;
+    }
+    .faq-item[open] { border-color: var(--primary); }
+    .faq-question {
+      padding: 18px 22px;
+      font-weight: 800;
+      font-size: 1.05rem;
+      color: var(--text-main);
+      cursor: pointer;
+      list-style: none;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      user-select: none;
+    }
+    .faq-question::-webkit-details-marker { display: none; }
+    .faq-question::after {
+      content: "+";
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--primary);
+      transition: transform 0.25s ease;
+    }
+    .faq-item[open] .faq-question::after {
+      content: "−";
+      transform: rotate(180deg);
+    }
+    .faq-answer {
+      padding: 0 22px 20px;
+      font-size: 0.95rem;
+      color: var(--text-muted);
+      line-height: 1.65;
+    }
+
+    /* Keyboard Shortcuts Table View */
+    .kbd-tag {
+      display: inline-block;
+      padding: 3px 8px;
+      font-family: 'Fira Code', monospace;
+      font-size: 12px;
+      font-weight: 700;
+      border-radius: 6px;
+      background: rgba(255, 255, 255, 0.12);
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      color: var(--text-main);
+      box-shadow: 0 2px 0 rgba(0, 0, 0, 0.25);
+    }
+    body.light-theme .kbd-tag {
+      background: #f1f0fa;
+      border-color: #d2cee8;
+      box-shadow: 0 2px 0 #bbb5db;
+    }
+
+    /* Toast Notification */
+    .guide-toast {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      z-index: 2000;
+      background: var(--primary-deep);
+      color: #fff;
+      padding: 14px 22px;
+      border-radius: 12px;
+      font-weight: 700;
+      font-size: 14px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+      transform: translateY(120px);
+      opacity: 0;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .guide-toast.show {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    /* Footer */
+    footer.guide-footer {
+      border-top: 1px solid var(--card-border);
+      padding: 40px 24px 60px;
+      text-align: center;
+      color: var(--text-dim);
+      font-size: 13.5px;
+      background: rgba(14, 10, 26, 0.5);
+    }
+    .footer-links {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+    }
+    .footer-links a {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-weight: 700;
+      transition: color 0.15s ease;
+    }
+    .footer-links a:hover { color: var(--primary); }
+
+    /* Responsive Adaptations */
+    @media (max-width: 1024px) {
+      .app-layout {
+        grid-template-columns: 1fr;
+        padding: 20px 16px 80px;
+        gap: 24px;
+      }
+      aside.guide-sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        width: 320px;
+        max-width: 86vw;
+        height: 100vh;
+        z-index: 996;
+        background: var(--sidebar-bg);
+        padding: 20px 18px 80px;
+        box-shadow: 12px 0 45px rgba(0, 0, 0, 0.5);
+        border-right: 1px solid var(--card-border);
+        transform: translateX(-105%);
+        transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        display: block;
+        overflow-y: auto;
+      }
+      aside.guide-sidebar.mobile-open {
+        transform: translateX(0);
+      }
+      .sidebar-mobile-header { display: flex; }
+      .sidebar-drawer-search { display: block; }
+      .mobile-menu-btn { display: flex; }
+      .search-input-wrap input { width: 170px; }
+      .search-input-wrap input:focus { width: 230px; }
+    }
+
+    @media (max-width: 768px) {
+      .mobile-bottom-bar { display: flex; }
+      .app-layout { padding-bottom: 95px; }
+      #waFloatingWidget { bottom: 76px !important; }
+      .hero-banner { padding: 32px 20px; }
+    }
+
+    @media (max-width: 640px) {
+      .header-inner {
+        padding: 10px 12px;
+        gap: 8px;
+        flex-direction: column;
+        align-items: stretch;
+      }
+      .header-inner > div:first-child {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
+      }
+      .brand-group { gap: 8px; }
+      .brand-meta p { display: none; }
+      .brand-meta h1 { font-size: 1.05rem; }
+      .brand-meta span.version-tag { font-size: 9.5px; padding: 2px 6px; }
+      .logo-box { width: 36px; height: 36px; font-size: 18px; border-radius: 10px; }
+      
+      /* Show upper navigation buttons in 2 rows in mobile view */
+      .header-actions {
+        display: grid !important;
+        grid-template-columns: repeat(2, 1fr) !important;
+        width: 100% !important;
+        gap: 6px !important;
+      }
+      .header-actions .btn-header.hide-xs,
+      .header-actions .btn-header.hide-sm {
+        display: inline-flex !important;
+      }
+      .header-actions .btn-header {
+        width: 100% !important;
+        min-width: 0 !important;
+        padding: 6px 8px !important;
+        font-size: 12px !important;
+        min-height: 34px !important;
+        justify-content: center !important;
+      }
+      .header-actions .btn-header.btn-text-hide .btn-lbl {
+        display: inline !important;
+      }
+      .header-actions .search-input-wrap {
+        display: none !important;
+      }
+      .search-input-wrap.mobile-expanded {
+        display: flex !important;
+        position: absolute;
+        top: 60px;
+        left: 12px;
+        right: 12px;
+        z-index: 1001;
+      }
+      .search-input-wrap.mobile-expanded input {
+        width: 100%;
+        background: var(--bg-surface);
+        box-shadow: var(--shadow-lg);
+      }
+      .hero-banner h2 { font-size: 1.7rem; }
+      .section-title { font-size: 1.35rem; }
+      .card { padding: 18px 16px; }
+      .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+    }
+
+    /* Print Styles */
+    @media print {
+      header.guide-header, aside.guide-sidebar, .sidebar-backdrop, .mobile-bottom-bar, .header-actions, .demo-sandbox-card, .btn-action-glow, .guide-toast, .footer-links {
+        display: none !important;
+      }
+      .app-layout { grid-template-columns: 1fr; padding: 0; }
+      body { background: #fff !important; color: #000 !important; }
+      .card, .feature-box, .workflow-step { border: 1px solid #ddd !important; box-shadow: none !important; break-inside: avoid; }
+      .hero-banner { background: #4a3fd6 !important; color: #fff !important; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Background Lighting Orbs -->
+  <div class="glow-sphere-1"></div>
+  <div class="glow-sphere-2"></div>
+  <div class="glow-sphere-3"></div>
+
+  <!-- Top Navigation Header -->
+  <header class="guide-header">
+    <div class="header-inner">
+      <div style="display:flex;align-items:center;gap:10px;">
+        <button class="mobile-menu-btn" onclick="toggleMobileSidebar()" aria-label="Toggle Navigation Menu" title="Open Navigation Drawer">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
+          </svg>
+        </button>
+        <a href="index.html" class="brand-group" title="Back to Task Wall">
+          <div class="logo-box">✓</div>
+          <div class="brand-meta">
+            <h1>Task Wall <span class="version-tag">Guide</span></h1>
+            <p>Speak, Pin, Track &amp; Export Follow-ups</p>
+          </div>
+        </a>
+      </div>
+
+      <div class="header-actions">
+        <a href="https://supportsourcecode.lovable.app/home" target="_blank" rel="noopener noreferrer" class="btn-header btn-text-hide" title="Home (Main Portal)">
+          <span class="nav-ico">🏠</span> <span class="btn-lbl">Home</span>
+        </a>
+        <a href="https://interactive-media-display.lovable.app/" target="_blank" rel="noopener noreferrer" class="btn-header btn-text-hide hide-xs" title="Interactive App Store">
+          <span class="nav-ico">🛍️</span> <span class="btn-lbl">Store</span>
+        </a>
+        <div class="search-input-wrap" id="headerSearchWrap">
+          <span class="search-ico">🔍</span>
+          <input type="text" id="guideSearchInput" placeholder="Search guide (voice, PDF)..." onkeyup="filterGuideContent(this.value)">
+        </div>
+        <button class="btn-header hide-sm hide-xs" onclick="toggleTheme()" id="themeToggleBtn" title="Toggle Light/Dark Theme">
+          <span class="nav-ico">🌓</span> <span id="themeLabel" class="btn-lbl">Light</span>
+        </button>
+        <button class="btn-header hide-sm hide-xs" onclick="window.print()" title="Print or Save as PDF">
+          <span class="nav-ico">🖨️</span> <span class="btn-lbl">Print</span>
+        </button>
+        <a href="index.html" class="btn-header primary" title="Launch Task Wall App">
+          <span class="nav-ico">🗂️</span> <span class="btn-lbl">Launch App</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Mobile Drawer Backdrop -->
+  <div class="sidebar-backdrop" id="sidebarBackdrop" onclick="closeMobileSidebar()" aria-hidden="true"></div>
+
+  <!-- Layout Container -->
+  <div class="app-layout">
+
+    <!-- Sticky Navigation Sidebar -->
+    <aside class="guide-sidebar" id="guideSidebar">
+      <div class="sidebar-mobile-header">
+        <h3><span>📑</span> Guide Contents</h3>
+        <button class="sidebar-close-btn" onclick="closeMobileSidebar()" aria-label="Close Guide Menu" title="Close Menu">✕</button>
+      </div>
+
+      <div class="sidebar-drawer-search">
+        <div class="search-input-wrap" style="width:100%;">
+          <span class="search-ico">🔍</span>
+          <input type="text" id="drawerSearchInput" placeholder="Filter topics..." onkeyup="filterGuideTopics(this.value)">
+        </div>
+      </div>
+
+      <div class="nav-section-title">Getting Started</div>
+      <ul class="side-nav-list">
+        <li><a href="#overview" class="side-nav-link active" onclick="closeMobileSidebar()"><span class="nav-ico">🌟</span> App Overview &amp; Concept</a></li>
+        <li><a href="#quickstart" class="side-nav-link" onclick="closeMobileSidebar()"><span class="nav-ico">🚀</span> 60-Second Quickstart</a></li>
+        <li><a href="#online-server" class="side-nav-link" onclick="closeMobileSidebar()"><span class="nav-ico">🌐</span> Online Server Setup</a></li>
+        <li><a href="#mobile-experience" class="side-nav-link" onclick="closeMobileSidebar()"><span class="nav-ico">📱</span> Mobile Navigation &amp; Icons</a></li>
+      </ul>
+
+      <div class="nav-section-title">Core Modules &amp; Panels</div>
+      <ul class="side-nav-list">
+        <li><a href="#wall-anatomy" class="side-nav-link" onclick="closeMobileSidebar()"><span class="nav-ico">🧱</span> Wall &amp; Card Anatomy</a></li>
+        <li><a href="#creating-tasks" class="side-nav-link" onclick="closeMobileSidebar()"><span class="nav-ico">➕</span> Adding &amp; Voice Input</a></li>
+        <li><a href="#email-metadata" class="side-nav-link" onclick="closeMobileSidebar()"><span class="nav-ico">✉️</span> Email Triage &amp; POCs</a></li>
+        <li><a href="#subtasks-pocs" class="side-nav-link" onclick="closeMobileSidebar()"><span class="nav-ico">🧩</span> Steps &amp; Multi-POCs</a></li>
+        <li><a href="#search-filtering" class="side-nav-link" onclick="closeMobileSidebar()"><span class="nav-ico">🔍</span> Search &amp; Date Range</a></li>
+        <li><a href="#export-engine" class="side-nav-link" onclick="closeMobileSidebar()"><span class="nav-ico">📊</span> PDF, Excel &amp; HTML</a></li>
+        <li><a href="#backup-restore" class="side-nav-link" onclick="closeMobileSidebar()"><span class="nav-ico">💾</span> Backup, Restore &amp; Data</a></li>
+      </ul>
+
+      <div class="nav-section-title">Interactive Resources</div>
+      <ul class="side-nav-list">
+        <li><a href="#mock-sandbox" class="side-nav-link" onclick="closeMobileSidebar()"><span class="nav-ico">🧪</span> Interactive Demo Sandbox</a></li>
+        <li><a href="#workflows" class="side-nav-link" onclick="closeMobileSidebar()"><span class="nav-ico">📋</span> Real-World Scenarios</a></li>
+        <li><a href="#shortcuts" class="side-nav-link" onclick="closeMobileSidebar()"><span class="nav-ico">⌨️</span> Keyboard Shortcuts</a></li>
+        <li><a href="#troubleshooting" class="side-nav-link" onclick="closeMobileSidebar()"><span class="nav-ico">🔧</span> Troubleshooting &amp; FAQ</a></li>
+      </ul>
+    </aside>
+
+    <!-- Main Content Stream -->
+    <main class="guide-main" id="guideMainContent">
+
+      <!-- Hero Banner -->
+      <section class="hero-banner">
+        <div class="hero-badge-row">
+          <span class="hero-pill live">● Production Ready</span>
+          <span class="hero-pill">🌐 Online Server Compatible</span>
+          <span class="hero-pill">📱 Mobile &amp; Touch Optimized</span>
+          <span class="hero-pill">🎤 Web Speech Voice AI</span>
+          <span class="hero-pill">📑 A2 Ultra-Res PDF Engine</span>
+        </div>
+        <h2>The Ultimate Operational Guide for Task Wall</h2>
+        <p class="hero-desc">
+          Everything you need to master Task Wall — from hands-free voice task dictation and rich email triage to multi-POC delegating, dynamic date grouping, Excel reporting, and lossless JSON backups.
+        </p>
+        <div class="hero-cta-group">
+          <a href="#quickstart" class="hero-btn primary">
+            <span>⚡</span> Start in 60 Seconds
+          </a>
+          <button class="hero-btn secondary" onclick="loadDemoDataToTaskWall()">
+            <span>✨</span> Inject Demo Tickets into App
+          </button>
+        </div>
+      </section>
+
+      <!-- Section 1: Overview & Architecture -->
+      <section class="guide-section" id="overview">
+        <div class="section-header">
+          <h3 class="section-title"><span>🌟</span> 1. Application Overview &amp; Architecture</h3>
+          <span class="sec-badge">Foundations</span>
+        </div>
+        <p class="section-desc">
+          <strong>Task Wall</strong> is a high-velocity task management and email follow-up operating system designed for professionals who manage high volumes of incoming communications, complex delegation checklists, and daily deliverables.
+        </p>
+
+        <div class="grid-3">
+          <div class="feature-box">
+            <div class="feat-icon-title">
+              <div class="feat-icon-sq purple">🎙️</div>
+              <h4>Voice &amp; Rich Input</h4>
+            </div>
+            <p>
+              Speak naturally to dictate tasks in real-time with Web Speech API integration, or paste raw emails with retained formatting, tables, and hyperlinks.
+            </p>
+          </div>
+
+          <div class="feature-box">
+            <div class="feat-icon-title">
+              <div class="feat-icon-sq green">📅</div>
+              <h4>Date-Centric Wall</h4>
+            </div>
+            <p>
+              Tickets automatically organize into chronological date ribbons. Filter seamlessly by Today, custom date ranges, full months, or entire years.
+            </p>
+          </div>
+
+          <div class="feature-box">
+            <div class="feat-icon-title">
+              <div class="feat-icon-sq amber">🧑‍🤝‍🧑</div>
+              <h4>Multi-POC &amp; Sub-Steps</h4>
+            </div>
+            <p>
+              Track primary and secondary People of Contact (POCs) with detailed <em>"who did what"</em> task accountability and synchronized sub-task checklists.
+            </p>
+          </div>
+
+          <div class="feature-box">
+            <div class="feat-icon-title">
+              <div class="feat-icon-sq blue">📊</div>
+              <h4>Tri-Export Engine</h4>
+            </div>
+            <p>
+              Generate high-resolution A2 rasterized PDFs, 17-column structured Excel sheets (XLSX), or self-contained print-ready HTML documents in one click.
+            </p>
+          </div>
+
+          <div class="feature-box">
+            <div class="feat-icon-title">
+              <div class="feat-icon-sq red">🔒</div>
+              <h4>Local-First Privacy</h4>
+            </div>
+            <p>
+              Zero server data transmission. All your confidential tasks, emails, and notes live strictly inside your browser's LocalStorage sandbox.
+            </p>
+          </div>
+
+          <div class="feature-box">
+            <div class="feat-icon-title">
+              <div class="feat-icon-sq purple">💾</div>
+              <h4>Instant JSON Disaster Recovery</h4>
+            </div>
+            <p>
+              Hit <span class="kbd-tag">Ctrl+S</span> anytime to export your entire database as a JSON backup with intelligent non-duplicating import logic.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Section 2: Online Server Setup -->
+      <section class="guide-section" id="online-server">
+        <div class="section-header">
+          <h3 class="section-title"><span>🌐</span> 2. Running on an Online Server</h3>
+          <span class="sec-badge">Important Ops Guide</span>
+        </div>
+        <p class="section-desc">
+          When hosting Task Wall on an online server (e.g. GitHub Pages, AWS, Netlify, Vercel, or your corporate web server), keep these critical operational factors in mind:
+        </p>
+
+        <div class="callout warning">
+          <div class="callout-ico">⚠️</div>
+          <div>
+            <strong>HTTPS is Required for Voice Input:</strong> Modern web browsers enforce strict security policies for hardware access. The <code>SpeechRecognition</code> and <code>webkitSpeechRecognition</code> voice dictation APIs will <strong>only function over secure HTTPS connections</strong> (or <code>localhost</code> for local development). Ensure your online server has an SSL/TLS certificate enabled!
+          </div>
+        </div>
+
+        <div class="grid-2">
+          <div class="card">
+            <h4 style="margin-bottom:12px;display:flex;align-items:center;gap:8px;">
+              <span>🛡️</span> Browser Permission Lifecycle
+            </h4>
+            <p style="font-size:0.93rem;color:var(--text-muted);margin-bottom:12px;">
+              When you tap the <strong>🎤 Speak</strong> button for the first time on an online domain:
+            </p>
+            <ol style="padding-left:20px;font-size:0.9rem;color:var(--text-muted);display:flex;flex-direction:column;gap:8px;">
+              <li>Your browser displays a security prompt: <em>"Allow [your-domain] to use your microphone?"</em></li>
+              <li>Select <strong>"Allow while using the site"</strong> or <strong>"Always allow"</strong>.</li>
+              <li>A red pulsing indicator <span style="color:var(--danger);font-weight:700;">● Listening…</span> confirms speech recognition is active.</li>
+              <li>Continuous listener automatically restarts between pauses and handles interim transcript streaming.</li>
+            </ol>
+          </div>
+
+          <div class="card">
+            <h4 style="margin-bottom:12px;display:flex;align-items:center;gap:8px;">
+              <span>💾</span> Domain Storage &amp; Isolation
+            </h4>
+            <p style="font-size:0.93rem;color:var(--text-muted);margin-bottom:12px;">
+              How browser storage functions across online servers:
+            </p>
+            <ul style="padding-left:20px;font-size:0.9rem;color:var(--text-muted);display:flex;flex-direction:column;gap:8px;">
+              <li><strong>Origin Isolation:</strong> Each online domain (e.g. <code>app.mycompany.com</code>) maintains its own isolated <code>localStorage</code> database.</li>
+              <li><strong>Cross-Tab Syncing:</strong> Changes made in one tab are saved instantaneously to the browser database.</li>
+              <li><strong>Incognito Mode Warning:</strong> Private/Incognito browsing sessions wipe all storage when the window closes. Always take a JSON backup (<span class="kbd-tag">Ctrl+S</span>) if using shared or temporary kiosks.</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- Section 3: 60-Second Quickstart -->
+      <section class="guide-section" id="quickstart">
+        <div class="section-header">
+          <h3 class="section-title"><span>⚡</span> 3. 60-Second Quickstart Workflow</h3>
+          <span class="sec-badge">Fast Track</span>
+        </div>
+        <p class="section-desc">Follow this rapid 4-step walkthrough to create, manage, and complete your first task.</p>
+
+        <div class="workflow-steps">
+          <div class="workflow-step">
+            <div class="step-num-bubble">1</div>
+            <div class="step-content">
+              <h4>Open the Add Drawer</h4>
+              <p>Click the <strong>➕ Add</strong> button in the left icon rail (or bottom navigation bar on mobile). The Add Drawer smoothly glides open and places focus into the task editor.</p>
+            </div>
+          </div>
+
+          <div class="workflow-step">
+            <div class="step-num-bubble">2</div>
+            <div class="step-content">
+              <h4>Dictate or Paste Your Task</h4>
+              <p>Click <strong>🎤 Speak</strong> to talk into your microphone, or paste an email snippet directly into the rich text box. Select the target date (defaults to today) and assign a priority level (<strong>High</strong>, <strong>Medium</strong>, or <strong>Low</strong>).</p>
+            </div>
+          </div>
+
+          <div class="workflow-step">
+            <div class="step-num-bubble">3</div>
+            <div class="step-content">
+              <h4>Attach Action Items, Sub-Steps &amp; POCs</h4>
+              <p>Type a clear action item (e.g. <em>"Review architecture doc and reply by 4 PM"</em>), add sub-checklists, and record the sender/recipient email details and assigned team members.</p>
+            </div>
+          </div>
+
+          <div class="workflow-step">
+            <div class="step-num-bubble">4</div>
+            <div class="step-content">
+              <h4>Pin to Wall &amp; Track to Closure</h4>
+              <p>Click <strong>Add to wall</strong>. Your ticket is instantly rendered under its date ribbon with a glowing amber pending stripe. Once finished, click the status checkbox to toggle it to closed (green stripe).</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Section: Mobile Navigation & Touch-Friendly Icons -->
+      <section class="guide-section" id="mobile-experience">
+        <div class="section-header">
+          <h3 class="section-title"><span>📱</span> Mobile Navigation &amp; Touch-Friendly Icons</h3>
+          <span class="sec-badge">Mobile Responsive</span>
+        </div>
+        <p class="section-desc">
+          Task Wall and this Guide are built with a first-class mobile experience. When viewed on smartphones or tablets (&lt; 768px), the layout dynamically reconfigures for single-thumb ergonomics:
+        </p>
+
+        <div class="grid-3">
+          <div class="feature-box">
+            <div class="feat-icon-title">
+              <div class="feat-icon-sq purple">📱</div>
+              <h4>Bottom Icon Bar</h4>
+            </div>
+            <p>
+              On mobile screens, the desktop vertical rail moves to a fixed frosted glass bottom navigation bar. Tap <strong>Wall</strong>, <strong>Add</strong>, <strong>Find</strong>, <strong>PDF</strong>, <strong>Excel</strong>, and <strong>Data</strong> with zero reach strain.
+            </p>
+          </div>
+
+          <div class="feature-box">
+            <div class="feat-icon-title">
+              <div class="feat-icon-sq green">📂</div>
+              <h4>Off-Canvas Slide Drawers</h4>
+            </div>
+            <p>
+              Adding tasks, editing tickets, and configuring date searches glide up in full-width mobile drawers. Tap the backdrop or the <strong>✕</strong> close button to dismiss smoothly.
+            </p>
+          </div>
+
+          <div class="feature-box">
+            <div class="feat-icon-title">
+              <div class="feat-icon-sq amber">📖</div>
+              <h4>Guide Drawer &amp; In-Menu Search</h4>
+            </div>
+            <p>
+              In this guide, tap the mobile hamburger <strong>☰</strong> or bottom <strong>📖 Menu</strong> to open the full table of contents with instant topic filtering and auto-scroll closing.
+            </p>
+          </div>
+        </div>
+
+        <div class="card">
+          <h4 style="margin-bottom:12px;display:flex;align-items:center;gap:8px;">
+            <span>💡</span> Mobile Usage Tips &amp; Best Practices
+          </h4>
+          <ul style="padding-left:20px;font-size:0.92rem;color:var(--text-muted);display:flex;flex-direction:column;gap:8px;">
+            <li><strong>Voice Dictation on Mobile:</strong> Tap <strong>🎤 Speak</strong> and dictate directly into your smartphone microphone. Make sure microphone permission is granted in your mobile browser.</li>
+            <li><strong>Quick Theme Toggle:</strong> Tap the <strong>🌓 Theme</strong> button in the mobile bottom bar to switch between Dark and Light mode instantly.</li>
+            <li><strong>Scroll to Top:</strong> Tap the <strong>⬆️ Top</strong> button in the bottom bar at any time to smoothly return to the top of the guide.</li>
+            <li><strong>Safe-Area Insets:</strong> Both the Task Wall app and this guide support modern notch and home bar displays with native <code>env(safe-area-inset-bottom)</code> padding.</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- Section 4: Wall & Card Anatomy -->
+      <section class="guide-section" id="wall-anatomy">
+        <div class="section-header">
+          <h3 class="section-title"><span>🧱</span> 4. Wall Architecture &amp; Card Anatomy</h3>
+          <span class="sec-badge">Visual Guide</span>
+        </div>
+        <p class="section-desc">Understand every visual element, badge, and interactive control rendered on a Task Card:</p>
+
+        <div class="grid-2">
+          <!-- Live Simulated Card (Pending) -->
+          <div>
+            <div style="font-size:12px;font-weight:800;text-transform:uppercase;color:var(--text-dim);margin-bottom:8px;">
+              Open Ticket (Pending Follow-up)
+            </div>
+            <div class="mock-card-preview">
+              <div class="card-top-row">
+                <label class="status-label">
+                  <input type="checkbox" style="width:18px;height:18px;accent-color:#17b978;">
+                  <span>Open</span>
+                </label>
+                <div style="display:flex;gap:6px;">
+                  <span style="background:#f1f0fa;padding:4px 8px;border-radius:6px;font-size:13px;cursor:pointer;">✏️</span>
+                  <span style="background:#f1f0fa;padding:4px 8px;border-radius:6px;font-size:13px;cursor:pointer;">🗑️</span>
+                </div>
+              </div>
+
+              <div>
+                <span class="prio-badge prio-high">High Priority</span>
+              </div>
+
+              <div class="mock-meta-table">
+                <div class="mock-meta-row"><b>From:</b> <span>sarah.connor@cloudcorp.io</span></div>
+                <div class="mock-meta-row"><b>To:</b> <span>dev-ops-team@cloudcorp.io</span></div>
+                <div class="mock-meta-row"><b>When:</b> <span>Mon 28-09-2026 09:30 AM</span></div>
+              </div>
+
+              <div style="font-weight:600;line-height:1.5;">
+                Critical security patch rollout for AWS Kubernetes clusters. Verify rolling upgrade with zero downtime.
+              </div>
+
+              <div class="mock-meta-table">
+                <div class="mock-meta-row"><b>Action:</b> <span>Approve PR #419 &amp; trigger automated pipeline</span></div>
+                <div class="mock-meta-row"><b>POC:</b> <span>David Vance (Lead SRE)</span></div>
+                <div class="mock-meta-row"><b>Email:</b> <a href="#" style="color:#4a3fd6;text-decoration:none;">david.vance@cloudcorp.io</a></div>
+              </div>
+
+              <div class="mock-steps-list">
+                <div style="font-size:12px;font-weight:700;color:#4a3fd6;display:flex;justify-content:space-between;">
+                  <span>Steps 1/3</span>
+                  <span style="cursor:pointer;color:#6d5efc;">✓ Tick all</span>
+                </div>
+                <div class="mock-step-item checked">
+                  <span>☑</span> <span>Backup etcd database snapshots</span>
+                </div>
+                <div class="mock-step-item">
+                  <span>☐</span> <span>Apply cluster manifest patch</span>
+                </div>
+                <div class="mock-step-item">
+                  <span>☐</span> <span>Run health check verification script</span>
+                </div>
+              </div>
+
+              <div style="border-top:1px dashed #ececf5;padding-top:6px;font-size:11px;color:#9a96ad;display:flex;justify-content:space-between;">
+                <span>🕒 Created Sep 28, 2026, 9:35 AM</span>
+                <span>✏️ Edited Sep 28, 2026, 9:42 AM</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Component Legend -->
+          <div class="card">
+            <h4 style="margin-bottom:14px;">Card Element Breakdown</h4>
+            <div style="display:flex;flex-direction:column;gap:12px;font-size:0.93rem;">
+              <div>
+                <b style="color:var(--accent);">● Left Status Stripe:</b> Amber (<span style="color:var(--accent);font-weight:700;">#f5a524</span>) indicates open/pending; Emerald (<span style="color:var(--success);font-weight:700;">#17b978</span>) indicates closed/completed.
+              </div>
+              <div>
+                <b style="color:var(--primary);">● Priority Badge:</b> Color-coded chips (High 🔴, Medium 🟡, Low 🟢) for instant visual sorting and triage.
+              </div>
+              <div>
+                <b style="color:var(--primary);">● Top Email Metadata:</b> Sender, Recipient, CC, and timestamp for effortless correspondence context.
+              </div>
+              <div>
+                <b style="color:var(--primary);">● Rich Body Content:</b> Preserves sanitized HTML formatting, lists, tables, and images without layout breakage.
+              </div>
+              <div>
+                <b style="color:var(--primary);">● Steps Checklist:</b> Multi-step sub-tasks with real-time progress ratio (e.g. <em>Steps 2/4</em>).
+              </div>
+              <div>
+                <b style="color:var(--primary);">● Audit Timestamps:</b> Precise ISO creation and modification timestamps for audit compliance.
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Section 5: Interactive Tabbed Panel Walkthrough -->
+      <section class="guide-section" id="creating-tasks">
+        <div class="section-header">
+          <h3 class="section-title"><span>🗂️</span> 5. Master Feature Matrix &amp; Panel Walkthrough</h3>
+          <span class="sec-badge">Deep Dive</span>
+        </div>
+        <p class="section-desc">Explore the 6 core functional panels built into the Task Wall left icon rail:</p>
+
+        <div class="tab-container">
+          <div class="tab-nav">
+            <button class="tab-btn active" onclick="switchGuideTab(this, 'tab-add')"><span>➕</span> Add Task</button>
+            <button class="tab-btn" onclick="switchGuideTab(this, 'tab-find')"><span>🔍</span> Find &amp; Search</button>
+            <button class="tab-btn" onclick="switchGuideTab(this, 'tab-pdf')"><span>⬇️</span> PDF Export</button>
+            <button class="tab-btn" onclick="switchGuideTab(this, 'tab-excel')"><span>📊</span> Excel Export</button>
+            <button class="tab-btn" onclick="switchGuideTab(this, 'tab-data')"><span>💾</span> Data &amp; Backup</button>
+          </div>
+
+          <!-- Tab 1: Add Task -->
+          <div class="tab-content active" id="tab-add">
+            <div class="card">
+              <h4 style="margin-bottom:12px;display:flex;align-items:center;gap:8px;">
+                <span>➕</span> The Add Task Engine
+              </h4>
+              <p style="color:var(--text-muted);font-size:0.95rem;margin-bottom:16px;">
+                The Add drawer provides a comprehensive data entry interface for capturing complex tasks, emails, and delegation matrices:
+              </p>
+              <div class="table-container">
+                <table class="guide-table">
+                  <thead>
+                    <tr>
+                      <th>Field</th>
+                      <th>Purpose</th>
+                      <th>Supported Input / Features</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td><strong>📅 Target Date</strong></td>
+                      <td>Assigns the ticket to a specific calendar date</td>
+                      <td>Native date picker, defaults to current date.</td>
+                    </tr>
+                    <tr>
+                      <td><strong>🚩 Priority</strong></td>
+                      <td>Severity and urgency classification</td>
+                      <td>High, Medium (default), Low.</td>
+                    </tr>
+                    <tr>
+                      <td><strong>📤 From / 📨 To / 📋 CC</strong></td>
+                      <td>Email communication participants</td>
+                      <td>Auto-expanding multiline textareas.</td>
+                    </tr>
+                    <tr>
+                      <td><strong>📝 Task Editor</strong></td>
+                      <td>Primary task body &amp; rich note</td>
+                      <td>Type, <strong>🎤 Speak (Voice)</strong>, or paste rich HTML from Outlook/Gmail.</td>
+                    </tr>
+                    <tr>
+                      <td><strong>✅ Action Item</strong></td>
+                      <td>Concrete next step or deliverable</td>
+                      <td>Highlights critical next action on the card.</td>
+                    </tr>
+                    <tr>
+                      <td><strong>🧩 Sub-Tasks (Steps)</strong></td>
+                      <td>Granular checklist items</td>
+                      <td>Type and press <span class="kbd-tag">Enter</span> to queue draft steps.</td>
+                    </tr>
+                    <tr>
+                      <td><strong>🧑‍🤝‍🧑 Sub-POCs</strong></td>
+                      <td>Multiple responsible individuals</td>
+                      <td>Pairs Name + <em>"What this POC did"</em> for full team attribution.</td>
+                    </tr>
+                    <tr>
+                      <td><strong>📧 Email &amp; Code</strong></td>
+                      <td>Direct email link &amp; ticket tracking code</td>
+                      <td>Creates clickable <code>mailto:</code> link with auto-populated subject line.</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <!-- Tab 2: Find & Search -->
+          <div class="tab-content" id="tab-find">
+            <div class="card">
+              <h4 style="margin-bottom:12px;display:flex;align-items:center;gap:8px;">
+                <span>🔍</span> Deep Search &amp; Multi-Dimensional Filtering
+              </h4>
+              <p style="color:var(--text-muted);font-size:0.95rem;margin-bottom:16px;">
+                Task Wall features a targeted search engine that allows precision querying across individual fields or the entire ticket body:
+              </p>
+              <div class="grid-2">
+                <div class="feature-box">
+                  <h5 style="font-size:1rem;color:var(--primary);">🎯 Targeted Field Search</h5>
+                  <p>Filter keyword searches strictly by <em>Task Text</em>, <em>Action Item</em>, <em>POC</em>, <em>Email Sender</em>, <em>Email Title</em>, or <em>Reference Code</em>.</p>
+                </div>
+                <div class="feature-box">
+                  <h5 style="font-size:1rem;color:var(--primary);">📅 Modal Date-Range Picker</h5>
+                  <p>When searching with keywords, Task Wall prompts for a start and end date to precisely constrain historical results.</p>
+                </div>
+                <div class="feature-box">
+                  <h5 style="font-size:1rem;color:var(--primary);">🗓️ Multi-Year Month Search</h5>
+                  <p>Analyze recurring seasonal tasks by showing a specific month across all years (e.g. <em>"Show every October"</em>).</p>
+                </div>
+                <div class="feature-box">
+                  <h5 style="font-size:1rem;color:var(--primary);">⚡ Instant Wall Filters</h5>
+                  <p>Combine keyword searches with the header <strong>All</strong>, <strong>Open</strong>, and <strong>Closed</strong> filters with zero latency.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Tab 3: PDF Export -->
+          <div class="tab-content" id="tab-pdf">
+            <div class="card">
+              <h4 style="margin-bottom:12px;display:flex;align-items:center;gap:8px;">
+                <span>⬇️</span> High-Resolution A2 PDF Rasterization Engine
+              </h4>
+              <p style="color:var(--text-muted);font-size:0.95rem;margin-bottom:16px;">
+                Unlike standard browser print-to-PDF which breaks complex layouts, Task Wall utilizes a custom rendering pipeline:
+              </p>
+              <div class="workflow-steps">
+                <div class="workflow-step">
+                  <div class="step-num-bubble">1</div>
+                  <div class="step-content">
+                    <h4>DOM Rendering &amp; Image Decoding</h4>
+                    <p>Each date group is isolated into an off-screen container where inline images and tables are decoded at 2x scale factor.</p>
+                  </div>
+                </div>
+                <div class="workflow-step">
+                  <div class="step-num-bubble">2</div>
+                  <div class="step-content">
+                    <h4>Smart Page Break Calculation</h4>
+                    <p>The engine analyzes pixel density rows to avoid slicing text lines or task boxes in half across page boundaries.</p>
+                  </div>
+                </div>
+                <div class="workflow-step">
+                  <div class="step-num-bubble">3</div>
+                  <div class="step-content">
+                    <h4>Ultra-High-Definition A2 Output</h4>
+                    <p>Assembles a professional A2 portrait document with branded date ribbons, metadata tables, and status checkboxes.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Tab 4: Excel Export -->
+          <div class="tab-content" id="tab-excel">
+            <div class="card">
+              <h4 style="margin-bottom:12px;display:flex;align-items:center;gap:8px;">
+                <span>📊</span> 17-Column Structured Excel Export
+              </h4>
+              <p style="color:var(--text-muted);font-size:0.95rem;margin-bottom:16px;">
+                Export your tasks into a structured <code>.xlsx</code> workbook powered by SheetJS with pre-formatted column widths:
+              </p>
+              <div class="code-block-wrap">
+                <div class="code-header">
+                  <span>Excel Schema Columns (17 Attributes)</span>
+                  <button class="code-copy-btn" onclick="copySnippet('Date, Status, Priority, Ticket, Action item, POC, Sub-POCs, From, To, CC, Email title, Email date & time, Email, Email code, Steps, Created, Edited')">Copy Columns</button>
+                </div>
+                <pre class="code-view">Date | Status | Priority | Ticket | Action item | POC | Sub-POCs | From | To | CC | Email title | Email date & time | Email | Email code | Steps | Created | Edited</pre>
+              </div>
+              <p style="font-size:0.9rem;color:var(--text-muted);margin-top:8px;">
+                💡 <em>Tip:</em> Excel exports automatically follow your active <strong>Open / Closed</strong> wall filter. Switch to <strong>All</strong> to export both states simultaneously.
+              </p>
+            </div>
+          </div>
+
+          <!-- Tab 5: Data & Backup -->
+          <div class="tab-content" id="tab-data">
+            <div class="card">
+              <h4 style="margin-bottom:12px;display:flex;align-items:center;gap:8px;">
+                <span>💾</span> Backup, Restore &amp; Disaster Recovery
+              </h4>
+              <p style="color:var(--text-muted);font-size:0.95rem;margin-bottom:16px;">
+                Never lose a single ticket. Task Wall includes enterprise-grade backup safeguards:
+              </p>
+              <ul style="padding-left:20px;color:var(--text-muted);font-size:0.92rem;display:flex;flex-direction:column;gap:10px;">
+                <li><strong>Instant Keyboard Backup (<span class="kbd-tag">Ctrl+S</span> / <span class="kbd-tag">Cmd+S</span>):</strong> Press anytime to immediately download a timestamped <code>task-wall-backup-YYYY-MM-DD.json</code> file.</li>
+                <li><strong>Smart Non-Duplicating Import:</strong> When restoring from JSON, existing tickets are matched by unique ID. Re-importing a backup merges new records without creating messy duplicates!</li>
+                <li><strong>Multi-Domain Cookie &amp; Storage Wipe:</strong> The <em>Clear Cookies</em> tool safely purges all local storage and host domain cookies with explicit confirmation.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Section 6: Interactive Demo Sandbox -->
+      <section class="guide-section" id="mock-sandbox">
+        <div class="section-header">
+          <h3 class="section-title"><span>🧪</span> 6. Interactive Demo Sandbox &amp; Test Data</h3>
+          <span class="sec-badge">Test &amp; Try</span>
+        </div>
+        <p class="section-desc">
+          Test drive Task Wall immediately with realistic enterprise mock data or copy pre-formatted sample tasks to test the rich paste engine:
+        </p>
+
+        <div class="demo-sandbox-card">
+          <div class="demo-sandbox-header">
+            <div>
+              <h3><span>⚡</span> One-Click Demo Data Injector</h3>
+              <p style="font-size:0.92rem;color:var(--text-muted);margin-top:4px;">
+                Injects 5 comprehensive enterprise tickets (Security Incident, Client Onboarding, Compliance Audit, Marketing Launch, Executive Review) directly into Task Wall's database.
+              </p>
+            </div>
+            <div class="sandbox-actions">
+              <button class="btn-action-glow" onclick="loadDemoDataToTaskWall()">
+                <span>🚀</span> Inject 5 Demo Tasks
+              </button>
+              <button class="btn-action-secondary" onclick="copyDemoJson()">
+                <span>📋</span> Copy Mock JSON
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="grid-2">
+          <!-- Sample Formatted Email to Copy-Paste -->
+          <div class="card">
+            <h4 style="margin-bottom:10px;display:flex;align-items:center;justify-content:space-between;">
+              <span>📧 Sample Formatted Email</span>
+              <button class="code-copy-btn" onclick="copySampleEmail()">Copy Formatted Email</button>
+            </h4>
+            <p style="font-size:0.88rem;color:var(--text-muted);margin-bottom:12px;">
+              Copy this email and paste it directly into Task Wall's task editor to see how rich HTML tables and bullet lists are automatically sanitized and preserved!
+            </p>
+            <div id="sampleEmailContent" style="background:var(--code-bg);border:1px solid var(--card-border);border-radius:8px;padding:14px;font-size:12.5px;color:var(--code-text);line-height:1.5;">
+              <strong>Subject: Q4 Kubernetes Migration Sign-off</strong><br>
+              <em>From: devops-lead@enterprise.com</em><br><br>
+              Hi Team,<br>
+              Please find the cluster upgrade checklist below:<br>
+              • Cluster A (US-East): Upgraded to v1.31<br>
+              • Cluster B (EU-West): Pending final validation<br>
+              • Cluster C (AP-South): Scheduled for Friday<br><br>
+              Please verify pod health metrics by 5 PM.
+            </div>
+          </div>
+
+          <!-- Sample Voice Commands -->
+          <div class="card">
+            <h4 style="margin-bottom:10px;display:flex;align-items:center;gap:8px;">
+              <span>🎤 Voice Dictation Practice Phrases</span>
+            </h4>
+            <p style="font-size:0.88rem;color:var(--text-muted);margin-bottom:12px;">
+              Try speaking these realistic multi-clause tasks into the microphone:
+            </p>
+            <div style="display:flex;flex-direction:column;gap:8px;font-size:13px;color:var(--text-muted);">
+              <div style="background:var(--code-bg);padding:8px 12px;border-radius:6px;border:1px solid var(--card-border);">
+                💬 <em>"Prepare quarterly revenue slide deck for executive board review by Thursday morning."</em>
+              </div>
+              <div style="background:var(--code-bg);padding:8px 12px;border-radius:6px;border:1px solid var(--card-border);">
+                💬 <em>"Follow up with vendor regarding invoice number 9021 and verify contract renewal terms."</em>
+              </div>
+              <div style="background:var(--code-bg);padding:8px 12px;border-radius:6px;border:1px solid var(--card-border);">
+                💬 <em>"Schedule database failover drill with site reliability engineering team for Saturday midnight."</em>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Section 7: Real-World Scenarios -->
+      <section class="guide-section" id="workflows">
+        <div class="section-header">
+          <h3 class="section-title"><span>📋</span> 7. End-to-End Enterprise Workflows</h3>
+          <span class="sec-badge">Best Practices</span>
+        </div>
+        <p class="section-desc">How top engineering leads, project managers, and executives use Task Wall daily:</p>
+
+        <div class="grid-3">
+          <div class="card">
+            <h4 style="margin-bottom:10px;color:var(--primary);display:flex;align-items:center;gap:8px;">
+              <span>🌅</span> 1. Morning Standup Triage
+            </h4>
+            <p style="font-size:0.92rem;color:var(--text-muted);">
+              Click <strong>🗂️ Wall</strong> to filter to today's date. Review open pending tasks with the amber stripe. Check off sub-steps in real-time as team members report progress.
+            </p>
+          </div>
+
+          <div class="card">
+            <h4 style="margin-bottom:10px;color:var(--primary);display:flex;align-items:center;gap:8px;">
+              <span>📥</span> 2. Email-to-Ticket Pipeline
+            </h4>
+            <p style="font-size:0.92rem;color:var(--text-muted);">
+              When an urgent client email arrives, open <strong>➕ Add</strong>, paste the email body, fill the sender and reference code, assign a POC, and pin it to the wall in under 10 seconds.
+            </p>
+          </div>
+
+          <div class="card">
+            <h4 style="margin-bottom:10px;color:var(--primary);display:flex;align-items:center;gap:8px;">
+              <span>📊</span> 3. Weekly Executive Reporting
+            </h4>
+            <p style="font-size:0.92rem;color:var(--text-muted);">
+              At the end of the week, open <strong>⬇️ PDF</strong> or <strong>📊 Excel</strong>, select the current date range or month, and download a polished report ready for stakeholder distribution.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Section 8: Keyboard Shortcuts -->
+      <section class="guide-section" id="shortcuts">
+        <div class="section-header">
+          <h3 class="section-title"><span>⌨️</span> 8. Power User Keyboard Shortcuts</h3>
+          <span class="sec-badge">Productivity</span>
+        </div>
+        <p class="section-desc">Maximize your workflow efficiency with built-in hotkeys:</p>
+
+        <div class="table-container">
+          <table class="guide-table">
+            <thead>
+              <tr>
+                <th>Key Shortcut</th>
+                <th>Action</th>
+                <th>Context / Scope</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><span class="kbd-tag">Ctrl</span> + <span class="kbd-tag">S</span> &nbsp;/&nbsp; <span class="kbd-tag">⌘</span> + <span class="kbd-tag">S</span></td>
+                <td><strong>Instant JSON Backup</strong></td>
+                <td>Global — downloads a complete timestamped backup file instantly.</td>
+              </tr>
+              <tr>
+                <td><span class="kbd-tag">Escape</span></td>
+                <td><strong>Close Drawer / Dialogs</strong></td>
+                <td>Global — closes any open sliding drawer or date modal.</td>
+              </tr>
+              <tr>
+                <td><span class="kbd-tag">Enter</span></td>
+                <td><strong>Add Sub-Task / Sub-POC</strong></td>
+                <td>Inside Step or POC input fields — adds item immediately without clicking button.</td>
+              </tr>
+              <tr>
+                <td><span class="kbd-tag">Enter</span></td>
+                <td><strong>Execute Search</strong></td>
+                <td>Inside Search Date or Keyword input — runs query immediately.</td>
+              </tr>
+              <tr>
+                <td><span class="kbd-tag">Ctrl</span> + <span class="kbd-tag">V</span></td>
+                <td><strong>Rich Formatted Paste</strong></td>
+                <td>Inside Task or Edit fields — sanitizes HTML while keeping tables, links, and lists.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- Section 9: Troubleshooting & FAQ -->
+      <section class="guide-section" id="troubleshooting">
+        <div class="section-header">
+          <h3 class="section-title"><span>🔧</span> 9. Troubleshooting &amp; Diagnostics FAQ</h3>
+          <span class="sec-badge">Help &amp; Answers</span>
+        </div>
+        <p class="section-desc">Solutions for common scenarios when using Task Wall on online servers:</p>
+
+        <div class="faq-list">
+          <details class="faq-item" open>
+            <summary class="faq-question">Why does the Speak (Voice) button not work on my online server?</summary>
+            <div class="faq-answer">
+              Web Speech API requires a secure HTTPS connection. If you are accessing your online server via <code>http://</code>, modern browsers (Chrome, Edge, Safari) disable microphone speech recognition for security. Ensure your server has SSL enabled (HTTPS). Also verify that you haven't blocked microphone permissions in your browser's URL bar settings.
+            </div>
+          </details>
+
+          <details class="faq-item">
+            <summary class="faq-question">Where are my tasks stored? Will anyone else on the online server see my data?</summary>
+            <div class="faq-answer">
+              All tasks are stored strictly in your local web browser's <code>localStorage</code> sandbox. No data is sent to the server. Your data remains 100% private to your specific computer and browser profile. Other users visiting the same online URL will have their own independent, empty task wall.
+            </div>
+          </details>
+
+          <details class="faq-item">
+            <summary class="faq-question">How do I transfer my tasks from my office desktop to my laptop?</summary>
+            <div class="faq-answer">
+              Press <span class="kbd-tag">Ctrl+S</span> or go to the <strong>💾 Data</strong> panel and click <strong>Export all as JSON</strong>. Transfer that <code>.json</code> file to your laptop (via email, Slack, or USB), open Task Wall on the laptop, go to <strong>💾 Data</strong>, and click <strong>Import from JSON</strong>. All your tickets will be merged seamlessly.
+            </div>
+          </details>
+
+          <details class="faq-item">
+            <summary class="faq-question">How do I print my tasks on standard A4 or Letter paper instead of A2 PDF?</summary>
+            <div class="faq-answer">
+              In the filter bar, click the <strong>🖨️ HTML</strong> export button. This downloads a clean standalone HTML document. Open it in your browser and press <span class="kbd-tag">Ctrl+P</span>. You can select any paper size (A4, Letter, Legal, A3) directly in your printer dialog!
+            </div>
+          </details>
+
+          <details class="faq-item">
+            <summary class="faq-question">Why does checking all sub-steps automatically mark the entire ticket Closed?</summary>
+            <div class="faq-answer">
+              Task Wall features bidirectional checklist synchronization: when all sub-steps of a ticket are checked off, the master ticket status automatically switches to Closed (green stripe). If you untick any step, the master ticket returns to Open (amber stripe).
+            </div>
+          </details>
+
+          <details class="faq-item">
+            <summary class="faq-question">How does Task Wall adapt on smartphones and tablets?</summary>
+            <div class="faq-answer">
+              Task Wall is fully responsive. On mobile screens, the left icon rail converts to a fixed, frosted-glass bottom navigation bar for effortless thumb reach. All creation and search panels slide up as responsive off-canvas drawers with backdrop tap-to-dismiss. You can also save Task Wall to your mobile home screen for an app-like full-screen experience.
+            </div>
+          </details>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- Toast Notification -->
+  <div class="guide-toast" id="guideToast">
+    <span id="toastIcon">✨</span>
+    <span id="toastMsg">Action completed successfully!</span>
+  </div>
+
+  <!-- Footer -->
+  <footer class="guide-footer">
+    <div class="footer-links">
+      <a href="index.html">← Return to Task Wall App</a>
+      <a href="https://supportsourcecode.lovable.app/home" target="_blank" rel="noopener noreferrer">Support Home</a>
+      <a href="https://interactive-media-display.lovable.app/" target="_blank" rel="noopener noreferrer">App Store</a>
+    </div>
+    <p>© 2026 Task Wall. Enterprise Task Management &amp; Follow-up Operating System.</p>
+  </footer>
+
+  <!-- Mobile Bottom Navigation Bar (Task Wall Mobile Experience) -->
+  <nav class="mobile-bottom-bar" id="mobileBottomBar" aria-label="Mobile Navigation">
+    <button class="mobile-bottom-btn" onclick="toggleMobileSidebar()" title="Table of Contents">
+      <span class="m-ico">📖</span>
+      <span>Menu</span>
+    </button>
+    <button class="mobile-bottom-btn" onclick="toggleMobileSearch()" title="Search Guide">
+      <span class="m-ico">🔍</span>
+      <span>Search</span>
+    </button>
+    <button class="mobile-bottom-btn" onclick="toggleTheme()" title="Toggle Theme">
+      <span class="m-ico">🌓</span>
+      <span id="mobileThemeLabel">Light</span>
+    </button>
+    <a href="https://supportsourcecode.lovable.app/home" target="_blank" rel="noopener noreferrer" class="mobile-bottom-btn" title="Main Portal">
+      <span class="m-ico">🏠</span>
+      <span>Home</span>
+    </a>
+    <a href="index.html" class="mobile-bottom-btn primary-pill" title="Launch Task Wall App">
+      <span class="m-ico">🗂️</span>
+      <span>App</span>
+    </a>
+    <button class="mobile-bottom-btn" onclick="window.scrollTo({top: 0, behavior: 'smooth'})" title="Scroll to Top">
+      <span class="m-ico">⬆️</span>
+      <span>Top</span>
+    </button>
+  </nav>
+
+  <script>
+    // Theme Management
+    function initTheme() {
+      const saved = localStorage.getItem('taskwall_guide_theme');
+      if (saved === 'light') {
+        document.body.classList.add('light-theme');
+        updateThemeBtn(true);
+      } else {
+        document.body.classList.remove('light-theme');
+        updateThemeBtn(false);
+      }
+    }
+    function toggleTheme() {
+      const isLight = document.body.classList.toggle('light-theme');
+      localStorage.setItem('taskwall_guide_theme', isLight ? 'light' : 'dark');
+      updateThemeBtn(isLight);
+    }
+    function updateThemeBtn(isLight) {
+      const label = document.getElementById('themeLabel');
+      if (label) label.textContent = isLight ? 'Dark' : 'Light';
+      const mLabel = document.getElementById('mobileThemeLabel');
+      if (mLabel) mLabel.textContent = isLight ? 'Dark' : 'Light';
+    }
+    initTheme();
+
+    // Mobile Sidebar Drawer Control
+    function toggleMobileSidebar() {
+      const sb = document.getElementById('guideSidebar');
+      const bd = document.getElementById('sidebarBackdrop');
+      if (sb) {
+        const isOpen = sb.classList.toggle('mobile-open');
+        if (bd) bd.classList.toggle('active', isOpen);
+        document.body.style.overflow = (isOpen && window.innerWidth <= 1024) ? 'hidden' : '';
+      }
+    }
+    function openMobileSidebar() {
+      const sb = document.getElementById('guideSidebar');
+      const bd = document.getElementById('sidebarBackdrop');
+      if (sb) sb.classList.add('mobile-open');
+      if (bd) bd.classList.add('active');
+      if (window.innerWidth <= 1024) document.body.style.overflow = 'hidden';
+    }
+    function closeMobileSidebar() {
+      const sb = document.getElementById('guideSidebar');
+      const bd = document.getElementById('sidebarBackdrop');
+      if (sb) sb.classList.remove('mobile-open');
+      if (bd) bd.classList.remove('active');
+      document.body.style.overflow = '';
+    }
+
+    // Toggle Mobile Search Bar
+    function toggleMobileSearch() {
+      const wrap = document.getElementById('headerSearchWrap');
+      if (window.innerWidth <= 640 && wrap) {
+        wrap.classList.toggle('mobile-expanded');
+        const input = document.getElementById('guideSearchInput');
+        if (wrap.classList.contains('mobile-expanded') && input) {
+          input.focus();
+        }
+      } else {
+        openMobileSidebar();
+        const dInput = document.getElementById('drawerSearchInput');
+        if (dInput) setTimeout(() => dInput.focus(), 200);
+      }
+    }
+
+    // Filter topics inside drawer
+    function filterGuideTopics(query) {
+      const q = (query || '').toLowerCase().trim();
+      const items = document.querySelectorAll('.side-nav-list li');
+      items.forEach(li => {
+        if (!q) {
+          li.style.display = '';
+        } else {
+          const match = li.textContent.toLowerCase().includes(q);
+          li.style.display = match ? '' : 'none';
+        }
+      });
+      // Sync with main content search
+      const headerInput = document.getElementById('guideSearchInput');
+      if (headerInput && headerInput.value !== query) {
+        headerInput.value = query;
+      }
+      filterGuideContent(query);
+    }
+
+    // Keyboard Shortcuts
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        closeMobileSidebar();
+        const wrap = document.getElementById('headerSearchWrap');
+        if (wrap) wrap.classList.remove('mobile-expanded');
+      }
+    });
+
+    // Interactive Tab Switcher
+    function switchGuideTab(btn, tabId) {
+      const container = btn.closest('.tab-container');
+      container.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      container.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+      btn.classList.add('active');
+      const target = document.getElementById(tabId);
+      if (target) target.classList.add('active');
+    }
+
+    // Toast Notification System
+    function showToast(msg, icon = '✨') {
+      const t = document.getElementById('guideToast');
+      const m = document.getElementById('toastMsg');
+      const i = document.getElementById('toastIcon');
+      if (t && m && i) {
+        m.innerHTML = msg;
+        i.textContent = icon;
+        t.classList.add('show');
+        setTimeout(() => t.classList.remove('show'), 4500);
+      }
+    }
+
+    // Copy to Clipboard Helper
+    function copySnippet(text) {
+      if (navigator.clipboard) {
+        navigator.clipboard.writeText(text).then(() => {
+          showToast('Copied to clipboard!', '📋');
+        }).catch(() => fallbackCopy(text));
+      } else {
+        fallbackCopy(text);
+      }
+    }
+    function fallbackCopy(text) {
+      const ta = document.createElement('textarea');
+      ta.value = text;
+      ta.style.position = 'fixed';
+      ta.style.opacity = '0';
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand('copy');
+      document.body.removeChild(ta);
+      showToast('Copied to clipboard!', '📋');
+    }
+
+    // Copy Sample Email
+    function copySampleEmail() {
+      const content = document.getElementById('sampleEmailContent').innerText;
+      copySnippet(content);
+    }
+
+    // Mock Enterprise Data Definition
+    const MOCK_DEMO_TASKS = [
+      {
+        id: 101,
+        text: "<b>Security Alert:</b> Immediate AWS production cluster kernel vulnerability patch (CVE-2026-8812). Requires rolling node restart with zero API downtime.",
+        rich: true,
+        priority: "high",
+        action: "Coordinate with DevOps team for midnight zero-downtime rolling node replacement.",
+        poc: "Sarah Connor (Security Lead)",
+        emailFrom: "security-ops@cloudenterprise.io",
+        emailTo: "devops-leads@cloudenterprise.io",
+        emailCc: "cto-office@cloudenterprise.io",
+        emailWhen: "Mon 28-09-2026 08:45 AM",
+        email: "sarah.connor@cloudenterprise.io",
+        emailTitle: "URGENT: CVE-2026-8812 Node Patch Rollout",
+        emailCode: "SEC-2026-904",
+        steps: [
+          { text: "Take snapshot of etcd key-value datastore", done: true },
+          { text: "Drain and cordon worker nodes in US-East-1", done: false },
+          { text: "Validate health check ingress traffic endpoints", done: false }
+        ],
+        pocs: [
+          { name: "Sarah Connor", work: "Security sign-off & CVE review" },
+          { name: "David Vance", work: "Executing terraform node pipeline" }
+        ],
+        date: new Date().toISOString().slice(0, 10),
+        completed: false,
+        createdAt: new Date().toISOString()
+      },
+      {
+        id: 102,
+        text: "<b>Enterprise Onboarding:</b> Acme Global Corp deployment. Finalize SAML 2.0 Single Sign-On (SSO) integration and review SLA requirements.",
+        rich: true,
+        priority: "high",
+        action: "Schedule 30-minute verification call with Acme IT Admin (Robert Chen).",
+        poc: "Marcus Brody (Customer Success)",
+        emailFrom: "r.chen@acmeglobal.com",
+        emailTo: "onboarding@cloudenterprise.io",
+        emailCc: "enterprise-sales@cloudenterprise.io",
+        emailWhen: "Mon 28-09-2026 10:15 AM",
+        email: "r.chen@acmeglobal.com",
+        emailTitle: "Acme Corp SAML 2.0 SSO Metadata XML",
+        emailCode: "ONB-ACM-441",
+        steps: [
+          { text: "Import Okta IDP Metadata XML into Auth0", done: true },
+          { text: "Test JIT (Just-in-Time) user provisioning", done: true },
+          { text: "Conduct test login with 5 Acme QA users", done: false }
+        ],
+        pocs: [
+          { name: "Marcus Brody", work: "Customer communications & timeline" },
+          { name: "Elena Rostova", work: "Identity provider configuration" }
+        ],
+        date: new Date().toISOString().slice(0, 10),
+        completed: false,
+        createdAt: new Date(Date.now() - 3600000).toISOString()
+      },
+      {
+        id: 103,
+        text: "<b>Quarterly Financial Compliance:</b> Compile SOC2 Type II audit logs for Q3 cloud infrastructure changes and user access reviews.",
+        rich: true,
+        priority: "medium",
+        action: "Export AWS CloudTrail and GitHub audit log archives to encrypted compliance S3 bucket.",
+        poc: "Jennifer Wu (Compliance Officer)",
+        emailFrom: "auditors@deloitte-audit.com",
+        emailTo: "compliance@cloudenterprise.io",
+        emailCc: "legal@cloudenterprise.io",
+        emailWhen: "Fri 25-09-2026 03:20 PM",
+        email: "jennifer.wu@cloudenterprise.io",
+        emailTitle: "Q3 SOC2 Evidence Request Matrix",
+        emailCode: "SOC2-2026-Q3",
+        steps: [
+          { text: "Extract quarterly IAM privilege escalation logs", done: true },
+          { text: "Verify MFA enforcement on all 450 corporate accounts", done: true },
+          { text: "Sign compliance attestation memorandum", done: true }
+        ],
+        pocs: [
+          { name: "Jennifer Wu", work: "Evidence compilation & auditor review" }
+        ],
+        date: new Date(Date.now() - 86400000).toISOString().slice(0, 10),
+        completed: true,
+        createdAt: new Date(Date.now() - 86400000).toISOString()
+      },
+      {
+        id: 104,
+        text: "<b>Marketing Product Launch:</b> Final review of v2.5 Interactive Dashboard feature release notes and accompanying social media assets.",
+        rich: true,
+        priority: "medium",
+        action: "Approve Figma hero banners and schedule Product Hunt launch announcement.",
+        poc: "Alex Rivera (Product Marketing)",
+        emailFrom: "alex.rivera@cloudenterprise.io",
+        emailTo: "growth-team@cloudenterprise.io",
+        emailCc: "vp-product@cloudenterprise.io",
+        emailWhen: "Thu 24-09-2026 11:00 AM",
+        email: "alex.rivera@cloudenterprise.io",
+        emailTitle: "V2.5 Launch Marketing Collateral Draft",
+        emailCode: "MKT-2026-V25",
+        steps: [
+          { text: "Draft technical release blog post", done: true },
+          { text: "Record 45-second Loom video walkthrough", done: true },
+          { text: "Publish customer newsletter via Customer.io", done: false }
+        ],
+        pocs: [
+          { name: "Alex Rivera", work: "Copywriting & newsletter scheduling" },
+          { name: "Liam O'Connor", work: "Video recording & thumbnail design" }
+        ],
+        date: new Date(Date.now() - 172800000).toISOString().slice(0, 10),
+        completed: false,
+        createdAt: new Date(Date.now() - 172800000).toISOString()
+      },
+      {
+        id: 105,
+        text: "<b>Executive Strategy Follow-up:</b> Review annual cloud hosting budget projections and evaluate reserved instance purchasing options.",
+        rich: true,
+        priority: "low",
+        action: "Prepare 1-page financial summary comparing 1-year vs 3-year AWS Savings Plans.",
+        poc: "Michael Chang (VP Finance)",
+        emailFrom: "m.chang@cloudenterprise.io",
+        emailTo: "engineering-leadership@cloudenterprise.io",
+        emailCc: "cfo@cloudenterprise.io",
+        emailWhen: "Wed 23-09-2026 02:15 PM",
+        email: "m.chang@cloudenterprise.io",
+        emailTitle: "AWS Reserved Instance & Savings Plan Projections",
+        emailCode: "FIN-2026-AWS",
+        steps: [
+          { text: "Analyze last 6 months AWS Cost Explorer telemetry", done: true },
+          { text: "Draft compute savings comparison spreadsheet", done: true }
+        ],
+        pocs: [
+          { name: "Michael Chang", work: "Financial ROI modeling" }
+        ],
+        date: new Date(Date.now() - 259200000).toISOString().slice(0, 10),
+        completed: true,
+        createdAt: new Date(Date.now() - 259200000).toISOString()
+      }
+    ];
+
+    // Inject Demo Data into Task Wall LocalStorage
+    function loadDemoDataToTaskWall() {
+      try {
+        let existing = [];
+        try {
+          existing = JSON.parse(localStorage.getItem('todos')) || [];
+        } catch (e) { existing = []; }
+
+        const existingIds = new Set(existing.map(t => t.id));
+        let addedCount = 0;
+
+        MOCK_DEMO_TASKS.forEach(task => {
+          if (!existingIds.has(task.id)) {
+            existing.unshift(task);
+            existingIds.add(task.id);
+            addedCount++;
+          }
+        });
+
+        localStorage.setItem('todos', JSON.stringify(existing));
+        showToast(
+          addedCount > 0 
+            ? `Injected ${addedCount} demo tickets! <a href="index.html" style="color:#fff;font-weight:800;text-decoration:underline;margin-left:6px;">View on Wall →</a>`
+            : `Demo tickets already loaded. <a href="index.html" style="color:#fff;font-weight:800;text-decoration:underline;margin-left:6px;">View on Wall →</a>`,
+          '🚀'
+        );
+      } catch (err) {
+        showToast('Failed to save to browser storage.', '⚠️');
+      }
+    }
+
+    // Copy JSON Demo Data
+    function copyDemoJson() {
+      copySnippet(JSON.stringify(MOCK_DEMO_TASKS, null, 2));
+    }
+
+    // Real-time Guide Content Search Filter
+    function filterGuideContent(query) {
+      const q = (query || '').toLowerCase().trim();
+      const sections = document.querySelectorAll('.guide-section');
+      
+      sections.forEach(sec => {
+        if (!q) {
+          sec.style.display = 'flex';
+          return;
+        }
+        const text = sec.innerText.toLowerCase();
+        sec.style.display = text.includes(q) ? 'flex' : 'none';
+      });
+    }
+
+    // Active Sidebar Scroll Spy
+    window.addEventListener('scroll', () => {
+      const sections = document.querySelectorAll('.guide-section');
+      const scrollPos = window.scrollY + 140;
+      
+      sections.forEach(sec => {
+        const top = sec.offsetTop;
+        const height = sec.offsetHeight;
+        const id = sec.getAttribute('id');
+        
+        if (scrollPos >= top && scrollPos < top + height) {
+          document.querySelectorAll('.side-nav-link').forEach(link => {
+            link.classList.remove('active');
+            if (link.getAttribute('href') === '#' + id) {
+              link.classList.add('active');
+            }
+          });
+        }
+      });
+    });
+  </script>
+
+  <!-- Floating WhatsApp Support & Personal License Widget -->
+  <div id="waFloatingWidget" style="position:fixed;bottom:20px;right:20px;z-index:99999;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;">
+    <div style="position:relative;background:#ffffff;color:#0f172a;border-radius:16px;box-shadow:0 12px 36px rgba(0,0,0,0.25),0 0 0 1px rgba(37,211,102,0.35);padding:14px 16px;max-width:315px;display:flex;flex-direction:column;gap:8px;">
+      <button onclick="document.getElementById('waFloatingWidget').style.display='none'" title="Close" aria-label="Close" style="position:absolute;top:8px;right:8px;background:#f1f5f9;border:1px solid #cbd5e1;color:#64748b;width:24px;height:24px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;line-height:1;transition:all 0.2s;" onmouseover="this.style.background='#ef4444';this.style.color='#fff';this.style.borderColor='#ef4444'" onmouseout="this.style.background='#f1f5f9';this.style.color='#64748b';this.style.borderColor='#cbd5e1'">✕</button>
+      <div style="display:flex;align-items:center;gap:10px;padding-right:20px;">
+        <div style="width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,#25D366,#128C7E);display:flex;align-items:center;justify-content:center;color:#fff;font-size:22px;flex-shrink:0;box-shadow:0 4px 10px rgba(37,211,102,0.4);">
+          <svg style="width:22px;height:22px;fill:#ffffff;" viewBox="0 0 24 24"><path d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21 5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.816 9.816 0 0 0 12.04 2zm5.77 14.18c-.24.68-1.4 1.26-1.95 1.34-.52.08-1.2.12-3.48-.83-2.68-1.12-4.4-3.84-4.54-4.02-.13-.19-1.08-1.44-1.08-2.75 0-1.31.69-1.96.93-2.22.25-.26.54-.33.72-.33.18 0 .36 0 .52.01.17.01.4.06.61.56.22.53.75 1.83.82 1.96.07.14.11.3.02.48-.09.19-.14.3-.27.46-.14.16-.3.35-.42.47-.14.14-.29.3-.12.59.16.29.73 1.21 1.57 1.96 1.08.96 1.99 1.26 2.27 1.4.29.14.45.12.62-.07.17-.19.72-.84.92-1.13.19-.29.39-.24.66-.14.27.1 1.71.81 2.01.96.29.15.49.22.56.34.07.13.07.74-.17 1.42z"/></svg>
+        </div>
+        <div>
+          <div style="font-weight:800;font-size:13px;color:#0f172a;line-height:1.2;">WhatsApp Personal Link</div>
+          <div style="font-size:11px;font-weight:700;color:#16a34a;">+91-7903933705</div>
+        </div>
+      </div>
+      <p style="font-size:11.5px;line-height:1.45;color:#475569;margin:0;">
+        If you want to use your personal link to access this app and feel free to slowness of app. Please WhatsApp us here and wait for response and when we will provide link then you can pay and purchase this app for personal use
+      </p>
+      <a href="https://wa.me/917903933705?text=Hello!%20I%20want%20to%20use%20my%20personal%20link%20to%20access%20this%20app%20and%20feel%20free%20to%20slowness%20of%20app.%20Please%20provide%20the%20link." target="_blank" rel="noopener noreferrer" style="display:flex;align-items:center;justify-content:center;gap:6px;background:linear-gradient(135deg,#25D366,#128C7E);color:#ffffff;text-decoration:none;font-size:12px;font-weight:700;padding:8px 12px;border-radius:10px;box-shadow:0 3px 10px rgba(37,211,102,0.3);transition:filter 0.2s;" onmouseover="this.style.filter='brightness(1.1)'" onmouseout="this.style.filter='brightness(1)'">
+        <svg style="width:15px;height:15px;fill:#ffffff;" viewBox="0 0 24 24"><path d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21 5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.816 9.816 0 0 0 12.04 2zm5.77 14.18c-.24.68-1.4 1.26-1.95 1.34-.52.08-1.2.12-3.48-.83-2.68-1.12-4.4-3.84-4.54-4.02-.13-.19-1.08-1.44-1.08-2.75 0-1.31.69-1.96.93-2.22.25-.26.54-.33.72-.33.18 0 .36 0 .52.01.17.01.4.06.61.56.22.53.75 1.83.82 1.96.07.14.11.3.02.48-.09.19-.14.3-.27.46-.14.16-.3.35-.42.47-.14.14-.29.3-.12.59.16.29.73 1.21 1.57 1.96 1.08.96 1.99 1.26 2.27 1.4.29.14.45.12.62-.07.17-.19.72-.84.92-1.13.19-.29.39-.24.66-.14.27.1 1.71.81 2.01.96.29.15.49.22.56.34.07.13.07.74-.17 1.42z"/></svg>
+        <span>Chat on WhatsApp (+91 7903933705)</span>
+      </a>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,2839 @@
+﻿<!DOCTYPE html>
+
+<html data-theme="dark" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Lumenboard Visual Studio — Complete User Guide &amp; Master Manual</title>
+<meta content="Comprehensive, step-by-step master guide for Lumenboard Visual Studio. Learn diagramming, smooth digital inking, multi-page lesson management, AI/code visualizers, large 3GB PDF import, media integration, and multi-format exports." name="description"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&amp;family=JetBrains+Mono:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<style>
+    :root {
+      --font-main: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+      
+      /* Dark Theme (Default) */
+      --bg-base: #0c0d14;
+      --bg-surface: #131522;
+      --bg-card: rgba(23, 26, 43, 0.75);
+      --bg-card-hover: rgba(32, 36, 60, 0.9);
+      --bg-subtle: #1c2035;
+      --border-color: rgba(255, 255, 255, 0.08);
+      --border-focus: #7c5cfc;
+      
+      --text-main: #f3f4f8;
+      --text-muted: #9aa0ba;
+      --text-dim: #656b88;
+      
+      --accent-primary: #7c5cfc;
+      --accent-primary-rgb: 124, 92, 252;
+      --accent-mint: #00e5a3;
+      --accent-coral: #ff5c77;
+      --accent-sun: #ffb830;
+      --accent-sky: #38bdf8;
+      
+      --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
+      --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.4);
+      --shadow-lg: 0 16px 48px rgba(0, 0, 0, 0.6);
+      --shadow-glow: 0 0 32px rgba(124, 92, 252, 0.25);
+      
+      --radius-sm: 8px;
+      --radius-md: 14px;
+      --radius-lg: 20px;
+      --radius-xl: 28px;
+      
+      --sidebar-width: 280px;
+      --header-height: 72px;
+      --transition-fast: 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+      --transition-normal: 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    [data-theme="light"] {
+      --bg-base: #f7f8fc;
+      --bg-surface: #ffffff;
+      --bg-card: rgba(255, 255, 255, 0.85);
+      --bg-card-hover: #ffffff;
+      --bg-subtle: #edf0f8;
+      --border-color: rgba(0, 0, 0, 0.07);
+      --border-focus: #6340e4;
+      
+      --text-main: #131627;
+      --text-muted: #585d77;
+      --text-dim: #8b92af;
+      
+      --accent-primary: #6340e4;
+      --accent-primary-rgb: 99, 64, 228;
+      --accent-mint: #00ab78;
+      --accent-coral: #e63956;
+      --accent-sun: #e59700;
+      --accent-sky: #0284c7;
+      
+      --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.05);
+      --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.08);
+      --shadow-lg: 0 16px 48px rgba(0, 0, 0, 0.12);
+      --shadow-glow: 0 0 32px rgba(99, 64, 228, 0.15);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      font-size: 16px;
+    }
+
+    body {
+      font-family: var(--font-main);
+      background-color: var(--bg-base);
+      color: var(--text-main);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+      transition: background-color var(--transition-normal), color var(--transition-normal);
+    }
+
+    /* Ambient background mesh */
+    .bg-mesh {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      pointer-events: none;
+      z-index: 0;
+      background: 
+        radial-gradient(circle at 15% 20%, rgba(var(--accent-primary-rgb), 0.12) 0%, transparent 45%),
+        radial-gradient(circle at 85% 75%, rgba(0, 229, 163, 0.08) 0%, transparent 40%),
+        radial-gradient(circle at 50% 50%, rgba(255, 92, 119, 0.05) 0%, transparent 50%);
+      opacity: 0.85;
+    }
+
+    /* Top Navigation Header */
+    header.site-header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      height: var(--header-height);
+      background: rgba(19, 21, 34, 0.85);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 2rem;
+      transition: background var(--transition-normal);
+    }
+    [data-theme="light"] header.site-header {
+      background: rgba(255, 255, 255, 0.88);
+    }
+
+    .brand-group {
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .brand-logo {
+      width: 40px;
+      height: 40px;
+      border-radius: var(--radius-sm);
+      background: linear-gradient(135deg, #7c5cfc, #00e5a3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: 800;
+      font-size: 1.25rem;
+      box-shadow: 0 4px 14px rgba(124, 92, 252, 0.4);
+    }
+
+    .brand-text h1 {
+      font-size: 1.15rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      line-height: 1.2;
+    }
+
+    .brand-text span {
+      font-size: 0.75rem;
+      color: var(--accent-mint);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .search-input-wrap {
+      position: relative;
+      width: 320px;
+    }
+
+    .search-input-wrap input {
+      width: 100%;
+      background: var(--bg-subtle);
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      padding: 0.6rem 1rem 0.6rem 2.4rem;
+      border-radius: 999px;
+      font-size: 0.88rem;
+      outline: none;
+      transition: all var(--transition-fast);
+      font-family: inherit;
+    }
+
+    .search-input-wrap input:focus {
+      border-color: var(--accent-primary);
+      box-shadow: 0 0 0 3px rgba(var(--accent-primary-rgb), 0.2);
+      background: var(--bg-surface);
+      width: 360px;
+    }
+
+    .search-input-wrap .search-icon {
+      position: absolute;
+      left: 0.85rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-muted);
+      pointer-events: none;
+      font-size: 0.9rem;
+    }
+
+    .btn-icon-toggle {
+      background: var(--bg-subtle);
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 1.15rem;
+      transition: all var(--transition-fast);
+    }
+    .btn-icon-toggle:hover {
+      background: var(--bg-surface);
+      border-color: var(--accent-primary);
+      transform: scale(1.05);
+    }
+
+    .btn-primary-launch {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: linear-gradient(135deg, var(--accent-primary), #6340e4);
+      color: white;
+      font-weight: 600;
+      font-size: 0.88rem;
+      padding: 0.6rem 1.25rem;
+      border-radius: 999px;
+      text-decoration: none;
+      transition: all var(--transition-fast);
+      box-shadow: 0 4px 14px rgba(var(--accent-primary-rgb), 0.35);
+      border: none;
+      cursor: pointer;
+    }
+    .btn-primary-launch:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(var(--accent-primary-rgb), 0.5);
+    }
+
+    /* Layout Container */
+    .app-layout {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      max-width: 1600px;
+      margin: 0 auto;
+      padding: 2rem;
+      gap: 2.5rem;
+    }
+
+    /* Sticky Sidebar Navigation */
+    aside.guide-sidebar {
+      width: var(--sidebar-width);
+      flex-shrink: 0;
+      position: sticky;
+      top: calc(var(--header-height) + 2rem);
+      height: calc(100vh - var(--header-height) - 4rem);
+      overflow-y: auto;
+      padding-right: 0.75rem;
+    }
+
+    aside.guide-sidebar::-webkit-scrollbar {
+      width: 5px;
+    }
+    aside.guide-sidebar::-webkit-scrollbar-thumb {
+      background: var(--bg-subtle);
+      border-radius: 10px;
+    }
+
+    .nav-section-title {
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--text-dim);
+      margin: 1.5rem 0 0.5rem 0.5rem;
+    }
+    .nav-section-title:first-child {
+      margin-top: 0;
+    }
+
+    .nav-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.2rem;
+    }
+
+    .nav-link {
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+      padding: 0.55rem 0.85rem;
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.88rem;
+      font-weight: 500;
+      border-radius: var(--radius-sm);
+      transition: all var(--transition-fast);
+      border-left: 2px solid transparent;
+    }
+
+    .nav-link:hover {
+      color: var(--text-main);
+      background: var(--bg-subtle);
+      transform: translateX(3px);
+    }
+
+    .nav-link.active {
+      color: var(--accent-primary);
+      background: rgba(var(--accent-primary-rgb), 0.12);
+      font-weight: 600;
+      border-left-color: var(--accent-primary);
+    }
+
+    .nav-link .nav-icon {
+      font-size: 1rem;
+      width: 20px;
+      text-align: center;
+      opacity: 0.85;
+    }
+
+    /* Main Content Area */
+    main.guide-main {
+      flex: 1;
+      min-width: 0;
+    }
+
+    /* Hero Banner */
+    .hero-banner {
+      position: relative;
+      background: linear-gradient(135deg, rgba(30, 27, 60, 0.85) 0%, rgba(19, 21, 38, 0.9) 100%);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-xl);
+      padding: 3.5rem 3rem;
+      overflow: hidden;
+      box-shadow: var(--shadow-lg), var(--shadow-glow);
+      margin-bottom: 3.5rem;
+    }
+    [data-theme="light"] .hero-banner {
+      background: linear-gradient(135deg, #ffffff 0%, #f0f3ff 100%);
+    }
+
+    .hero-banner::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      right: -20%;
+      width: 500px;
+      height: 500px;
+      background: radial-gradient(circle, rgba(var(--accent-primary-rgb), 0.25) 0%, transparent 70%);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+
+    .hero-badge-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .hero-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.35rem 0.85rem;
+      border-radius: 999px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      letter-spacing: 0.03em;
+      background: rgba(255, 255, 255, 0.07);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: var(--text-main);
+    }
+    .hero-pill.glow-mint {
+      background: rgba(0, 229, 163, 0.15);
+      border-color: rgba(0, 229, 163, 0.3);
+      color: var(--accent-mint);
+    }
+    .hero-pill.glow-coral {
+      background: rgba(255, 92, 119, 0.15);
+      border-color: rgba(255, 92, 119, 0.3);
+      color: var(--accent-coral);
+    }
+
+    .hero-title {
+      font-size: 2.75rem;
+      font-weight: 800;
+      line-height: 1.15;
+      letter-spacing: -0.03em;
+      margin-bottom: 1rem;
+      background: linear-gradient(135deg, #ffffff 30%, #b8a6ff 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    [data-theme="light"] .hero-title {
+      background: linear-gradient(135deg, #131627 30%, #6340e4 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero-subtitle {
+      font-size: 1.15rem;
+      color: var(--text-muted);
+      max-width: 780px;
+      margin-bottom: 2rem;
+      line-height: 1.6;
+    }
+
+    .hero-stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 1.25rem;
+      margin-top: 2rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--border-color);
+    }
+
+    .stat-item h3 {
+      font-size: 1.85rem;
+      font-weight: 800;
+      color: var(--text-main);
+      font-family: var(--font-mono);
+      line-height: 1;
+      margin-bottom: 0.35rem;
+    }
+    .stat-item h3 span {
+      color: var(--accent-primary);
+    }
+    .stat-item p {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+
+    /* Section Styles */
+    section.guide-section {
+      margin-bottom: 4.5rem;
+      scroll-margin-top: calc(var(--header-height) + 1.5rem);
+    }
+
+    .section-header {
+      margin-bottom: 1.85rem;
+    }
+
+    .section-eyebrow {
+      display: inline-block;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--accent-primary);
+      margin-bottom: 0.5rem;
+    }
+
+    .section-title {
+      font-size: 1.85rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      line-height: 1.25;
+      margin-bottom: 0.6rem;
+    }
+
+    .section-desc {
+      font-size: 1rem;
+      color: var(--text-muted);
+      max-width: 850px;
+      line-height: 1.6;
+    }
+
+    /* Card Grids */
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .card-grid-3 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.25rem;
+    }
+
+    .guide-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 1.75rem;
+      transition: all var(--transition-normal);
+      position: relative;
+      overflow: hidden;
+      backdrop-filter: blur(12px);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .guide-card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(var(--accent-primary-rgb), 0.35);
+      background: var(--bg-card-hover);
+      box-shadow: var(--shadow-md);
+    }
+
+    .card-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.4rem;
+      margin-bottom: 1.25rem;
+      background: var(--bg-subtle);
+      color: var(--accent-primary);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+
+    .card-icon.mint { color: var(--accent-mint); background: rgba(0, 229, 163, 0.12); }
+    .card-icon.coral { color: var(--accent-coral); background: rgba(255, 92, 119, 0.12); }
+    .card-icon.sun { color: var(--accent-sun); background: rgba(255, 184, 48, 0.12); }
+    .card-icon.sky { color: var(--accent-sky); background: rgba(56, 189, 248, 0.12); }
+
+    .card-title {
+      font-size: 1.15rem;
+      font-weight: 700;
+      margin-bottom: 0.6rem;
+      color: var(--text-main);
+    }
+
+    .card-text {
+      font-size: 0.92rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+      margin-bottom: 1rem;
+    }
+
+    .card-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      font-size: 0.88rem;
+    }
+
+    .card-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.55rem;
+      color: var(--text-muted);
+    }
+
+    .card-list li span.check {
+      color: var(--accent-mint);
+      font-weight: 700;
+    }
+
+    /* Interactive Interface Diagram (UI Map) */
+    .ui-map-container {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-xl);
+      padding: 2rem;
+      box-shadow: var(--shadow-lg);
+      margin-bottom: 2rem;
+      position: relative;
+    }
+
+    .ui-wireframe {
+      display: grid;
+      grid-template-columns: 70px 240px 1fr 280px;
+      grid-template-rows: 54px 420px 48px;
+      gap: 10px;
+      background: var(--bg-base);
+      border-radius: var(--radius-md);
+      padding: 12px;
+      border: 1px solid var(--border-color);
+      position: relative;
+    }
+
+    .wire-block {
+      background: var(--bg-subtle);
+      border: 1px dashed rgba(255, 255, 255, 0.15);
+      border-radius: var(--radius-sm);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 8px;
+      text-align: center;
+      position: relative;
+      cursor: pointer;
+      transition: all var(--transition-fast);
+    }
+    [data-theme="light"] .wire-block {
+      border-color: rgba(0, 0, 0, 0.15);
+    }
+
+    .wire-block:hover, .wire-block.active {
+      background: rgba(var(--accent-primary-rgb), 0.15);
+      border-color: var(--accent-primary);
+      border-style: solid;
+      box-shadow: 0 0 16px rgba(var(--accent-primary-rgb), 0.3);
+    }
+
+    .wire-topbar {
+      grid-column: 1 / -1;
+      flex-direction: row;
+      justify-content: space-between;
+      padding: 0 1.5rem;
+    }
+
+    .wire-rail {
+      grid-row: 2 / 3;
+      gap: 12px;
+      font-size: 1.2rem;
+    }
+
+    .wire-library {
+      grid-row: 2 / 3;
+      align-items: flex-start;
+      padding: 1rem;
+      text-align: left;
+    }
+
+    .wire-canvas {
+      grid-row: 2 / 3;
+      background: radial-gradient(#2a2f4d 1px, transparent 1px);
+      background-size: 16px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    [data-theme="light"] .wire-canvas {
+      background: radial-gradient(#d3d8ec 1px, transparent 1px);
+      background-size: 16px 16px;
+    }
+
+    .wire-inspector {
+      grid-row: 2 / 3;
+      align-items: flex-start;
+      padding: 1rem;
+      text-align: left;
+    }
+
+    .wire-bottombar {
+      grid-column: 1 / -1;
+      flex-direction: row;
+      justify-content: space-between;
+      padding: 0 1.5rem;
+    }
+
+    .ui-info-box {
+      margin-top: 1.5rem;
+      background: var(--bg-card);
+      border: 1px solid rgba(var(--accent-primary-rgb), 0.3);
+      border-radius: var(--radius-md);
+      padding: 1.25rem 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1.5rem;
+    }
+
+    .ui-info-text h4 {
+      color: var(--accent-primary);
+      font-size: 1.1rem;
+      margin-bottom: 0.25rem;
+    }
+
+    .ui-info-text p {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+    }
+
+    /* Interactive Live Tool Simulator */
+    .tool-simulator-box {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-xl);
+      padding: 2rem;
+      margin-bottom: 2rem;
+    }
+
+    .tool-tab-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+      margin-bottom: 1.5rem;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 1rem;
+    }
+
+    .tool-tab-btn {
+      background: var(--bg-subtle);
+      border: 1px solid var(--border-color);
+      color: var(--text-muted);
+      padding: 0.6rem 1.1rem;
+      border-radius: 999px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: all var(--transition-fast);
+    }
+
+    .tool-tab-btn:hover {
+      color: var(--text-main);
+      background: var(--bg-card);
+      border-color: var(--accent-primary);
+    }
+
+    .tool-tab-btn.active {
+      background: var(--accent-primary);
+      color: white;
+      border-color: var(--accent-primary);
+      box-shadow: 0 4px 14px rgba(var(--accent-primary-rgb), 0.4);
+    }
+
+    .tool-display-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+      align-items: center;
+    }
+
+    .tool-preview-stage {
+      background: var(--bg-base);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      height: 280px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .tool-desc-content h3 {
+      font-size: 1.4rem;
+      margin-bottom: 0.75rem;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+    }
+
+    .tool-desc-content p {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      line-height: 1.6;
+      margin-bottom: 1.25rem;
+    }
+
+    .pro-tip-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: rgba(255, 184, 48, 0.12);
+      border: 1px solid rgba(255, 184, 48, 0.3);
+      color: var(--accent-sun);
+      padding: 0.5rem 0.9rem;
+      border-radius: var(--radius-sm);
+      font-size: 0.85rem;
+      font-weight: 500;
+    }
+
+    /* Step-by-Step Workflow Steps */
+    .workflow-timeline {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+      position: relative;
+      padding-left: 2rem;
+    }
+
+    .workflow-timeline::before {
+      content: '';
+      position: absolute;
+      left: 11px;
+      top: 24px;
+      bottom: 24px;
+      width: 2px;
+      background: linear-gradient(to bottom, var(--accent-primary), var(--accent-mint), var(--accent-coral));
+    }
+
+    .timeline-step {
+      position: relative;
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 1.5rem 1.75rem;
+      transition: all var(--transition-fast);
+    }
+
+    .timeline-step:hover {
+      border-color: rgba(var(--accent-primary-rgb), 0.4);
+      background: var(--bg-card-hover);
+      transform: translateX(4px);
+    }
+
+    .step-number {
+      position: absolute;
+      left: -2rem;
+      top: 1.5rem;
+      transform: translateX(-50%);
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: var(--accent-primary);
+      color: white;
+      font-size: 0.75rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 0 10px rgba(var(--accent-primary-rgb), 0.5);
+    }
+
+    .timeline-step h4 {
+      font-size: 1.15rem;
+      font-weight: 700;
+      margin-bottom: 0.4rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .timeline-step p {
+      color: var(--text-muted);
+      font-size: 0.92rem;
+      line-height: 1.6;
+    }
+
+    /* Keyboard Shortcuts Table */
+    .shortcut-filter-bar {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1.25rem;
+      flex-wrap: wrap;
+    }
+
+    .shortcut-filter-btn {
+      background: var(--bg-subtle);
+      border: 1px solid var(--border-color);
+      color: var(--text-muted);
+      padding: 0.4rem 0.85rem;
+      border-radius: var(--radius-sm);
+      font-size: 0.82rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all var(--transition-fast);
+    }
+    .shortcut-filter-btn:hover, .shortcut-filter-btn.active {
+      color: var(--text-main);
+      background: var(--accent-primary);
+      border-color: var(--accent-primary);
+    }
+
+    .shortcuts-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1rem;
+    }
+
+    .shortcut-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 1rem 1.25rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      cursor: pointer;
+      transition: all var(--transition-fast);
+    }
+
+    .shortcut-card:hover {
+      border-color: var(--accent-primary);
+      background: var(--bg-card-hover);
+      transform: translateY(-2px);
+    }
+
+    .shortcut-action {
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: var(--text-main);
+    }
+
+    .shortcut-desc {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    kbd {
+      background: var(--bg-subtle);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-bottom: 2px solid rgba(255, 255, 255, 0.25);
+      border-radius: 6px;
+      padding: 0.25rem 0.6rem;
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--accent-sky);
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+      white-space: nowrap;
+    }
+    [data-theme="light"] kbd {
+      background: #e8ebf5;
+      border-color: #cbd2e8;
+      border-bottom-color: #98a5cc;
+      color: #0284c7;
+    }
+
+    /* Accordion FAQ */
+    .faq-accordion {
+      display: flex;
+      flex-direction: column;
+      gap: 0.85rem;
+    }
+
+    .faq-item {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      transition: border-color var(--transition-fast);
+    }
+
+    .faq-item:hover {
+      border-color: rgba(var(--accent-primary-rgb), 0.35);
+    }
+
+    .faq-header {
+      padding: 1.25rem 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+      user-select: none;
+      font-weight: 600;
+      font-size: 1rem;
+      color: var(--text-main);
+    }
+
+    .faq-icon {
+      font-size: 1.25rem;
+      transition: transform var(--transition-normal);
+      color: var(--accent-primary);
+    }
+
+    .faq-item.open .faq-icon {
+      transform: rotate(45deg);
+    }
+
+    .faq-body {
+      padding: 0 1.5rem 1.25rem 1.5rem;
+      color: var(--text-muted);
+      font-size: 0.92rem;
+      line-height: 1.65;
+      display: none;
+      border-top: 1px solid var(--border-color);
+      padding-top: 1rem;
+    }
+
+    .faq-item.open .faq-body {
+      display: block;
+    }
+
+    /* Callout Boxes */
+    .callout {
+      border-radius: var(--radius-md);
+      padding: 1.25rem 1.5rem;
+      margin: 1.5rem 0;
+      display: flex;
+      gap: 1rem;
+      align-items: flex-start;
+      border-left: 4px solid;
+    }
+    .callout-info {
+      background: rgba(56, 189, 248, 0.08);
+      border-color: var(--accent-sky);
+    }
+    .callout-success {
+      background: rgba(0, 229, 163, 0.08);
+      border-color: var(--accent-mint);
+    }
+    .callout-warning {
+      background: rgba(255, 184, 48, 0.08);
+      border-color: var(--accent-sun);
+    }
+
+    .callout-icon {
+      font-size: 1.3rem;
+      line-height: 1;
+    }
+
+    .callout-content h5 {
+      font-size: 0.95rem;
+      font-weight: 700;
+      margin-bottom: 0.25rem;
+      color: var(--text-main);
+    }
+    .callout-content p {
+      font-size: 0.88rem;
+      color: var(--text-muted);
+      margin: 0;
+    }
+
+    /* Copy Toast */
+    .toast {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      background: #131522;
+      border: 1px solid var(--accent-mint);
+      color: var(--text-main);
+      padding: 0.85rem 1.5rem;
+      border-radius: 999px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      box-shadow: var(--shadow-lg);
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      transform: translateY(100px);
+      opacity: 0;
+      transition: all var(--transition-normal);
+      z-index: 999;
+    }
+    .toast.show {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    /* Footer */
+    footer.site-footer {
+      border-top: 1px solid var(--border-color);
+      background: var(--bg-surface);
+      padding: 3rem 2rem;
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.88rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    footer.site-footer a {
+      color: var(--accent-primary);
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    /* Responsive */
+    @media (max-width: 1100px) {
+      aside.guide-sidebar {
+        display: none;
+      }
+      .app-layout {
+        padding: 1.5rem;
+      }
+      .ui-wireframe {
+        grid-template-columns: 50px 1fr;
+        grid-template-rows: auto auto auto auto;
+      }
+      .tool-display-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 768px) {
+      header.site-header {
+        padding: 0 1rem;
+      }
+      .search-input-wrap {
+        display: none;
+      }
+      .hero-title {
+        font-size: 2rem;
+      }
+      .hero-banner {
+        padding: 2rem 1.5rem;
+      }
+    }
+
+    /* Print Styles */
+    @media print {
+      header.site-header, aside.guide-sidebar, .btn-icon-toggle, .btn-primary-launch, .search-input-wrap {
+        display: none !important;
+      }
+      body {
+        background: #fff !important;
+        color: #000 !important;
+      }
+      .guide-card, .timeline-step, .faq-item {
+        border: 1px solid #ccc !important;
+        page-break-inside: avoid;
+      }
+    }
+  </style>
+<!-- WhatsApp Integration for Lumenboard Documentation -->
+<!-- Lumenboard Documentation Navigation & WhatsApp Styles -->
+
+
+            <!-- Lumenboard Documentation External Navigation & WhatsApp Styles -->
+    <style id="wa-doc-style">
+      /* Base Navigation Button Styles */
+      .doc-nav-bar-actions {
+        display: flex !important;
+        align-items: center !important;
+        gap: 8px !important;
+        flex-wrap: wrap !important;
+      }
+      .doc-btn-nav {
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        gap: 6px !important;
+        padding: 7px 14px !important;
+        font-size: 0.85rem !important;
+        font-weight: 700 !important;
+        border-radius: 20px !important;
+        text-decoration: none !important;
+        transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
+        cursor: pointer !important;
+        border: 1px solid transparent !important;
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+        white-space: nowrap !important;
+        user-select: none !important;
+        -webkit-tap-highlight-color: transparent !important;
+      }
+      .doc-btn-main {
+        background: linear-gradient(135deg, #02c9de, #0072ff) !important;
+        color: #ffffff !important;
+        border-color: rgba(2, 201, 222, 0.4) !important;
+        box-shadow: 0 2px 8px rgba(2, 201, 222, 0.35) !important;
+      }
+      .doc-btn-main:hover {
+        background: linear-gradient(135deg, #00b4c7, #005fdb) !important;
+        color: #ffffff !important;
+        transform: translateY(-1px) !important;
+        box-shadow: 0 4px 12px rgba(2, 201, 222, 0.5) !important;
+      }
+      .doc-btn-store {
+        background: linear-gradient(135deg, #8b5cf6, #ec4899) !important;
+        color: #ffffff !important;
+        border-color: rgba(139, 92, 246, 0.4) !important;
+        box-shadow: 0 2px 8px rgba(139, 92, 246, 0.35) !important;
+      }
+      .doc-btn-store:hover {
+        background: linear-gradient(135deg, #7c3aed, #db2777) !important;
+        color: #ffffff !important;
+        transform: translateY(-1px) !important;
+        box-shadow: 0 4px 12px rgba(139, 92, 246, 0.5) !important;
+      }
+      .doc-btn-matrix {
+        background: #f1f5f9 !important;
+        color: #1e293b !important;
+        border-color: #cbd5e1 !important;
+      }
+      .doc-btn-matrix:hover {
+        background: #e2e8f0 !important;
+        color: #0f172a !important;
+        transform: translateY(-1px) !important;
+      }
+      [data-theme="dark"] .doc-btn-matrix {
+        background: #1e293b !important;
+        color: #e2e8f0 !important;
+        border-color: #334155 !important;
+      }
+      .doc-btn-buy-nav {
+        background: linear-gradient(135deg, #25d366, #128c7e) !important;
+        color: #ffffff !important;
+        border-color: #25d366 !important;
+        box-shadow: 0 2px 8px rgba(37,211,102,0.3) !important;
+      }
+      .doc-btn-buy-nav:hover {
+        background: linear-gradient(135deg, #1ebc57, #0e7064) !important;
+        color: #ffffff !important;
+        box-shadow: 0 4px 12px rgba(37,211,102,0.5) !important;
+        transform: translateY(-1px) !important;
+      }
+      .wa-doc-hero-cta {
+        margin-top: 20px;
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+        align-items: center;
+      }
+      .wa-doc-hero-btn-main {
+        background: linear-gradient(135deg, #02c9de, #0072ff);
+        color: #ffffff !important;
+        text-decoration: none !important;
+        padding: 9px 20px;
+        border-radius: 25px;
+        font-weight: 800;
+        font-size: 13.5px;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        box-shadow: 0 3px 12px rgba(2, 201, 222, 0.4);
+        transition: all 0.2s ease;
+      }
+      .wa-doc-hero-btn-main:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 5px 16px rgba(2, 201, 222, 0.6);
+      }
+      .wa-doc-hero-btn-store {
+        background: linear-gradient(135deg, #8b5cf6, #6d28d9);
+        color: #ffffff !important;
+        text-decoration: none !important;
+        padding: 9px 20px;
+        border-radius: 25px;
+        font-weight: 800;
+        font-size: 13.5px;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        box-shadow: 0 3px 12px rgba(139, 92, 246, 0.4);
+        transition: all 0.2s ease;
+      }
+      .wa-doc-hero-btn-store:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 5px 16px rgba(139, 92, 246, 0.6);
+      }
+      .wa-doc-hero-btn-matrix {
+        background: rgba(255,255,255,0.15);
+        color: #ffffff !important;
+        text-decoration: none !important;
+        padding: 9px 18px;
+        border-radius: 25px;
+        font-weight: 700;
+        font-size: 13.5px;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        border: 1px solid rgba(255,255,255,0.3);
+        transition: all 0.2s ease;
+      }
+      .wa-doc-hero-btn-matrix:hover {
+        background: rgba(255,255,255,0.3);
+      }
+      .wa-doc-hero-btn-wa {
+        background: #25d366;
+        color: #ffffff !important;
+        text-decoration: none !important;
+        padding: 9px 20px;
+        border-radius: 25px;
+        font-weight: 800;
+        font-size: 13.5px;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        box-shadow: 0 3px 12px rgba(37,211,102,0.4);
+        transition: all 0.2s ease;
+      }
+      .wa-doc-hero-btn-wa:hover {
+        background: #1ebc57;
+        transform: translateY(-1px);
+        box-shadow: 0 5px 16px rgba(37,211,102,0.6);
+      }
+      .wa-doc-float-btn {
+        position: fixed;
+        bottom: 25px;
+        right: 25px;
+        background: linear-gradient(135deg, #25d366, #128c7e);
+        color: #ffffff !important;
+        text-decoration: none !important;
+        padding: 12px 22px;
+        border-radius: 50px;
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        font-weight: 800;
+        font-size: 14px;
+        box-shadow: 0 6px 22px rgba(37,211,102,0.5);
+        z-index: 99999;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        animation: waPulse 2s infinite;
+        transition: all 0.2s;
+        user-select: none;
+        -webkit-tap-highlight-color: transparent;
+      }
+      .wa-doc-float-btn:hover {
+        transform: scale(1.05);
+        box-shadow: 0 8px 28px rgba(37,211,102,0.7);
+        color: #fff !important;
+      }
+      @keyframes waPulse {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.04); }
+        100% { transform: scale(1); }
+      }
+
+      /* =========================================================
+         MOBILE RESPONSIVE NAVIGATION & TOUCH ICONS
+         ========================================================= */
+      .doc-mobile-menu-btn {
+        display: none !important;
+        width: 38px;
+        height: 38px;
+        border-radius: 10px;
+        background: rgba(2, 201, 222, 0.12);
+        border: 1.5px solid rgba(2, 201, 222, 0.4);
+        color: #02c9de;
+        cursor: pointer;
+        align-items: center;
+        justify-content: center;
+        font-size: 18px;
+        font-weight: 800;
+        transition: all 0.2s ease;
+        -webkit-tap-highlight-color: transparent;
+        outline: none;
+        flex-shrink: 0;
+      }
+      .doc-mobile-menu-btn:hover, .doc-mobile-menu-btn:active {
+        background: rgba(2, 201, 222, 0.25);
+        border-color: #02c9de;
+        transform: scale(1.05);
+      }
+      .doc-mobile-menu-btn.active {
+        background: rgba(239, 68, 68, 0.15);
+        border-color: #ef4444;
+        color: #f87171;
+      }
+
+      /* Mobile Drawer Backdrop */
+      .doc-mobile-backdrop {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.65);
+        backdrop-filter: blur(6px);
+        -webkit-backdrop-filter: blur(6px);
+        z-index: 100000;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+      }
+      .doc-mobile-backdrop.open {
+        display: block;
+        opacity: 1;
+      }
+
+      /* Mobile Navigation Drawer */
+      .doc-mobile-drawer {
+        position: fixed;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        width: min(85vw, 360px);
+        background: #0f172a;
+        color: #f8fafc;
+        z-index: 100001;
+        box-shadow: -8px 0 32px rgba(0, 0, 0, 0.6);
+        border-left: 1px solid rgba(2, 201, 222, 0.25);
+        display: flex;
+        flex-direction: column;
+        transform: translateX(100%);
+        transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+      }
+      [data-theme="light"] .doc-mobile-drawer {
+        background: #ffffff;
+        color: #1e293b;
+        border-left-color: #e2e8f0;
+      }
+      .doc-mobile-drawer.open {
+        transform: translateX(0);
+      }
+
+      /* Drawer Header */
+      .doc-drawer-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 16px 20px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        background: rgba(255, 255, 255, 0.03);
+      }
+      [data-theme="light"] .doc-drawer-header {
+        border-bottom-color: #e2e8f0;
+        background: #f8fafc;
+      }
+      .doc-drawer-title {
+        font-size: 15px;
+        font-weight: 800;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        background: linear-gradient(135deg, #02c9de, #0072ff);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+      .doc-drawer-close-btn {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.1);
+        border: none;
+        color: inherit;
+        font-size: 16px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.2s;
+      }
+      .doc-drawer-close-btn:hover {
+        background: #ef4444;
+        color: #fff;
+      }
+
+      /* Drawer Body */
+      .doc-drawer-body {
+        padding: 16px 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        flex: 1;
+      }
+      .doc-drawer-section-title {
+        font-size: 11px;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: #94a3b8;
+        margin-bottom: 10px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+      .doc-drawer-portal-links {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+      .doc-drawer-portal-link {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 10px 14px;
+        border-radius: 12px;
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        text-decoration: none;
+        color: inherit;
+        font-size: 13.5px;
+        font-weight: 700;
+        transition: all 0.2s;
+      }
+      [data-theme="light"] .doc-drawer-portal-link {
+        background: #f8fafc;
+        border-color: #e2e8f0;
+      }
+      .doc-drawer-portal-link:hover, .doc-drawer-portal-link:active {
+        background: rgba(2, 201, 222, 0.12);
+        border-color: #02c9de;
+        transform: translateX(3px);
+      }
+      .doc-drawer-portal-link .icon-badge {
+        width: 32px;
+        height: 32px;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 15px;
+        flex-shrink: 0;
+      }
+      .doc-drawer-toc-list {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        list-style: none;
+      }
+      .doc-drawer-toc-item a {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 9px 12px;
+        border-radius: 8px;
+        color: #94a3b8;
+        text-decoration: none;
+        font-size: 13px;
+        font-weight: 600;
+        transition: all 0.2s;
+      }
+      [data-theme="light"] .doc-drawer-toc-item a {
+        color: #64748b;
+      }
+      .doc-drawer-toc-item a:hover, .doc-drawer-toc-item a.active {
+        color: #02c9de;
+        background: rgba(2, 201, 222, 0.1);
+        font-weight: 700;
+        transform: translateX(4px);
+      }
+      .doc-drawer-toc-item .num-badge {
+        font-size: 10px;
+        font-weight: 800;
+        padding: 2px 6px;
+        border-radius: 4px;
+        background: rgba(255, 255, 255, 0.08);
+        color: #02c9de;
+      }
+
+      /* =========================================================
+         AUTOMATIC MOBILE KEYBOARD POP-UP ADAPTATION STYLES
+         ========================================================= */
+      body.keyboard-visible {
+        padding-bottom: 20px !important;
+      }
+      body.keyboard-visible .wa-doc-float-btn,
+      body.keyboard-visible #waFloatingWidget,
+      body.keyboard-visible .back-to-top-btn,
+      body.keyboard-visible #backToTop,
+      body.keyboard-visible .scroll-top-btn {
+        opacity: 0 !important;
+        pointer-events: none !important;
+        transform: translateY(20px) !important;
+        transition: opacity 0.2s ease, transform 0.2s ease !important;
+      }
+
+      /* Body lock when drawer is open */
+      body.doc-drawer-open {
+        overflow: hidden !important;
+      }
+
+                  /* Drawer theme button specific styles */
+      button.doc-drawer-portal-link, .doc-drawer-theme-btn {
+        font-family: inherit;
+        width: 100%;
+        text-align: left;
+        cursor: pointer;
+        outline: none;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        background: rgba(255, 255, 255, 0.04);
+        color: inherit;
+      }
+      [data-theme="light"] button.doc-drawer-portal-link, [data-theme="light"] .doc-drawer-theme-btn {
+        background: #f8fafc;
+        border-color: #e2e8f0;
+        color: #1e293b;
+      }
+
+      /* =========================================================
+         TABLET & MOBILE BREAKPOINTS (<= 900px, <= 640px, <= 480px)
+         ========================================================= */
+      @media (max-width: 900px) {
+        .doc-mobile-menu-btn {
+          display: inline-flex !important;
+        }
+        
+        .navbar, header.guide-header, header.top-nav, header.site-header, header.top-navbar, header.header-bar, header.header, .top-nav, .header-nav, .main-header, .top-header, header, nav {
+          padding: 10px 16px !important;
+          gap: 12px !important;
+          height: auto !important;
+          min-height: 54px !important;
+          display: flex !important;
+          flex-direction: row !important;
+          align-items: center !important;
+          justify-content: space-between !important;
+        }
+
+        .header-inner {
+          padding: 0 !important;
+          width: 100% !important;
+          display: flex !important;
+          flex-direction: row !important;
+          align-items: center !important;
+          justify-content: space-between !important;
+        }
+
+        /* Hide desktop action buttons in header on mobile; they are neatly accessible under 3 horizontal lines (☰) */
+        .doc-nav-bar-actions, [class*="doc-nav-bar-actions"], .nav-actions, header.guide-header .nav-actions, .header-actions, .header-controls, .top-nav-actions {
+          display: none !important;
+        }
+        
+        /* Container and Content adjustments */
+        .container, .app-container, .app-layout, .main-layout {
+          grid-template-columns: 1fr !important;
+          padding: 1rem 0.85rem !important;
+          gap: 1.5rem !important;
+        }
+        .sidebar, .guide-sidebar, .sidebar-nav, .sidebar-toc, nav.sidebar {
+          display: none !important;
+        }
+      }
+
+      @media (max-width: 640px) {
+        .brand-container, .brand-group, .nav-brand, .brand, .brand-logo-group {
+          gap: 8px !important;
+        }
+        .brand-title, .brand-text h1, .brand span:not(.brand-badge) {
+          font-size: 1.05rem !important;
+        }
+        .brand-title span.badge, .brand-badge, .brand-text p {
+          display: none !important;
+        }
+        .nav-search, .search-wrapper, .header-search {
+          display: none !important;
+        }
+        .header-controls {
+          gap: 6px !important;
+        }
+
+        .doc-nav-bar-actions, [class*="doc-nav-bar-actions"], .nav-actions, header.guide-header .nav-actions, .header-actions, .header-controls, .top-nav-actions {
+          display: none !important;
+        }
+
+        /* Floating buttons mobile adjustments */
+        .wa-doc-float-btn {
+          bottom: max(14px, env(safe-area-inset-bottom, 14px)) !important;
+          right: 14px !important;
+          padding: 9px 15px !important;
+          font-size: 12.5px !important;
+          border-radius: 25px !important;
+        }
+        .back-to-top-btn, #backToTop, .scroll-top-btn {
+          bottom: max(68px, calc(68px + env(safe-area-inset-bottom, 0px))) !important;
+          right: 14px !important;
+          width: 38px !important;
+          height: 38px !important;
+          font-size: 1rem !important;
+        }
+
+        /* Table touch scrolling */
+        .shortcut-table, .feature-table, table {
+          display: block !important;
+          width: 100% !important;
+          overflow-x: auto !important;
+          -webkit-overflow-scrolling: touch !important;
+        }
+        .hero, .hero-banner {
+          padding: 1.5rem 1rem !important;
+          border-radius: 14px !important;
+        }
+        .hero h1, .hero h2, .hero-title {
+          font-size: 1.6rem !important;
+        }
+        .guide-section, section {
+          scroll-margin-top: 65px !important;
+        }
+      }
+    </style>
+    
+</head>
+<body>
+<div class="bg-mesh"></div>
+<!-- Header -->
+<header class="site-header"><div class="doc-nav-bar-actions">
+    <a href="https://supportsourcecode.lovable.app/home" class="doc-btn-nav doc-btn-main" title="Open Main Page (https://supportsourcecode.lovable.app/home)">🏠 Main Page</a>
+    <a href="https://interactive-media-display.lovable.app/" target="_blank" class="doc-btn-nav doc-btn-store" title="Open App Store (https://interactive-media-display.lovable.app/)">🛒 App Store</a>
+    <a href="../../compare.html" class="doc-btn-nav doc-btn-matrix" title="View 25-Version Matrix">📊 Compare Matrix</a>
+    <a href="https://api.whatsapp.com/send?phone=917903933705&text=Hello%2C%20I%20am%20reading%20the%20guide%20for%20software%20version%3A%20Source_code_large_pdf_V_1.12%20%28Large%20PDF%20V1.12%29.%20I%20would%20like%20to%20purchase%20/%20inquire%20about%20this%20package." target="_blank" class="doc-btn-nav doc-btn-buy-nav" title="Purchase Source_code_large_pdf_V_1.12 on WhatsApp">💬 Buy (Large PDF V1.12)</a>
+    </div>
+<div class="header-actions">
+
+<button aria-label="Toggle theme" class="btn-icon-toggle" id="themeToggle" title="Toggle Dark / Light Theme">🌙</button>
+</div>
+</header>
+<!-- Main Container -->
+<div class="app-layout">
+<!-- Sidebar Navigation -->
+<aside class="guide-sidebar">
+<div class="nav-section-title">Getting Started</div>
+<ul class="nav-list">
+<li><a class="nav-link active" href="#quickstart"><span class="nav-icon">⚡</span> 60-Second Quickstart</a></li>
+<li><a class="nav-link" href="#interface-tour"><span class="nav-icon">🗺</span> Interface &amp; Layout</a></li>
+<li><a class="nav-link" href="#core-tools"><span class="nav-icon">🛠</span> Interactive Tool Simulator</a></li>
+</ul>
+<div class="nav-section-title">Creation &amp; Design</div>
+<ul class="nav-list">
+<li><a class="nav-link" href="#shapes-frames"><span class="nav-icon">⌗</span> Shapes, Cards &amp; Frames</a></li>
+<li><a class="nav-link" href="#smart-connectors"><span class="nav-icon">↗</span> Smart Connectors &amp; Arrows</a></li>
+<li><a class="nav-link" href="#rich-text-tables"><span class="nav-icon">T</span> Rich Text &amp; Canvas Tables</a></li>
+<li><a class="nav-link" href="#digital-inking"><span class="nav-icon">✒</span> Digital Inking &amp; Stylus</a></li>
+</ul>
+<div class="nav-section-title">Supercharged Features</div>
+<ul class="nav-list">
+<li><a class="nav-link" href="#visualizers"><span class="nav-icon">&lt;/&gt;</span> Code &amp; Text Visualizers</a></li>
+<li><a class="nav-link" href="#pdf-media-engine"><span class="nav-icon">📄</span> 3 GB PDF &amp; Media Engine</a></li>
+<li><a class="nav-link" href="#page-management"><span class="nav-icon">📚</span> Multi-Page Lessons &amp; Bulk Ops</a></li>
+<li><a class="nav-link" href="#export-center"><span class="nav-icon">🚀</span> Presentation &amp; Export</a></li>
+</ul>
+<div class="nav-section-title">Reference &amp; Help</div>
+<ul class="nav-list">
+<li><a class="nav-link" href="#shortcuts-cheat-sheet"><span class="nav-icon">⌨</span> Keyboard Shortcuts</a></li>
+<li><a class="nav-link" href="#troubleshooting-faq"><span class="nav-icon">❓</span> Troubleshooting &amp; FAQ</a></li>
+</ul>
+</aside>
+<!-- Main Content Stream -->
+<main class="guide-main">
+<!-- Hero Banner -->
+<section class="hero-banner">
+<div class="hero-badge-row">
+<span class="hero-pill glow-mint">● v1.12 Ultra Edition</span>
+<span class="hero-pill">⚡ Instant Client-Side Performance</span>
+<span class="hero-pill glow-coral">🔒 100% Privacy — Zero Server Uploads</span>
+</div>
+<h2 class="hero-title">Master Visual Diagramming, Inking &amp; Interactive Lessons.</h2>
+<p class="hero-subtitle">
+          Welcome to the definitive guide for <strong>Lumenboard Visual Studio</strong>. Whether you are drafting system architecture, explaining complex codebases, annotating 1,000-page textbooks, or delivering live classroom presentations, this manual will guide you end-to-end.
+        </p>
+<div class="hero-stats-grid">
+<div class="stat-item">
+<h3>50<span>+</span></h3>
+<p>Diagramming &amp; Inking Tools</p>
+</div>
+<div class="stat-item">
+<h3>3<span> GB</span></h3>
+<p>Streaming PDF Page Engine</p>
+</div>
+<div class="stat-item">
+<h3>7<span> Formats</span></h3>
+<p>Web ZIP, HTML, PDF, SVG, PNG &amp; JSON</p>
+</div>
+<div class="stat-item">
+<h3>250<span> Steps</span></h3>
+<p>Deep Instant Undo/Redo</p>
+</div>
+</div>
+</section>
+<!-- CHAPTER 1: 60-Second Quickstart -->
+<section class="guide-section searchable-item" id="quickstart">
+<div class="section-header">
+<span class="section-eyebrow">Chapter 1</span>
+<h2 class="section-title">⚡ 60-Second Quickstart Guide</h2>
+<p class="section-desc">Create your first polished diagram or multi-page visual lesson in under a minute with these four easy steps.</p>
+</div>
+<div class="workflow-timeline">
+<div class="timeline-step">
+<div class="step-number">1</div>
+<h4>Choose a Template or Start Blank</h4>
+<p>Click <strong>Templates</strong> in the top bar to open pre-built structures like <em>Web Foundations</em>, <em>Architecture Overview</em>, or <em>Flowcharts</em>. Or pick <strong>Card / Concept (□)</strong> from the left rail to drop your first box anywhere on the canvas.</p>
+</div>
+<div class="timeline-step">
+<div class="step-number">2</div>
+<h4>Connect Nodes &amp; Annotate</h4>
+<p>Hover near any node edge while holding <kbd>Shift</kbd> (or click the <strong>+</strong> handle) and drag to another shape to create an auto-routing connector arrow. Switch to <strong>Pen (✒)</strong> or <strong>Marker Highlighter (▰)</strong> to annotate directly on the board.</p>
+</div>
+<div class="timeline-step">
+<div class="step-number">3</div>
+<h4>Customize Style via Inspector</h4>
+<p>Click any object to open the right-hand <strong>Properties Panel</strong>. Adjust colors, opacity, line thickness, rotation degrees, icon badges, rich formatted text, or crop imported images.</p>
+</div>
+<div class="timeline-step">
+<div class="step-number">4</div>
+<h4>Present &amp; Export</h4>
+<p>Press <kbd>Ctrl</kbd> + <kbd>F</kbd> for distraction-free Fullscreen presentation mode. When ready, click <strong>Export</strong> to download a standalone <em>Interactive Lesson HTML</em>, a complete <em>Website ZIP</em>, crisp <em>SVG / PNG</em>, or a multi-page <em>PDF</em>.</p>
+</div>
+</div>
+</section>
+<!-- CHAPTER 2: Interface & Layout Tour -->
+<section class="guide-section searchable-item" id="interface-tour">
+<div class="section-header">
+<span class="section-eyebrow">Chapter 2</span>
+<h2 class="section-title">🗺 Interface &amp; Workspace Breakdown</h2>
+<p class="section-desc">Get familiar with the 5 core regions of Lumenboard Visual Studio. Click any region below to discover its purpose and tools.</p>
+</div>
+<div class="ui-map-container">
+<div class="ui-wireframe">
+<!-- Topbar -->
+<div class="wire-block wire-topbar active" onclick="showUiDetails('topbar')">
+<strong>1. Top Navigation Bar</strong>
+<span>File Menu · Templates · Code Visualizer · Text Visualizer · Fullscreen · Theme · Export</span>
+</div>
+<!-- Left Rail -->
+<div class="wire-block wire-rail" onclick="showUiDetails('rail')">
+<strong>2. Left Tool Rail</strong>
+<span>↖ ✎ ✒ ▰ ◇ □ ↗ T ⌗</span>
+</div>
+<!-- Library Panel -->
+<div class="wire-block wire-library" onclick="showUiDetails('library')">
+<strong>3. Collapsible Library</strong>
+<span>Design Palette · Basic Shapes · Connectors · Icons · Quick-Start Templates · Page Management</span>
+</div>
+<!-- Canvas Stage -->
+<div class="wire-block wire-canvas" onclick="showUiDetails('canvas')">
+<div>
+<strong>4. Canvas Stage (White Working Area)</strong>
+<p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 4px;">Dynamic Sizing (up to 8000×6000) · 35%–200% Zoom · Marquee Select · Inking · Connectors</p>
+</div>
+</div>
+<!-- Right Inspector -->
+<div class="wire-block wire-inspector" onclick="showUiDetails('inspector')">
+<strong>5. Context Inspector</strong>
+<span>Properties · Geometry · Color Picker · Transparency · Layers · Rotation · GIF Quality · Cropper</span>
+</div>
+<!-- Bottombar -->
+<div class="wire-block wire-bottombar" onclick="showUiDetails('bottombar')">
+<strong>6. Bottom Multi-Page Lesson Bar</strong>
+<span>Lesson Tabs · Drag to Reorder · Color Tags · Add (+) / Delete Pages · Canvas Size &amp; Zoom Controls</span>
+</div>
+</div>
+<div class="ui-info-box" id="uiInfoBox">
+<div class="ui-info-text">
+<h4 id="uiInfoTitle">Top Navigation Bar</h4>
+<p id="uiInfoDesc">Contains the master File menu (Import JSON, ZIP, DOCX, 3GB PDF, Images, Videos, GIFs), Quick-Start Templates, Code/Text Visualizers, Theme switch, Fullscreen presentation toggle, and Export Center.</p>
+</div>
+<span class="pro-tip-badge">💡 Click regions above to inspect</span>
+</div>
+</div>
+</section>
+<!-- CHAPTER 3: Interactive Tool Simulator -->
+<section class="guide-section searchable-item" id="core-tools">
+<div class="section-header">
+<span class="section-eyebrow">Chapter 3</span>
+<h2 class="section-title">🛠 Interactive Tool Simulator</h2>
+<p class="section-desc">Click through each primary tool in the Studio to view its exact behavior, keyboard triggers, and master techniques.</p>
+</div>
+<div class="tool-simulator-box">
+<div class="tool-tab-buttons">
+<button class="tool-tab-btn active" onclick="simulateTool('select')"><span>↖</span> Select &amp; Marquee</button>
+<button class="tool-tab-btn" onclick="simulateTool('pan')"><span>✥</span> Pan Canvas</button>
+<button class="tool-tab-btn" onclick="simulateTool('pencil')"><span>✎</span> Pencil Inking</button>
+<button class="tool-tab-btn" onclick="simulateTool('pen')"><span>✒</span> Pen Calligraphy</button>
+<button class="tool-tab-btn" onclick="simulateTool('marker')"><span>▰</span> Highlighter Marker</button>
+<button class="tool-tab-btn" onclick="simulateTool('eraser')"><span>◇</span> Smart Eraser</button>
+<button class="tool-tab-btn" onclick="simulateTool('text')"><span>T</span> Formatted Text</button>
+<button class="tool-tab-btn" onclick="simulateTool('connector')"><span>↗</span> Smart Connectors</button>
+<button class="tool-tab-btn" onclick="simulateTool('frame')"><span>⌗</span> Container Frames</button>
+</div>
+<div class="tool-display-grid">
+<div class="tool-preview-stage" id="toolPreviewStage">
+<!-- Live SVG / CSS illustration generated by JS -->
+<svg height="180" id="toolSvgIllustration" viewbox="0 0 220 180" width="220">
+<rect fill="#7c5cfc" fill-opacity="0.2" height="110" rx="12" stroke="#7c5cfc" stroke-dasharray="4 4" stroke-width="2" width="160" x="30" y="30"></rect>
+<circle cx="30" cy="30" fill="#7c5cfc" r="4"></circle>
+<circle cx="190" cy="30" fill="#7c5cfc" r="4"></circle>
+<circle cx="190" cy="140" fill="#7c5cfc" r="4"></circle>
+<circle cx="30" cy="140" fill="#7c5cfc" r="4"></circle>
+<text fill="#f3f4f8" font-size="14" font-weight="600" text-anchor="middle" x="110" y="90">Selected Object</text>
+</svg>
+</div>
+<div class="tool-desc-content" id="toolDescContent">
+<h3 id="simToolTitle">Select &amp; Marquee Tool (↖)</h3>
+<p id="simToolDesc">The default workhorse tool. Click any shape, arrow, or stroke to select and reveal its resize and rotation handles. Click and drag empty canvas to draw a marquee selection box over multiple objects at once.</p>
+<div class="pro-tip-badge" id="simToolTip">
+<span>💡 Pro Tip:</span>
+<span id="simToolTipText">Press <kbd>Ctrl</kbd> + <kbd>A</kbd> to select every element on the active lesson. Hold <kbd>Shift</kbd> to select multiple specific items.</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- CHAPTER 4: Shapes, Cards & Frames -->
+<section class="guide-section searchable-item" id="shapes-frames">
+<div class="section-header">
+<span class="section-eyebrow">Chapter 4</span>
+<h2 class="section-title">⌗ Shapes, Concept Cards &amp; Container Frames</h2>
+<p class="section-desc">Create clear, structured mental models using semantic shapes, icons, and grouping frames.</p>
+</div>
+<div class="card-grid">
+<div class="guide-card">
+<div class="card-icon">□</div>
+<h3 class="card-title">Concept Cards &amp; Geometries</h3>
+<p class="card-text">Add Rectangles, Squares, Circles, Diamonds, and Start/End Pills directly from the rail or the Library panel.</p>
+<ul class="card-list">
+<li><span class="check">✓</span> <strong>In-place editing:</strong> Double click any box to rename title and content.</li>
+<li><span class="check">✓</span> <strong>15° Snap Rotation:</strong> Drag the top circular rotation handle; hold <kbd>Shift</kbd> to snap in 15° increments.</li>
+<li><span class="check">✓</span> <strong>Glassmorphism:</strong> Toggle Fill Mode between <em>Opaque</em> and <em>Transparent</em> for wireframes.</li>
+</ul>
+</div>
+<div class="guide-card">
+<div class="card-icon mint">◇</div>
+<h3 class="card-title">Decision Nodes &amp; Flowcharts</h3>
+<p class="card-text">Specialized diamond decision nodes for logic branching, conditional algorithms, and decision trees.</p>
+<ul class="card-list">
+<li><span class="check">✓</span> <strong>4-Way Ports:</strong> Connect outgoing True/False paths from any side.</li>
+<li><span class="check">✓</span> <strong>Code Snippet Attachment:</strong> Attach executable code or pseudo-code labels directly inside the decision card.</li>
+<li><span class="check">✓</span> <strong>Custom Tones:</strong> Indigo, Mint, Coral, and Sun color presets.</li>
+</ul>
+</div>
+<div class="guide-card">
+<div class="card-icon coral">⌗</div>
+<h3 class="card-title">Container Bounding Frames</h3>
+<p class="card-text">Frames serve as visual boundaries (e.g. "Microservices Cluster", "Frontend Tier", "Module 1").</p>
+<ul class="card-list">
+<li><span class="check">✓</span> <strong>Hierarchical Parenting:</strong> When shapes are placed inside a frame, moving or copying the frame moves all child elements synchronously.</li>
+<li><span class="check">✓</span> <strong>Layer Ordering:</strong> Easily send frames to back or bring to front via the Inspector.</li>
+</ul>
+</div>
+</div>
+</section>
+<!-- CHAPTER 5: Smart Connectors & Arrows -->
+<section class="guide-section searchable-item" id="smart-connectors">
+<div class="section-header">
+<span class="section-eyebrow">Chapter 5</span>
+<h2 class="section-title">↗ Smart Connectors &amp; Dynamic Routing</h2>
+<p class="section-desc">Never redraw connections when rearranging diagrams. Lumenboard connectors automatically stick and route intelligently.</p>
+</div>
+<div class="card-grid-3">
+<div class="guide-card">
+<div class="card-icon sun">→</div>
+<h3 class="card-title">6 Distinct Arrow Styles</h3>
+<ul class="card-list">
+<li><strong>Straight Line (―):</strong> Clean structural links.</li>
+<li><strong>Straight Arrow (→):</strong> Unidirectional data flow.</li>
+<li><strong>Both-Sides Arrow (↔):</strong> Bidirectional synchronization.</li>
+<li><strong>Elbow / Orthogonal (↳):</strong> 90-degree circuit &amp; architecture paths.</li>
+<li><strong>Curved Bezier (∿):</strong> Organic, fluid flowcharts.</li>
+<li><strong>Dashed Connector (⇢):</strong> Async or optional relations.</li>
+</ul>
+</div>
+<div class="guide-card">
+<div class="card-icon sky">⚡</div>
+<h3 class="card-title">Instant Connection Handles</h3>
+<p class="card-text">Hover near any card while holding <kbd>Shift</kbd> (or click the purple <strong>+</strong> handle) and drag directly towards any destination node. A connection popup lets you select your preferred arrow style on release.</p>
+</div>
+<div class="guide-card">
+<div class="card-icon mint">📐</div>
+<h3 class="card-title">Custom Bend Points</h3>
+<p class="card-text">Need an arrow to avoid an obstacle? Drag the central bend control point anywhere on canvas. If you change your mind, click <strong>Reset automatic route</strong> in the Inspector.</p>
+</div>
+</div>
+</section>
+<!-- CHAPTER 6: Rich Text & In-Canvas Tables -->
+<section class="guide-section searchable-item" id="rich-text-tables">
+<div class="section-header">
+<span class="section-eyebrow">Chapter 6</span>
+<h2 class="section-title">T Formatted Rich Text, Typography &amp; In-Canvas Tables</h2>
+<p class="section-desc">Format notes, technical documentation, and comparison matrices directly within cards or standalone text blocks.</p>
+</div>
+<div class="card-grid">
+<div class="guide-card">
+<div class="card-icon">Aa</div>
+<h3 class="card-title">Formatting Toolbar</h3>
+<p class="card-text">When editing text, a dedicated top formatting toolbar appears with comprehensive controls:</p>
+<ul class="card-list">
+<li><span class="check">✓</span> <strong>Typography:</strong> Arial, Georgia, Verdana, Tahoma, Courier New with sizes 10px to 48px.</li>
+<li><span class="check">✓</span> <strong>Styling:</strong> Bold (<kbd>Ctrl+B</kbd>), Italic (<kbd>Ctrl+I</kbd>), Underline (<kbd>Ctrl+U</kbd>), Strikethrough.</li>
+<li><span class="check">✓</span> <strong>Highlights:</strong> Custom text color picker + vibrant highlighter pen tool.</li>
+<li><span class="check">✓</span> <strong>Structure:</strong> Bullet lists, Numbered lists, Indent/Outdent, Left/Center/Right alignment.</li>
+<li><span class="check">✓</span> <strong>Format Painter (🖌):</strong> Copy styling from one text snippet and paint onto another.</li>
+</ul>
+</div>
+<div class="guide-card">
+<div class="card-icon mint">▦</div>
+<h3 class="card-title">8×8 Table Grid Inserter</h3>
+<p class="card-text">Insert structured data tables into any card or note with a single drag:</p>
+<ul class="card-list">
+<li><span class="check">✓</span> Click <strong>▦ Table</strong> in the text toolbar to open the interactive grid picker.</li>
+<li><span class="check">✓</span> Hover over desired rows and columns (up to 8×8 cells) and click to insert.</li>
+<li><span class="check">✓</span> Clean HTML table styling with striped borders and auto-expanding cell heights.</li>
+<li><span class="check">✓</span> Safe HTML sanitization removes dangerous scripts while preserving rich formatting.</li>
+</ul>
+</div>
+</div>
+</section>
+<!-- CHAPTER 7: Digital Inking & Pen Tablet Studio -->
+<section class="guide-section searchable-item" id="digital-inking">
+<div class="section-header">
+<span class="section-eyebrow">Chapter 7</span>
+<h2 class="section-title">✒ Digital Inking, Stylus &amp; Pen Tablet Studio</h2>
+<p class="section-desc">Write, annotate, sketch, and teach with lag-free digital ink optimized for Huion, Wacom, iPad, and touch displays.</p>
+</div>
+<div class="card-grid-3">
+<div class="guide-card">
+<div class="card-icon">✎</div>
+<h3 class="card-title">Pencil vs. Pen vs. Marker</h3>
+<ul class="card-list">
+<li><strong>Pencil (✎):</strong> Crisp, high-precision lines for technical sketching and math formulas.</li>
+<li><strong>Pen (✒):</strong> Smooth calligraphy with rounded endpoints for fluid handwriting.</li>
+<li><strong>Marker (▰):</strong> 28% translucent highlighter for emphasizing text and PDF slides.</li>
+<li><strong>Eraser (◇):</strong> Adjustable radius eraser (10px–100px) that cleanly deletes intersected strokes.</li>
+</ul>
+</div>
+<div class="guide-card">
+<div class="card-icon coral">✍</div>
+<h3 class="card-title">Hardware Stylus Anti-Glitch</h3>
+<p class="card-text">Lumenboard features built-in barrel-button context-menu suppression. Pressing the stylus barrel switch will not trigger annoying right-click browser menus while in the middle of writing.</p>
+</div>
+<div class="guide-card">
+<div class="card-icon sky">🎨</div>
+<h3 class="card-title">Vector Stroke Editing</h3>
+<p class="card-text">Every drawn stroke becomes a first-class vector object. You can select strokes, change their color, adjust width (1–50px), modify opacity, duplicate (<kbd>Ctrl+C</kbd>/<kbd>V</kbd>), rotate, and adjust layer depth.</p>
+</div>
+</div>
+</section>
+<!-- CHAPTER 8: AI & Algorithmic Visualizers -->
+<section class="guide-section searchable-item" id="visualizers">
+<div class="section-header">
+<span class="section-eyebrow">Chapter 8</span>
+<h2 class="section-title">&lt;/&gt; Code &amp; Text Visualizers (Instant Algorithmic Diagramming)</h2>
+<p class="section-desc">Turn raw source code or unstructured lecture notes into fully connected visual diagrams in 1 click.</p>
+</div>
+<div class="card-grid">
+<div class="guide-card">
+<div class="card-icon">&lt;/&gt;</div>
+<h3 class="card-title">Code to Diagram Visualizer</h3>
+<p class="card-text">Paste HTML, JavaScript, TypeScript, React JSX, or pseudo-code into the visualizer modal:</p>
+<ul class="card-list">
+<li><strong>High-Level (HLD):</strong> Generates an architectural tier diagram grouping components into logical modules.</li>
+<li><strong>Low-Level (LLD):</strong> Generates an execution flowchart tracing functions, conditional branches, and data flows.</li>
+<li><span class="check">✓</span> <strong>100% Client-Side Privacy:</strong> Code is parsed locally in the browser and never transmitted over the network.</li>
+</ul>
+</div>
+<div class="guide-card">
+<div class="card-icon mint">TXT</div>
+<h3 class="card-title">Text to Concept Visualizer</h3>
+<p class="card-text">Paste meeting notes, textbook paragraphs, or standard operating procedures:</p>
+<ul class="card-list">
+<li><strong>Concept Overview (HLD):</strong> Extracts core topics, definitions, and contextual relationships.</li>
+<li><strong>Detailed Flow (LLD):</strong> Chains sentences into step-by-step reading-order sequence blocks with smart arrows.</li>
+<li><span class="check">✓</span> Fully editable output: Modify titles, reposition nodes, or recolor immediately.</li>
+</ul>
+</div>
+</div>
+</section>
+<!-- CHAPTER 9: Large PDF Engine & Media Hub -->
+<section class="guide-section searchable-item" id="pdf-media-engine">
+<div class="section-header">
+<span class="section-eyebrow">Chapter 9</span>
+<h2 class="section-title">📄 Large 3 GB PDF Engine, Video &amp; GIF Media Hub</h2>
+<p class="section-desc">Import heavy PDFs, videos, animated GIFs, and images with browser-based hardware acceleration.</p>
+</div>
+<div class="card-grid">
+<div class="guide-card">
+<div class="card-icon coral">📑</div>
+<h3 class="card-title">3 GB PDF Streaming Engine</h3>
+<p class="card-text">Drag and drop massive textbooks or presentation decks directly onto the canvas:</p>
+<ul class="card-list">
+<li><span class="check">✓</span> <strong>Zero Memory Blowup:</strong> PDF.js streams pages on-demand without buffering multi-gigabyte ArrayBuffers.</li>
+<li><span class="check">✓</span> <strong>Page-to-Lesson Conversion:</strong> Each PDF page automatically becomes a discrete lesson tab (e.g. Page 1, Page 2...).</li>
+<li><span class="check">✓</span> <strong>Password Protected PDF:</strong> Full decryption support for protected documents.</li>
+<li><span class="check">✓</span> <strong>Vector Sharpness:</strong> Pages are rendered as ultra-crisp vector-like cards ready for ink annotation.</li>
+</ul>
+</div>
+<div class="guide-card">
+<div class="card-icon sun">🎬</div>
+<h3 class="card-title">Video, GIF &amp; Image Studio</h3>
+<ul class="card-list">
+<li><span class="check">✓</span> <strong>Video Converter (FFmpeg WASM):</strong> Import AVI, 3GP, or MP4 videos; converts directly to lightweight WebM in your browser.</li>
+<li><span class="check">✓</span> <strong>GIF Optimizer:</strong> Built-in WebCodecs optimizer compresses heavy GIFs down to 20–40 KB for fast web loading.</li>
+<li><span class="check">✓</span> <strong>In-Canvas Image Cropper:</strong> Right-click any image/slide to crop exact regions visually.</li>
+<li><span class="check">✓</span> <strong>Clickable Hyperlinks:</strong> Attach URL destinations to any image or badge.</li>
+</ul>
+</div>
+</div>
+</section>
+<!-- CHAPTER 10: Multi-Page Lessons & Bulk Page Operations -->
+<section class="guide-section searchable-item" id="page-management">
+<div class="section-header">
+<span class="section-eyebrow">Chapter 10</span>
+<h2 class="section-title">📚 Multi-Page Lesson Management &amp; Bulk Operations</h2>
+<p class="section-desc">Organize complex curriculum, multi-chapter presentations, and decks with high-efficiency tab controls.</p>
+</div>
+<div class="card-grid-3">
+<div class="guide-card">
+<div class="card-icon">🗂</div>
+<h3 class="card-title">Drag-and-Drop Reordering</h3>
+<p class="card-text">Drag lesson tabs horizontally across the bottom bar to reorder pages instantly. Double-click any tab or click the <strong>✎</strong> button to rename.</p>
+</div>
+<div class="guide-card">
+<div class="card-icon sky">🏷</div>
+<h3 class="card-title">Tab Color Coding</h3>
+<p class="card-text">Right-click any tab to assign custom color tags (Red, Mint, Indigo, Coral, Sun, Sky) for visual categorization across chapters or topics.</p>
+</div>
+<div class="guide-card">
+<div class="card-icon coral">🗑</div>
+<h3 class="card-title">Bulk Page Deletion Panel</h3>
+<p class="card-text">Managing 500+ pages? Open the <strong>Delete pages</strong> tab in the Library to filter pages (Inclusive/Exclusive mode), select 100-page batch ranges, or drag-select rows for instant batch removal.</p>
+</div>
+</div>
+</section>
+<!-- CHAPTER 11: Presentation & Export Masterclass -->
+<section class="guide-section searchable-item" id="export-center">
+<div class="section-header">
+<span class="section-eyebrow">Chapter 11</span>
+<h2 class="section-title">🚀 Presentation Mode &amp; Universal Export Center</h2>
+<p class="section-desc">Take your work anywhere — from web deployments to vector slides and offline print documents.</p>
+</div>
+<div class="card-grid">
+<div class="guide-card">
+<div class="card-icon">🌐</div>
+<h3 class="card-title">Interactive Lesson HTML &amp; Website ZIP</h3>
+<ul class="card-list">
+<li><strong>Standalone Lesson HTML:</strong> Generates a single, self-contained interactive web file. Includes mobile horizontal swipe gestures and fullscreen mode.</li>
+<li><strong>Full Website ZIP:</strong> Generates a complete responsive multi-page static website with one HTML page per lesson and responsive navigation menus.</li>
+</ul>
+</div>
+<div class="guide-card">
+<div class="card-icon mint">📄</div>
+<h3 class="card-title">Multi-Page PDF, SVG &amp; PNG</h3>
+<ul class="card-list">
+<li><strong>Lesson-by-Lesson PDF:</strong> Converts all lessons into a multi-page PDF document (Lesson 1 = Page 1, Lesson 2 = Page 2).</li>
+<li><strong>Scalable Vector Graphics (SVG):</strong> Infinite-resolution vector graphic for PowerPoint, Keynote, and Figma.</li>
+<li><strong>High-Resolution PNG:</strong> Pixel-perfect raster image export with text anti-aliasing.</li>
+</ul>
+</div>
+<div class="guide-card">
+<div class="card-icon sun">{"{ }"}</div>
+<h3 class="card-title">Lossless Project JSON &amp; Lesson ZIP</h3>
+<ul class="card-list">
+<li><strong>Project JSON:</strong> 100% lossless project state backup. Re-import anytime to continue editing.</li>
+<li><strong>Lesson ZIP:</strong> Timestamped archive containing individual JSON files for each lesson and a manifest index.</li>
+<li><strong>Local Storage + IndexedDB:</strong> Auto-saves to browser memory so your work is safe across browser refreshes (<kbd>Ctrl+S</kbd>).</li>
+</ul>
+</div>
+</div>
+</section>
+<!-- CHAPTER 12: Keyboard Shortcuts Cheat Sheet -->
+<section class="guide-section searchable-item" id="shortcuts-cheat-sheet">
+<div class="section-header">
+<span class="section-eyebrow">Chapter 12</span>
+<h2 class="section-title">⌨ Master Keyboard Shortcuts Cheat Sheet</h2>
+<p class="section-desc">Click any shortcut card to copy its key combination to your clipboard.</p>
+</div>
+<div class="shortcut-filter-bar">
+<button class="shortcut-filter-btn active" onclick="filterShortcuts('all')">All Shortcuts</button>
+<button class="shortcut-filter-btn" onclick="filterShortcuts('canvas')">Canvas &amp; View</button>
+<button class="shortcut-filter-btn" onclick="filterShortcuts('editing')">Editing &amp; Clipboard</button>
+<button class="shortcut-filter-btn" onclick="filterShortcuts('text')">Text Formatting</button>
+<button class="shortcut-filter-btn" onclick="filterShortcuts('inking')">Inking &amp; Stylus</button>
+</div>
+<div class="shortcuts-grid" id="shortcutsGrid">
+<!-- Populated by JS -->
+</div>
+</section>
+<!-- CHAPTER 13: Troubleshooting & FAQ -->
+<section class="guide-section searchable-item" id="troubleshooting-faq">
+<div class="section-header">
+<span class="section-eyebrow">Chapter 13</span>
+<h2 class="section-title">❓ Troubleshooting &amp; Frequently Asked Questions</h2>
+<p class="section-desc">Quick solutions to common questions and performance optimization tips.</p>
+</div>
+<div class="faq-accordion">
+<div class="faq-item">
+<div class="faq-header" onclick="toggleFaq(this)">
+<span>Where is my diagram data stored? Is my code or data uploaded to a server?</span>
+<span class="faq-icon">+</span>
+</div>
+<div class="faq-body">
+<strong>100% of your data stays private on your machine.</strong> Lumenboard operates entirely in your browser using local memory, IndexedDB, and LocalStorage. No diagrams, code snippets, imported PDFs, or videos are ever uploaded to any cloud backend or external server.
+            </div>
+</div>
+<div class="faq-item">
+<div class="faq-header" onclick="toggleFaq(this)">
+<span>How do I save my project permanently?</span>
+<span class="faq-icon">+</span>
+</div>
+<div class="faq-body">
+              Press <kbd>Ctrl</kbd> + <kbd>S</kbd> to immediately save the project to your browser's persistent storage. For permanent backups and cross-device transfers, click <strong>Export</strong> → <strong>Project JSON</strong> or <strong>Lesson ZIP</strong> to save the files to your computer.
+            </div>
+</div>
+<div class="faq-item">
+<div class="faq-header" onclick="toggleFaq(this)">
+<span>How do I clear the browser cache if storage gets full?</span>
+<span class="faq-icon">+</span>
+</div>
+<div class="faq-body">
+              Open the top <strong>File</strong> menu and select <strong>Remove browser saved data (⌫)</strong>. This safely clears LocalStorage and IndexedDB media cache after asking for your confirmation.
+            </div>
+</div>
+<div class="faq-item">
+<div class="faq-header" onclick="toggleFaq(this)">
+<span>Why is my stylus triggering right-click menus while drawing?</span>
+<span class="faq-icon">+</span>
+</div>
+<div class="faq-body">
+              Lumenboard automatically suppresses the context menu when in <em>Pencil</em>, <em>Pen</em>, <em>Marker</em>, or <em>Eraser</em> mode. Ensure you have selected a drawing tool from the left rail (<kbd>✎</kbd>, <kbd>✒</kbd>, or <kbd>▰</kbd>) before using your stylus.
+            </div>
+</div>
+<div class="faq-item">
+<div class="faq-header" onclick="toggleFaq(this)">
+<span>How can I import a massive 1,000-page PDF textbook smoothly?</span>
+<span class="faq-icon">+</span>
+</div>
+<div class="faq-body">
+              Click <strong>File</strong> → <strong>Import PDF as lessons</strong> and select your file (up to 3 GB). Lumenboard uses streaming chunk loaders so only the active page is rendered in memory, keeping your browser fast and responsive.
+            </div>
+</div>
+</div>
+</section>
+</main>
+</div>
+<!-- Toast Notification -->
+<div class="toast" id="toast">
+<span>✓</span>
+<span id="toastMsg">Shortcut copied to clipboard!</span>
+</div>
+<!-- Footer -->
+<footer class="site-footer">
+<p>© 2026 Lumenboard Visual Studio. Empowering visual thinking, teaching &amp; learning everywhere.</p>
+<p style="margin-top: 0.5rem;"> · <a href="#quickstart">Back to Top ↑</a></p>
+</footer>
+<script>
+    // Theme Switcher Logic
+    const themeToggleBtn = document.getElementById('themeToggle');
+    const htmlElem = document.documentElement;
+    
+    // Load saved theme or system preference
+    const savedTheme = localStorage.getItem('lumenboard_help_theme') || 'dark';
+    htmlElem.setAttribute('data-theme', savedTheme);
+    updateThemeIcon(savedTheme);
+
+    themeToggleBtn.addEventListener('click', () => {
+      const currentTheme = htmlElem.getAttribute('data-theme');
+      const nextTheme = currentTheme === 'dark' ? 'light' : 'dark';
+      htmlElem.setAttribute('data-theme', nextTheme);
+      localStorage.setItem('lumenboard_help_theme', nextTheme);
+      updateThemeIcon(nextTheme);
+    });
+
+    function updateThemeIcon(theme) {
+      themeToggleBtn.textContent = theme === 'dark' ? '☀' : '🌙';
+    }
+
+    // UI Map Interactive Inspector
+    const uiData = {
+      topbar: {
+        title: "1. Top Navigation Bar",
+        desc: "Houses the File menu (Import JSON, ZIP, DOCX, 3GB PDF, Images, Videos, GIFs), Quick-Start Templates, Code/Text Visualizers, Theme switch, Fullscreen presentation toggle, and Universal Export Center."
+      },
+      rail: {
+        title: "2. Left Creation Tool Rail",
+        desc: "Provides instant access to core tools: Select (↖), Pan (✥), Pencil (✎), Pen (✒), Marker Highlighter (▰), Eraser (◇), Concept Cards (□), Decision Nodes (◇), Formatted Text (T), Connectors (↗), Container Frames (⌗), and Visualizers."
+      },
+      library: {
+        title: "3. Collapsible Library Panel",
+        desc: "Contains searchable basic shapes, arrow styles, learning blocks, desktop icons, pre-built lesson templates, and the powerful Bulk Page Management deletion panel."
+      },
+      canvas: {
+        title: "4. Canvas Working Stage",
+        desc: "Dynamic white working canvas supporting dimensions up to 8000×6000 px. Features 35%–200% zoom, dual synchronized horizontal scrollbars, marquee multi-selection, laser drawing, and 15° snap rotation handles."
+      },
+      inspector: {
+        title: "5. Contextual Properties Inspector",
+        desc: "Real-time properties inspector for selected objects. Modify geometry (X, Y, W, H), color swatches, 16-million hex picker, fill opacity, layer order (above/below), rotation angle, icon badges, rich text, and GIF quality compression."
+      },
+      bottombar: {
+        title: "6. Bottom Lesson & Navigation Bar",
+        desc: "Manages multi-page lessons with drag-and-drop reordering, custom tab color tags, double-click rename, raw JSON code editor, canvas size +/- controls, and zoom sliders with Fit Diagram (⌗)."
+      }
+    };
+
+    function showUiDetails(key) {
+      document.querySelectorAll('.wire-block').forEach(b => b.classList.remove('active'));
+      const block = event.currentTarget || document.querySelector(`.wire-${key}`);
+      if (block) block.classList.add('active');
+      
+      const data = uiData[key];
+      if (data) {
+        document.getElementById('uiInfoTitle').textContent = data.title;
+        document.getElementById('uiInfoDesc').textContent = data.desc;
+      }
+    }
+
+    // Tool Simulator Logic
+    const toolSimData = {
+      select: {
+        title: "Select & Marquee Tool (↖)",
+        desc: "Click any shape, connector, or inking stroke to inspect and transform it. Drag on blank canvas to draw a selection marquee enclosing multiple elements. Supports drag-move, resize handles, and rotation.",
+        tip: "Press Ctrl+A to select all items on the board. Hold Shift while clicking to add or remove individual items from selection.",
+        svg: `<rect x="30" y="30" width="160" height="110" rx="12" fill="#7c5cfc" fill-opacity="0.2" stroke="#7c5cfc" stroke-width="2" stroke-dasharray="4 4"/><circle cx="30" cy="30" r="4" fill="#7c5cfc"/><circle cx="190" cy="30" r="4" fill="#7c5cfc"/><circle cx="190" cy="140" r="4" fill="#7c5cfc"/><circle cx="30" cy="140" r="4" fill="#7c5cfc"/><text x="110" y="90" fill="#f3f4f8" font-size="14" font-weight="600" text-anchor="middle">Selected Object</text>`
+      },
+      pan: {
+        title: "Pan Canvas Tool (✥)",
+        desc: "Click and drag anywhere across the canvas to glide smoothly across large diagrams without accidentally moving shapes or drawing strokes.",
+        tip: "You can also pan with your mouse wheel or trackpad gestures at any time.",
+        svg: `<circle cx="110" cy="90" r="45" fill="none" stroke="#38bdf8" stroke-width="2" stroke-dasharray="6 4"/><path d="M 110 30 L 110 150 M 50 90 L 170 90" stroke="#38bdf8" stroke-width="2"/><polygon points="110,20 105,32 115,32" fill="#38bdf8"/><polygon points="110,160 105,148 115,148" fill="#38bdf8"/><polygon points="40,90 52,85 52,95" fill="#38bdf8"/><polygon points="180,90 168,85 168,95" fill="#38bdf8"/>`
+      },
+      pencil: {
+        title: "Pencil Inking Tool (✎)",
+        desc: "High-precision freehand digital inking with crisp edges. Perfect for mathematical equations, flow arrows, and fine technical sketches.",
+        tip: "Customize stroke size (1px to 24px) and color from the top toolbar when active.",
+        svg: `<path d="M 40 130 Q 70 40, 110 80 T 180 50" fill="none" stroke="#7c5cfc" stroke-width="4" stroke-linecap="round"/><circle cx="180" cy="50" r="6" fill="#7c5cfc"/>`
+      },
+      pen: {
+        title: "Pen Calligraphy Tool (✒)",
+        desc: "Smooth, organic handwriting tool that renders fluid vector curves. Feels natural with Huion, Wacom, and Apple Pencil stylus input.",
+        tip: "Strokes are saved as vector objects and can be recolored or resized later in the Inspector.",
+        svg: `<path d="M 40 120 C 70 60, 100 140, 140 80 S 170 120, 190 70" fill="none" stroke="#00e5a3" stroke-width="6" stroke-linecap="round"/>`
+      },
+      marker: {
+        title: "Highlighter Marker (▰)",
+        desc: "28% translucent highlighter designed to emphasize text, PDF slides, or diagram nodes without obscuring underlying details.",
+        tip: "Use vibrant yellow (#fff09a) or mint green (#00e5a3) for textbook annotation.",
+        svg: `<rect x="40" y="70" width="140" height="36" rx="6" fill="#ffb830" fill-opacity="0.35"/><text x="110" y="93" fill="#f3f4f8" font-size="14" font-weight="700" text-anchor="middle">Important Note</text>`
+      },
+      eraser: {
+        title: "Smart Stroke Eraser (◇)",
+        desc: "Interactive eraser with adjustable brush radius (10px–100px). Deletes freehand strokes and digital ink cleanly upon contact.",
+        tip: "Double-click or drag across drawing strokes to clear annotations rapidly.",
+        svg: `<circle cx="110" cy="90" r="35" fill="#ff5c77" fill-opacity="0.15" stroke="#ff5c77" stroke-width="2" stroke-dasharray="4 4"/><text x="110" y="95" fill="#ff5c77" font-size="13" font-weight="600" text-anchor="middle">Eraser: 35px</text>`
+      },
+      text: {
+        title: "Formatted Text Tool (T)",
+        desc: "Click anywhere on canvas to place rich text boxes. Supports custom fonts, sizes, colors, highlights, bullet lists, and in-canvas tables.",
+        tip: "Text boxes auto-expand vertically as you type so your content never gets cut off.",
+        svg: `<rect x="40" y="45" width="140" height="90" rx="8" fill="#1c2035" stroke="#7c5cfc" stroke-width="1.5"/><text x="55" y="75" fill="#7c5cfc" font-size="16" font-weight="700">Heading</text><text x="55" y="100" fill="#9aa0ba" font-size="12">• Key Point 1</text><text x="55" y="118" fill="#9aa0ba" font-size="12">• Key Point 2</text>`
+      },
+      connector: {
+        title: "Smart Connector & Arrow Tool (↗)",
+        desc: "Draw dynamic connection lines between cards. Automatically avoids overlaps with Elbow, Curved, Straight, or Dashed styles.",
+        tip: "Hold Shift and hover over any shape edge to reveal quick-connect handles.",
+        svg: `<rect x="30" y="65" width="60" height="50" rx="6" fill="#1c2035" stroke="#656b88"/><rect x="130" y="65" width="60" height="50" rx="6" fill="#1c2035" stroke="#656b88"/><path d="M 90 90 L 130 90" stroke="#7c5cfc" stroke-width="3" marker-end="url(#arrow)"/><polygon points="126,86 134,90 126,94" fill="#7c5cfc"/>`
+      },
+      frame: {
+        title: "Container Frame Tool (⌗)",
+        desc: "Create logical bounding frames that group child cards, notes, and arrows into isolated modules (e.g. Backend Cluster, UI Layer).",
+        tip: "Moving or copying a Frame automatically relocates all encapsulated child elements.",
+        svg: `<rect x="25" y="25" width="170" height="130" rx="10" fill="none" stroke="#00e5a3" stroke-width="2" stroke-dasharray="6 3"/><rect x="35" y="30" width="70" height="18" rx="4" fill="#00e5a3"/><text x="70" y="43" fill="#0c0d14" font-size="10" font-weight="800" text-anchor="middle">MODULE 1</text><rect x="45" y="65" width="50" height="40" rx="4" fill="#1c2035" stroke="#656b88"/><rect x="125" y="65" width="50" height="40" rx="4" fill="#1c2035" stroke="#656b88"/>`
+      }
+    };
+
+    function simulateTool(toolKey) {
+      document.querySelectorAll('.tool-tab-btn').forEach(btn => btn.classList.remove('active'));
+      event.currentTarget.classList.add('active');
+
+      const data = toolSimData[toolKey];
+      if (data) {
+        document.getElementById('simToolTitle').textContent = data.title;
+        document.getElementById('simToolDesc').textContent = data.desc;
+        document.getElementById('simToolTipText').innerHTML = data.tip;
+        document.getElementById('toolSvgIllustration').innerHTML = data.svg;
+      }
+    }
+
+    // Keyboard Shortcuts Data & Rendering
+    const shortcutsList = [
+      { keys: "Ctrl + S", action: "Quick Save", desc: "Saves project to browser storage & IndexedDB", cat: "editing" },
+      { keys: "Ctrl + Z", action: "Undo", desc: "Reverts last action (250-step history)", cat: "editing" },
+      { keys: "Ctrl + Y", action: "Redo", desc: "Restores reverted action (or Ctrl+Shift+Z)", cat: "editing" },
+      { keys: "Ctrl + C", action: "Copy", desc: "Copies selected objects or whole diagram", cat: "editing" },
+      { keys: "Ctrl + X", action: "Cut", desc: "Cuts selected objects to internal clipboard", cat: "editing" },
+      { keys: "Ctrl + V", action: "Paste", desc: "Pastes at current mouse cursor location", cat: "editing" },
+      { keys: "Ctrl + A", action: "Select All", desc: "Selects every object on active lesson", cat: "editing" },
+      { keys: "Delete / Backspace", action: "Delete", desc: "Removes selected elements or strokes", cat: "editing" },
+      { keys: "Ctrl + F", action: "Fullscreen", desc: "Toggles distraction-free presentation mode", cat: "canvas" },
+      { keys: "Escape", action: "Exit / Close", desc: "Exits fullscreen, closes menus or pickers", cat: "canvas" },
+      { keys: "Ctrl + Wheel", action: "Zoom In / Out", desc: "Zooms canvas view from 35% to 200%", cat: "canvas" },
+      { keys: "Shift + Drag Handle", action: "15° Snap Rotate", desc: "Snaps object rotation to exact 15° angles", cat: "editing" },
+      { keys: "Shift + Hover Edge", action: "Quick Connect", desc: "Reveals arrow connection drag handle", cat: "editing" },
+      { keys: "Ctrl + B", action: "Bold Text", desc: "Toggles bold styling on selected text", cat: "text" },
+      { keys: "Ctrl + I", action: "Italic Text", desc: "Toggles italic styling on selected text", cat: "text" },
+      { keys: "Ctrl + U", action: "Underline Text", desc: "Toggles underline styling on selected text", cat: "text" },
+      { keys: "Double Click Tab", action: "Rename Lesson", desc: "Quickly renames the active lesson tab", cat: "canvas" },
+      { keys: "Right Click Tab", action: "Lesson Options", desc: "Assigns tab color tags or opens raw JSON", cat: "canvas" }
+    ];
+
+    function renderShortcuts(filter = 'all') {
+      const grid = document.getElementById('shortcutsGrid');
+      grid.innerHTML = '';
+      
+      const filtered = filter === 'all' ? shortcutsList : shortcutsList.filter(s => s.cat === filter);
+      
+      filtered.forEach(item => {
+        const card = document.createElement('div');
+        card.className = 'shortcut-card';
+        card.innerHTML = `
+          <div>
+            <div class="shortcut-action">${item.action}</div>
+            <div class="shortcut-desc">${item.desc}</div>
+          </div>
+          <kbd>${item.keys}</kbd>
+        `;
+        card.addEventListener('click', () => {
+          navigator.clipboard.writeText(item.keys);
+          showToast(`Copied "${item.keys}" to clipboard!`);
+        });
+        grid.appendChild(card);
+      });
+    }
+
+    function filterShortcuts(cat) {
+      document.querySelectorAll('.shortcut-filter-btn').forEach(btn => btn.classList.remove('active'));
+      event.currentTarget.classList.add('active');
+      renderShortcuts(cat);
+    }
+
+    renderShortcuts('all');
+
+    // FAQ Accordion Toggle
+    function toggleFaq(header) {
+      const item = header.parentElement;
+      item.classList.toggle('open');
+    }
+
+    // Live Search Filter
+    const searchInput = document.getElementById('liveSearch');
+    if (typeof searchInput !== "undefined" && searchInput) searchInput.addEventListener('input', (e) => {
+      const query = e.target.value.toLowerCase().trim();
+      const sections = document.querySelectorAll('.searchable-item');
+      
+      sections.forEach(sec => {
+        const text = sec.textContent.toLowerCase();
+        if (query === '' || text.includes(query)) {
+          sec.style.display = 'block';
+        } else {
+          sec.style.display = 'none';
+        }
+      });
+    });
+
+    // Toast Notification Helper
+    function showToast(msg) {
+      const toast = document.getElementById('toast');
+      document.getElementById('toastMsg').textContent = msg;
+      toast.classList.add('show');
+      setTimeout(() => {
+        toast.classList.remove('show');
+      }, 2500);
+    }
+
+    // ScrollSpy for Sidebar Navigation
+    const navLinks = document.querySelectorAll('.guide-sidebar .nav-link');
+    window.addEventListener('scroll', () => {
+      let current = '';
+      const sections = document.querySelectorAll('section.guide-section');
+      
+      sections.forEach(section => {
+        const sectionTop = section.offsetTop;
+        if (pageYOffset >= sectionTop - 120) {
+          current = section.getAttribute('id');
+        }
+      });
+
+      navLinks.forEach(link => {
+        link.classList.remove('active');
+        if (link.getAttribute('href') === `#${current}`) {
+          link.classList.add('active');
+        }
+      });
+    });
+  </script>
+
+
+    <a href="https://api.whatsapp.com/send?phone=917903933705&text=Hello%2C%20I%20am%20reading%20the%20guide%20for%20software%20version%3A%20Source_code_large_pdf_V_1.12%20%28Large%20PDF%20V1.12%29.%20I%20would%20like%20to%20purchase%20/%20inquire%20about%20this%20package." target="_blank" class="wa-doc-float-btn" title="Purchase Source_code_large_pdf_V_1.12 on WhatsApp">
+      <span>💬 Buy This Version (+91-7903933705)</span>
+    </a>
+    
+        <!-- Mobile Responsive Navigation & TOC Drawer Script with Auto-Scroll Keyboard Viewport Adaptation -->
+    <script id="wa-doc-mobile-nav-js">
+      (function initDocMobileNav() {
+        // 1. Locate navigation actions container
+        const navContainer = document.querySelector('.doc-nav-bar-actions') || 
+                             document.querySelector('.nav-actions') || 
+                             document.querySelector('.header-controls') || 
+                             document.querySelector('.header-actions') || 
+                             document.querySelector('.top-nav-actions') || 
+                             document.querySelector('header') || 
+                             document.querySelector('nav');
+        if (!navContainer) return;
+
+        // 2. Create or find Mobile Menu Toggle Button (☰)
+        let menuBtn = document.getElementById('docMobileMenuBtn');
+        if (!menuBtn) {
+          menuBtn = document.createElement('button');
+          menuBtn.id = 'docMobileMenuBtn';
+          menuBtn.className = 'doc-mobile-menu-btn';
+          menuBtn.setAttribute('aria-label', 'Toggle Navigation and Table of Contents');
+          menuBtn.setAttribute('title', 'Table of Contents & Navigation');
+          menuBtn.innerHTML = '☰';
+          
+          const headerControls = document.querySelector('.header-actions') || 
+                                 document.querySelector('.header-controls') || 
+                                 document.querySelector('.nav-controls') || 
+                                 document.querySelector('.top-nav-actions') ||
+                                 document.querySelector('.header-inner') || 
+                                 document.querySelector('header') || 
+                                 document.querySelector('nav');
+          if (headerControls && headerControls !== navContainer) {
+            headerControls.appendChild(menuBtn);
+          } else {
+            navContainer.appendChild(menuBtn);
+          }
+        }
+
+        // 3. Ensure .doc-btn-nav have text wrapped in .nav-text for clean icon-only mobile mode
+        document.querySelectorAll('.doc-btn-nav').forEach(btn => {
+          if (!btn.querySelector('.nav-text')) {
+            const raw = btn.textContent.trim();
+            const parts = raw.split(/\s+/);
+            if (parts.length > 1) {
+              btn.innerHTML = parts[0] + ' <span class="nav-text">' + parts.slice(1).join(' ') + '</span>';
+            }
+          }
+        });
+
+        // 4. Universal Theme Management Helper for Drawer
+        function getCurrentTheme() {
+          return document.documentElement.getAttribute('data-theme') || 
+                 document.body.getAttribute('data-theme') || 
+                 (document.body.classList.contains('dark') ? 'dark' : 
+                 (localStorage.getItem('lumenboard_guide_theme') || 
+                  localStorage.getItem('lumenboard-theme') || 
+                  localStorage.getItem('lumenboard_theme') || 
+                  localStorage.getItem('lumenboard-help-theme') || 
+                  localStorage.getItem('lumenboard-docs-theme') || 
+                  localStorage.getItem('lumenboard_help_theme') || 
+                  (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')));
+        }
+
+        function updateDrawerThemeUI(theme) {
+          const isLight = theme === 'light';
+          const drawerIcon = document.getElementById('drawerThemeIcon');
+          const drawerTitle = document.getElementById('drawerThemeTitle');
+          const drawerDesc = document.getElementById('drawerThemeDesc');
+          if (drawerIcon && drawerTitle && drawerDesc) {
+            if (isLight) {
+              drawerIcon.textContent = '◐';
+              drawerIcon.style.background = 'linear-gradient(135deg, #6366f1, #4f46e5)';
+              drawerTitle.textContent = '• ◐ Dark Theme Toggle (#theme-toggle)';
+              drawerDesc.textContent = 'Switch to Dark Theme';
+            } else {
+              drawerIcon.textContent = '☀';
+              drawerIcon.style.background = 'linear-gradient(135deg, #f59e0b, #eab308)';
+              drawerTitle.textContent = '• ☀ Light Theme Toggle (#theme-toggle)';
+              drawerDesc.textContent = 'Switch to Light Theme';
+            }
+          }
+        }
+        window.updateDrawerThemeUI = updateDrawerThemeUI;
+
+        function setUniversalTheme(theme) {
+          document.documentElement.setAttribute('data-theme', theme);
+          document.body.setAttribute('data-theme', theme);
+          if (theme === 'dark') {
+            document.body.classList.add('dark');
+            document.documentElement.classList.add('dark');
+          } else {
+            document.body.classList.remove('dark');
+            document.documentElement.classList.remove('dark');
+          }
+          ['lumenboard_guide_theme', 'lumenboard-theme', 'lumenboard_theme', 'lumenboard-help-theme', 'lumenboard-docs-theme', 'lumenboard_help_theme'].forEach(key => {
+            try { localStorage.setItem(key, theme); } catch(e) {}
+          });
+
+          // Sync with page theme icons/text if present
+          const pageIcon = document.getElementById('theme-icon') || document.getElementById('themeIcon');
+          const pageText = document.getElementById('theme-text') || document.getElementById('themeText') || document.getElementById('themeLabel');
+          if (pageIcon) {
+            pageIcon.textContent = theme === 'light' ? '☀' : '🌙';
+          }
+          if (pageText) {
+            pageText.textContent = theme === 'light' ? 'Light' : 'Dark';
+          }
+
+          updateDrawerThemeUI(theme);
+        }
+        window.setUniversalTheme = setUniversalTheme;
+
+        // 5. Create Mobile Backdrop & Drawer
+        let backdrop = document.getElementById('docMobileBackdrop');
+        if (!backdrop) {
+          backdrop = document.createElement('div');
+          backdrop.id = 'docMobileBackdrop';
+          backdrop.className = 'doc-mobile-backdrop';
+          document.body.appendChild(backdrop);
+        }
+
+        let drawer = document.getElementById('docMobileDrawer');
+        if (!drawer) {
+          drawer = document.createElement('div');
+          drawer.id = 'docMobileDrawer';
+          drawer.className = 'doc-mobile-drawer';
+
+          const buyBtn = document.querySelector('.doc-btn-buy-nav') || document.querySelector('.wa-doc-float-btn');
+          const buyUrl = buyBtn ? buyBtn.getAttribute('href') : 'https://api.whatsapp.com/send?phone=917903933705';
+          const buyTitle = buyBtn ? buyBtn.textContent.trim().replace(/^💬\s*/, '') : 'Buy Package';
+          const docTitle = document.title.split('—')[0].trim() || 'Lumenboard Guide';
+          const initialTheme = getCurrentTheme();
+          const isLight = initialTheme === 'light';
+
+          drawer.innerHTML = `
+            <div class="doc-drawer-header">
+              <div class="doc-drawer-title">
+                <span>📑</span> ${docTitle}
+              </div>
+              <button class="doc-drawer-close-btn" id="docDrawerCloseBtn" aria-label="Close menu">✕</button>
+            </div>
+            <div class="doc-drawer-body">
+              <div>
+                <div class="doc-drawer-section-title">🚀 Portals & Quick Actions</div>
+                <div class="doc-drawer-portal-links">
+                  <a href="../../compare.html" class="doc-drawer-portal-link" title="Compare Matrix">
+                    <span class="icon-badge" style="background:linear-gradient(135deg,#f59e0b,#ef4444);color:#fff;">📊</span>
+                    <div>
+                      <div>• 📊 Compare Matrix</div>
+                      <small style="font-size:10.5px;color:#94a3b8;font-weight:500;">25-Version Feature Matrix</small>
+                    </div>
+                  </a>
+                  <a href="${buyUrl}" target="_blank" class="doc-drawer-portal-link" title="${buyTitle}">
+                    <span class="icon-badge" style="background:linear-gradient(135deg,#25d366,#128c7e);color:#fff;">💬</span>
+                    <div>
+                      <div>• 💬 ${buyTitle}</div>
+                      <small style="font-size:10.5px;color:#94a3b8;font-weight:500;">WhatsApp Instant License &amp; Support</small>
+                    </div>
+                  </a>
+                  <button type="button" class="doc-drawer-portal-link doc-drawer-theme-btn" id="drawerThemeToggle" aria-label="Toggle Light/Dark Theme" title="Toggle Light/Dark Theme">
+                    <span class="icon-badge" id="drawerThemeIcon" style="background:${isLight ? 'linear-gradient(135deg, #6366f1, #4f46e5)' : 'linear-gradient(135deg, #f59e0b, #eab308)'};color:#fff;">${isLight ? '◐' : '☀'}</span>
+                    <div>
+                      <div id="drawerThemeTitle">• ${isLight ? '◐ Dark Theme Toggle (#theme-toggle)' : '☀ Light Theme Toggle (#theme-toggle)'}</div>
+                      <small id="drawerThemeDesc" style="font-size:10.5px;color:#94a3b8;font-weight:500;">${isLight ? 'Switch to Dark Theme' : 'Switch to Light Theme'}</small>
+                    </div>
+                  </button>
+                  <a href="https://supportsourcecode.lovable.app/home" class="doc-drawer-portal-link" title="Main Page">
+                    <span class="icon-badge" style="background:linear-gradient(135deg,#02c9de,#0072ff);color:#fff;">🏠</span>
+                    <div>
+                      <div>• 🏠 Main Page Portal</div>
+                      <small style="font-size:10.5px;color:#94a3b8;font-weight:500;">Live Demos &amp; Documentation</small>
+                    </div>
+                  </a>
+                  <a href="https://interactive-media-display.lovable.app/" target="_blank" class="doc-drawer-portal-link" title="App Store">
+                    <span class="icon-badge" style="background:linear-gradient(135deg,#8b5cf6,#ec4899);color:#fff;">🛒</span>
+                    <div>
+                      <div>• 🛒 App Store Portal</div>
+                      <small style="font-size:10.5px;color:#94a3b8;font-weight:500;">Explore 25+ Software Releases</small>
+                    </div>
+                  </a>
+                </div>
+              </div>
+
+              <div>
+                <div class="doc-drawer-section-title">📖 Table of Contents</div>
+                <ul class="doc-drawer-toc-list" id="docDrawerTocList"></ul>
+              </div>
+            </div>
+          `;
+          document.body.appendChild(drawer);
+
+          // Populate Table of Contents from Sidebar or headings
+          const tocList = document.getElementById('docDrawerTocList');
+          const sidebarLinks = document.querySelectorAll('.sidebar a, .guide-sidebar a, .sidebar-nav a, .sidebar-toc a, nav.sidebar a');
+
+          if (sidebarLinks && sidebarLinks.length > 0) {
+            sidebarLinks.forEach((link) => {
+              const href = link.getAttribute('href');
+              if (href && href.startsWith('#')) {
+                const li = document.createElement('li');
+                li.className = 'doc-drawer-toc-item';
+                const a = document.createElement('a');
+                a.href = href;
+                a.innerHTML = link.innerHTML;
+                li.appendChild(a);
+                tocList.appendChild(li);
+              }
+            });
+          } else {
+            const sections = document.querySelectorAll('section[id], .guide-section[id], h2[id]');
+            sections.forEach((sec, idx) => {
+              const id = sec.getAttribute('id');
+              const title = sec.querySelector('h2, h3')?.textContent?.trim() || sec.textContent?.trim()?.substring(0, 30) || id;
+              if (id) {
+                const li = document.createElement('li');
+                li.className = 'doc-drawer-toc-item';
+                li.innerHTML = `<a href="#${id}"><span class="num-badge">${String(idx + 1).padStart(2, '0')}</span> ${title}</a>`;
+                tocList.appendChild(li);
+              }
+            });
+          }
+        }
+
+        // Toggle Drawer Function
+        function toggleDrawer(open) {
+          const isOpen = typeof open === 'boolean' ? open : !drawer.classList.contains('open');
+          drawer.classList.toggle('open', isOpen);
+          backdrop.classList.toggle('open', isOpen);
+          menuBtn.classList.toggle('active', isOpen);
+          menuBtn.innerHTML = isOpen ? '✕' : '☰';
+          document.body.classList.toggle('doc-drawer-open', isOpen);
+          if (isOpen && window.updateDrawerThemeUI) {
+            window.updateDrawerThemeUI(getCurrentTheme());
+          }
+        }
+
+        menuBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          toggleDrawer();
+        });
+
+        backdrop.addEventListener('click', () => toggleDrawer(false));
+        document.getElementById('docDrawerCloseBtn')?.addEventListener('click', () => toggleDrawer(false));
+
+        // Drawer Theme Toggle Click Handler
+        const drawerThemeToggleBtn = document.getElementById('drawerThemeToggle');
+        if (drawerThemeToggleBtn) {
+          drawerThemeToggleBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            const currentTheme = getCurrentTheme();
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            
+            // Try page-specific theme toggler if available
+            const pageThemeBtn = document.querySelector('.navbar #themeToggle, .navbar #theme-toggle, .navbar #themeToggleBtn, .top-nav #themeToggle, .top-nav #theme-toggle, .top-nav #themeToggleBtn, .header-actions #themeToggle, .header-actions #theme-toggle, .header-actions #themeToggleBtn, .header-controls #themeToggle, .header-controls #theme-toggle, .nav-actions #themeToggle, .nav-actions #theme-toggle, .top-nav-actions #themeToggle, .header-actions .btn-icon, .header-actions .btn-icon-toggle, .header-actions .btn-toggle-theme, .header-actions .btn-icon-only');
+
+            if (typeof window.setTheme === 'function') {
+              window.setTheme(newTheme);
+            } else if (typeof window.applyTheme === 'function') {
+              window.applyTheme(newTheme);
+            } else if (pageThemeBtn && pageThemeBtn !== drawerThemeToggleBtn) {
+              pageThemeBtn.click();
+            } else {
+              setUniversalTheme(newTheme);
+            }
+            updateDrawerThemeUI(newTheme);
+          });
+        }
+
+        // Observe external theme changes
+        if (window.MutationObserver) {
+          const observer = new MutationObserver(() => {
+            updateDrawerThemeUI(getCurrentTheme());
+          });
+          observer.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme', 'class'] });
+          observer.observe(document.body, { attributes: true, attributeFilter: ['data-theme', 'class'] });
+        }
+
+        // Smooth TOC scroll on mobile
+        drawer.querySelectorAll('a').forEach(link => {
+          link.addEventListener('click', (e) => {
+            const href = link.getAttribute('href');
+            if (href && href.startsWith('#')) {
+              const target = document.querySelector(href);
+              if (target) {
+                e.preventDefault();
+                toggleDrawer(false);
+                setTimeout(() => {
+                  target.scrollIntoView({ behavior: 'smooth' });
+                }, 120);
+              }
+            } else {
+              toggleDrawer(false);
+            }
+          });
+        });
+
+        // Close on Esc
+        document.addEventListener('keydown', (e) => {
+          if (e.key === 'Escape' && drawer.classList.contains('open')) {
+            toggleDrawer(false);
+          }
+        });
+
+        // =============================================================
+        // 6. Automatic Screen Scroll Up on Mobile Keyboard Pop-up
+        // =============================================================
+        let isKeyboardOpen = false;
+
+        function scrollToFocusedElement(element) {
+          if (!element) element = document.activeElement;
+          if (!element) return;
+
+          const isInput = element.tagName === 'INPUT' || 
+                          element.tagName === 'TEXTAREA' || 
+                          element.isContentEditable || 
+                          element.getAttribute('role') === 'textbox';
+
+          if (!isInput) return;
+
+          // Multi-stage smooth scroll to account for virtual keyboard slide-up animation timing
+          const doScroll = () => {
+            const rect = element.getBoundingClientRect();
+            const header = document.querySelector('.suite-header, header.navbar, header.guide-header, header.top-nav, header.site-header, header.top-navbar, header.header-bar, header.header, .navbar');
+            const headerHeight = header ? header.offsetHeight : 60;
+
+            // Target offset ensuring input is positioned clearly in view with header offset
+            const targetY = window.pageYOffset + rect.top - headerHeight - 20;
+
+            window.scrollTo({
+              top: Math.max(0, targetY),
+              behavior: 'smooth'
+            });
+          };
+
+          doScroll();
+          setTimeout(doScroll, 100);
+          setTimeout(doScroll, 250);
+          setTimeout(doScroll, 450);
+        }
+
+        // Visual Viewport API for accurate virtual keyboard detection
+        if (window.visualViewport) {
+          window.visualViewport.addEventListener('resize', function() {
+            const windowHeight = window.innerHeight;
+            const viewportHeight = window.visualViewport.height;
+            const diff = windowHeight - viewportHeight;
+
+            // Keyboard is considered open if viewport shrinks by > 150px
+            if (diff > 150) {
+              if (!isKeyboardOpen) {
+                isKeyboardOpen = true;
+                document.body.classList.add('keyboard-visible');
+                scrollToFocusedElement();
+              }
+            } else {
+              if (isKeyboardOpen) {
+                isKeyboardOpen = false;
+                document.body.classList.remove('keyboard-visible');
+              }
+            }
+          });
+        }
+
+        // Input Focus Listeners (for all mobile and desktop browsers)
+        document.addEventListener('focusin', function(e) {
+          const target = e.target;
+          if (target && (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.isContentEditable)) {
+            document.body.classList.add('keyboard-visible');
+            scrollToFocusedElement(target);
+          }
+        });
+
+        document.addEventListener('focusout', function(e) {
+          setTimeout(function() {
+            const active = document.activeElement;
+            const stillInput = active && (active.tagName === 'INPUT' || active.tagName === 'TEXTAREA' || active.isContentEditable);
+            
+            if (!stillInput) {
+              if (!window.visualViewport || (window.innerHeight - window.visualViewport.height) <= 150) {
+                isKeyboardOpen = false;
+                document.body.classList.remove('keyboard-visible');
+              }
+            }
+          }, 200);
+        });
+      })();
+    </script>
+
+</body>
+</html>

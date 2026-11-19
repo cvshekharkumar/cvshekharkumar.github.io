@@ -1,0 +1,30 @@
+[
+  {
+    "id": "lioness",
+    "name": "Lioness",
+    "icon": "🦁",
+    "file": "0_A.D._animal_lioness.stl",
+    "path": "3D models/0_A.D._animal_lioness.stl"
+  },
+  {
+    "id": "merchant_ship",
+    "name": "Merchant Ship",
+    "icon": "⛵",
+    "file": "0_A.D._ptol_ship_merchant_complete.stl",
+    "path": "3D models/0_A.D._ptol_ship_merchant_complete.stl"
+  },
+  {
+    "id": "statue_of_niobe",
+    "name": "Statue of Niobe",
+    "icon": "🏛",
+    "file": "Statue_of_Niobe,_3D_photogrammetry_scan_(STL).stl",
+    "path": "3D models/Statue_of_Niobe,_3D_photogrammetry_scan_(STL).stl"
+  },
+  {
+    "id": "noto_sans",
+    "name": "Noto Sans 3D",
+    "icon": "🔤",
+    "file": "U+1D5F_Noto_Sans_20230413.stl",
+    "path": "3D models/U+1D5F_Noto_Sans_20230413.stl"
+  }
+]

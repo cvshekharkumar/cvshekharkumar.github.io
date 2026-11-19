@@ -1,0 +1,201 @@
+  
+   <!-- Login Code -->
+<style>
+.fa-file-text-o:before {content:"\f0f6"; font-family:'FontAwesome'; font-style:normal; font-weight:normal;}
+input[type="text"]#textEmail{height:33px!important;}
+.wb-content .left-inner-addon i{padding:12px 11px 10px 0px!important;}
+</style>   
+    
+   <div class="wb-content" id="ancTutorContent" >
+      <a href="user-login3ff9.html?type=signin" title="Tutor Connect Login" target="_blank">
+      <img src="images/tutor-connect-icon.png" title="Tutor Connect"/>
+      </a><br/><br/>
+      <div class="left-inner-addon ">
+         <i class="fa-envelope"></i>
+         <input type="text" value="" placeholder="Enter Email ID" class="txtClass" id="textEmail" />
+         <div class="login-error"></div>
+      </div>
+      <br/>
+      <div class="left-inner-addon ">
+         <i class="fa-lock" style="padding-top:8px;"></i>
+         <input type="password" value="" placeholder="Enter Password" class="txtClass" id="textPassword"  />
+         <div class="login-error"></div>
+      </div>     
+      <div id="errDivLogin" class="login-error"></div>      
+      <div class="login-butn" id="submitLogin"><a href="javascript:void(0)" ><i class="fa-sign-in"></i> &nbsp;Login</a> </div>
+      <div class="login-links">               
+         <a href="forgotpassword.html"><i class="fa-lock"></i> Lost your Password ?</a>
+         <a href="registration.html" style="border-right:none;"><i class="fa-user"></i> Registration</a>
+      </div>
+   </div>
+   <!-- End of Login Code --> 
+      
+    
+   
+
+<script>
+
+$(document).ready(function(){
+   var email_id = '';
+   var baseurl = 'index.html';
+   var regEmail =  /^([\w-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/;
+   var regPhone = /^[0-9]{10}$/;
+   var numberPattern = /^\d*$/;
+   var totlafiles = 0;
+
+   $('#textEmail,#textPassword').bind('keydown', function(e) {
+      if (e.keyCode == 13) {
+         userLogin();   
+      }
+   });
+   $('#submitLogin').click(function(){
+      userLogin();   
+   });
+   function userLogin(){
+      var email = $('#textEmail').val();
+      var pwd = $('#textPassword').val();
+     
+      $("#ancTutorContent input,textarea,select").each(function () {
+          $(this).css('border-color','#ccc');
+      });
+      if (email == '')
+      {    
+         $('.txtClass').next().html('');
+         $('#textEmail').next().html('Please enter a email id');
+         $('#textEmail').focus();
+         $('#textEmail').css('border-color','red');
+         return false;
+      } 
+      else if (!regEmail.test(email))
+      { 
+         $('#textEmail').css('border-color','#ccc');
+         $('.txtClass').next().html('');
+         $('#textEmail').next().html('Please enter a valid email id');
+         $('#textEmail').focus();
+         $('#textEmail').css('border-color','red');
+         return false;
+      }
+      else if (pwd == '')
+      {
+         $('#textEmail').css('border-color','#ccc');
+         $('.txtClass').next().html('');
+         $('#textPassword').next().html('Please enter a password');;
+         $('#textPassword').focus();
+         $('#textPassword').css('border-color','red');
+         return false;
+      }
+      
+      email = $.trim(email);
+      pwd = $.trim(pwd);
+      
+      $("#ancTutorContent input,textarea,select").each(function () {
+          $(this).css('border-color','#ccc');
+      });
+      
+      $('.txtClass').next().html('');     
+      $('#errDivLogin').html('');
+      $('.wrapLoader').show();
+      
+      $.ajax({
+         url: baseurl+"ajax/ajaxUserSignIn.php",
+         method:"POST",
+         data: {"email":email,'pwd':pwd}
+      }).done(function(msg) {
+         if(msg == 0)
+         {    
+            $('.wrapLoader').hide();
+            $('#errDivLogin').html('<i class="fa-close"></i> Email or password you entered is incorrect!');	
+         }
+         else
+         {	
+            var resObj = eval("("+msg+")");
+            localStorage.flag = 1;
+            $('.wrapLoader').hide();
+            $('#errDivLogin').html('');  
+            $('#sign').window('refresh', 'tutor_connect/tutor-connect-content.html');
+            
+         }             
+      });  
+   }      
+   
+   $('#userLogout').click(function(){
+      localStorage.flag = 0;
+       $('.wrapLoader').show();
+      $.ajax({
+        url: baseurl+"ajax/ajaxUserLogout.php",
+        method:"POST"
+      }).done(function(msg) {  
+         $('.wrapLoader').hide();
+         $('#sign').window('refresh', 'tutor_connect/tutor-connect-content.html');
+      });      
+   });
+   $('#fileUpload').change(function(e){    
+      var next_number = totlafiles + 1;
+      if(email_id == '')
+      {
+         return false;
+      }
+      
+      var exts = ['jpg','jpeg','png','pdf','doc','docx','pptx','ppt','odt','rtf','txt'];	
+     
+      for (var i = 0; i < $(this).get(0).files.length; ++i) {             
+         var ext = $(this).get(0).files[i].name.split('.');			
+         ext = ext.reverse();		
+         var size = ($(this).get(0).files[i].size / (1024*1024)).toFixed(2);
+         if ($.inArray ( ext[0].toLowerCase(), exts ) < 0 ){
+            alert("Please select jpeg/png/pdf/ppt/doc format files only.");
+            $('#fileUpload').focus();
+            $("#fileUpload").val('');
+            return false;
+         } else if(size > 5){
+            alert("Please select file less than 5 MB files only.");
+            $('#fileUpload').focus();
+            $("#fileUpload").val('');
+            return false;
+         }        
+      } 
+      var formdata = new FormData();
+      formdata.append("file", $('#fileUpload')[0].files[0]);
+      formdata.append("email_id", email_id);
+      formdata.append("next_number", next_number);
+      
+      $('.wrapLoader').show();
+      
+      $.ajax({
+         url: "https://w.sendfiles.net/tutor_content_files.php",
+         method:"POST",
+         cache: false,
+         data: formdata,	
+         processData: false,
+         contentType: false,	
+      }).done(function(msg) { 
+         msg = msg.replace(/\\/g, '')
+         var resObj = eval("("+msg+")");
+         var flag = resObj['flag'];
+         var content = resObj['content'];
+         var filename = resObj['name'];
+         var filetype = resObj['type'];
+         var totalpages = resObj['total'];
+         var foldername = resObj['foldername'];
+         $('.wrapLoader').hide();
+         if(flag == -99)
+         {
+            $('#sign').window('refresh', 'tutor-connect-content.html');
+         }
+         $.ajax({
+            url: baseurl+"ajax/ajaxTutorContent.php",
+            method:"POST",
+            data: {"filename":filename,'filetype':filetype,'totalpages':totalpages,'foldername':foldername,"type":"add"}
+         }).done(function(msg) {
+            if(msg == -99)
+            {
+               $('#sign').window('refresh', 'tutor_connect/tutor-connect-content.html');
+            }
+            $('#fileUpload').val('');
+            $('#contentDiv').append(content);  
+            $('#sign').window('refresh', 'tutor_connect/tutor-connect-content.html');
+         });         
+      });   
+   });
+});
+</script>
